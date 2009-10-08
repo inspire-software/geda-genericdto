@@ -9,6 +9,7 @@
 package dp.lib.dto.geda.assembler;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -245,7 +246,7 @@ public class DTOAssemblerTest {
 		
 		final DTOAssembler<TestDto5Class, TestEntity5Class> assembler = 
 			DTOAssembler.newAssembler(TestDto5Class.class, TestEntity5Class.class);
-
+		
 		assembler.assembleDto(dto, entity, null);
 		
 		assertEquals(entity.getWrapper().getWrapper().getName(), dto.getNestedString());
@@ -255,6 +256,31 @@ public class DTOAssemblerTest {
 		assembler.assembleEntity(dto, entity, null);
 		
 		assertEquals("Another Name", entity.getWrapper().getWrapper().getName());
+		
+	}
+
+	/**
+	 * Test that wrapper (nested) dto property mapping get resolved correctly.
+	 * At the moment there is no way to create null domain nested bean. This issue in the
+	 * process of design decision.
+	 */
+	@Test(expected = IllegalArgumentException.class) 
+	public void testDeepWrappedNullProperty() {
+		final TestDto5Class dto = new TestDto5Class();
+		final TestEntity5Class entity = new TestEntity5Class();
+		entity.setWrapper(new TestEntity4Class());
+		entity.getWrapper().setWrapper(null);
+		
+		final DTOAssembler<TestDto5Class, TestEntity5Class> assembler = 
+			DTOAssembler.newAssembler(TestDto5Class.class, TestEntity5Class.class);
+
+		assembler.assembleDto(dto, entity, null);
+		
+		assertNull(dto.getNestedString());
+		
+		dto.setNestedString("Another Name");
+		
+		assembler.assembleEntity(dto, entity, null);
 		
 	}
 	

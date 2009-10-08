@@ -68,7 +68,12 @@ class DataPipe implements Pipe {
 	public void writeFromEntityToDto(final Object entity, final Object dto, final Map<String, ValueConverter> converters) 
 		throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		
+		if (entity == null) {
+			return;
+		}
+
 		final Object entityData = this.entityRead.invoke(entity);
+		
 		if (usesConverter()) {
 			this.dtoWrite.invoke(dto, getConverter(converters).convertToDto(entityData));
 		} else {
@@ -79,6 +84,11 @@ class DataPipe implements Pipe {
 	/** {@inheritDoc} */
 	public void writeFromDtoToEntity(final Object entity, final Object dto, final Map<String, ValueConverter> converters) 
 		throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		
+		if (entity == null) {
+			// tempoprary fix need to think more about this
+			throw new IllegalArgumentException("Nested domain entity is null and cannot be set");
+		}
 		
 		if (readOnly) {
 			return;
