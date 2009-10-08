@@ -17,7 +17,6 @@ import java.util.Map;
 import org.junit.Test;
 
 import dp.lib.dto.geda.adapter.ValueConverter;
-import dp.lib.dto.geda.assembler.DTOAssembler;
 import dp.lib.dto.geda.assembler.TestDto3Class.Decision;
 
 /**
