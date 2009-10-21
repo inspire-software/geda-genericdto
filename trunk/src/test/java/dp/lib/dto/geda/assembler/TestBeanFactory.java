@@ -8,6 +8,8 @@
  */
 package dp.lib.dto.geda.assembler;
 
+import org.junit.Ignore;
+
 import dp.lib.dto.geda.adapter.BeanFactory;
 
 /**
@@ -17,6 +19,7 @@ import dp.lib.dto.geda.adapter.BeanFactory;
  * @since 1.0.0
  *
  */
+@Ignore
 public class TestBeanFactory implements BeanFactory {
 
 	/** {@inheritDoc} */
