@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.ValueConverter;
 
 
@@ -82,24 +83,35 @@ class DataPipe implements Pipe {
 	}
 
 	/** {@inheritDoc} */
-	public void writeFromDtoToEntity(final Object entity, final Object dto, final Map<String, ValueConverter> converters) 
+	public void writeFromDtoToEntity(final Object entity, final Object dto, 
+			final Map<String, ValueConverter> converters, final BeanFactory entityBeanFactory) 
 		throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		
-		if (entity == null) {
-			// tempoprary fix need to think more about this
-			throw new IllegalArgumentException("Nested domain entity is null and cannot be set");
-		}
-		
+
 		if (readOnly) {
 			return;
 		}
 		
+		final Object dtoValue;
 		final Object dtoData = this.dtoRead.invoke(dto);
 		if (usesConverter()) {
-			this.entityWrite.invoke(entity, getConverter(converters).convertToEntity(dtoData));
+			dtoValue = getConverter(converters).convertToEntity(dtoData);
 		} else {
-			this.entityWrite.invoke(entity, dtoData);
+			dtoValue = dtoData;
 		}
+		
+		if (dtoValue != null) {
+			final Object parentEntity;
+			if (entity instanceof NewEntityProxy) {
+				parentEntity = ((NewEntityProxy) entity).create();
+			} else {
+				parentEntity = entity;
+			}
+			this.entityWrite.invoke(parentEntity, dtoValue);
+		} else if (!(entity instanceof NewEntityProxy)) {
+			// if the dtoValue is null the setting only makes sense if the entity bean existed.
+			this.entityWrite.invoke(entity, dtoValue);
+		}
+
 	}
 	
 	private boolean usesConverter() {

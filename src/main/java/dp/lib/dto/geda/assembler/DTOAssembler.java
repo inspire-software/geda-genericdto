@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.ValueConverter;
 import dp.lib.dto.geda.annotations.Dto;
 
@@ -60,6 +61,22 @@ public final class DTOAssembler<DTO, Entity> {
 					
 					final String binding = dtoFieldAnn.value();
 					final String converter = dtoFieldAnn.converter();
+					final String[] beanKeysChain;
+					if (binding.indexOf('.') != -1) {
+						final dp.lib.dto.geda.annotations.Dto dtoBeanMappingAnn = 
+							(dp.lib.dto.geda.annotations.Dto) dtoField.getAnnotation(dp.lib.dto.geda.annotations.Dto.class);
+						if (dtoBeanMappingAnn.entityBeanKeys() == null || dtoBeanMappingAnn.entityBeanKeys().length == 0) {
+							throw new IllegalArgumentException(
+									"Binding for '" + binding 
+									+ "' must be annotated with @Dto and entityBeanKeys must be specified for each nested entity in [" 
+									+ dtoClass.getCanonicalName() + "]");
+						}
+						beanKeysChain = dtoBeanMappingAnn.entityBeanKeys();
+						
+					} else {
+						beanKeysChain = null;
+					}
+					
 					final boolean readOnly = dtoFieldAnn.readOnly();
 					if (relationMapping.containsKey(binding)) {
 						throw new IllegalArgumentException(
@@ -72,7 +89,7 @@ public final class DTOAssembler<DTO, Entity> {
 										
 					final Pipe pipe = createPipe(
 							dtoPropertyDescriptors, entityPropertyDescriptors,
-							dtoField, bindingChain, 0, converter, readOnly);
+							dtoField, bindingChain, beanKeysChain, 0, converter, readOnly);
 					
 
 					relationMapping.put(binding, pipe);
@@ -95,7 +112,8 @@ public final class DTOAssembler<DTO, Entity> {
 	private Pipe createPipe(
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
-			final Field dtoField, final String[] binding, final int chainIndex, final String converter, final boolean readOnly) 
+			final Field dtoField, final String[] binding, final String[] beanKeysChain, 
+			final int chainIndex, final String converter, final boolean readOnly) 
 		throws IntrospectionException {
 
 		if (chainIndex + 1 == binding.length) {
@@ -109,14 +127,16 @@ public final class DTOAssembler<DTO, Entity> {
 				entityPropertyDescriptors, dtoField, binding[chainIndex]);
 		
 		final Method entityFieldRead = entityFieldDesc.getReadMethod();
+		final Method entityFieldWrite = entityFieldDesc.getWriteMethod();
 		final Class returnType = (Class) entityFieldRead.getGenericReturnType();
 		
 		final PropertyDescriptor[] entitySubPropertyDescriptors = 
 			Introspector.getBeanInfo(returnType).getPropertyDescriptors();
 			
-		return new DataPipeChain(entityFieldRead,
+		return new DataPipeChain(entityFieldRead, entityFieldWrite,
 				createPipe(dtoPropertyDescriptors, entitySubPropertyDescriptors, 
-						dtoField, binding, chainIndex + 1, converter, readOnly));
+						dtoField, binding, beanKeysChain, chainIndex + 1, converter, readOnly),
+						beanKeysChain[chainIndex]);
 
 	}
 
@@ -237,19 +257,24 @@ public final class DTOAssembler<DTO, Entity> {
 	 * Assembles entity from current dto by unsing annotations of the dto.
 	 * @param dto the dto to get data from
 	 * @param entity the entity to copy data to
-	 * @param converters the converters to be used during conversion. The rationale for injecting the converters
+	 * @param converters the converters to be used during conversion. Optional parameter that provides map with 
+	 *        value converters mapped by {@link dp.lib.dto.geda.annotations.Field#converter()}. If no converters
+	 *        are required for this DTO then a <code>null</code> can be passed in. The rationale for injecting the converters
 	 *        during conversion is to enforce them being stateless and unattached to assembler.
+	 * @param entityBeanFactory bean factory for creating new instances of nested domain objects mapped to DTO by
+	 *        {@link dp.lib.dto.geda.annotations.Dto#entityBeanKeys()} key.
 	 * @throws IllegalArgumentException if dto or entity are not of correct class or
 	 *         refrlection pipe fails
 	 */
-	public void assembleEntity(final DTO dto, final Object entity, final Map<String, ValueConverter> converters)
+	public void assembleEntity(final DTO dto, final Object entity, 
+			final Map<String, ValueConverter> converters, final BeanFactory entityBeanFactory)
 		throws IllegalArgumentException {
 		
 		validateDtoAndEntity(dto, entity);
 		
 		for (Pipe pipe : relationMapping.values()) {
 			try {
-				pipe.writeFromDtoToEntity(entity, dto, converters);
+				pipe.writeFromDtoToEntity(entity, dto, converters, entityBeanFactory);
 			} catch (IllegalAccessException iae) {
 				throw new IllegalArgumentException(iae);
 			} catch (InvocationTargetException ite) {

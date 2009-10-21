@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.ValueConverter;
 import dp.lib.dto.geda.assembler.TestDto3Class.Decision;
 
@@ -49,7 +50,7 @@ public class DTOAssemblerTest {
 		dto.setMyString("Will Smith");
 		dto.setMyDouble(1.0d);
 		
-		assembler.assembleEntity(dto, entity, null);
+		assembler.assembleEntity(dto, entity, null, null);
 		assertEquals(Long.valueOf(0L), entity.getEntityId());
 		assertEquals("Will Smith", entity.getName());
 		assertEquals(Double.valueOf(1.0d), entity.getNumber());
@@ -84,7 +85,7 @@ public class DTOAssemblerTest {
 		dto.setMyLong(0L);
 		dto.setMyBoolean(false);
 		
-		assembler.assembleEntity(dto, entity, null);
+		assembler.assembleEntity(dto, entity, null, null);
 		assertEquals(Long.valueOf(0L), entity.getEntityId());
 		assertEquals(Boolean.FALSE, entity.getDecision());
 		
@@ -117,7 +118,7 @@ public class DTOAssemblerTest {
 		
 		dto.setMyLong(0L);
 		
-		assembler.assembleEntity(dto, entity, null);
+		assembler.assembleEntity(dto, entity, null, null);
 		assertEquals(Long.valueOf(0L), entity.getEntityId());
 		assertEquals(Boolean.TRUE, entity.getDecision());
 		
@@ -203,7 +204,7 @@ public class DTOAssemblerTest {
 		
 		dto.setMyEnum(Decision.Undecided);
 		
-		assembler.assembleEntity(dto, entity, converters);
+		assembler.assembleEntity(dto, entity, converters, null);
 			
 	}
 	
@@ -226,7 +227,7 @@ public class DTOAssemblerTest {
 		
 		dto.setNestedString("Another Name");
 		
-		assembler.assembleEntity(dto, entity, null);
+		assembler.assembleEntity(dto, entity, null, null);
 		
 		assertEquals("Another Name", entity.getWrapper().getName());
 		
@@ -252,7 +253,34 @@ public class DTOAssemblerTest {
 		
 		dto.setNestedString("Another Name");
 		
-		assembler.assembleEntity(dto, entity, null);
+		assembler.assembleEntity(dto, entity, null, null);
+		
+		assertEquals("Another Name", entity.getWrapper().getWrapper().getName());
+		
+	}
+
+	/**
+	 * Test that wrapper (nested) dto property mapping get resolved correctly.
+	 * Test shows that second level entity is created on the fly.
+	 */
+	@Test
+	public void testDeepWrappedNullProperty() {
+		final TestDto5Class dto = new TestDto5Class();
+		final TestEntity5Class entity = new TestEntity5Class();
+		entity.setWrapper(new TestEntity4Class());
+		entity.getWrapper().setWrapper(null);
+		final BeanFactory beanFactory = new TestBeanFactory();
+		
+		final DTOAssembler<TestDto5Class, TestEntity5Class> assembler = 
+			DTOAssembler.newAssembler(TestDto5Class.class, TestEntity5Class.class);
+		
+		assembler.assembleDto(dto, entity, null);
+		
+		assertNull(dto.getNestedString());
+		
+		dto.setNestedString("Another Name");
+		
+		assembler.assembleEntity(dto, entity, null, beanFactory);
 		
 		assertEquals("Another Name", entity.getWrapper().getWrapper().getName());
 		
@@ -263,12 +291,12 @@ public class DTOAssemblerTest {
 	 * At the moment there is no way to create null domain nested bean. This issue in the
 	 * process of design decision.
 	 */
-	@Test(expected = IllegalArgumentException.class) 
-	public void testDeepWrappedNullProperty() {
+	@Test
+	public void testDeepWrappedDoubleNullProperty() {
 		final TestDto5Class dto = new TestDto5Class();
 		final TestEntity5Class entity = new TestEntity5Class();
-		entity.setWrapper(new TestEntity4Class());
-		entity.getWrapper().setWrapper(null);
+		entity.setWrapper(null);
+		final BeanFactory beanFactory = new TestBeanFactory();
 		
 		final DTOAssembler<TestDto5Class, TestEntity5Class> assembler = 
 			DTOAssembler.newAssembler(TestDto5Class.class, TestEntity5Class.class);
@@ -277,10 +305,12 @@ public class DTOAssemblerTest {
 		
 		assertNull(dto.getNestedString());
 		
-		dto.setNestedString("Another Name");
+		dto.setNestedString("Another Deep Name");
 		
-		assembler.assembleEntity(dto, entity, null);
-		
+		assembler.assembleEntity(dto, entity, null, beanFactory);
+
+		assertEquals("Another Deep Name", entity.getWrapper().getWrapper().getName());
+
 	}
 	
 	/**
@@ -303,7 +333,7 @@ public class DTOAssemblerTest {
 		dto.setMyString("Will Smith");
 		dto.setMyDouble(1.0d);
 		
-		assembler.assembleEntity(dto, entity, null);
+		assembler.assembleEntity(dto, entity, null, null);
 		assertEquals(Long.valueOf(0L), entity.getEntityId());
 		assertEquals("John Doe", entity.getName());
 		assertEquals(Double.valueOf(2.0d), entity.getNumber());
@@ -329,7 +359,7 @@ public class DTOAssemblerTest {
 		dto.setMyString("Will Smith");
 		dto.setMyDouble(1.0d);
 		
-		assembler.assembleEntity(dto, entity, null);
+		assembler.assembleEntity(dto, entity, null, null);
 		assertEquals(Long.valueOf(0L), entity.getEntityId());
 		assertEquals("Will Smith", entity.getName());
 		assertEquals(Double.valueOf(1.0d), entity.getNumber());
@@ -355,7 +385,7 @@ public class DTOAssemblerTest {
 		dto.setMyString("Will Smith");
 		dto.setMyDouble(1.0d);
 		
-		assembler.assembleEntity(dto, entity, null);
+		assembler.assembleEntity(dto, entity, null, null);
 		assertEquals(Long.valueOf(0L), entity.getEntityId());
 		assertEquals("Will Smith", entity.getName());
 		assertEquals(Double.valueOf(1.0d), entity.getNumber());
