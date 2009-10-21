@@ -11,6 +11,7 @@ package dp.lib.dto.geda.assembler;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.ValueConverter;
 
 /**
@@ -41,12 +42,14 @@ interface Pipe {
 	 * @param entity the entity to write data to.
 	 * @param dto the dto to read data from.
 	 * @param converters the converters to be used during conversion.
+	 * @param entityBeanFactory bean factory for creating new instances of nested domain objects mapped to DTO.
 	 * @throws IllegalArgumentException {@link java.lang.reflect.Method}
 	 * @throws IllegalAccessException {@link java.lang.reflect.Method}
 	 * @throws InvocationTargetException {@link java.lang.reflect.Method}
 	 */
 	void writeFromDtoToEntity(final Object entity, final Object dto,
-			final Map<String, ValueConverter> converters)
+			final Map<String, ValueConverter> converters,
+			final BeanFactory entityBeanFactory)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException;
 

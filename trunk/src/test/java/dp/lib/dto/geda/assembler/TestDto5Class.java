@@ -24,6 +24,7 @@ import dp.lib.dto.geda.annotations.Field;
 @Ignore
 class TestDto5Class {
 		
+	@Dto(entityBeanKeys = { "wrapper.key", "wrapper.wrapper.key" })
 	@Field("wrapper.wrapper.name")
 	private String nestedString;
 
