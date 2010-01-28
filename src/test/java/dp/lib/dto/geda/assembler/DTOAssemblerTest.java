@@ -1,24 +1,21 @@
-/**
- * This code is distributed under The GNU Lesser General Public License (LGPLv3)
- * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
- * 
- * Copyright Denis Pavlov 2009 
- * Web: http://www.inspire-software.com 
- * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+/*
+ * Copyright (c) 2010. The intellectual rights for this code remain to the NPA developer team.
+ * Code distribution, sale or modification is prohibited unless authorized by all members of NPA
+ * development team.
  */
+
 package dp.lib.dto.geda.assembler;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.ValueConverter;
 import dp.lib.dto.geda.assembler.TestDto3Class.Decision;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * DTOAssembler test.
@@ -39,9 +36,9 @@ public class DTOAssemblerTest {
 		final TestDto1Class dto = new TestDto1Class();
 		final TestEntity1Interface entity = createTestEntity1();
 		
-		final DTOAssembler<TestDto1Class, TestEntity1Class> assembler = 
+		final DTOAssembler assembler =
 			DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
-		assembler.assembleDto(dto, entity, null);
+		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
 		assertEquals(entity.getName(), dto.getMyString());
 		assertEquals(entity.getNumber(), dto.getMyDouble());
@@ -74,9 +71,9 @@ public class DTOAssemblerTest {
 		final TestDto2Class dto = new TestDto2Class();
 		final TestEntity2Class entity = createTestEntity2();
 		
-		final DTOAssembler<TestDto2Class, TestEntity2Class> assembler = 
+		final DTOAssembler assembler =
 			DTOAssembler.newAssembler(TestDto2Class.class, TestEntity2Class.class);
-		assembler.assembleDto(dto, entity, null);
+		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
 		assertEquals(entity.getName(), dto.getMyString());
 		assertEquals(entity.getNumber(), dto.getMyDouble());
@@ -109,9 +106,9 @@ public class DTOAssemblerTest {
 		final TestDto1Class dto = new TestDto1Class();
 		final TestEntity2Class entity = createTestEntity2();
 		
-		final DTOAssembler<TestDto1Class, TestEntity2Class> assembler = 
+		final DTOAssembler assembler =
 			DTOAssembler.newAssembler(TestDto1Class.class, TestEntity2Class.class);
-		assembler.assembleDto(dto, entity, null);
+		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
 		assertEquals(entity.getName(), dto.getMyString());
 		assertEquals(entity.getNumber(), dto.getMyDouble());
@@ -147,7 +144,7 @@ public class DTOAssemblerTest {
 		final DTOAssembler assembler = 
 			DTOAssembler.newAssembler(TestDto1Class.class, TestEntity2Class.class);
 		
-		assembler.assembleDto(dto1, entity1, null);
+		assembler.assembleDto(dto1, entity1, null, null);
 		
 	}
 
@@ -163,7 +160,7 @@ public class DTOAssemblerTest {
 		final DTOAssembler assembler = 
 			DTOAssembler.newAssembler(TestDto1Class.class, TestEntity2Class.class);
 		
-		assembler.assembleDto(dto2, entity2, null);
+		assembler.assembleDto(dto2, entity2, null, null);
 		
 	}
 	
@@ -179,7 +176,7 @@ public class DTOAssemblerTest {
 		final DTOAssembler assembler = 
 			DTOAssembler.newAssembler(TestDto1Class.class, TestEntity2Class.class);
 
-		assembler.assembleDto(dto2, entity1, null);
+		assembler.assembleDto(dto2, entity1, null, null);
 
 	}
 	
@@ -195,10 +192,10 @@ public class DTOAssemblerTest {
 		final Map<String, ValueConverter> converters = new HashMap<String, ValueConverter>();
 		converters.put("boolToEnum", conv3toDto);
 		
-		final DTOAssembler<TestDto3Class, TestEntity3Class> assembler = 
+		final DTOAssembler assembler =
 			DTOAssembler.newAssembler(TestDto3Class.class, TestEntity3Class.class);
 		
-		assembler.assembleDto(dto, entity, converters);
+		assembler.assembleDto(dto, entity, converters, null);
 		
 		assertEquals(Decision.Decided, dto.getMyEnum());
 		
@@ -218,10 +215,10 @@ public class DTOAssemblerTest {
 		entity.setWrapper(new TestEntity4SubClass());
 		entity.getWrapper().setName("Name");
 		
-		final DTOAssembler<TestDto4Class, TestEntity4Class> assembler = 
+		final DTOAssembler assembler =
 			DTOAssembler.newAssembler(TestDto4Class.class, TestEntity4Class.class);
 		
-		assembler.assembleDto(dto, entity, null);
+		assembler.assembleDto(dto, entity, null, null);
 		
 		assertEquals(entity.getWrapper().getName(), dto.getNestedString());
 		
@@ -232,7 +229,76 @@ public class DTOAssemblerTest {
 		assertEquals("Another Name", entity.getWrapper().getName());
 		
 	}
-	
+
+    /**
+	 * Test that wrapper (nested) dto property mapping get resolved correctly.
+	 */
+	@Test
+	public void testWrappedNullDtoProperty() {
+		final TestDto4ComplexClass dto = new TestDto4ComplexClass();
+		final TestEntity4Class entity = new TestEntity4Class();
+		entity.setWrapper(new TestEntity4SubClass());
+		entity.getWrapper().setName("Name");
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestDto4ComplexSubClass".equals(entityBeanKey)) {
+                    return new TestDto4ComplexSubClass();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto4ComplexClass.class, TestEntity4Class.class);
+
+		assembler.assembleDto(dto, entity, null, factory);
+
+		assertEquals(entity.getWrapper().getName(), dto.getNestedString().getNestedName());
+
+		dto.getNestedString().setNestedName("Another Name");
+
+		assembler.assembleEntity(dto, entity, null, null);
+
+		assertEquals("Another Name", entity.getWrapper().getName());
+
+	}
+
+    /**
+	 * Test that wrapper (nested) dto property mapping get resolved correctly.
+	 */
+	@Test
+	public void testWrappedNullEntityProperty() {
+		final TestDto4ComplexClass dto = new TestDto4ComplexClass();
+		final TestEntity4Class entity = new TestEntity4Class();
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestDto4ComplexSubClass".equals(entityBeanKey)) {
+                    return new TestDto4ComplexSubClass();
+                } else if ("dp.lib.dto.geda.assembler.TestEntity4SubClass".equals(entityBeanKey)) {
+                    return new TestEntity4SubClass();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto4ComplexClass.class, TestEntity4Class.class);
+
+		assembler.assembleDto(dto, entity, null, factory);
+
+		assertNull(dto.getNestedString());
+
+        dto.setNestedString(new TestDto4ComplexSubClass());
+		dto.getNestedString().setNestedName("Another Name");
+
+		assembler.assembleEntity(dto, entity, null, factory);
+
+		assertEquals("Another Name", entity.getWrapper().getName());
+
+	}
+
 	/**
 	 * Test that wrapper (nested) dto property mapping get resolved correctly.
 	 */
@@ -244,10 +310,10 @@ public class DTOAssemblerTest {
 		entity.getWrapper().setWrapper(new TestEntity4SubClass());
 		entity.getWrapper().getWrapper().setName("Name");
 		
-		final DTOAssembler<TestDto5Class, TestEntity5Class> assembler = 
+		final DTOAssembler assembler =
 			DTOAssembler.newAssembler(TestDto5Class.class, TestEntity5Class.class);
 		
-		assembler.assembleDto(dto, entity, null);
+		assembler.assembleDto(dto, entity, null, null);
 		
 		assertEquals(entity.getWrapper().getWrapper().getName(), dto.getNestedString());
 		
@@ -271,10 +337,10 @@ public class DTOAssemblerTest {
 		entity.getWrapper().setWrapper(null);
 		final BeanFactory beanFactory = new TestBeanFactory();
 		
-		final DTOAssembler<TestDto5Class, TestEntity5Class> assembler = 
+		final DTOAssembler assembler =
 			DTOAssembler.newAssembler(TestDto5Class.class, TestEntity5Class.class);
 		
-		assembler.assembleDto(dto, entity, null);
+		assembler.assembleDto(dto, entity, null, null);
 		
 		assertNull(dto.getNestedString());
 		
@@ -298,10 +364,10 @@ public class DTOAssemblerTest {
 		entity.setWrapper(null);
 		final BeanFactory beanFactory = new TestBeanFactory();
 		
-		final DTOAssembler<TestDto5Class, TestEntity5Class> assembler = 
+		final DTOAssembler assembler =
 			DTOAssembler.newAssembler(TestDto5Class.class, TestEntity5Class.class);
 
-		assembler.assembleDto(dto, entity, null);
+		assembler.assembleDto(dto, entity, null, null);
 		
 		assertNull(dto.getNestedString());
 		
@@ -322,9 +388,9 @@ public class DTOAssemblerTest {
 		final TestDto6Class dto = new TestDto6Class();
 		final TestEntity1Interface entity = createTestEntity1();
 		
-		final DTOAssembler<TestDto6Class, TestEntity1Class> assembler = 
+		final DTOAssembler assembler =
 			DTOAssembler.newAssembler(TestDto6Class.class, TestEntity1Class.class);
-		assembler.assembleDto(dto, entity, null);
+		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
 		assertEquals(entity.getName(), dto.getMyString());
 		assertEquals(entity.getNumber(), dto.getMyDouble());
@@ -350,7 +416,7 @@ public class DTOAssemblerTest {
 		
 		final DTOAssembler assembler = 
 			DTOAssembler.newAssembler(dto.getClass(), TestEntity1Class.class);
-		assembler.assembleDto(dto, entity, null);
+		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
 		assertEquals(entity.getName(), dto.getMyString());
 		assertEquals(entity.getNumber(), dto.getMyDouble());
@@ -376,7 +442,7 @@ public class DTOAssemblerTest {
 		
 		final DTOAssembler assembler = 
 			DTOAssembler.newAssembler(dto.getClass(), TestEntity1Interface.class);
-		assembler.assembleDto(dto, entity, null);
+		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
 		assertEquals(entity.getName(), dto.getMyString());
 		assertEquals(entity.getNumber(), dto.getMyDouble());
@@ -390,7 +456,283 @@ public class DTOAssemblerTest {
 		assertEquals("Will Smith", entity.getName());
 		assertEquals(Double.valueOf(1.0d), entity.getNumber());
 	}
+
+    /**
+	 * Test collection of nested objects.
+	 */
+	@Test
+	public void testCollectionProperty() {
+		final TestDto7CollectionClass dto = new TestDto7CollectionClass();
+		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+        entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+
+        final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+        item1.setName("1");
+        final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+        item2.setName("2");
+        final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+        item3.setName("3");
+        entity.getCollection().add(item1);
+        entity.getCollection().add(item2);
+        entity.getCollection().add(item3);
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestDto7CollectionSubClass();
+                } else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7CollectionSubClass();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto7CollectionClass.class, TestEntity7CollectionClass.class);
+
+		assembler.assembleDto(dto, entity, null, factory);
+
+		assertNotNull(dto.getNestedString());
+        assertEquals(3, dto.getNestedString().size());
+
+        Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
+        for (int index = 0; it.hasNext(); index++) {
+            it.next().setName("sameName" + index);
+        }
+
+		assembler.assembleEntity(dto, entity, null, factory);
+
+		assertNotNull(entity.getCollection());
+		assertEquals(3, entity.getCollection().size());
+
+        Iterator<TestEntity7CollectionSubClass> itr = entity.getCollection().iterator();
+        while (itr.hasNext()) {
+            final TestEntity7CollectionSubClass next = itr.next();
+
+            assertNotNull(next.getName());
+            assertTrue(next.getName().startsWith("sameName"));
+        }
+
+	}
+
+    /**
+	 * Test collection of nested objects.
+	 */
+	@Test
+	public void testCollectionEntityToNullProperty() {
+		final TestDto7CollectionClass dto = new TestDto7CollectionClass();
+		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+        entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+
+        final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+        item1.setName("1");
+        final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+        item2.setName("2");
+        final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+        item3.setName("3");
+        entity.getCollection().add(item1);
+        entity.getCollection().add(item2);
+        entity.getCollection().add(item3);
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestDto7CollectionSubClass();
+                } else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7CollectionSubClass();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto7CollectionClass.class, TestEntity7CollectionClass.class);
+
+		assembler.assembleDto(dto, entity, null, factory);
+
+		assertNotNull(dto.getNestedString());
+        assertEquals(3, dto.getNestedString().size());
+
+        dto.setNestedString(null);
+
+		assembler.assembleEntity(dto, entity, null, factory);
+
+		assertNotNull(entity.getCollection());
+		assertEquals(0, entity.getCollection().size());
+
+	}
 	
-	
+
+    /**
+	 * Test collection of nested objects.
+	 */
+	@Test
+	public void testCollectionNullToNullProperty() {
+		final TestDto7CollectionClass dto = new TestDto7CollectionClass();
+		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+        entity.setCollection(null);
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestDto7CollectionSubClass();
+                } else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7CollectionSubClass();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto7CollectionClass.class, TestEntity7CollectionClass.class);
+
+		assembler.assembleDto(dto, entity, null, factory);
+
+		assertNull(dto.getNestedString());
+
+		assembler.assembleEntity(dto, entity, null, factory);
+
+		assertNull(entity.getCollection());
+
+	}
+
+        /**
+	 * Test collection of nested objects.
+	 */
+	@Test
+	public void testCollectionPropertyWithInterfaces() {
+		final TestDto7CollectionInterface dto = new TestDto7iCollectionClass();
+		final TestEntity7CollectionInterface entity = new TestEntity7iCollectionClass();
+        entity.setCollection(new HashSet<TestEntity7CollectionSubInterface>());
+
+        final TestEntity7CollectionSubInterface item1 = new TestEntity7iCollectionSubClass();
+        item1.setName("1");
+        final TestEntity7CollectionSubInterface item2 = new TestEntity7iCollectionSubClass();
+        item2.setName("2");
+        final TestEntity7CollectionSubInterface item3 = new TestEntity7iCollectionSubClass();
+        item3.setName("3");
+        entity.getCollection().add(item1);
+        entity.getCollection().add(item2);
+        entity.getCollection().add(item3);
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestDto7iCollectionSubClass".equals(entityBeanKey)) {
+                    return new TestDto7iCollectionSubClass();
+                } else if ("dp.lib.dto.geda.assembler.TestEntity7iCollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7iCollectionSubClass();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(dto.getClass(), TestEntity7CollectionInterface.class);
+
+		assembler.assembleDto(dto, entity, null, factory);
+
+		assertNotNull(dto.getNestedString());
+        assertEquals(3, dto.getNestedString().size());
+
+        Iterator<TestDto7CollectionSubInterface> it = dto.getNestedString().iterator();
+        for (int index = 0; it.hasNext(); index++) {
+            it.next().setName("sameName" + index);
+        }
+
+		assembler.assembleEntity(dto, entity, null, factory);
+
+		assertNotNull(entity.getCollection());
+		assertEquals(3, entity.getCollection().size());
+
+        Iterator<TestEntity7CollectionSubInterface> itr = entity.getCollection().iterator();
+        while (itr.hasNext()) {
+            final TestEntity7CollectionSubInterface next = itr.next();
+
+            assertNotNull(next.getName());
+            assertTrue(next.getName().startsWith("sameName"));
+        }
+
+	}
+
+    /**
+	 * Test collection of nested objects.
+	 */
+	@Test
+	public void testCollectionEntityToNullPropertyWithInterfaces() {
+		final TestDto7CollectionInterface dto = new TestDto7iCollectionClass();
+		final TestEntity7CollectionInterface entity = new TestEntity7iCollectionClass();
+        entity.setCollection(new HashSet<TestEntity7CollectionSubInterface>());
+
+        final TestEntity7CollectionSubInterface item1 = new TestEntity7iCollectionSubClass();
+        item1.setName("1");
+        final TestEntity7CollectionSubInterface item2 = new TestEntity7iCollectionSubClass();
+        item2.setName("2");
+        final TestEntity7CollectionSubInterface item3 = new TestEntity7iCollectionSubClass();
+        item3.setName("3");
+        entity.getCollection().add(item1);
+        entity.getCollection().add(item2);
+        entity.getCollection().add(item3);
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestDto7iCollectionSubClass".equals(entityBeanKey)) {
+                    return new TestDto7iCollectionSubClass();
+                } else if ("dp.lib.dto.geda.assembler.TestEntity7iCollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7iCollectionSubClass();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(dto.getClass(), TestEntity7CollectionInterface.class);
+
+		assembler.assembleDto(dto, entity, null, factory);
+
+				assertNotNull(dto.getNestedString());
+        assertEquals(3, dto.getNestedString().size());
+
+        dto.setNestedString(null);
+
+		assembler.assembleEntity(dto, entity, null, factory);
+
+		assertNotNull(entity.getCollection());
+		assertEquals(0, entity.getCollection().size());
+
+	}
+
+        /**
+	 * Test collection of nested objects.
+	 */
+	@Test
+	public void testCollectionNullToNullPropertyWithInterfaces() {
+		final TestDto7CollectionInterface dto = new TestDto7iCollectionClass();
+		final TestEntity7CollectionInterface entity = new TestEntity7iCollectionClass();
+        entity.setCollection(null);
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestDto7iCollectionSubClass".equals(entityBeanKey)) {
+                    return new TestDto7iCollectionSubClass();
+                } else if ("dp.lib.dto.geda.assembler.TestEntity7iCollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7iCollectionSubClass();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(dto.getClass(), TestEntity7CollectionInterface.class);
+
+		assembler.assembleDto(dto, entity, null, factory);
+
+		assertNull(dto.getNestedString());
+
+		assembler.assembleEntity(dto, entity, null, factory);
+
+		assertNull(entity.getCollection());
+
+	}
+
 	
 }

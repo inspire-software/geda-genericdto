@@ -1,16 +1,13 @@
-/**
- * This code is distributed under The GNU Lesser General Public License (LGPLv3)
- * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
- * 
- * Copyright Denis Pavlov 2009 
- * Web: http://www.inspire-software.com 
- * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+/*
+ * Copyright (c) 2010. The intellectual rights for this code remain to the NPA developer team.
+ * Code distribution, sale or modification is prohibited unless authorized by all members of NPA
+ * development team.
  */
+
 package dp.lib.dto.geda.assembler;
 
-import org.junit.Ignore;
-
 import dp.lib.dto.geda.adapter.BeanFactory;
+import org.junit.Ignore;
 
 /**
  * Test bean factory.

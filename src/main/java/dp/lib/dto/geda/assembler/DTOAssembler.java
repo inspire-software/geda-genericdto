@@ -1,12 +1,16 @@
-/**
- * This code is distributed under The GNU Lesser General Public License (LGPLv3)
- * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
- * 
- * Copyright Denis Pavlov 2009 
- * Web: http://www.inspire-software.com 
- * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+/*
+ * Copyright (c) 2010. The intellectual rights for this code remain to the NPA developer team.
+ * Code distribution, sale or modification is prohibited unless authorized by all members of NPA
+ * development team.
  */
 package dp.lib.dto.geda.assembler;
+
+import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.adapter.ValueConverter;
+import dp.lib.dto.geda.annotations.Dto;
+import dp.lib.dto.geda.annotations.DtoCollection;
+import dp.lib.dto.geda.annotations.DtoField;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -14,25 +18,21 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.ValueConverter;
-import dp.lib.dto.geda.annotations.Dto;
-
 /**
  * Assemble DTO and Entities depending on the annotations of Dto.
- *
- * @param <DTO> the Dto class
- * @param <Entity> the entity class
  *
  * @author Denis Pavlov
  * @since 1.0.0
  *
  */
 @SuppressWarnings("unchecked")
-public final class DTOAssembler<DTO, Entity> {
+public final class DTOAssembler {
+
+    private static final String[] EMPTY_ARR = new String[0];
 	
 	private static final Map<String, DTOAssembler> CACHE = new HashMap<String, DTOAssembler>();	
 	
@@ -55,46 +55,25 @@ public final class DTOAssembler<DTO, Entity> {
 			final Field[] dtoFields = dtoClass.getDeclaredFields();
 			for (Field dtoField : dtoFields) {
 				
-				final dp.lib.dto.geda.annotations.Field dtoFieldAnn = 
-					(dp.lib.dto.geda.annotations.Field) dtoField.getAnnotation(dp.lib.dto.geda.annotations.Field.class);
+				final DtoField dtoFieldAnn =
+					(DtoField) dtoField.getAnnotation(DtoField.class);
 				if (dtoFieldAnn != null) {
-					
-					final String binding = dtoFieldAnn.value();
-					final String converter = dtoFieldAnn.converter();
-					final String[] beanKeysChain;
-					if (binding.indexOf('.') != -1) {
-						final dp.lib.dto.geda.annotations.Dto dtoBeanMappingAnn = 
-							(dp.lib.dto.geda.annotations.Dto) dtoField.getAnnotation(dp.lib.dto.geda.annotations.Dto.class);
-						if (dtoBeanMappingAnn.entityBeanKeys() == null || dtoBeanMappingAnn.entityBeanKeys().length == 0) {
-							throw new IllegalArgumentException(
-									"Binding for '" + binding 
-									+ "' must be annotated with @Dto and entityBeanKeys must be specified for each nested entity in [" 
-									+ dtoClass.getCanonicalName() + "]");
-						}
-						beanKeysChain = dtoBeanMappingAnn.entityBeanKeys();
-						
-					} else {
-						beanKeysChain = null;
-					}
-					
-					final boolean readOnly = dtoFieldAnn.readOnly();
-					if (relationMapping.containsKey(binding)) {
-						throw new IllegalArgumentException(
-								"Binding for '" + binding + "' already exists in Dto: " 
-								+ dtoClass.getCanonicalName());
-					}
-					
-					
-					final String[] bindingChain = createFieldBindingChain(binding);
-										
-					final Pipe pipe = createPipe(
-							dtoPropertyDescriptors, entityPropertyDescriptors,
-							dtoField, bindingChain, beanKeysChain, 0, converter, readOnly);
-					
 
-					relationMapping.put(binding, pipe);
-					
+					relationMapping.put(dtoFieldAnn.value(),
+                            createFieldPipeChain(dtoPropertyDescriptors, entityPropertyDescriptors, dtoField, dtoFieldAnn));
+					continue;
 				}
+
+                final DtoCollection dtoCollAnn =
+                     (DtoCollection) dtoField.getAnnotation(DtoCollection.class);
+                if (dtoCollAnn != null) {
+
+                    relationMapping.put(dtoCollAnn.value(),
+                            createCollectionPipeChain(dtoPropertyDescriptors, entityPropertyDescriptors, dtoField, dtoCollAnn));
+
+
+                }
+
 			}
 		} catch (IntrospectionException intr) {
 			throw new IllegalArgumentException(intr);
@@ -102,7 +81,103 @@ public final class DTOAssembler<DTO, Entity> {
 		
 	}
 
-	private String[] createFieldBindingChain(final String binding) {
+    private Pipe createCollectionPipeChain(final PropertyDescriptor[] dtoPropertyDescriptors, 
+    		final PropertyDescriptor[] entityPropertyDescriptors, final Field dtoField, 
+    		final DtoCollection dtoCollAnn) throws IntrospectionException {
+        final String binding = dtoCollAnn.value();
+
+        validateNewBinding(binding);
+
+
+        final String entityBeanKey = dtoCollAnn.entityBeanKey();
+        final String dtoBeanKey = dtoCollAnn.dtoBeanKey();
+
+        final Class< ? extends Collection> dtoCollectionClass = dtoCollAnn.dtoCollectionClass();
+        final Class< ? extends Collection> entityCollectionClass = dtoCollAnn.entityCollectionClass();
+
+        final Class entityGenericType = dtoCollAnn.entityGenericType();
+        final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcher = dtoCollAnn.dtoToEntityMatcher();
+
+        if (binding.indexOf('.') != -1) {
+            throw new IllegalArgumentException(
+                        "entityBeanKeys must specify single member path for binding '" + binding
+                        + "' of collection of [" + dtoClass.getCanonicalName() + "]");
+
+        }
+
+
+        final boolean readOnly = dtoCollAnn.readOnly();
+
+        final PropertyDescriptor entityFieldDesc = getEntityPropertyDescriptorForField(
+				entityPropertyDescriptors, dtoField, binding);
+
+		final Method entityFieldRead = entityFieldDesc.getReadMethod();
+		final Method entityFieldWrite = entityFieldDesc.getWriteMethod();
+
+        final PropertyDescriptor dtoFieldDesc = getDtoPropertyDescriptorForField(dtoField, dtoPropertyDescriptors);
+
+        final Method dtoFieldRead = dtoFieldDesc.getReadMethod();
+		final Method dtoFieldWrite = dtoFieldDesc.getWriteMethod();
+
+
+        return new CollectionPipe(
+                dtoFieldRead, dtoFieldWrite,
+                entityFieldRead, entityFieldWrite,
+                readOnly,
+                dtoBeanKey, entityBeanKey, entityGenericType,
+                dtoCollectionClass, entityCollectionClass,
+                dtoToEntityMatcher);
+    }
+
+    private void validateNewBinding(final String binding) {
+        if (relationMapping.containsKey(binding)) {
+            throw new IllegalArgumentException(
+                    "Binding for '" + binding + "' already exists in Dto: "
+                    + dtoClass.getCanonicalName());
+        }
+    }
+
+    private Pipe createFieldPipeChain(final PropertyDescriptor[] dtoPropertyDescriptors, final PropertyDescriptor[] entityPropertyDescriptors, final Field dtoField, final DtoField dtoFieldAnn) throws IntrospectionException {
+        final String binding = dtoFieldAnn.value();
+
+        validateNewBinding(binding);
+
+        final String converter = dtoFieldAnn.converter();
+        final String[] entityBeanKeys = dtoFieldAnn.entityBeanKeys();
+        final String[] dtoBeanKeys = dtoFieldAnn.dtoBeanKeys();
+
+        final String[] beanKeysChain;
+        if (binding.indexOf('.') != -1) {
+            if (entityBeanKeys == null || entityBeanKeys.length == 0) {
+                throw new IllegalArgumentException(
+                        "entityBeanKeys must be specified for binding '" + binding
+                        + "' for each entity sub path of [" + dtoClass.getCanonicalName() + "]");
+            }
+            beanKeysChain = entityBeanKeys;
+
+        } else if (entityBeanKeys != null) {
+            beanKeysChain = entityBeanKeys;
+        } else {
+            beanKeysChain = EMPTY_ARR;
+        }
+        final String[] dtoKeysChain;
+        if (dtoBeanKeys != null) {
+            dtoKeysChain = dtoBeanKeys;
+        } else {
+            dtoKeysChain = EMPTY_ARR;
+        }
+
+        final boolean readOnly = dtoFieldAnn.readOnly();
+
+
+        final String[] bindingChain = createFieldBindingChain(binding);
+
+        return createPipe(
+                dtoPropertyDescriptors, entityPropertyDescriptors,
+                dtoField, bindingChain, beanKeysChain, dtoKeysChain, 0, converter, readOnly);
+    }
+
+    private String[] createFieldBindingChain(final String binding) {
 		if (binding.indexOf('.') == -1) {
 			return new String[] { binding };
 		} 
@@ -112,15 +187,31 @@ public final class DTOAssembler<DTO, Entity> {
 	private Pipe createPipe(
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
-			final Field dtoField, final String[] binding, final String[] beanKeysChain, 
+			final Field dtoField, final String[] binding,
+            final String[] beanKeysChain, final String[] dtoKeysChain,
 			final int chainIndex, final String converter, final boolean readOnly) 
 		throws IntrospectionException {
 
+
+        final String dtoBeanKey;
+        if (dtoKeysChain.length > chainIndex) {
+            dtoBeanKey = dtoKeysChain[chainIndex];
+        } else {
+            dtoBeanKey = "";
+        }
+
+        final String entityBeanKey;
+        if (beanKeysChain.length > chainIndex) {
+            entityBeanKey = beanKeysChain[chainIndex];
+        } else {
+            entityBeanKey = "";
+        }
+
 		if (chainIndex + 1 == binding.length) {
-		
-			return createDataPipe(dtoPropertyDescriptors,
+
+        	return createDataPipe(dtoPropertyDescriptors,
 					entityPropertyDescriptors, dtoField, binding[chainIndex],
-					converter, readOnly);
+					converter, readOnly, dtoBeanKey, entityBeanKey);
 		}
 			
 		final PropertyDescriptor entityFieldDesc = getEntityPropertyDescriptorForField(
@@ -129,21 +220,23 @@ public final class DTOAssembler<DTO, Entity> {
 		final Method entityFieldRead = entityFieldDesc.getReadMethod();
 		final Method entityFieldWrite = entityFieldDesc.getWriteMethod();
 		final Class returnType = (Class) entityFieldRead.getGenericReturnType();
+
 		
 		final PropertyDescriptor[] entitySubPropertyDescriptors = 
 			Introspector.getBeanInfo(returnType).getPropertyDescriptors();
 			
 		return new DataPipeChain(entityFieldRead, entityFieldWrite,
 				createPipe(dtoPropertyDescriptors, entitySubPropertyDescriptors, 
-						dtoField, binding, beanKeysChain, chainIndex + 1, converter, readOnly),
-						beanKeysChain[chainIndex]);
+						dtoField, binding, beanKeysChain, dtoKeysChain, chainIndex + 1, converter, readOnly),
+						entityBeanKey);
 
 	}
 
 	private Pipe createDataPipe(
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
-			final Field dtoField, final String binding, final String converter, final boolean readOnly) {
+			final Field dtoField, final String binding, final String converter,
+            final boolean readOnly, final String dtoBeanKey, final String entityBeanKey) {
 		
 		final PropertyDescriptor dtoFieldDesc = getDtoPropertyDescriptorForField(
 				dtoField, dtoPropertyDescriptors);
@@ -156,7 +249,7 @@ public final class DTOAssembler<DTO, Entity> {
 				dtoFieldDesc.getWriteMethod(),
 				entityFieldDesc.getReadMethod(),
 				entityFieldDesc.getWriteMethod(),
-				converter, readOnly
+				converter, readOnly, dtoBeanKey, entityBeanKey
 		);
 	}
 
@@ -192,17 +285,15 @@ public final class DTOAssembler<DTO, Entity> {
 	}
 	
 	/**
-	 * @param <DTO> Dto class
-	 * @param dto Dto class
-	 * @param <Entity> the entity class
-	 * @param entity the entity class
+	 * @param dto Dto concrete class that is annotated.
+	 * @param entity the entity class or interface that has appropriate getters and setters
 	 * @return assembler instance for this conversion.
 	 * @throws IllegalArgumentException if dto class is not annotated 
 	 *         with {@link dp.lib.dto.geda.annotations.Dto}, or if Dto annotation mapping is not correct
 	 *         in respect to entity object
 	 */
-	public static <DTO, Entity> DTOAssembler<DTO, Entity> newAssembler(
-			final Class<DTO> dto, final Class<Entity> entity) throws IllegalArgumentException {
+	public static DTOAssembler newAssembler(
+			final Class< ? > dto, final Class< ? > entity) throws IllegalArgumentException {
 		
 		if (dto.getAnnotation(Dto.class) == null) {
 			throw new IllegalArgumentException("Dto must be annotated with @Dto");
@@ -214,7 +305,7 @@ public final class DTOAssembler<DTO, Entity> {
 			return CACHE.get(key);
 		}
 		
-		final DTOAssembler<DTO, Entity> assembler = new DTOAssembler<DTO, Entity>(dto, entity);
+		final DTOAssembler assembler = new DTOAssembler(dto, entity);
 		CACHE.put(key, assembler);
 		
 		return assembler;
@@ -234,19 +325,21 @@ public final class DTOAssembler<DTO, Entity> {
 	 * @throws IllegalArgumentException if dto or entity are not of correct class or
 	 *         refrlection pipe fails
 	 */
-	public void assembleDto(final DTO dto, final Object entity, final Map<String, ValueConverter> converters)
+	public void assembleDto(final Object dto, final Object entity,
+                            final Map<String, ValueConverter> converters,
+                            final BeanFactory dtoBeanFactory)
 		throws IllegalArgumentException {
 		
 		validateDtoAndEntity(dto, entity);
 		
 		for (Pipe pipe : relationMapping.values()) {
 			try {
-				pipe.writeFromEntityToDto(entity, dto, converters);
+				pipe.writeFromEntityToDto(entity, dto, converters, dtoBeanFactory);
 			} catch (IllegalAccessException iae) {
 				throw new IllegalArgumentException(iae);
 			} catch (InvocationTargetException ite) {
 				throw new IllegalArgumentException(ite);
-			}
+			} 
 		}
 		
 	}
@@ -258,15 +351,15 @@ public final class DTOAssembler<DTO, Entity> {
 	 * @param dto the dto to get data from
 	 * @param entity the entity to copy data to
 	 * @param converters the converters to be used during conversion. Optional parameter that provides map with 
-	 *        value converters mapped by {@link dp.lib.dto.geda.annotations.Field#converter()}. If no converters
+	 *        value converters mapped by {@link dp.lib.dto.geda.annotations.DtoField#converter()}. If no converters
 	 *        are required for this DTO then a <code>null</code> can be passed in. The rationale for injecting the converters
 	 *        during conversion is to enforce them being stateless and unattached to assembler.
 	 * @param entityBeanFactory bean factory for creating new instances of nested domain objects mapped to DTO by
-	 *        {@link dp.lib.dto.geda.annotations.Dto#entityBeanKeys()} key.
+	 *        {@link dp.lib.dto.geda.annotations.DtoField#entityBeanKeys()} key.
 	 * @throws IllegalArgumentException if dto or entity are not of correct class or
 	 *         refrlection pipe fails
 	 */
-	public void assembleEntity(final DTO dto, final Object entity, 
+	public void assembleEntity(final Object dto, final Object entity,
 			final Map<String, ValueConverter> converters, final BeanFactory entityBeanFactory)
 		throws IllegalArgumentException {
 		
@@ -284,7 +377,7 @@ public final class DTOAssembler<DTO, Entity> {
 		
 	}
 	
-	private void validateDtoAndEntity(final DTO dto, final Object entity) {
+	private void validateDtoAndEntity(final Object dto, final Object entity) {
 		if (!this.dtoClass.isInstance(dto)) {
 			throw new IllegalArgumentException(
 					"This assembler is only applicable for dto: "
@@ -292,8 +385,8 @@ public final class DTOAssembler<DTO, Entity> {
 		}
 		if (!this.entityClass.isInstance(entity)) {
 			throw new IllegalArgumentException(
-					"This assembler is only applicable for dto: "
-					+ this.dtoClass.getCanonicalName());
+					"This assembler is only applicable for entity: "
+					+ this.entityClass.getCanonicalName());
 		}
 	}
 	

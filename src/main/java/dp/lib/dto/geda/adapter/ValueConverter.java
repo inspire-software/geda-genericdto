@@ -1,10 +1,7 @@
-/**
- * This code is distributed under The GNU Lesser General Public License (LGPLv3)
- * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
- * 
- * Copyright Denis Pavlov 2009 
- * Web: http://www.inspire-software.com 
- * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+/*
+ * Copyright (c) 2010. The intellectual rights for this code remain to the NPA developer team.
+ * Code distribution, sale or modification is prohibited unless authorized by all members of NPA
+ * development team.
  */
 package dp.lib.dto.geda.adapter;
 
@@ -19,16 +16,23 @@ public interface ValueConverter {
 
 	/**
 	 * Convert one object into another to resolve incompatibilities between DTO and Entities.
-	 * @param object the object to convert
+	 *
+     * @param object the object to convert
+     * @param beanFactory DTO bean factory
+     *
 	 * @return converted object.
 	 */
-	Object convertToDto(final Object object);
+	Object convertToDto(final Object object, final BeanFactory beanFactory);
 
 	/**
 	 * Convert one object into another to resolve incompatibilities between DTO and Entities.
-	 * @param object the object to convert
+	 *
+     * @param object the object to convert
+     * @param oldEntity the old value that was in the entity
+     * @param beanFactory entity bean factory
+     *
 	 * @return converted object.
 	 */
-	Object convertToEntity(final Object object);
+	Object convertToEntity(final Object object, final Object oldEntity, final BeanFactory beanFactory);
 	
 }
