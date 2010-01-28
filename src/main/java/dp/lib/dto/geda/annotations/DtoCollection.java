@@ -1,8 +1,13 @@
+
 /*
- * Copyright (c) 2010. The intellectual rights for this code remain to the NPA developer team.
- * Code distribution, sale or modification is prohibited unless authorized by all members of NPA
- * development team.
+ * This code is distributed under The GNU Lesser General Public License (LGPLv3)
+ * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright Denis Pavlov 2009
+ * Web: http://www.inspire-software.com
+ * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
+
 
 package dp.lib.dto.geda.annotations;
 
