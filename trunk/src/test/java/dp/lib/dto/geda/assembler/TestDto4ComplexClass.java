@@ -11,34 +11,33 @@ import dp.lib.dto.geda.annotations.DtoField;
 import org.junit.Ignore;
 
 /**
- * Test DTO for Assembler.
- *
- * @author Denis Pavlov
- * @since 1.0.0
- *
+ * .
+ * <p/>
+ * User: Denis Pavlov
+ * Date: Jan 24, 2010
+ * Time: 10:42:07 PM
  */
 @Dto
 @Ignore
-class TestDto5Class {
-		
+public class TestDto4ComplexClass {
+
 	@DtoField(
-            value = "wrapper.wrapper.name",
-            entityBeanKeys = { "wrapper.key", "wrapper.wrapper.key" })
-	private String nestedString;
+            value = "wrapper",
+            entityBeanKeys = { "dp.lib.dto.geda.assembler.TestEntity4SubClass" },
+            dtoBeanKeys = { "dp.lib.dto.geda.assembler.TestDto4ComplexSubClass" })
+	private TestDto4ComplexSubClass nestedString;
 
 	/**
 	 * @return nested property.
 	 */
-	public String getNestedString() {
+	public TestDto4ComplexSubClass getNestedString() {
 		return nestedString;
 	}
 	/**
 	 * @param nestedString nested property.
 	 */
-	public void setNestedString(final String nestedString) {
+	public void setNestedString(final TestDto4ComplexSubClass nestedString) {
 		this.nestedString = nestedString;
 	}
-	
-	
-	
+
 }
