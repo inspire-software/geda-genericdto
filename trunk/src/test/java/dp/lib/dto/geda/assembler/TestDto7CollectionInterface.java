@@ -22,7 +22,9 @@ import org.junit.Ignore;
 @Ignore
 public interface TestDto7CollectionInterface {
     
+	/** {@inheritDoc} */
     java.util.Collection<TestDto7CollectionSubInterface> getNestedString();
 
+    /** {@inheritDoc} */
     void setNestedString(java.util.Collection<TestDto7CollectionSubInterface> nestedString);
 }

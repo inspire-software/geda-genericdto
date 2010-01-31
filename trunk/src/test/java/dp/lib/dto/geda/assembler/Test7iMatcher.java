@@ -23,6 +23,7 @@ import org.junit.Ignore;
 @Ignore
 public class Test7iMatcher implements DtoToEntityMatcher<TestDto7CollectionSubInterface, TestEntity7CollectionSubInterface> {
 
+	/** {@inheritDoc} */
     public boolean match(final TestDto7CollectionSubInterface testDto7CollectionSubClass,
                          final TestEntity7CollectionSubInterface testEntity7CollectionSubClass) {
 

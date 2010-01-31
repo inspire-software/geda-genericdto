@@ -52,46 +52,59 @@ public final class DTOAssembler {
 		dtoClass = dto;
 		entityClass = entity;
 		
-		try {
-			final PropertyDescriptor[] dtoPropertyDescriptors = 
-				Introspector.getBeanInfo(dtoClass).getPropertyDescriptors();
-			final PropertyDescriptor[] entityPropertyDescriptors = 
-				Introspector.getBeanInfo(entityClass).getPropertyDescriptors();
+		Class dtoMap = dto;
+		while (dtoMap != null) { // when we reach Object.class this should be null
 			
-			final Field[] dtoFields = dtoClass.getDeclaredFields();
+			mapRelationMapping(dtoMap, entity);
+			dtoMap = (Class) dtoMap.getGenericSuperclass();
+			
+		}
+
+		
+	}
+
+	private void mapRelationMapping(final Class dto, final Class entity) {		
+		try {
+			
+			final PropertyDescriptor[] dtoPropertyDescriptors = 
+				Introspector.getBeanInfo(dto).getPropertyDescriptors();
+			final PropertyDescriptor[] entityPropertyDescriptors = 
+				Introspector.getBeanInfo(entity).getPropertyDescriptors();
+
+			
+			final Field[] dtoFields = dto.getDeclaredFields();
 			for (Field dtoField : dtoFields) {
 				
 				final DtoField dtoFieldAnn =
 					(DtoField) dtoField.getAnnotation(DtoField.class);
 				if (dtoFieldAnn != null) {
-
-					relationMapping.put(dtoFieldAnn.value(),
-                            createFieldPipeChain(dtoPropertyDescriptors, entityPropertyDescriptors, dtoField, dtoFieldAnn));
+	
+					relationMapping.put(getBindingFromAnnotationOrFieldName(dtoFieldAnn.value(), dtoField.getName()),
+			                createFieldPipeChain(dtoPropertyDescriptors, entityPropertyDescriptors, dtoField, dtoFieldAnn));
 					continue;
 				}
-
-                final DtoCollection dtoCollAnn =
-                     (DtoCollection) dtoField.getAnnotation(DtoCollection.class);
-                if (dtoCollAnn != null) {
-
-                    relationMapping.put(dtoCollAnn.value(),
-                            createCollectionPipeChain(dtoPropertyDescriptors, entityPropertyDescriptors, dtoField, dtoCollAnn));
-
-
-                }
-
+	
+			    final DtoCollection dtoCollAnn =
+			         (DtoCollection) dtoField.getAnnotation(DtoCollection.class);
+			    if (dtoCollAnn != null) {
+	
+			        relationMapping.put(getBindingFromAnnotationOrFieldName(dtoCollAnn.value(), dtoField.getName()),
+			                createCollectionPipeChain(dtoPropertyDescriptors, entityPropertyDescriptors, dtoField, dtoCollAnn));
+	
+	
+			    }
+	
 			}
 		} catch (IntrospectionException intr) {
 			throw new IllegalArgumentException(intr);
 		}
-		
 	}
 
     private Pipe createCollectionPipeChain(final PropertyDescriptor[] dtoPropertyDescriptors, 
     		final PropertyDescriptor[] entityPropertyDescriptors, final Field dtoField, 
     		final DtoCollection dtoCollAnn) throws IntrospectionException {
-        final String binding = dtoCollAnn.value();
-
+        
+    	final String binding = getBindingFromAnnotationOrFieldName(dtoCollAnn.value(), dtoField.getName());
         validateNewBinding(binding);
 
 
@@ -134,6 +147,14 @@ public final class DTOAssembler {
                 dtoCollectionClass, entityCollectionClass,
                 dtoToEntityMatcher);
     }
+    
+    private String getBindingFromAnnotationOrFieldName(final String annotation, final String fieldName) {
+    	if (annotation == null || annotation.length() == 0) {
+    		return fieldName;
+    	} else {
+    		return annotation;
+    	}
+    }
 
     private void validateNewBinding(final String binding) {
         if (relationMapping.containsKey(binding)) {
@@ -143,9 +164,11 @@ public final class DTOAssembler {
         }
     }
 
-    private Pipe createFieldPipeChain(final PropertyDescriptor[] dtoPropertyDescriptors, final PropertyDescriptor[] entityPropertyDescriptors, final Field dtoField, final DtoField dtoFieldAnn) throws IntrospectionException {
-        final String binding = dtoFieldAnn.value();
-
+    private Pipe createFieldPipeChain(final PropertyDescriptor[] dtoPropertyDescriptors, 
+    		final PropertyDescriptor[] entityPropertyDescriptors, 
+    		final Field dtoField, final DtoField dtoFieldAnn) throws IntrospectionException {
+        
+    	final String binding = getBindingFromAnnotationOrFieldName(dtoFieldAnn.value(), dtoField.getName());
         validateNewBinding(binding);
 
         final String converter = dtoFieldAnn.converter();
@@ -328,6 +351,8 @@ public final class DTOAssembler {
 	 * @param entity the entity to get data from
 	 * @param converters the converters to be used during conversion. The rationale for injecting the converters
 	 *        during conversion is to enforce them being stateless and unattached to assembler.
+	 * @param dtoBeanFactory bean factory for creating new instances of nested DTO objects mapped by
+	 *        {@link dp.lib.dto.geda.annotations.DtoField#dtoBeanKeys()} key.
 	 * @throws IllegalArgumentException if dto or entity are not of correct class or
 	 *         refrlection pipe fails
 	 */

@@ -24,10 +24,12 @@ public class TestEntity7CollectionSubClass {
 
     private String name;
 
+    /** {@inheritDoc} */
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     public void setName(final String name) {
         this.name = name;
     }

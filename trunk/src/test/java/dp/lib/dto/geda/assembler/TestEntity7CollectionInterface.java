@@ -24,7 +24,9 @@ import java.util.Collection;
 @Ignore
 public interface TestEntity7CollectionInterface {
 
+	/** {@inheritDoc} */
     Collection<TestEntity7CollectionSubInterface> getCollection();
 
+    /** {@inheritDoc} */
     void setCollection(Collection<TestEntity7CollectionSubInterface> collection);
 }

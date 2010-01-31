@@ -22,7 +22,9 @@ import org.junit.Ignore;
 @Ignore
 public interface TestEntity7CollectionSubInterface {
     
+	/** {@inheritDoc} */
     String getName();
 
+    /** {@inheritDoc} */
     void setName(String name);
 }

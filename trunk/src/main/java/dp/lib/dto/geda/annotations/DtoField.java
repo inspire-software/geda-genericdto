@@ -28,7 +28,7 @@ public @interface DtoField {
 	/**
 	 * textual reference to field that will be binded to this field (reflection notation).
 	 */
-	String value();
+	String value() default "";
 	
 	/**
 	 * Textual reference to converter to use when assembling DTO's and Entities.
