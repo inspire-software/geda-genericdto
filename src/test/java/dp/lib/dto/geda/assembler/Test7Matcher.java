@@ -23,7 +23,9 @@ import org.junit.Ignore;
 @Ignore
 public class Test7Matcher implements DtoToEntityMatcher<TestDto7CollectionSubClass, TestEntity7CollectionSubClass> {
 
-    public boolean match(final TestDto7CollectionSubClass testDto7CollectionSubClass, final TestEntity7CollectionSubClass testEntity7CollectionSubClass) {
+	/** {@inheritDoc} */
+    public boolean match(final TestDto7CollectionSubClass testDto7CollectionSubClass, 
+    		final TestEntity7CollectionSubClass testEntity7CollectionSubClass) {
         final String dtoName = testDto7CollectionSubClass.getName();
         final String entityName = testEntity7CollectionSubClass.getName();
 

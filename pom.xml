@@ -1,3 +1,12 @@
+<!--
+  ~ This code is distributed under The GNU Lesser General Public License (LGPLv3)
+  ~ Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+  ~
+  ~ Copyright Denis Pavlov 2009
+  ~ Web: http://www.inspire-software.com
+  ~ SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>dp.lib</groupId>
@@ -78,13 +87,13 @@
 	  <groupId>org.slf4j</groupId>
 	  <artifactId>slf4j-api</artifactId>
 	  <version>1.5.8</version>
-	  <scope>compile, test</scope>
+	  <scope>compile</scope>
 	</dependency>
 	<dependency>
 	  <groupId>org.slf4j</groupId>
 	  <artifactId>slf4j-jcl</artifactId>
 	  <version>1.5.6</version>
-	  <scope>compile, test</scope>
+	  <scope>compile</scope>
 	</dependency>
   </dependencies>
    

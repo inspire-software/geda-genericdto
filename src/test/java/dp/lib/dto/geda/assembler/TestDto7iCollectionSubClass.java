@@ -28,10 +28,12 @@ public class TestDto7iCollectionSubClass implements TestDto7CollectionSubInterfa
     @DtoField(value = "name")
     private String name;
 
+    /** {@inheritDoc} */
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     public void setName(final String name) {
         this.name = name;
     }

@@ -21,7 +21,10 @@ import org.junit.Ignore;
  */
 @Ignore
 public interface TestDto7CollectionSubInterface {
+	
+	/** {@inheritDoc} */
     String getName();
 
+    /** {@inheritDoc} */
     void setName(String name);
 }

@@ -28,10 +28,12 @@ public class TestEntity7iCollectionClass implements TestEntity7CollectionInterfa
 
     private Collection<TestEntity7CollectionSubInterface> collection;
 
+    /** {@inheritDoc} */
     public Collection<TestEntity7CollectionSubInterface> getCollection() {
         return collection;
     }
 
+    /** {@inheritDoc} */
     public void setCollection(final Collection<TestEntity7CollectionSubInterface> collection) {
         this.collection = collection;
     }

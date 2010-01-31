@@ -26,10 +26,12 @@ public class TestEntity7CollectionClass {
 
     private Collection<TestEntity7CollectionSubClass> collection;
 
+    /** {@inheritDoc} */
     public Collection<TestEntity7CollectionSubClass> getCollection() {
         return collection;
     }
 
+    /** {@inheritDoc} */
     public void setCollection(final Collection<TestEntity7CollectionSubClass> collection) {
         this.collection = collection;
     }

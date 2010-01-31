@@ -28,8 +28,9 @@ import java.util.Map;
  * @since 1.0.0
  *
  */
-@SuppressWarnings("unchecked")
 public class DTOAssemblerTest {
+
+	private static final int I_3 = 3;
 
 	/**
 	 * Test that correctly mapped classes for Entity and Dto get assembled as expected.
@@ -497,7 +498,7 @@ public class DTOAssemblerTest {
 		assembler.assembleDto(dto, entity, null, factory);
 
 		assertNotNull(dto.getNestedString());
-        assertEquals(3, dto.getNestedString().size());
+        assertEquals(I_3, dto.getNestedString().size());
 
         Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
         for (int index = 0; it.hasNext(); index++) {
@@ -507,7 +508,7 @@ public class DTOAssemblerTest {
 		assembler.assembleEntity(dto, entity, null, factory);
 
 		assertNotNull(entity.getCollection());
-		assertEquals(3, entity.getCollection().size());
+		assertEquals(I_3, entity.getCollection().size());
 
         Iterator<TestEntity7CollectionSubClass> itr = entity.getCollection().iterator();
         while (itr.hasNext()) {
@@ -555,7 +556,7 @@ public class DTOAssemblerTest {
 		assembler.assembleDto(dto, entity, null, factory);
 
 		assertNotNull(dto.getNestedString());
-        assertEquals(3, dto.getNestedString().size());
+        assertEquals(I_3, dto.getNestedString().size());
 
         dto.setNestedString(null);
 
@@ -636,7 +637,7 @@ public class DTOAssemblerTest {
 		assembler.assembleDto(dto, entity, null, factory);
 
 		assertNotNull(dto.getNestedString());
-        assertEquals(3, dto.getNestedString().size());
+        assertEquals(I_3, dto.getNestedString().size());
 
         Iterator<TestDto7CollectionSubInterface> it = dto.getNestedString().iterator();
         for (int index = 0; it.hasNext(); index++) {
@@ -646,7 +647,7 @@ public class DTOAssemblerTest {
 		assembler.assembleEntity(dto, entity, null, factory);
 
 		assertNotNull(entity.getCollection());
-		assertEquals(3, entity.getCollection().size());
+		assertEquals(I_3, entity.getCollection().size());
 
         Iterator<TestEntity7CollectionSubInterface> itr = entity.getCollection().iterator();
         while (itr.hasNext()) {
@@ -694,7 +695,7 @@ public class DTOAssemblerTest {
 		assembler.assembleDto(dto, entity, null, factory);
 
 				assertNotNull(dto.getNestedString());
-        assertEquals(3, dto.getNestedString().size());
+        assertEquals(I_3, dto.getNestedString().size());
 
         dto.setNestedString(null);
 
@@ -736,6 +737,75 @@ public class DTOAssemblerTest {
 
 		assertNull(entity.getCollection());
 
+	}
+	
+	/**
+	 * Test that names are extracted from field name if binding is not specified.
+	 */
+	@Test
+	public void testAutowireNames() {
+		
+		final String name = "testName";
+		final String name2 = "testAnotherName";
+		
+		final TestDto8AutowireNameClass dto = new TestDto8AutowireNameClass();
+		final TestEntity8AutowireNameClass entity = new TestEntity8AutowireNameClass();
+		entity.setName(name);
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto8AutowireNameClass.class, TestEntity8AutowireNameClass.class);
+
+		assembler.assembleDto(dto, entity, null, null);
+
+		assertNotNull(dto.getName());
+		assertEquals(name, dto.getName());
+		
+		dto.setName(name2);
+
+		assembler.assembleEntity(dto, entity, null, null);
+
+		assertNotNull(entity.getName());
+		assertEquals(name2, entity.getName());
+
+		
+	}
+	
+	/**
+	 * Test the inheritance of DtoField does not break data pipes.
+	 */
+	@Test
+	public void testInheritanceOfDtoFields() {
+		
+		final String name = "name";
+		final String nameChild = "nameChild";
+		final String name2 = "name2";
+		final String nameChild2 = "nameChild2";
+		
+		final TestDto9InheritanceChildClass dto = new TestDto9InheritanceChildClass();
+		final TestEntity9InheritanceClass entity = new TestEntity9InheritanceClass();
+		entity.setName(name);
+		entity.setNameChild(nameChild);
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto9InheritanceChildClass.class, TestEntity9InheritanceClass.class);
+
+		assembler.assembleDto(dto, entity, null, null);
+
+		assertNotNull(dto.getName());
+		assertEquals(name, dto.getName());
+		assertNotNull(dto.getNameChild());
+		assertEquals(nameChild, dto.getNameChild());
+		
+		dto.setName(name2);
+		dto.setNameChild(nameChild2);
+
+		assembler.assembleEntity(dto, entity, null, null);
+
+		assertNotNull(entity.getName());
+		assertEquals(name2, entity.getName());
+		assertNotNull(entity.getNameChild());
+		assertEquals(nameChild2, entity.getNameChild());
+		
 	}
 
 	

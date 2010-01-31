@@ -28,11 +28,12 @@ public class TestDto4ComplexSubClass {
     @DtoField("name")
 	private String nestedName;
 
-    
+    /** {@inheritDoc} */
     public String getNestedName() {
         return nestedName;
     }
 
+    /** {@inheritDoc} */
     public void setNestedName(final String nestedName) {
         this.nestedName = nestedName;
     }

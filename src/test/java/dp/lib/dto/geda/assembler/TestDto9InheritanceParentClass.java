@@ -1,4 +1,3 @@
-
 /*
  * This code is distributed under The GNU Lesser General Public License (LGPLv3)
  * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
@@ -10,30 +9,33 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.annotations.Dto;
 import org.junit.Ignore;
+
+import dp.lib.dto.geda.annotations.Dto;
+import dp.lib.dto.geda.annotations.DtoField;
 
 /**
  * .
  * <p/>
  * User: Denis Pavlov
  * Date: Jan 26, 2010
- * Time: 11:43:04 AM
+ * Time: 11:39:45 AM
  */
 @Dto
 @Ignore
-public class TestEntity7iCollectionSubClass implements TestEntity7CollectionSubInterface {
+public class TestDto9InheritanceParentClass {
+	
+	@DtoField
+	private String name;
 
-    private String name;
+	/** {@inheritDoc} */
+	public String getName() {
+		return name;
+	}
 
-    /** {@inheritDoc} */
-    public String getName() {
-        return name;
-    }
-
-    /** {@inheritDoc} */
-    public void setName(final String name) {
-        this.name = name;
-    }
+	/** {@inheritDoc} */
+	public void setName(final String name) {
+		this.name = name;
+	}
 
 }
