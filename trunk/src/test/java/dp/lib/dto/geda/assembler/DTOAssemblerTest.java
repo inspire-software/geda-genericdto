@@ -807,6 +807,28 @@ public class DTOAssemblerTest {
 		assertEquals(nameChild2, entity.getNameChild());
 		
 	}
+	
+	/**
+	 * Test to ensure null property of DTO correctly maps on Entity.
+	 */
+	@Test
+	public void testNestedNullPropertyOnEntity() {
+		
+		final TestDto4ComplexClass dto = new TestDto4ComplexClass();
+		final TestEntity4Class entity = new TestEntity4Class();
+		entity.setWrapper(new TestEntity4SubClass());
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto4ComplexClass.class, TestEntity4Class.class);
+
+		assertNull(dto.getNestedString());
+		assertNotNull(entity.getWrapper());
+		
+		assembler.assembleEntity(dto, entity, null, null);
+		
+		assertNull(entity.getWrapper());
+		
+	}
 
 	
 }

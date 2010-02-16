@@ -11,13 +11,12 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.ValueConverter;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Map;
+
+import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.adapter.ValueConverter;
 
 
 /**
@@ -39,6 +38,8 @@ class DataPipe implements Pipe {
 	
 	private final Method entityRead;
 	private final Method entityWrite;
+	
+	private static final Object[] NULL = new Object[] { null };
 	
 	/**
 	 * @param dtoRead method for reading data from DTO field
@@ -158,10 +159,7 @@ class DataPipe implements Pipe {
             } else {
                 parentEntity = entity;
             }
-            if (parentEntity instanceof Collection) {
-                // if we are dealing with collections need to copy values accross
-                ((Collection) parentEntity).addAll((Collection) dtoValue);
-            } else if (hasSubEntity()) {
+            if (hasSubEntity()) {
 
                 Object dataEntity = this.entityRead.invoke(parentEntity);
                 if (dataEntity == null) {
@@ -182,11 +180,7 @@ class DataPipe implements Pipe {
             }
         } else if (!(entity instanceof NewObjectProxy)) {
             // if the dtoValue is null the setting only makes sense if the entity bean existed.
-            if (entity instanceof Collection) {
-                ((Collection) entity).clear();
-            } else {
-                this.entityWrite.invoke(entity, null);
-            }
+            this.entityWrite.invoke(entity, NULL);
         }
 
 
