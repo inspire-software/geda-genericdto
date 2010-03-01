@@ -39,7 +39,7 @@ class DataPipe implements Pipe {
 	private final Method entityRead;
 	private final Method entityWrite;
 	
-	private static final Object[] NULL = new Object[] { null };
+	private static final Object[] NULL = { null };
 	
 	/**
 	 * @param dtoRead method for reading data from DTO field
@@ -95,20 +95,25 @@ class DataPipe implements Pipe {
 
 		final Object entityData = this.entityRead.invoke(entity);
 
-        if (hasSubEntity()) {
-
-            if (entityData != null) {
+		if (entityData != null) {
+	        if (hasSubEntity()) {
+	
                 createDtoAndWriteFromEntityToDto(dto, converters, dtoBeanFactory, entityData);
-            }
-
-        } else {
+	
+	        } else {
+			
+	            if (usesConverter()) {
+	                this.dtoWrite.invoke(dto, getConverter(converters).convertToDto(entityData, dtoBeanFactory));
+	            } else {
+	                this.dtoWrite.invoke(dto, entityData);
+	            }
+	            
+	        }
+		} else {
+			
+			this.dtoWrite.invoke(dto, NULL);
 		
-            if (usesConverter()) {
-                this.dtoWrite.invoke(dto, getConverter(converters).convertToDto(entityData, dtoBeanFactory));
-            } else {
-                this.dtoWrite.invoke(dto, entityData);
-            }
-        }
+		}
 	}
 
     private void createDtoAndWriteFromEntityToDto(final Object dto,
@@ -127,7 +132,6 @@ class DataPipe implements Pipe {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
 	public void writeFromDtoToEntity(final Object entity,
                                      final Object dto,
 			                         final Map<String, ValueConverter> converters,

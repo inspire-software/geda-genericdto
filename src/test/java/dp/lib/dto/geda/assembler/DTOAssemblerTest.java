@@ -809,6 +809,35 @@ public class DTOAssemblerTest {
 	}
 	
 	/**
+	 * Test that null in entity property does not cause NPE.
+	 */
+	@Test
+	public void testNullPropertyInEntity() {
+		
+		final TestDto1Class dto = new TestDto1Class();
+		final TestEntity1Class entity = new TestEntity1Class();
+		
+		dto.setMyDouble(1d);
+		dto.setMyLong(1L);
+		dto.setMyString("1");
+		
+		assertNotNull(dto.getMyDouble());
+		assertNotNull(dto.getMyLong());
+		assertNotNull(dto.getMyString());
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
+		
+		assembler.assembleDto(dto, entity, null, null);
+		
+		assertNull(dto.getMyDouble());
+		assertNull(dto.getMyLong());
+		assertNull(dto.getMyString());
+		
+		
+	}
+	
+	/**
 	 * Test to ensure null property of DTO correctly maps on Entity.
 	 */
 	@Test
