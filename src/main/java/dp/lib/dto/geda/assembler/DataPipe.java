@@ -67,15 +67,22 @@ class DataPipe implements Pipe {
 		this.dtoWrite = dtoWrite;
 		this.entityRead = entityRead;
 		if (readOnly) {
+			
+			PipeValidator.validateReadPipeNonNull(this.dtoWrite, this.entityRead);
+			
 			this.dtoRead = null;
 			this.entityWrite = null;
             if (requiresConverter == null) {
                 PipeValidator.validateReadPipeTypes(this.dtoWrite, this.entityRead);
             }
 		} else {
+			
 			this.dtoRead = dtoRead;
 			this.entityWrite = entityWrite;
-            if (requiresConverter == null) {
+
+			PipeValidator.validatePipeNonNull(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
+			
+			if (requiresConverter == null) {
                 PipeValidator.validatePipeTypes(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
             }
 		}
