@@ -858,6 +858,51 @@ public class DTOAssemblerTest {
 		assertNull(entity.getWrapper());
 		
 	}
+	
+	/**
+	 * Test that if mapping is specified with a readOnly property with a nesting, 
+	 * then when write to entity is invoked the higher level object is not created via proxy. 
+	 */
+	@Test
+	public void testNullObjectWithReadOnlyMappingAndLayeredNestingDoesNotRequireBeanFactory() {
+		final TestDto4DelegatingReadOnlyClass dto = new TestDto4DelegatingReadOnlyClass();
+		dto.setNestedString("ReadOnly");
+		
+		final TestEntity4Class entity = new TestEntity4Class(); // entity with nested string null.
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto4DelegatingReadOnlyClass.class, TestEntity4Class.class);
+		
+		assertNotNull(dto.getNestedString());
+		assertNull(entity.getWrapper());
+		
+		assembler.assembleEntity(dto, entity, null, null);
+		
+		assertNull(entity.getWrapper());
+		
+	}
+	
+	/**
+	 * Test that if mapping is specified without a readOnly property with a nesting, 
+	 * then when write to entity is invoked the higher level object is created via proxy
+	 * and exception is thrown if no beanFactory exists. 
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testNullObjectWithoutReadOnlyMappingAndLayeredNestingDoesNotRequireBeanFactory() {
+		final TestDto4DelegatingWritableClass dto = new TestDto4DelegatingWritableClass();
+		dto.setNestedString("ReadOnly");
+		
+		final TestEntity4Class entity = new TestEntity4Class(); // entity with nested string null.
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto4DelegatingWritableClass.class, TestEntity4Class.class);
+
+		assertNotNull(dto.getNestedString());
+		assertNull(entity.getWrapper());
+		
+		assembler.assembleEntity(dto, entity, null, null);
+		
+	}
 
 	
 }

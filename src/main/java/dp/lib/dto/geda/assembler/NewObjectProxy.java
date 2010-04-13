@@ -36,16 +36,11 @@ class NewObjectProxy {
 	 * @param newBeanKey the key used for this entity bean class instance
 	 * @param parentObject the parent of this bean (can be {@link NewObjectProxy} to allow deep nesting)
 	 * @param objectWrite the method that allows to set new bean to parrent object.
-	 * @throws IllegalArgumentException if bean factory is not specified.
 	 */
 	public NewObjectProxy(final BeanFactory beanFactory,
 			final String newBeanKey,
 			final Object parentObject,
-			final Method objectWrite) throws IllegalArgumentException {
-		if (beanFactory == null) {
-			throw new IllegalArgumentException("BeanFactory must be specified in order to create bean with key: "
-					+ newBeanKey);
-		}
+			final Method objectWrite) {
 		this.beanFactory = beanFactory;
 		this.newBeanKey = newBeanKey;
 		this.parentObject = parentObject;
@@ -61,6 +56,11 @@ class NewObjectProxy {
 	 */
 	public Object create() 
 		throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		
+		if (beanFactory == null) {
+			throw new IllegalArgumentException("BeanFactory must be specified in order to create bean with key: "
+					+ newBeanKey);
+		}
 		
 		final Object parentObject;
 		if (this.parentObject instanceof NewObjectProxy) {
