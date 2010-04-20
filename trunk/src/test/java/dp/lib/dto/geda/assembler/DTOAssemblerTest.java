@@ -903,6 +903,63 @@ public class DTOAssemblerTest {
 		assembler.assembleEntity(dto, entity, null, null);
 		
 	}
+	
+	/**
+	 * Refer to Test*10* classes to see setup for a nested entityt property that is
+	 * exposed as an interface that is a composite of serveral interfaces including
+	 * generics. This test shows that such mapping is correctly handled and properties 
+	 * are resolved.
+	 */
+	@Test
+	public void testMultiInheritaceInInterfacesForNestedProperties() {
+		final TestDto10Class dto = new TestDto10Class();
+		
+		final TestEntity10Class entity = new TestEntity10Class();
+		final TestEntity10Interface subEntity = new TestEntity10SubClass();
+		subEntity.setIm1("im1");
+		subEntity.setIm2("im2");
+		subEntity.setIm3("im3");
+		entity.setNested(subEntity);
+	
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto10Class.class, TestEntity10Class.class);
+		
+		assembler.assembleDto(dto, entity, null, null);
+		
+		assertEquals("im1", dto.getIm1());
+		assertEquals("im2", dto.getIm2());
+		assertEquals("im3", dto.getIm3());
+		
+		dto.setIm1("dto1");
+		dto.setIm2("dto2");
+		dto.setIm3("dto3");
+		
+		assembler.assembleEntity(dto, entity, null, new BeanFactory() {
+			public Object get(final String entityBeanKey) {
+				return new TestEntity10SubClass();
+			}
+			
+		});
+		
+		assertEquals("dto1", entity.getNested().getIm1());
+		assertEquals("dto2", entity.getNested().getIm2());
+		assertEquals("dto3", entity.getNested().getIm3());
+		
+		entity.setNested(null);
+		
+		assembler.assembleEntity(dto, entity, null, new BeanFactory() {
+			public Object get(final String entityBeanKey) {
+				return new TestEntity10SubClass();
+			}
+			
+		});
+		
+		assertEquals("dto1", entity.getNested().getIm1());
+		assertEquals("dto2", entity.getNested().getIm2());
+		assertEquals("dto3", entity.getNested().getIm3());
+
+	
+	}
 
 	
 }
