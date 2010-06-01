@@ -363,7 +363,7 @@ public final class DTOAssembler {
 			final Class< ? > dto, final Class< ? > entity) throws IllegalArgumentException {
 		
 		if (dto.getAnnotation(Dto.class) == null) {
-			throw new IllegalArgumentException("Dto must be annotated with @Dto");
+			throw new IllegalArgumentException("Dto " + dto.getName() + " must be annotated with @Dto");
 		}
 		
 		final String key = createAssemberKey(dto, entity);
