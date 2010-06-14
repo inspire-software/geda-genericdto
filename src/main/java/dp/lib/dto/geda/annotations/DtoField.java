@@ -31,7 +31,8 @@ public @interface DtoField {
 	String value() default "";
 	
 	/**
-	 * Textual reference to converter to use when assembling DTO's and Entities.
+	 * Textual reference to converter to use when assembling DTO's and Entities. This is passed in a
+	 * converter map an must implement {@link dp.lib.dto.geda.adapter.ValueConverter}.
 	 */
 	String converter() default "";
 	

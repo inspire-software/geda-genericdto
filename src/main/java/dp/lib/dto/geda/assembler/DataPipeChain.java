@@ -10,12 +10,12 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.ValueConverter;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
+
+import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.adapter.meta.PipeMetadata;
 
 
 /**
@@ -27,8 +27,8 @@ import java.util.Map;
  */
 class DataPipeChain implements Pipe {
 
-	private final String entityBeanKey;
-
+	private final PipeMetadata meta;
+	
 	private final Method entityRead;
 	private final Method entityWrite;
 
@@ -36,35 +36,36 @@ class DataPipeChain implements Pipe {
 	
 	/**
 	 * @param entityRead method for reading data from Entity field
-	 * @param entityWrite method for writting data to Entity field
+	 * @param entityWrite method for writing data to Entity field
 	 * @param pipe the inner pipe.
-	 * @param entityBeanKey bean key for this data delegate
+	 * @param meta meta data for this data delegate
 	 */
 	public DataPipeChain(final Method entityRead, 
 					     final Method entityWrite,
 						 final Pipe pipe,
-						 final String entityBeanKey) {
+						 final PipeMetadata meta) {
 		this.entityRead = entityRead;
 		this.entityWrite = entityWrite;
 		this.pipe = pipe;
-		this.entityBeanKey = entityBeanKey;
+		this.meta = meta;
 	}
 
 	/** {@inheritDoc} */
 	public void writeFromDtoToEntity(final Object entity, final Object dto,
-			final Map<String, ValueConverter> converters, final BeanFactory entityBeanFactory)
+			final Map<String, Object> converters, final BeanFactory entityBeanFactory)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
 
 		Object entityDataDelegate = null;
-		if (!(entity instanceof NewObjectProxy)) {
+		if (!(entity instanceof NewDataProxy)) {
 			entityDataDelegate = this.entityRead.invoke(entity);
 		}
 		if (entityDataDelegate == null) {
 			
-			entityDataDelegate = new NewObjectProxy(
+			entityDataDelegate = new NewDataProxy(
 					entityBeanFactory,
-					this.entityBeanKey,
+					this.meta,
+					false,
 					entity,
 					this.entityWrite
 			);
@@ -76,7 +77,7 @@ class DataPipeChain implements Pipe {
 
 	/** {@inheritDoc} */
 	public void writeFromEntityToDto(final Object entity, final Object dto,
-			final Map<String, ValueConverter> converters, final BeanFactory dtoBeanFactory)
+			final Map<String, Object> converters, final BeanFactory dtoBeanFactory)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
 		

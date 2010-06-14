@@ -10,16 +10,23 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.ValueConverter;
-import dp.lib.dto.geda.assembler.TestDto3Class.Decision;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.junit.Test;
+
+import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.adapter.EntityRetriever;
+import dp.lib.dto.geda.adapter.ValueConverter;
+import dp.lib.dto.geda.assembler.TestDto3Class.Decision;
 
 /**
  * DTOAssembler test.
@@ -31,6 +38,7 @@ import java.util.Map;
 public class DTOAssemblerTest {
 
 	private static final int I_3 = 3;
+	private static final long L_3 = 3L;
 
 	/**
 	 * Test that correctly mapped classes for Entity and Dto get assembled as expected.
@@ -194,7 +202,7 @@ public class DTOAssemblerTest {
 		final TestEntity3Class entity = new TestEntity3Class();
 		entity.setDecision(true);
 		final ValueConverter conv3toDto = new TestConverter3();
-		final Map<String, ValueConverter> converters = new HashMap<String, ValueConverter>();
+		final Map<String, Object> converters = new HashMap<String, Object>();
 		converters.put("boolToEnum", conv3toDto);
 		
 		final DTOAssembler assembler =
@@ -959,6 +967,86 @@ public class DTOAssemblerTest {
 		assertEquals("dto3", entity.getNested().getIm3());
 
 	
+	}
+	
+	/**
+	 * Test that when dto field is additionally annotated with dto parent when writing
+	 * back data from dto to entity the assembler does not copy the values but uses
+	 * {@link dp.lib.dto.geda.adapter.EntityRetriever} to delegate the setting of value.
+	 */
+	@Test
+	public void testDtoParentAnnotation() {
+		
+		final TestEntity11ParentInterface parentEntity = new TestEntity11ParentClass();
+		final String parentName = "parent with id 3";
+		parentEntity.setEntityId(L_3);
+		parentEntity.setName(parentName);
+		
+		final TestEntity11ChildInterface childEntity = new TestEntity11ChildClass();
+		final String childName = "child of parent with id 3";
+		childEntity.setParent(parentEntity);
+		childEntity.setName(childName);
+		
+		final TestDto11ChildInterface childDto = new TestDto11ChildClass();
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(childDto.getClass(), childEntity.getClass());
+		
+		assembler.assembleDto(childDto, childEntity, null, new BeanFactory() {
+
+			public Object get(final String entityBeanKey) {
+				if (entityBeanKey.equals("dp.lib.dto.geda.assembler.TestDto11ParentClass")) {
+					return new TestDto11ParentClass();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertEquals(childName, childDto.getName());
+		assertNotNull(childDto.getParent());
+		assertEquals(parentName, childDto.getParent().getName());
+		assertEquals(Long.valueOf(L_3), Long.valueOf(childDto.getParent().getEntityId()));
+		
+		final TestEntity11ParentInterface parentEntity2 = new TestEntity11ParentClass();
+		final String parentName2 = "parent with id 0";
+		parentEntity2.setEntityId(0);
+		parentEntity2.setName(parentName2);
+		
+		// change dto parent.
+		childDto.getParent().setEntityId(0L);
+		childDto.setName("child with changed parent");
+		
+		final EntityRetriever retriever = new EntityRetriever() {
+			
+			@SuppressWarnings("unchecked")
+			public Object retrieveByPrimaryKey(final Class entityInterface, final Class entityClass, final Object primaryKey) {
+				assertEquals(Long.valueOf(0), primaryKey);
+				assertTrue(entityInterface.equals(TestEntity11ParentInterface.class));
+				assertTrue(entityClass.equals(TestEntity11ParentClass.class));
+				return parentEntity2;
+			}
+			
+		};
+		
+		final Map<String, Object> conv = new HashMap<String, Object>();
+		conv.put("retriever", retriever);
+		
+		assembler.assembleEntity(childDto, childEntity, conv, new BeanFactory() {
+
+			public Object get(final String entityBeanKey) {
+				if (entityBeanKey.equals("dp.lib.dto.geda.assembler.TestEntity11ParentClass")) {
+					return new TestEntity11ParentClass();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(childEntity.getParent());
+		assertSame(parentEntity2, childEntity.getParent());
+		assertEquals("child with changed parent", childEntity.getName());
+		
 	}
 
 	
