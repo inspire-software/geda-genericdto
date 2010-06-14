@@ -10,11 +10,10 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.ValueConverter;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+
+import dp.lib.dto.geda.adapter.BeanFactory;
 
 /**
  * A pipe is an object that allows to pipe data between Dto and Entity field.
@@ -36,7 +35,7 @@ interface Pipe {
 	 * @throws InvocationTargetException {@link java.lang.reflect.Method}
 	 */
 	void writeFromEntityToDto(final Object entity, final Object dto,
-			final Map<String, ValueConverter> converters,
+			final Map<String, Object> converters,
             final BeanFactory dtoBeanFactory)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException;
@@ -52,7 +51,7 @@ interface Pipe {
 	 * @throws InvocationTargetException {@link java.lang.reflect.Method}
 	 */
 	void writeFromDtoToEntity(final Object entity, final Object dto,
-			final Map<String, ValueConverter> converters,
+			final Map<String, Object> converters,
 			final BeanFactory entityBeanFactory)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException;

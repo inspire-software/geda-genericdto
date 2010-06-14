@@ -11,13 +11,6 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
-import dp.lib.dto.geda.adapter.ValueConverter;
-import dp.lib.dto.geda.annotations.Dto;
-import dp.lib.dto.geda.annotations.DtoCollection;
-import dp.lib.dto.geda.annotations.DtoField;
-
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -31,6 +24,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
+import dp.lib.dto.geda.adapter.meta.FieldPipeMetadata;
+import dp.lib.dto.geda.adapter.meta.PipeMetadata;
+import dp.lib.dto.geda.annotations.Dto;
+import dp.lib.dto.geda.annotations.DtoCollection;
+import dp.lib.dto.geda.annotations.DtoField;
+import dp.lib.dto.geda.annotations.DtoParent;
 
 /**
  * Assemble DTO and Entities depending on the annotations of Dto.
@@ -83,8 +86,10 @@ public final class DTOAssembler {
 					(DtoField) dtoField.getAnnotation(DtoField.class);
 				if (dtoFieldAnn != null) {
 	
+					final DtoParent parentAnn = (DtoParent) dtoField.getAnnotation(DtoParent.class);
+					
 					relationMapping.put(getBindingFromAnnotationOrFieldName(dtoFieldAnn.value(), dtoField.getName()),
-			                createFieldPipeChain(dtoPropertyDescriptors, entityPropertyDescriptors, dtoField, dtoFieldAnn));
+			                createFieldPipeChain(dtoPropertyDescriptors, entityPropertyDescriptors, dtoField, dtoFieldAnn, parentAnn));
 					continue;
 				}
 	
@@ -142,14 +147,22 @@ public final class DTOAssembler {
         final Method dtoFieldRead = dtoFieldDesc.getReadMethod();
 		final Method dtoFieldWrite = dtoFieldDesc.getWriteMethod();
 
+		final CollectionPipeMetadata meta = new dp.lib.dto.geda.assembler.CollectionPipeMetadata(
+				dtoField.getName(),
+				dtoCollAnn.value(),
+				dtoBeanKey, 
+				entityBeanKey,
+				readOnly,
+				dtoCollectionClass,
+				entityCollectionClass,
+				entityGenericType,
+				dtoToEntityMatcher
+		);
 
         return new CollectionPipe(
                 dtoFieldRead, dtoFieldWrite,
                 entityFieldRead, entityFieldWrite,
-                readOnly,
-                dtoBeanKey, entityBeanKey, entityGenericType,
-                dtoCollectionClass, entityCollectionClass,
-                dtoToEntityMatcher);
+                meta);
     }
     
     private String getBindingFromAnnotationOrFieldName(final String annotation, final String fieldName) {
@@ -170,7 +183,7 @@ public final class DTOAssembler {
 
     private Pipe createFieldPipeChain(final PropertyDescriptor[] dtoPropertyDescriptors, 
     		final PropertyDescriptor[] entityPropertyDescriptors, 
-    		final Field dtoField, final DtoField dtoFieldAnn) throws IntrospectionException {
+    		final Field dtoField, final DtoField dtoFieldAnn, final DtoParent parent) throws IntrospectionException {
         
     	final String binding = getBindingFromAnnotationOrFieldName(dtoFieldAnn.value(), dtoField.getName());
         validateNewBinding(binding);
@@ -178,6 +191,16 @@ public final class DTOAssembler {
         final String converter = dtoFieldAnn.converter();
         final String[] entityBeanKeys = dtoFieldAnn.entityBeanKeys();
         final String[] dtoBeanKeys = dtoFieldAnn.dtoBeanKeys();
+		final boolean isChild = parent != null;
+		final String parentKeyField;
+		final String entityRetrieverKey;
+		if (isChild) {
+			parentKeyField = parent.value();
+			entityRetrieverKey = parent.retriever();
+		} else {
+			parentKeyField = null;
+			entityRetrieverKey = null;
+		}
 
         final String[] beanKeysChain;
         if (binding.indexOf('.') != -1) {
@@ -207,7 +230,7 @@ public final class DTOAssembler {
 
         return createPipe(
                 dtoPropertyDescriptors, entityPropertyDescriptors,
-                dtoField, bindingChain, beanKeysChain, dtoKeysChain, 0, converter, readOnly);
+                dtoField, bindingChain, beanKeysChain, dtoKeysChain, 0, converter, readOnly, isChild, parentKeyField, entityRetrieverKey);
     }
 
     private String[] createFieldBindingChain(final String binding) {
@@ -222,7 +245,8 @@ public final class DTOAssembler {
 			final PropertyDescriptor[] entityPropertyDescriptors,
 			final Field dtoField, final String[] binding,
             final String[] beanKeysChain, final String[] dtoKeysChain,
-			final int chainIndex, final String converter, final boolean readOnly) 
+			final int chainIndex, final String converter, final boolean readOnly,
+            final boolean isChild, final String parentPKField, final String entityRetrieverKey) 
 		throws IntrospectionException {
 
 
@@ -244,7 +268,7 @@ public final class DTOAssembler {
 
         	return createDataPipe(dtoPropertyDescriptors,
 					entityPropertyDescriptors, dtoField, binding[chainIndex],
-					converter, readOnly, dtoBeanKey, entityBeanKey);
+					converter, readOnly, dtoBeanKey, entityBeanKey, isChild, parentPKField, entityRetrieverKey);
 		}
 			
 		final PropertyDescriptor entityFieldDesc = getEntityPropertyDescriptorForField(
@@ -257,10 +281,18 @@ public final class DTOAssembler {
 		
 		final PropertyDescriptor[] entitySubPropertyDescriptors = getPropertyDescriptorsForClass(returnType);
 			
+		final PipeMetadata meta = new BasePipeMetadata(
+				dtoField.getName(),
+				binding[chainIndex],
+				dtoBeanKey, 
+				entityBeanKey,
+				readOnly
+		);
+		
 		return new DataPipeChain(entityFieldRead, entityFieldWrite,
 				createPipe(dtoPropertyDescriptors, entitySubPropertyDescriptors, 
-						dtoField, binding, beanKeysChain, dtoKeysChain, chainIndex + 1, converter, readOnly),
-						entityBeanKey);
+						dtoField, binding, beanKeysChain, dtoKeysChain, chainIndex + 1, converter, readOnly, isChild, parentPKField, entityRetrieverKey),
+						meta);
 
 	}
 
@@ -268,7 +300,8 @@ public final class DTOAssembler {
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
 			final Field dtoField, final String binding, final String converter,
-            final boolean readOnly, final String dtoBeanKey, final String entityBeanKey) {
+            final boolean readOnly, final String dtoBeanKey, final String entityBeanKey,
+            final boolean isChild, final String parentPKField, final String entityRetrieverKey) throws IntrospectionException {
 		
 		final PropertyDescriptor dtoFieldDesc = getDtoPropertyDescriptorForField(
 				dtoField, dtoPropertyDescriptors);
@@ -276,13 +309,43 @@ public final class DTOAssembler {
 		final PropertyDescriptor entityFieldDesc = getEntityPropertyDescriptorForField(
 				entityPropertyDescriptors, dtoField, binding);
 		
+		final Method dtoParentReadMethod;
+		
+
+		if (isChild) {
+			final Method parentGet = dtoFieldDesc.getReadMethod();
+			final Class returnType = (Class) parentGet.getGenericReturnType();
+			final PropertyDescriptor[] dtoSubPropertyDescriptors = getPropertyDescriptorsForClass(returnType);
+			final PropertyDescriptor dtoParentDesc = getDtoPropertyDescriptorForField(parentPKField, dtoSubPropertyDescriptors);
+			dtoParentReadMethod = dtoParentDesc.getReadMethod();
+
+		} else {
+			
+			dtoParentReadMethod = null;
+			
+		}
+			
+		final FieldPipeMetadata meta = new dp.lib.dto.geda.assembler.FieldPipeMetadata(
+				dtoField.getName(),
+				binding,
+				dtoBeanKey, 
+				entityBeanKey,
+				readOnly,
+				converter,
+				isChild,
+				parentPKField,
+				entityRetrieverKey
+		);
+		
 		return new DataPipe(
 				dtoFieldDesc.getReadMethod(),
 				dtoFieldDesc.getWriteMethod(),
+				dtoParentReadMethod,
 				entityFieldDesc.getReadMethod(),
 				entityFieldDesc.getWriteMethod(),
-				converter, readOnly, dtoBeanKey, entityBeanKey
+				meta
 		);
+
 	}
 	
 	private PropertyDescriptor[] getPropertyDescriptorsForClass(final Class clazz) throws IntrospectionException {
@@ -339,16 +402,23 @@ public final class DTOAssembler {
 	private PropertyDescriptor getDtoPropertyDescriptorForField(
 			final Field dtoField,
 			final PropertyDescriptor[] dtoPropertyDescriptors) {
+		
+		return getDtoPropertyDescriptorForField(dtoField.getName(), dtoPropertyDescriptors);
+	}
+	
+	private PropertyDescriptor getDtoPropertyDescriptorForField(
+			final String dtoFieldName,
+			final PropertyDescriptor[] dtoPropertyDescriptors) {
 
 		for (PropertyDescriptor current : dtoPropertyDescriptors) {
-			if (current.getName().equals(dtoField.getName())) {
+			if (current.getName().equals(dtoFieldName)) {
 				return current;
 			}
 		}
 		
 		throw new IllegalArgumentException(
 				"Unable to locale Dto field '" + dtoClass.getCanonicalName() + "#" 
-				+ dtoField.getName() + "'");
+				+ dtoFieldName + "'");
 	}
 	
 	/**
@@ -395,7 +465,7 @@ public final class DTOAssembler {
 	 *         refrlection pipe fails
 	 */
 	public void assembleDto(final Object dto, final Object entity,
-                            final Map<String, ValueConverter> converters,
+                            final Map<String, Object> converters,
                             final BeanFactory dtoBeanFactory)
 		throws IllegalArgumentException {
 		
@@ -429,7 +499,7 @@ public final class DTOAssembler {
 	 *         refrlection pipe fails
 	 */
 	public void assembleEntity(final Object dto, final Object entity,
-			final Map<String, ValueConverter> converters, final BeanFactory entityBeanFactory)
+			final Map<String, Object> converters, final BeanFactory entityBeanFactory)
 		throws IllegalArgumentException {
 		
 		validateDtoAndEntity(dto, entity);

@@ -11,15 +11,15 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
-import dp.lib.dto.geda.adapter.ValueConverter;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+
+import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
 
 /**
  * Object that handles read and write streams between Dto and Entity objects.
@@ -31,15 +31,7 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 class CollectionPipe implements Pipe {
 
-    private final boolean readOnly;
-    private final String dtoBeanKey;
-    private final String entityBeanKey;
-
-    private final Class< ? extends Collection> dtoCollectionClass;
-    private final Class< ? extends Collection> entityCollectionClass;
-
-    private final Class< ? > returnType;
-    private final DtoToEntityMatcher dtoToEntityMatcher;
+    private final CollectionPipeMetadata meta;
 
 	private final Method dtoRead;
 	private final Method dtoWrite;
@@ -52,37 +44,20 @@ class CollectionPipe implements Pipe {
      * @param dtoWrite method for writting data to DTO field
      * @param entityRead method for reading data from Entity field
      * @param entityWrite method for writting data to Entity field
-     * @param readOnly if set to true the aseembly of entity will not include this data
-     * @param dtoBeanKey bean key for this data delegate
-     * @param entityBeanKey bean key for this data delegate
-     * @param returnType return type of entity collection.
-     * @param dtoCollectionClass class that defined the type of collection to be used for DTO's
-     * @param entityCollectionClass class that defined the type of collection to be used for Entities
-     * @param dtoToEntityMatcher matcher for synchronizing collections
+     * @param meta collection pipe meta
      */
     CollectionPipe(final Method dtoRead,
                    final Method dtoWrite,
                    final Method entityRead,
                    final Method entityWrite,
-                   final boolean readOnly,
-                   final String dtoBeanKey,
-                   final String entityBeanKey,
-                   final Class<?> returnType,
-                   final Class<? extends Collection> dtoCollectionClass,
-                   final Class<? extends Collection> entityCollectionClass,
-                   final Class<? extends DtoToEntityMatcher> dtoToEntityMatcher) {
-        this.readOnly = readOnly;
-        this.dtoBeanKey = dtoBeanKey;
-        this.entityBeanKey = entityBeanKey;
-        this.dtoCollectionClass = dtoCollectionClass;
-        this.entityCollectionClass = entityCollectionClass;
-
-        this.returnType = returnType;
+                   final CollectionPipeMetadata meta) {
+    	
+    	this.meta = meta;
 
         this.dtoWrite = dtoWrite;
         this.entityRead = entityRead;
 
-        if (readOnly) {
+        if (this.meta.isReadOnly()) {
 			this.dtoRead = null;
 			this.entityWrite = null;
             PipeValidator.validateReadPipeTypes(this.dtoWrite, this.entityRead);
@@ -92,16 +67,12 @@ class CollectionPipe implements Pipe {
             PipeValidator.validatePipeTypes(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
 		}
 
-        this.dtoToEntityMatcher = newBeanForClass(
-                dtoToEntityMatcher, "Unable to create matcher: " + dtoToEntityMatcher.getCanonicalName()
-                        + " for: " + this.dtoBeanKey + " - " + this.entityBeanKey);
-
     }
 
     /** {@inheritDoc} */
     public void writeFromEntityToDto(final Object entity,
                                      final Object dto,
-                                     final Map<String, ValueConverter> converters,
+                                     final Map<String, Object> converters,
                                      final BeanFactory dtoBeanFactory)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
@@ -110,19 +81,19 @@ class CollectionPipe implements Pipe {
         if (entityCollection instanceof Collection) {
             final Collection entities = (Collection) entityCollection;
 
-            final Collection dtos = newCollection(dtoCollectionClass);
+            final Collection dtos = this.meta.newDtoCollection();
 
-            Object newDto = newBean(dtoBeanFactory, this.dtoBeanKey);
+            Object newDto = this.meta.newDtoBean(dtoBeanFactory);
 
             try {
-                final DTOAssembler assembler = DTOAssembler.newAssembler(newDto.getClass(), this.returnType);
+                final DTOAssembler assembler = DTOAssembler.newAssembler(newDto.getClass(), this.meta.getReturnType());
 
                 for (Object object : entities) {
 
                     assembler.assembleDto(newDto, object, converters, dtoBeanFactory);
                     dtos.add(newDto);
 
-                    newDto = newBean(dtoBeanFactory, this.dtoBeanKey);
+                    newDto = this.meta.newDtoBean(dtoBeanFactory);
                 }
 
                 this.dtoWrite.invoke(dto, dtos);
@@ -142,11 +113,11 @@ class CollectionPipe implements Pipe {
     /** {@inheritDoc} */
     public void writeFromDtoToEntity(final Object entity,
                                      final Object dto,
-                                     final Map<String, ValueConverter> converters,
+                                     final Map<String, Object> converters,
                                      final BeanFactory entityBeanFactory)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-       if (this.readOnly) {
+       if (this.meta.isReadOnly()) {
            return;
        }
 
@@ -160,7 +131,7 @@ class CollectionPipe implements Pipe {
            if (originalEntityColl instanceof Collection) {
                original = (Collection) originalEntityColl;
            } else {
-               original = newCollection(this.entityCollectionClass);
+               original = this.meta.newEntityCollection();
                this.entityWrite.invoke(entity,  original);
            }
 
@@ -177,15 +148,16 @@ class CollectionPipe implements Pipe {
 
     }
 
-    private void addOrUpdateItems(final Object dto, final Map<String, ValueConverter> converters, final BeanFactory entityBeanFactory, final Collection original, final Collection dtos) {
+    private void addOrUpdateItems(final Object dto, final Map<String, Object> converters, final BeanFactory entityBeanFactory, final Collection original, final Collection dtos) {
 
         DTOAssembler assembler = null;
+        final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
         for (Object dtoItem : dtos) {
 
             boolean toAdd = true;
             for (Object orItem : original) {
 
-                if (this.dtoToEntityMatcher.match(dtoItem, orItem)) {
+                if (matcher.match(dtoItem, orItem)) {
                     assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
                     toAdd = false;
                     break;
@@ -196,7 +168,7 @@ class CollectionPipe implements Pipe {
             if (toAdd) {
                 if (assembler == null) {
                     try {
-                        assembler = DTOAssembler.newAssembler(dtoItem.getClass(), this.returnType);
+                        assembler = DTOAssembler.newAssembler(dtoItem.getClass(), this.meta.getReturnType());
                     } catch (IllegalArgumentException iae) {
                         if (iae.getMessage().startsWith("This assembler is only applicable for entity")) {
                             throw new IllegalArgumentException("A missmatch in return type of entity is detected," +
@@ -205,7 +177,7 @@ class CollectionPipe implements Pipe {
                         throw iae;
                     }   
                 }
-                final Object newItem = newBean(entityBeanFactory, this.entityBeanKey);
+                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
                 assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
                 original.add(newItem);
             }
@@ -214,6 +186,7 @@ class CollectionPipe implements Pipe {
     }
 
     private void removeDeletedItems(final Collection original, final Collection dtos) {
+    	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
         Iterator orIt = original.iterator();
         while (orIt.hasNext()) {
 
@@ -222,7 +195,7 @@ class CollectionPipe implements Pipe {
             boolean isRemoved = true;
             for (Object dtoItem : dtos) {
 
-                if (dtoToEntityMatcher.match(dtoItem, orItem)) {
+                if (matcher.match(dtoItem, orItem)) {
                     isRemoved = false;
                     break;
                 }
@@ -234,26 +207,5 @@ class CollectionPipe implements Pipe {
 
         }
     }
-
-    private Collection newCollection(final Class< ? extends Collection> clazz) {
-        return newBeanForClass(clazz, "Unable to create collection: " + clazz.getCanonicalName());
-    }
-
-    private <T> T newBeanForClass(final Class<T> clazz, final String errMsg) {
-        try {
-            return clazz.newInstance();
-        } catch (InstantiationException iex) {
-            throw new IllegalArgumentException(errMsg, iex);
-        } catch (IllegalAccessException iaex) {
-            throw new IllegalArgumentException(errMsg, iaex);
-        }
-    }
-
-    private Object newBean(final BeanFactory factory, final String beanKey) {
-        final Object bean = factory.get(beanKey);
-        if (bean == null) {
-            throw new IllegalArgumentException("Cannot create bean for key: " + beanKey);
-        }
-        return bean;
-    }
+    
 }

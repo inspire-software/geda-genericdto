@@ -12,6 +12,8 @@ package dp.lib.dto.geda.assembler;
 
 import java.lang.reflect.Method;
 
+import dp.lib.dto.geda.annotations.Dto;
+
 /**
  * Small utility class that validates pipes.
  * <p/>
@@ -81,7 +83,7 @@ final class PipeValidator {
 
     }
     
-    private static void validatePipeNonNull(final Method meth, final String desc) throws IllegalArgumentException {
+    static void validatePipeNonNull(final Method meth, final String desc) throws IllegalArgumentException {
     	if (meth == null) {
     		throw new IllegalArgumentException("Data pipe method for [" + desc 
     				+ "] is not initialized. Please check parameter and return types of your getters/setters");
@@ -109,6 +111,21 @@ final class PipeValidator {
         validateWritePipeTypes(dtoRead, entityWrite);
     }
 
+    private static boolean sameDataType(final Class< ? > data1, final Class< ? > data2) {
+    	return data1.equals(data2)
+	    	|| (data1.isPrimitive() && !data2.isPrimitive() && samePrimitiveDataType(data2, data1))
+	    	|| (!data1.isPrimitive() && data2.isPrimitive() && samePrimitiveDataType(data1, data2));  	
+    }
+    
+    private static boolean samePrimitiveDataType(final Class< ? > wrapper, final Class< ? > primitive) {
+    	try {
+	    	return wrapper.getDeclaredField("TYPE").get(null).equals(primitive);
+    	} catch (Throwable thr) {
+			return false;
+		}
+	    	
+    }
+    
     /**
      * Validates that read and write pipes for dto to entity match types.
      *
@@ -125,7 +142,20 @@ final class PipeValidator {
         final Class< ? > dtoWriteClass = dtoWrite.getParameterTypes()[0];
         final Class< ? > entityReadClass = entityRead.getReturnType();
 
-        if (!dtoWriteClass.equals(entityReadClass)) {
+        
+        if (
+        		// if it is interface we cannot find out until we get an annotated class instance.
+        		!dtoWriteClass.isInterface()
+
+        		// check if it is a nested dto
+        		&& dtoWriteClass.getAnnotation(Dto.class) == null 
+
+        		// Object checking is for generics - they are too much effort just let it go
+        		&& !entityReadClass.equals(Object.class) && !dtoWriteClass.equals(Object.class) 
+        		
+        		// check the same types
+        		&& !sameDataType(dtoWriteClass, entityReadClass)
+        	) {
             throw new IllegalArgumentException("Type mismatch is detected for: DTO write {" + dtoWrite
                     + "} and Entity read {" + entityRead + "}. Consider using a converter.");
         }
@@ -147,7 +177,21 @@ final class PipeValidator {
         final Class< ? > dtoReadClass = dtoRead.getReturnType();
         final Class< ? > entityWriteClass = entityWrite.getParameterTypes()[0];
 
-        if (!dtoReadClass.equals(entityWriteClass)) {
+        // Object checking is for generics - they are too much effort just let it go
+        if (
+        		// if it is interface we cannot find out until we get an annotated class instance.
+        		!dtoReadClass.isInterface()
+        		
+        		// check if it is a nested dto
+        		&& dtoReadClass.getAnnotation(Dto.class) == null 
+        		
+        		// Object checking is for generics - they are too much effort just let it go
+        		&& !entityWriteClass.equals(Object.class) && !dtoReadClass.equals(Object.class)
+        		
+        		// check the same types
+        		&& !sameDataType(dtoReadClass, entityWriteClass)
+        		
+        	) {
             throw new IllegalArgumentException("Type mismatch is detected for: DTO read {" + dtoRead
                     + "} and Entity write {" + entityWrite + "}. Consider using a converter.");
         }
