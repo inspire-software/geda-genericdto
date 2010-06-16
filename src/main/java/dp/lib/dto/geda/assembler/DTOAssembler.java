@@ -462,12 +462,12 @@ public final class DTOAssembler {
 	 * @param dtoBeanFactory bean factory for creating new instances of nested DTO objects mapped by
 	 *        {@link dp.lib.dto.geda.annotations.DtoField#dtoBeanKeys()} key.
 	 * @throws IllegalArgumentException if dto or entity are not of correct class or
-	 *         refrlection pipe fails
+	 *         reflection pipe fails
 	 */
 	public void assembleDto(final Object dto, final Object entity,
-                            final Map<String, Object> converters,
-                            final BeanFactory dtoBeanFactory)
-		throws IllegalArgumentException {
+			final Map<String, Object> converters,
+			final BeanFactory dtoBeanFactory)
+	throws IllegalArgumentException {
 		
 		validateDtoAndEntity(dto, entity);
 		
@@ -482,8 +482,43 @@ public final class DTOAssembler {
 		}
 		
 	}
-
-
+	
+	/**
+	 * Assembles dtos from current entities by using annotations of the dto.
+	 * @param dtos the non-null and empty dtos collection to insert data to
+	 * @param entities the the non-null entity collection to get data from
+	 * @param converters the converters to be used during conversion. The rationale for injecting the converters
+	 *        during conversion is to enforce them being stateless and unattached to assembler.
+	 * @param dtoBeanFactory bean factory for creating new instances of nested DTO objects mapped by
+	 *        {@link dp.lib.dto.geda.annotations.DtoField#dtoBeanKeys()} key.
+	 * @throws IllegalArgumentException if dto or entity are not of correct class or
+	 *         reflection pipe fails; or dto's collection is null or not empty; or entity collection
+	 *         is null; or a new instance of dtoClass cannot be created.
+	 */
+	public void assembleDtos(final Collection dtos, final Collection entities,
+                            final Map<String, Object> converters,
+                            final BeanFactory dtoBeanFactory)
+		throws IllegalArgumentException {
+		
+		if (dtos instanceof Collection && dtos.isEmpty() && entities instanceof Collection) {
+		
+			for (Object entity : entities) {
+				try {
+					final Object dto = this.dtoClass.newInstance();
+					assembleDto(dto, entity, converters, dtoBeanFactory);
+					dtos.add(dto);
+				} catch (Exception exp) {
+					throw new IllegalArgumentException(
+							"Unable to create dto instance for: " + this.dtoClass.getName());
+				}
+			}
+			
+		} else {
+			throw new IllegalArgumentException(
+					"Collections must not be null and dtos collection should be empty");
+		}
+		
+	}
 
 	/**
 	 * Assembles entity from current dto by unsing annotations of the dto.
@@ -496,7 +531,7 @@ public final class DTOAssembler {
 	 * @param entityBeanFactory bean factory for creating new instances of nested domain objects mapped to DTO by
 	 *        {@link dp.lib.dto.geda.annotations.DtoField#entityBeanKeys()} key.
 	 * @throws IllegalArgumentException if dto or entity are not of correct class or
-	 *         refrlection pipe fails
+	 *         reflection pipe fails
 	 */
 	public void assembleEntity(final Object dto, final Object entity,
 			final Map<String, Object> converters, final BeanFactory entityBeanFactory)
@@ -515,6 +550,45 @@ public final class DTOAssembler {
 		}
 		
 	}
+	
+	/**
+	 * Assembles entities from current dtos by unsing annotations of the dto.
+	 * @param dtos the dto to get data from
+	 * @param entities the entity to copy data to
+	 * @param converters the converters to be used during conversion. Optional parameter that provides map with 
+	 *        value converters mapped by {@link dp.lib.dto.geda.annotations.DtoField#converter()}. If no converters
+	 *        are required for this DTO then a <code>null</code> can be passed in. The rationale for injecting the converters
+	 *        during conversion is to enforce them being stateless and unattached to assembler.
+	 * @param entityBeanFactory bean factory for creating new instances of nested domain objects mapped to DTO by
+	 *        {@link dp.lib.dto.geda.annotations.DtoField#entityBeanKeys()} key.
+	 * @throws IllegalArgumentException if dto or entity are not of correct class or
+	 *         reflection pipe fails; or dto's collection is null; or entity collection
+	 *         is null or not empty; or a new instance of entityClass cannot be created.
+	 */
+	public void assembleEntities(final Collection dtos, final Collection entities,
+			final Map<String, Object> converters, final BeanFactory entityBeanFactory)
+		throws IllegalArgumentException {
+		
+		if (dtos instanceof Collection && entities instanceof Collection && entities.isEmpty()) {
+			
+			for (Object dto : dtos) {
+				try {
+					final Object entity = this.entityClass.newInstance();
+					assembleEntity(dto, entity, converters, entityBeanFactory);
+					entities.add(entity);
+				} catch (Exception exp) {
+					throw new IllegalArgumentException(
+							"Unable to create entity instance for: " + this.dtoClass.getName());
+				}
+			}
+			
+		} else {
+			throw new IllegalArgumentException(
+				"Collections must not be null and entities collection should be empty");
+		}	
+		
+	}
+	
 	
 	private void validateDtoAndEntity(final Object dto, final Object entity) {
 		if (!this.dtoClass.isInstance(dto)) {
