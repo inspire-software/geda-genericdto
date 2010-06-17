@@ -49,6 +49,11 @@ class DataPipeChain implements Pipe {
 		this.pipe = pipe;
 		this.meta = meta;
 	}
+	
+	/** {@inheritDoc} */
+	public String getBinding() {
+		return meta.getEntityFieldName() + "." + pipe.getBinding();
+	}
 
 	/** {@inheritDoc} */
 	public void writeFromDtoToEntity(final Object entity, final Object dto,

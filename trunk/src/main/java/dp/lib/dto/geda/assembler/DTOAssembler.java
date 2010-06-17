@@ -16,24 +16,16 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
 import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
 import dp.lib.dto.geda.adapter.meta.FieldPipeMetadata;
 import dp.lib.dto.geda.adapter.meta.PipeMetadata;
 import dp.lib.dto.geda.annotations.Dto;
-import dp.lib.dto.geda.annotations.DtoCollection;
-import dp.lib.dto.geda.annotations.DtoField;
-import dp.lib.dto.geda.annotations.DtoParent;
 
 /**
  * Assemble DTO and Entities depending on the annotations of Dto.
@@ -44,8 +36,6 @@ import dp.lib.dto.geda.annotations.DtoParent;
  */
 @SuppressWarnings("unchecked")
 public final class DTOAssembler {
-
-    private static final String[] EMPTY_ARR = new String[0];
 	
 	private static final Map<String, DTOAssembler> CACHE = new HashMap<String, DTOAssembler>();	
 	
@@ -66,7 +56,6 @@ public final class DTOAssembler {
 			dtoMap = (Class) dtoMap.getGenericSuperclass();
 			
 		}
-
 		
 	}
 
@@ -82,96 +71,52 @@ public final class DTOAssembler {
 			final Field[] dtoFields = dto.getDeclaredFields();
 			for (Field dtoField : dtoFields) {
 				
-				final DtoField dtoFieldAnn =
-					(DtoField) dtoField.getAnnotation(DtoField.class);
-				if (dtoFieldAnn != null) {
-	
-					final DtoParent parentAnn = (DtoParent) dtoField.getAnnotation(DtoParent.class);
-					
-					relationMapping.put(getBindingFromAnnotationOrFieldName(dtoFieldAnn.value(), dtoField.getName()),
-			                createFieldPipeChain(dtoPropertyDescriptors, entityPropertyDescriptors, dtoField, dtoFieldAnn, parentAnn));
+				final List<PipeMetadata> metas = MetadataChainBuilder.build(dtoField);
+				if (metas == null || metas.isEmpty()) {
 					continue;
 				}
-	
-			    final DtoCollection dtoCollAnn =
-			         (DtoCollection) dtoField.getAnnotation(DtoCollection.class);
-			    if (dtoCollAnn != null) {
-	
-			        relationMapping.put(getBindingFromAnnotationOrFieldName(dtoCollAnn.value(), dtoField.getName()),
-			                createCollectionPipeChain(dtoPropertyDescriptors, entityPropertyDescriptors, dtoField, dtoCollAnn));
-	
-	
-			    }
-	
+				final Pipe pipe = createPipeChain(dtoClass, dtoPropertyDescriptors, entityClass, entityPropertyDescriptors, dtoField, metas, 0);
+				final String binding = pipe.getBinding();
+				validateNewBinding(binding);
+				relationMapping.put(binding, pipe);
 			}
 		} catch (IntrospectionException intr) {
 			throw new IllegalArgumentException(intr);
 		}
 	}
-
-    private Pipe createCollectionPipeChain(final PropertyDescriptor[] dtoPropertyDescriptors, 
-    		final PropertyDescriptor[] entityPropertyDescriptors, final Field dtoField, 
-    		final DtoCollection dtoCollAnn) throws IntrospectionException {
-        
-    	final String binding = getBindingFromAnnotationOrFieldName(dtoCollAnn.value(), dtoField.getName());
-        validateNewBinding(binding);
-
-
-        final String entityBeanKey = dtoCollAnn.entityBeanKey();
-        final String dtoBeanKey = dtoCollAnn.dtoBeanKey();
-
-        final Class< ? extends Collection> dtoCollectionClass = dtoCollAnn.dtoCollectionClass();
-        final Class< ? extends Collection> entityCollectionClass = dtoCollAnn.entityCollectionClass();
-
-        final Class entityGenericType = dtoCollAnn.entityGenericType();
-        final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcher = dtoCollAnn.dtoToEntityMatcher();
-
-        if (binding.indexOf('.') != -1) {
-            throw new IllegalArgumentException(
-                        "entityBeanKeys must specify single member path for binding '" + binding
-                        + "' of collection of [" + dtoClass.getCanonicalName() + "]");
-
-        }
-
-
-        final boolean readOnly = dtoCollAnn.readOnly();
-
-        final PropertyDescriptor entityFieldDesc = getEntityPropertyDescriptorForField(
-				entityPropertyDescriptors, dtoField, binding);
-
-		final Method entityFieldRead = entityFieldDesc.getReadMethod();
-		final Method entityFieldWrite = entityFieldDesc.getWriteMethod();
-
-        final PropertyDescriptor dtoFieldDesc = getDtoPropertyDescriptorForField(dtoField, dtoPropertyDescriptors);
-
-        final Method dtoFieldRead = dtoFieldDesc.getReadMethod();
-		final Method dtoFieldWrite = dtoFieldDesc.getWriteMethod();
-
-		final CollectionPipeMetadata meta = new dp.lib.dto.geda.assembler.CollectionPipeMetadata(
-				dtoField.getName(),
-				dtoCollAnn.value(),
-				dtoBeanKey, 
-				entityBeanKey,
-				readOnly,
-				dtoCollectionClass,
-				entityCollectionClass,
-				entityGenericType,
-				dtoToEntityMatcher
-		);
-
-        return new CollectionPipe(
-                dtoFieldRead, dtoFieldWrite,
-                entityFieldRead, entityFieldWrite,
-                meta);
-    }
-    
-    private String getBindingFromAnnotationOrFieldName(final String annotation, final String fieldName) {
-    	if (annotation == null || annotation.length() == 0) {
-    		return fieldName;
-    	} else {
-    		return annotation;
-    	}
-    }
+	
+	private Pipe createPipeChain(
+			final Class dto, final PropertyDescriptor[] dtoPropertyDescriptors, 
+			final Class entity, final PropertyDescriptor[] entityPropertyDescriptors,
+			final Field dtoField, final List<PipeMetadata> metas, final int index) {
+		
+		final PipeMetadata meta = metas.get(index);
+		
+		if (index + 1 == metas.size()) {
+			if (meta instanceof FieldPipeMetadata) {
+				// create field pipe
+				return DataPipeBuilder.build(dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
+			} else if (meta instanceof CollectionPipeMetadata) {
+				// create collection
+				return CollectionPipeBuilder.build(dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (CollectionPipeMetadata) meta);
+			} else if (meta instanceof MapPipeMetadata) {
+				// create map
+				return MapPipeBuilder.build(dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (MapPipeMetadata) meta);
+			} else {
+				throw new IllegalArgumentException("Unknown pipe meta: " + meta.getClass());
+			}
+		}
+		
+		final PropertyDescriptor nested = PropertyInspector.getEntityPropertyDescriptorForField(
+				dto, entity, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
+		final PropertyDescriptor[] nestedEntityPropertyDescriptors = PropertyInspector.getPropertyDescriptorsForClassReturnedByGet(nested);
+		
+		// build a chain pipe
+		return DataPipeChainBuilder.build(dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, meta, 
+				createPipeChain(dto, dtoPropertyDescriptors, entity, nestedEntityPropertyDescriptors, dtoField, metas, index + 1)	
+			);
+		
+	}
 
     private void validateNewBinding(final String binding) {
         if (relationMapping.containsKey(binding)) {
@@ -180,247 +125,7 @@ public final class DTOAssembler {
                     + dtoClass.getCanonicalName());
         }
     }
-
-    private Pipe createFieldPipeChain(final PropertyDescriptor[] dtoPropertyDescriptors, 
-    		final PropertyDescriptor[] entityPropertyDescriptors, 
-    		final Field dtoField, final DtoField dtoFieldAnn, final DtoParent parent) throws IntrospectionException {
-        
-    	final String binding = getBindingFromAnnotationOrFieldName(dtoFieldAnn.value(), dtoField.getName());
-        validateNewBinding(binding);
-
-        final String converter = dtoFieldAnn.converter();
-        final String[] entityBeanKeys = dtoFieldAnn.entityBeanKeys();
-        final String[] dtoBeanKeys = dtoFieldAnn.dtoBeanKeys();
-		final boolean isChild = parent != null;
-		final String parentKeyField;
-		final String entityRetrieverKey;
-		if (isChild) {
-			parentKeyField = parent.value();
-			entityRetrieverKey = parent.retriever();
-		} else {
-			parentKeyField = null;
-			entityRetrieverKey = null;
-		}
-
-        final String[] beanKeysChain;
-        if (binding.indexOf('.') != -1) {
-            if (entityBeanKeys == null || entityBeanKeys.length == 0) {
-                throw new IllegalArgumentException(
-                        "entityBeanKeys must be specified for binding '" + binding
-                        + "' for each entity sub path of [" + dtoClass.getCanonicalName() + "]");
-            }
-            beanKeysChain = entityBeanKeys;
-
-        } else if (entityBeanKeys != null) {
-            beanKeysChain = entityBeanKeys;
-        } else {
-            beanKeysChain = EMPTY_ARR;
-        }
-        final String[] dtoKeysChain;
-        if (dtoBeanKeys != null) {
-            dtoKeysChain = dtoBeanKeys;
-        } else {
-            dtoKeysChain = EMPTY_ARR;
-        }
-
-        final boolean readOnly = dtoFieldAnn.readOnly();
-
-
-        final String[] bindingChain = createFieldBindingChain(binding);
-
-        return createPipe(
-                dtoPropertyDescriptors, entityPropertyDescriptors,
-                dtoField, bindingChain, beanKeysChain, dtoKeysChain, 0, converter, readOnly, isChild, parentKeyField, entityRetrieverKey);
-    }
-
-    private String[] createFieldBindingChain(final String binding) {
-		if (binding.indexOf('.') == -1) {
-			return new String[] { binding };
-		} 
-		return binding.split("\\.");
-	}
-
-	private Pipe createPipe(
-			final PropertyDescriptor[] dtoPropertyDescriptors,
-			final PropertyDescriptor[] entityPropertyDescriptors,
-			final Field dtoField, final String[] binding,
-            final String[] beanKeysChain, final String[] dtoKeysChain,
-			final int chainIndex, final String converter, final boolean readOnly,
-            final boolean isChild, final String parentPKField, final String entityRetrieverKey) 
-		throws IntrospectionException {
-
-
-        final String dtoBeanKey;
-        if (dtoKeysChain.length > chainIndex) {
-            dtoBeanKey = dtoKeysChain[chainIndex];
-        } else {
-            dtoBeanKey = "";
-        }
-
-        final String entityBeanKey;
-        if (beanKeysChain.length > chainIndex) {
-            entityBeanKey = beanKeysChain[chainIndex];
-        } else {
-            entityBeanKey = "";
-        }
-
-		if (chainIndex + 1 == binding.length) {
-
-        	return createDataPipe(dtoPropertyDescriptors,
-					entityPropertyDescriptors, dtoField, binding[chainIndex],
-					converter, readOnly, dtoBeanKey, entityBeanKey, isChild, parentPKField, entityRetrieverKey);
-		}
-			
-		final PropertyDescriptor entityFieldDesc = getEntityPropertyDescriptorForField(
-				entityPropertyDescriptors, dtoField, binding[chainIndex]);
-		
-		final Method entityFieldRead = entityFieldDesc.getReadMethod();
-		final Method entityFieldWrite = entityFieldDesc.getWriteMethod();
-		final Class returnType = (Class) entityFieldRead.getGenericReturnType();
-
-		
-		final PropertyDescriptor[] entitySubPropertyDescriptors = getPropertyDescriptorsForClass(returnType);
-			
-		final PipeMetadata meta = new BasePipeMetadata(
-				dtoField.getName(),
-				binding[chainIndex],
-				dtoBeanKey, 
-				entityBeanKey,
-				readOnly
-		);
-		
-		return new DataPipeChain(entityFieldRead, entityFieldWrite,
-				createPipe(dtoPropertyDescriptors, entitySubPropertyDescriptors, 
-						dtoField, binding, beanKeysChain, dtoKeysChain, chainIndex + 1, converter, readOnly, isChild, parentPKField, entityRetrieverKey),
-						meta);
-
-	}
-
-	private Pipe createDataPipe(
-			final PropertyDescriptor[] dtoPropertyDescriptors,
-			final PropertyDescriptor[] entityPropertyDescriptors,
-			final Field dtoField, final String binding, final String converter,
-            final boolean readOnly, final String dtoBeanKey, final String entityBeanKey,
-            final boolean isChild, final String parentPKField, final String entityRetrieverKey) throws IntrospectionException {
-		
-		final PropertyDescriptor dtoFieldDesc = getDtoPropertyDescriptorForField(
-				dtoField, dtoPropertyDescriptors);
-
-		final PropertyDescriptor entityFieldDesc = getEntityPropertyDescriptorForField(
-				entityPropertyDescriptors, dtoField, binding);
-		
-		final Method dtoParentReadMethod;
-		
-
-		if (isChild) {
-			final Method parentGet = dtoFieldDesc.getReadMethod();
-			final Class returnType = (Class) parentGet.getGenericReturnType();
-			final PropertyDescriptor[] dtoSubPropertyDescriptors = getPropertyDescriptorsForClass(returnType);
-			final PropertyDescriptor dtoParentDesc = getDtoPropertyDescriptorForField(parentPKField, dtoSubPropertyDescriptors);
-			dtoParentReadMethod = dtoParentDesc.getReadMethod();
-
-		} else {
-			
-			dtoParentReadMethod = null;
-			
-		}
-			
-		final FieldPipeMetadata meta = new dp.lib.dto.geda.assembler.FieldPipeMetadata(
-				dtoField.getName(),
-				binding,
-				dtoBeanKey, 
-				entityBeanKey,
-				readOnly,
-				converter,
-				isChild,
-				parentPKField,
-				entityRetrieverKey
-		);
-		
-		return new DataPipe(
-				dtoFieldDesc.getReadMethod(),
-				dtoFieldDesc.getWriteMethod(),
-				dtoParentReadMethod,
-				entityFieldDesc.getReadMethod(),
-				entityFieldDesc.getWriteMethod(),
-				meta
-		);
-
-	}
-	
-	private PropertyDescriptor[] getPropertyDescriptorsForClass(final Class clazz) throws IntrospectionException {
-		final PropertyDescriptor[] basic = Introspector.getBeanInfo(clazz, Introspector.USE_ALL_BEANINFO).getPropertyDescriptors();
-		if (clazz.isInterface()) {
-			final Type[] extendedInterfaces = (Type[]) clazz.getGenericInterfaces();
-			
-			if (extendedInterfaces != null && extendedInterfaces.length > 0) {
-				final ArrayList<PropertyDescriptor> descs = new ArrayList<PropertyDescriptor>();
-				for (Type extendedInterface : extendedInterfaces) {
-					
-					if (extendedInterface instanceof Class) {
-						addToList(descs, getPropertyDescriptorsForClass((Class) extendedInterface));
-					} else if (extendedInterface instanceof ParameterizedType) {
-						addToList(descs, getPropertyDescriptorsForClass(
-								(Class) ((ParameterizedType) extendedInterface).getRawType()));
-					}
-					
-				}
-				addToList(descs, basic);
-				return descs.toArray(new PropertyDescriptor[descs.size()]);
-			}
-			
-		}
-		return basic;
-		
-	}
-	
-	private void addToList(final List<PropertyDescriptor> list, final PropertyDescriptor[] descs) {
-		if (descs == null || descs.length == 0) {
-			return;
-		}
-		for (PropertyDescriptor item : descs) {
-			list.add(item);
-		}
-	}
-
-	private PropertyDescriptor getEntityPropertyDescriptorForField(
-			final PropertyDescriptor[] entityPropertyDescriptors,
-			final Field dtoField, final String binding) {
-		
-		for (PropertyDescriptor current : entityPropertyDescriptors) {
-			if (current.getName().equals(binding)) {
-				return current;
-			}
-		}
-
-		throw new IllegalArgumentException(
-				"Unable to bind Dto field '" + dtoClass.getCanonicalName() + "#" 
-				+ dtoField.getName() + "' to '" 
-				+ entityClass.getCanonicalName() + "#" + binding + "'");
-	}
-
-	private PropertyDescriptor getDtoPropertyDescriptorForField(
-			final Field dtoField,
-			final PropertyDescriptor[] dtoPropertyDescriptors) {
-		
-		return getDtoPropertyDescriptorForField(dtoField.getName(), dtoPropertyDescriptors);
-	}
-	
-	private PropertyDescriptor getDtoPropertyDescriptorForField(
-			final String dtoFieldName,
-			final PropertyDescriptor[] dtoPropertyDescriptors) {
-
-		for (PropertyDescriptor current : dtoPropertyDescriptors) {
-			if (current.getName().equals(dtoFieldName)) {
-				return current;
-			}
-		}
-		
-		throw new IllegalArgumentException(
-				"Unable to locale Dto field '" + dtoClass.getCanonicalName() + "#" 
-				+ dtoFieldName + "'");
-	}
-	
+    	
 	/**
 	 * @param dto Dto concrete class that is annotated.
 	 * @param entity the entity class or interface that has appropriate getters and setters

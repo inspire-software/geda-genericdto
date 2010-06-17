@@ -57,6 +57,6 @@ public @interface DtoField {
      * This annotation is mandatory for nested objects that are used as fields within the top
      * level DTO.
      */
-    String[] dtoBeanKeys() default "";
+    String dtoBeanKey() default "";
 		
 }

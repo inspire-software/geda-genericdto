@@ -91,10 +91,17 @@ class BasePipeMetadata implements PipeMetadata {
 	}
 	
 	private Object newBean(final String beanKey, final BeanFactory factory) throws IllegalArgumentException {
+		if (factory == null) {
+			throw new IllegalArgumentException("No factory provided for: " 
+					+ dtoFieldName + "@" + dtoBeanKey + " - " 
+					+ entityFieldName + "@" + entityBeanKey);
+		}
 		final Object newObject = factory.get(beanKey);
 		if (newObject == null) {
 			throw new IllegalArgumentException("Unable to construct bean with key: " 
-					+ beanKey + " using beanFactory: " + factory);
+					+ beanKey + " using beanFactory: " + factory + "for: " 
+					+ dtoFieldName + "@" + dtoBeanKey + " - " 
+					+ entityFieldName + "@" + entityBeanKey);
 		}
 		return newObject;
 	}
