@@ -11,14 +11,14 @@
 
 package dp.lib.dto.geda.annotations;
 
-import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
+import java.util.HashMap;
+
+import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
 
 /**
- * Defines a collection in DTO.
+ * Defines a map to map or a map to collection mapping in DTO.
  * <p/>
  * User: Denis Pavlov
  * Date: Jan 25, 2010
@@ -26,12 +26,12 @@ import java.util.ArrayList;
  */
 @SuppressWarnings("unchecked")
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DtoCollection {
+public @interface DtoMap {
 
     /**
 	 * textual reference to field that will be binded to this field (reflection notation).
 	 */
-	String value() default "";
+	String value();
 
     /**
 	 * Marks Dto for read only state. When assembler assembles entity the data in Dto fields with
@@ -41,37 +41,44 @@ public @interface DtoCollection {
 
     /**
      * Class that defines the type of class for creating new Domain object collection.
-     * Default is {@link java.util.ArrayList}
+     * Default is {@link java.util.HashMap} but this can also be instance of {@link java.util.Collection}
      */
-    Class entityCollectionClass() default ArrayList.class;
+    Class entityMapOrCollectionClass() default HashMap.class;
     /**
      * Class that defines the type of class for creating new DTO object collection.
      * Default is {@link java.util.ArrayList}
      */
-    Class dtoCollectionClass() default ArrayList.class;
+    Class dtoMapClass() default HashMap.class;
 
     /**
      * Domain object bean factory key for creating new domain object instance
-     * within collection. If the collection has deep nested mapping the the key
-     * for the Item bean will be the last in this chain.
+     * within collection.
      */
     String[] entityBeanKeys() default "";
 
     /**
      * DTO object bean factory key for creating new domain object instance 
-     * within collection. If the collection has deep nested mapping the the key
-     * for the Item bean will be the last in this chain.
+     * within collection.
      */
     String dtoBeanKey() default "";
 
     /**
-     * Entity generic type i.e. the type of collection for entities. This cannot be extracted 
+     * Entity generic type i.e. the type of collection/map item for entities. This cannot be extracted 
      * through reflection API since collection might be null.
      */
     Class entityGenericType() default Object.class;
+    
+    /**
+     * If entity property is a collection this maps a property of collection item
+     * to be the key in the dto map.
+     */
+    String entityCollectionMapKey() default "";
 
     /**
      * Matcher used to synchronize collection of DTO's and Entities.
+     * This is different to {@link DtoCollection#dtoToEntityMatcher()} since this
+     * matches matches a key from Dto Map to either key of Entity Map or item of entity
+     * collection depending on whether entity's property is a collection or a map.
      */
 	Class< ? extends DtoToEntityMatcher> dtoToEntityMatcher() default DtoToEntityMatcher.class;
 

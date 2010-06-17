@@ -28,7 +28,7 @@ public class TestDto4ComplexClass {
 	@DtoField(
             value = "wrapper",
             entityBeanKeys = { "dp.lib.dto.geda.assembler.TestEntity4SubClass" },
-            dtoBeanKeys = { "dp.lib.dto.geda.assembler.TestDto4ComplexSubClass" })
+            dtoBeanKey = "dp.lib.dto.geda.assembler.TestDto4ComplexSubClass")
 	private TestDto4ComplexSubClass nestedString;
 
 	/**

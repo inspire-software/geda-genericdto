@@ -30,7 +30,7 @@ import dp.lib.dto.geda.adapter.BeanFactory;
  * @since 1.0.0
  *
  */
-public class DTOAssemblerDtoCollectionTest {
+public class DTOAssemblerDtoMapTest {
 
 	private static final int I_3 = 3;
 

@@ -27,7 +27,7 @@ public class TestDto7iCollectionClass implements TestDto7CollectionInterface {
 
     @DtoCollection(
             value = "collection",
-            entityBeanKey = "dp.lib.dto.geda.assembler.TestEntity7iCollectionSubClass",
+            entityBeanKeys = "dp.lib.dto.geda.assembler.TestEntity7iCollectionSubClass",
             dtoBeanKey = "dp.lib.dto.geda.assembler.TestDto7iCollectionSubClass",
             dtoToEntityMatcher = Test7iMatcher.class,
             entityGenericType = TestEntity7CollectionSubInterface.class

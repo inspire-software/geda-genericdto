@@ -19,7 +19,7 @@ import java.util.Map;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
-import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
+import dp.lib.dto.geda.adapter.meta.MapPipeMetadata;
 
 /**
  * Object that handles read and write streams between Dto and Entity objects.
@@ -29,15 +29,17 @@ import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
  * Time: 12:10:02 PM
  */
 @SuppressWarnings("unchecked")
-class CollectionPipe implements Pipe {
+class MapPipe implements Pipe {
 
-    private final CollectionPipeMetadata meta;
+    private final MapPipeMetadata meta;
 
 	private final Method dtoRead;
 	private final Method dtoWrite;
 
 	private final Method entityRead;
 	private final Method entityWrite;
+	
+	private final Method entityCollectionKeyRead;
 
     /**
 	 * @param dtoRead method for reading data from DTO field
@@ -46,16 +48,18 @@ class CollectionPipe implements Pipe {
      * @param entityWrite method for writting data to Entity field
      * @param meta collection pipe meta
      */
-    CollectionPipe(final Method dtoRead,
+    MapPipe(final Method dtoRead,
                    final Method dtoWrite,
                    final Method entityRead,
                    final Method entityWrite,
-                   final CollectionPipeMetadata meta) {
+                   final Method entityCollectionKeyRead,
+                   final MapPipeMetadata meta) {
     	
     	this.meta = meta;
 
         this.dtoWrite = dtoWrite;
         this.entityRead = entityRead;
+        this.entityCollectionKeyRead = entityCollectionKeyRead;
 
         if (this.meta.isReadOnly()) {
 			this.dtoRead = null;
@@ -86,7 +90,7 @@ class CollectionPipe implements Pipe {
         if (entityCollection instanceof Collection) {
             final Collection entities = (Collection) entityCollection;
 
-            final Collection dtos = this.meta.newDtoCollection();
+            final Map dtos = this.meta.newDtoMap();
 
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
 
@@ -95,8 +99,9 @@ class CollectionPipe implements Pipe {
 
                 for (Object object : entities) {
 
+                	final Object key = this.entityCollectionKeyRead.invoke(object);
                     assembler.assembleDto(newDto, object, converters, dtoBeanFactory);
-                    dtos.add(newDto);
+                    dtos.put(key, newDto);
 
                     newDto = this.meta.newDtoBean(dtoBeanFactory);
                 }
@@ -111,6 +116,36 @@ class CollectionPipe implements Pipe {
                 throw iae;
             }
 
+        } else if (entityCollection instanceof Map) {
+        	
+            final Map entities = (Map) entityCollection;
+
+            final Map dtos = this.meta.newDtoMap();
+
+            Object newDto = this.meta.newDtoBean(dtoBeanFactory);
+
+            try {
+                final DTOAssembler assembler = DTOAssembler.newAssembler(newDto.getClass(), this.meta.getReturnType());
+
+                for (Object key : entities.keySet()) {
+
+                	final Object object = entities.get(key);
+                    assembler.assembleDto(newDto, object, converters, dtoBeanFactory);
+                    dtos.put(key, newDto);
+
+                    newDto = this.meta.newDtoBean(dtoBeanFactory);
+                }
+
+                this.dtoWrite.invoke(dto, dtos);
+
+            } catch (IllegalArgumentException iae) {
+                if (iae.getMessage().startsWith("This assembler is only applicable for entity")) {
+                    throw new IllegalArgumentException("A missmatch in return type of entity is detected," +
+                            "please check @DtoCollection.entityGenericType()", iae);
+                }
+                throw iae;
+            }
+        	
         }
         
     }
@@ -129,26 +164,35 @@ class CollectionPipe implements Pipe {
        final Object originalEntityColl = this.entityRead.invoke(entity);
        final Object dtoColl = this.dtoRead.invoke(dto);
 
-       if (dtoColl instanceof Collection) {
+       if (dtoColl instanceof Map) {
            // need to synch
 
-           Collection original = null;
+           Object original = null;
            if (originalEntityColl instanceof Collection) {
                original = (Collection) originalEntityColl;
+           } else if (originalEntityColl instanceof Map) {
+               original = (Collection) originalEntityColl;
            } else {
-               original = this.meta.newEntityCollection();
+               original = this.meta.newEntityMapOrCollection();
                this.entityWrite.invoke(entity,  original);
            }
 
-           final Collection dtos = (Collection) dtoColl;
+           final Map dtos = (Map) dtoColl;
 
-           removeDeletedItems(original, dtos);
-
-           addOrUpdateItems(dto, converters, entityBeanFactory, original, dtos);
+           if (originalEntityColl instanceof Collection) {
+	           removeDeletedItems((Collection) original, dtos);
+	           addOrUpdateItems(dto, converters, entityBeanFactory, (Collection) original, dtos);
+           } else if (originalEntityColl instanceof Map) {
+	           removeDeletedItems((Map) original, dtos);
+	           addOrUpdateItems(dto, converters, entityBeanFactory, (Map) original, dtos);
+           }    
 
        } else if (originalEntityColl instanceof Collection) {
            // if there were items then clear it
            ((Collection) originalEntityColl).clear();
+       } else if (originalEntityColl instanceof Map) {
+           // if there were items then clear it
+           ((Map) originalEntityColl).clear();
        } // else it was null anyways
 
     }
@@ -171,16 +215,47 @@ class CollectionPipe implements Pipe {
 		return assembler;
 	}
 
-    private void addOrUpdateItems(final Object dto, final Map<String, Object> converters, final BeanFactory entityBeanFactory, final Collection original, final Collection dtos) {
+	private void addOrUpdateItems(final Object dto, final Map<String, Object> converters, final BeanFactory entityBeanFactory, final Collection original, final Map dtos) {
+		
+		DTOAssembler assembler = null;
+		final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
+		for (Object dtoKey : dtos.keySet()) {
+			
+			final Object dtoItem = dtos.get(dtoKey);
+			boolean toAdd = true;
+			for (Object orItem : original) {
+				
+				if (matcher.match(dtoKey, orItem)) {
+					assembler = lazyCreateAssembler(assembler, dtoItem);
+					assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
+					toAdd = false;
+					break;
+				}
+				
+			}
+			
+			if (toAdd) {
+				assembler = lazyCreateAssembler(assembler, dtoItem);
+				final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+				assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
+				original.add(newItem);
+			}
+			
+		}
+	}
+	
+    private void addOrUpdateItems(final Object dto, final Map<String, Object> converters, final BeanFactory entityBeanFactory, final Map original, final Map dtos) {
 
         DTOAssembler assembler = null;
         final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
-        for (Object dtoItem : dtos) {
+        for (Object dtoKey : dtos.keySet()) {
 
+        	final Object dtoItem = dtos.get(dtoKey);
             boolean toAdd = true;
-            for (Object orItem : original) {
+            for (Object orKey : original.keySet()) {
 
-                if (matcher.match(dtoItem, orItem)) {
+                if (matcher.match(dtoKey, orKey)) {
+                	final Object orItem = original.get(orKey);
                 	assembler = lazyCreateAssembler(assembler, dtoItem);
                     assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
                     toAdd = false;
@@ -193,30 +268,50 @@ class CollectionPipe implements Pipe {
                 assembler = lazyCreateAssembler(assembler, dtoItem);
                 final Object newItem = this.meta.newEntityBean(entityBeanFactory);
                 assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
-                original.add(newItem);
+                original.put(dtoKey, newItem);
             }
 
         }
     }
 
-    private void removeDeletedItems(final Collection original, final Collection dtos) {
+    private void removeDeletedItems(final Collection original, final Map dtos) {
     	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
-        Iterator orIt = original.iterator();
-        while (orIt.hasNext()) {
-
-            final Object orItem = orIt.next();
+    	Iterator orIt = original.iterator();
+    	while (orIt.hasNext()) {
+    		
+    		final Object orItem = orIt.next();
+    		
+    		boolean isRemoved = true;
+    		for (Object dtoKey : dtos.keySet()) {
+    			
+    			if (matcher.match(dtoKey, orItem)) {
+    				isRemoved = false;
+    				break;
+    			}
+    		}
+    		
+    		if (isRemoved) {
+    			orIt.remove();
+    		}
+    		
+    	}
+    }
+    
+    private void removeDeletedItems(final Map original, final Map dtos) {
+    	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
+        for (Object orKey : original.keySet()) {
 
             boolean isRemoved = true;
-            for (Object dtoItem : dtos) {
+            for (Object dtoKey : dtos.keySet()) {
 
-                if (matcher.match(dtoItem, orItem)) {
+                if (matcher.match(dtoKey, orKey)) {
                     isRemoved = false;
                     break;
                 }
             }
 
             if (isRemoved) {
-                orIt.remove();
+            	original.remove(orKey);
             }
 
         }

@@ -23,6 +23,11 @@ import dp.lib.dto.geda.adapter.BeanFactory;
  *
  */
 interface Pipe {
+	
+	/**
+	 * @return full binding for this pipe.
+	 */
+	String getBinding();
 
 	/**
 	 * write data from entity field to dto field.

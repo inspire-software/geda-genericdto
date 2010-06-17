@@ -95,6 +95,11 @@ class DataPipe implements Pipe {
 	}
 	
 	/** {@inheritDoc} */
+	public String getBinding() {
+		return meta.getEntityFieldName();
+	}
+
+	/** {@inheritDoc} */
 	public void writeFromEntityToDto(final Object entity,
                                      final Object dto,
                                      final Map<String, Object> converters,

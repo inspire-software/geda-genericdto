@@ -27,7 +27,7 @@ public class TestDto7CollectionClass {
 
     @DtoCollection(
             value = "collection",
-            entityBeanKey = "dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass",
+            entityBeanKeys = "dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass",
             dtoBeanKey = "dp.lib.dto.geda.assembler.TestDto7CollectionSubClass",
             dtoToEntityMatcher = Test7Matcher.class,
             entityGenericType = TestEntity7CollectionSubClass.class
