@@ -31,7 +31,7 @@ public class TestDto12CollectionClass implements TestDto12CollectionIterface {
 	@DtoCollection(value = "collectionWrapper.items",
 				   dtoBeanKey = "dtoItem",
 				   entityBeanKeys = { "nestedEntity", "entityItem" },
-				   dtoToEntityMatcher = Test12Matcher.class,
+				   dtoToEntityMatcher = Test12CollectionItemsMatcher.class,
 				   entityGenericType = TestEntity12CollectionItemInterface.class)
 	private Collection<TestDto12CollectionItemIterface> items;
 

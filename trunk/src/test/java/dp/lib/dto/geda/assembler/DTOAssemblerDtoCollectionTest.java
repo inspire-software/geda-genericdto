@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -386,6 +387,66 @@ public class DTOAssemblerDtoCollectionTest {
 		assertEquals("itm2", itm1.getName());
 		assertEquals("itm3", itm2.getName());
 		
+	}
+	
+    /**
+	 * Test collection of nested objects.
+	 */
+	@Test
+	public void testCollectionToNestedNullWrite() {
+		final TestDto7CollectionInterface dto = new TestDto7NestedCollectionClass();
+		final TestEntity7CollectionWrapperInterface entity = new TestEntity7CollectionWrapperClass();
+
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7iCollectionSubClass();
+                } else if ("wrapper".equals(entityBeanKey)) {
+                	return new TestEntity7iCollectionClass();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(dto.getClass(), entity.getClass());
+
+		dto.setNestedString(new ArrayList<TestDto7CollectionSubInterface>());
+		
+		final TestDto7CollectionSubInterface item1 = new TestDto7CollectionSubClass();
+		item1.setName("itm1");
+		final TestDto7CollectionSubInterface item2 = new TestDto7CollectionSubClass();
+		item2.setName("itm2");
+		final TestDto7CollectionSubInterface item3 = new TestDto7CollectionSubClass();
+		item3.setName("itm3");
+
+		dto.getNestedString().add(item1);
+		dto.getNestedString().add(item2);
+		dto.getNestedString().add(item3);
+
+		assembler.assembleEntity(dto, entity, null, factory);
+
+		assertNotNull(entity.getWrapper());
+		assertNotNull(entity.getWrapper().getCollection());
+		assertEquals(I_3, entity.getWrapper().getCollection().size());
+		
+		boolean item1b = false;
+		boolean item2b = false;
+		boolean item3b = false;
+		for(TestEntity7CollectionSubInterface item : entity.getWrapper().getCollection()) {
+			if ("itm1".equals(item.getName())) {
+				item1b = true;
+			} else if ("itm2".equals(item.getName())) {
+				item2b = true;
+			} else if ("itm3".equals(item.getName())) {
+				item3b = true;
+			} else {
+				fail("Unkown item");
+			}
+		}
+		assertTrue(item1b && item2b && item3b);
+
 	}
 	
 }
