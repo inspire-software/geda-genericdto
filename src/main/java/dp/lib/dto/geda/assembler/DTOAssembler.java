@@ -299,12 +299,12 @@ public final class DTOAssembler {
 		if (!this.dtoClass.isInstance(dto)) {
 			throw new IllegalArgumentException(
 					"This assembler is only applicable for dto: "
-					+ this.dtoClass.getCanonicalName());
+					+ this.dtoClass.getCanonicalName() + (dto != null ? ", found: " + dto.getClass() : ""));
 		}
 		if (!this.entityClass.isInstance(entity)) {
 			throw new IllegalArgumentException(
 					"This assembler is only applicable for entity: "
-					+ this.entityClass.getCanonicalName());
+					+ this.entityClass.getCanonicalName() + (entity != null ? ", found: " + entity.getClass() : ""));
 		}
 	}
 	

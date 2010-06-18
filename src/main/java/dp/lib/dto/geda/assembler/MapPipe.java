@@ -13,8 +13,10 @@ package dp.lib.dto.geda.assembler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
@@ -151,7 +153,7 @@ class MapPipe implements Pipe {
     }
 
     /** {@inheritDoc} */
-    public void writeFromDtoToEntity(final Object entity,
+    public void writeFromDtoToEntity(final Object entityObj,
                                      final Object dto,
                                      final Map<String, Object> converters,
                                      final BeanFactory entityBeanFactory)
@@ -161,17 +163,24 @@ class MapPipe implements Pipe {
            return;
        }
 
-       final Object originalEntityColl = this.entityRead.invoke(entity);
        final Object dtoColl = this.dtoRead.invoke(dto);
 
        if (dtoColl instanceof Map) {
            // need to synch
 
+    	   final Object entity;
+           if (entityObj instanceof NewDataProxy) {
+        	   entity = ((NewDataProxy) entityObj).create();
+           } else {
+        	   entity = entityObj;
+           }
+           
+           final Object originalEntityColl = this.entityRead.invoke(entity);
+
+    	   
            Object original = null;
-           if (originalEntityColl instanceof Collection) {
-               original = (Collection) originalEntityColl;
-           } else if (originalEntityColl instanceof Map) {
-               original = (Collection) originalEntityColl;
+           if (originalEntityColl instanceof Collection || originalEntityColl instanceof Map) {
+               original = originalEntityColl;
            } else {
                original = this.meta.newEntityMapOrCollection();
                this.entityWrite.invoke(entity,  original);
@@ -179,20 +188,23 @@ class MapPipe implements Pipe {
 
            final Map dtos = (Map) dtoColl;
 
-           if (originalEntityColl instanceof Collection) {
+           if (original instanceof Collection) {
 	           removeDeletedItems((Collection) original, dtos);
 	           addOrUpdateItems(dto, converters, entityBeanFactory, (Collection) original, dtos);
-           } else if (originalEntityColl instanceof Map) {
+           } else if (original instanceof Map) {
 	           removeDeletedItems((Map) original, dtos);
 	           addOrUpdateItems(dto, converters, entityBeanFactory, (Map) original, dtos);
            }    
 
-       } else if (originalEntityColl instanceof Collection) {
-           // if there were items then clear it
-           ((Collection) originalEntityColl).clear();
-       } else if (originalEntityColl instanceof Map) {
-           // if there were items then clear it
-           ((Map) originalEntityColl).clear();
+       } else if (entityObj != null && !(entityObj instanceof NewDataProxy)) {
+    	   final Object originalEntityColl = this.entityRead.invoke(entityObj);
+    	   if (originalEntityColl instanceof Collection) {
+	           // if there were items then clear it
+	           ((Collection) originalEntityColl).clear();
+	       } else if (originalEntityColl instanceof Map) {
+	           // if there were items then clear it
+	           ((Map) originalEntityColl).clear();
+	       }
        } // else it was null anyways
 
     }
@@ -221,24 +233,30 @@ class MapPipe implements Pipe {
 		final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
 		for (Object dtoKey : dtos.keySet()) {
 			
-			final Object dtoItem = dtos.get(dtoKey);
-			boolean toAdd = true;
-			for (Object orItem : original) {
-				
-				if (matcher.match(dtoKey, orItem)) {
-					assembler = lazyCreateAssembler(assembler, dtoItem);
-					assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
-					toAdd = false;
-					break;
+			try {
+				final Object dtoItem = dtos.get(dtoKey);
+				boolean toAdd = true;
+				for (Object orItem : original) {
+					
+					if (matcher.match(dtoKey, orItem)) {
+						assembler = lazyCreateAssembler(assembler, dtoItem);
+						assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
+						toAdd = false;
+						break;
+					}
+					
 				}
 				
-			}
-			
-			if (toAdd) {
-				assembler = lazyCreateAssembler(assembler, dtoItem);
-				final Object newItem = this.meta.newEntityBean(entityBeanFactory);
-				assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
-				original.add(newItem);
+				if (toAdd) {
+					assembler = lazyCreateAssembler(assembler, dtoItem);
+					final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+					assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
+					original.add(newItem);
+				}
+        	} catch (IllegalArgumentException iae) {
+				if (iae.getMessage().startsWith("This assembler is only applicable for entity:")) {
+					throw new IllegalArgumentException("Check return type of collection", iae);
+				}
 			}
 			
 		}
@@ -250,34 +268,39 @@ class MapPipe implements Pipe {
         final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
         for (Object dtoKey : dtos.keySet()) {
 
-        	final Object dtoItem = dtos.get(dtoKey);
-            boolean toAdd = true;
-            for (Object orKey : original.keySet()) {
-
-                if (matcher.match(dtoKey, orKey)) {
-                	final Object orItem = original.get(orKey);
-                	assembler = lazyCreateAssembler(assembler, dtoItem);
-                    assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
-                    toAdd = false;
-                    break;
-                }
-
-            }
-
-            if (toAdd) {
-                assembler = lazyCreateAssembler(assembler, dtoItem);
-                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
-                assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
-                original.put(dtoKey, newItem);
-            }
-
+        	try {
+	        	final Object dtoItem = dtos.get(dtoKey);
+	            boolean toAdd = true;
+	            for (Object orKey : original.keySet()) {
+	
+	                if (matcher.match(dtoKey, orKey)) {
+	                	final Object orItem = original.get(orKey);
+	                	assembler = lazyCreateAssembler(assembler, dtoItem);
+	                    assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
+	                    toAdd = false;
+	                    break;
+	                }
+	
+	            }
+	
+	            if (toAdd) {
+	                assembler = lazyCreateAssembler(assembler, dtoItem);
+	                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+	                assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
+	                original.put(dtoKey, newItem);
+	            }
+        	} catch (IllegalArgumentException iae) {
+				if (iae.getMessage().startsWith("This assembler is only applicable for entity:")) {
+					throw new IllegalArgumentException("Check return type of map", iae);
+				}
+			}
         }
     }
 
     private void removeDeletedItems(final Collection original, final Map dtos) {
     	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
     	Iterator orIt = original.iterator();
-    	while (orIt.hasNext()) {
+    	while (orIt.hasNext()) { // must be iterator to avoid concurrent modification exception while #remove()
     		
     		final Object orItem = orIt.next();
     		
@@ -299,8 +322,9 @@ class MapPipe implements Pipe {
     
     private void removeDeletedItems(final Map original, final Map dtos) {
     	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
-        for (Object orKey : original.keySet()) {
-
+    	final List keysToRemove = new ArrayList(); // must save to avoid concurrent modification exception while #remove(key)
+    	for (Object orKey : original.keySet()) { 
+        	
             boolean isRemoved = true;
             for (Object dtoKey : dtos.keySet()) {
 
@@ -311,10 +335,14 @@ class MapPipe implements Pipe {
             }
 
             if (isRemoved) {
-            	original.remove(orKey);
+            	keysToRemove.add(orKey);
             }
 
         }
+    	
+    	for (Object orKey : keysToRemove) {
+    		original.remove(orKey);
+    	}
     }
     
 }

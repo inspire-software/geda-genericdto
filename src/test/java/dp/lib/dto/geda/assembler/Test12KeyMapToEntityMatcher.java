@@ -21,12 +21,12 @@ import org.junit.Ignore;
  * Time: 3:34:16 PM
  */
 @Ignore
-public class Test12Matcher implements DtoToEntityMatcher<TestDto12CollectionItemIterface, TestEntity12CollectionItemInterface> {
+public class Test12KeyMapToEntityMatcher implements DtoToEntityMatcher<String, TestEntity12CollectionItemInterface> {
 
 	/** {@inheritDoc} */
-    public boolean match(final TestDto12CollectionItemIterface dto, 
+    public boolean match(final String dtoKey, 
     		final TestEntity12CollectionItemInterface entity) {
-        final String dtoName = dto.getName();
+        final String dtoName = dtoKey;
         final String entityName = entity.getName();
 
         return dtoName != null && entityName != null && dtoName.equals(entityName);

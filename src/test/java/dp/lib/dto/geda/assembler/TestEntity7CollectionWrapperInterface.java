@@ -10,32 +10,21 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.annotations.Dto;
-import dp.lib.dto.geda.annotations.DtoField;
 import org.junit.Ignore;
 
 /**
  * .
  * <p/>
  * User: Denis Pavlov
- * Date: Jan 25, 2010
- * Time: 1:59:30 PM
+ * Date: Jan 26, 2010
+ * Time: 11:33:40 AM
  */
-@Dto
 @Ignore
-public class TestDto7CollectionSubClass implements TestDto7CollectionSubInterface {
+public interface TestEntity7CollectionWrapperInterface {
 
-    @DtoField(value = "name")
-    private String name;
-
-    /** {@inheritDoc} */
-    public String getName() {
-        return name;
-    }
+	/** {@inheritDoc} */
+    TestEntity7CollectionInterface getWrapper();
 
     /** {@inheritDoc} */
-    public void setName(final String name) {
-        this.name = name;
-    }
-
+    void setWrapper(TestEntity7CollectionInterface collection);
 }

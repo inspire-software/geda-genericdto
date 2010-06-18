@@ -116,7 +116,7 @@ class CollectionPipe implements Pipe {
     }
 
     /** {@inheritDoc} */
-    public void writeFromDtoToEntity(final Object entity,
+    public void writeFromDtoToEntity(final Object entityObj,
                                      final Object dto,
                                      final Map<String, Object> converters,
                                      final BeanFactory entityBeanFactory)
@@ -126,11 +126,19 @@ class CollectionPipe implements Pipe {
            return;
        }
 
-       final Object originalEntityColl = this.entityRead.invoke(entity);
        final Object dtoColl = this.dtoRead.invoke(dto);
 
        if (dtoColl instanceof Collection) {
            // need to synch
+    	   
+    	   final Object entity;
+           if (entityObj instanceof NewDataProxy) {
+        	   entity = ((NewDataProxy) entityObj).create();
+           } else {
+        	   entity = entityObj;
+           }
+           
+           final Object originalEntityColl = this.entityRead.invoke(entity);
 
            Collection original = null;
            if (originalEntityColl instanceof Collection) {
@@ -146,9 +154,12 @@ class CollectionPipe implements Pipe {
 
            addOrUpdateItems(dto, converters, entityBeanFactory, original, dtos);
 
-       } else if (originalEntityColl instanceof Collection) {
-           // if there were items then clear it
-           ((Collection) originalEntityColl).clear();
+       } else if (entityObj != null && !(entityObj instanceof NewDataProxy)) {
+    	   final Object originalEntityColl = this.entityRead.invoke(entityObj);
+    	   if (originalEntityColl instanceof Collection) {
+	          // if there were items then clear it
+	          ((Collection) originalEntityColl).clear();
+    	   }
        } // else it was null anyways
 
     }
@@ -177,24 +188,30 @@ class CollectionPipe implements Pipe {
         final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
         for (Object dtoItem : dtos) {
 
-            boolean toAdd = true;
-            for (Object orItem : original) {
-
-                if (matcher.match(dtoItem, orItem)) {
-                	assembler = lazyCreateAssembler(assembler, dtoItem);
-                    assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
-                    toAdd = false;
-                    break;
-                }
-
-            }
-
-            if (toAdd) {
-                assembler = lazyCreateAssembler(assembler, dtoItem);
-                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
-                assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
-                original.add(newItem);
-            }
+        	try {
+	            boolean toAdd = true;
+	            for (Object orItem : original) {
+	
+	                if (matcher.match(dtoItem, orItem)) {
+	                	assembler = lazyCreateAssembler(assembler, dtoItem);
+	                    assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
+	                    toAdd = false;
+	                    break;
+	                }
+	
+	            }
+	
+	            if (toAdd) {
+	                assembler = lazyCreateAssembler(assembler, dtoItem);
+	                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+	                assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
+	                original.add(newItem);
+	            }
+        	} catch (IllegalArgumentException iae) {
+				if (iae.getMessage().startsWith("This assembler is only applicable for entity:")) {
+					throw new IllegalArgumentException("Check return type of collection", iae);
+				}
+			}
 
         }
     }
