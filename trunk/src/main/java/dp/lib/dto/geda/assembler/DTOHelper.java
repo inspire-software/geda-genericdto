@@ -111,7 +111,7 @@ public final class DTOHelper {
 	}
 
 	/**
-	 * Unload values from dto to map (key = field name, value = the field value)
+	 * Unload values from dto to map (key = field name, value = the field value).
 	 * 
 	 * @param dto the dto to unload values from
 	 * @param fields limits the unloading to these field only (omit to unload all fields from dto)

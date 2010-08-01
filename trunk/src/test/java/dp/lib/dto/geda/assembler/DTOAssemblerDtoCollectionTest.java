@@ -337,7 +337,7 @@ public class DTOAssemblerDtoCollectionTest {
 		
 		assembler.assembleDto(dColl, eWrap, null, new BeanFactory() {
 
-			public Object get(String entityBeanKey) {
+			public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -366,7 +366,7 @@ public class DTOAssemblerDtoCollectionTest {
 		
 		assembler.assembleEntity(dColl, eWrap, null, new BeanFactory() {
 			
-			public Object get(String entityBeanKey) {
+			public Object get(final String entityBeanKey) {
 				if ("nestedEntity".equals(entityBeanKey)) {
 					return new TestDto12CollectionClass();
 				} else if ("entityItem".equals(entityBeanKey)) {
@@ -434,7 +434,7 @@ public class DTOAssemblerDtoCollectionTest {
 		boolean item1b = false;
 		boolean item2b = false;
 		boolean item3b = false;
-		for(TestEntity7CollectionSubInterface item : entity.getWrapper().getCollection()) {
+		for (TestEntity7CollectionSubInterface item : entity.getWrapper().getCollection()) {
 			if ("itm1".equals(item.getName())) {
 				item1b = true;
 			} else if ("itm2".equals(item.getName())) {

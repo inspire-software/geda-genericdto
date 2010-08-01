@@ -38,7 +38,7 @@ public class TestDto11ParentClass implements TestDto11ParentInterface {
 		return entityId;
 	}
 	/**
-	 * @param parentId PK of this entity.
+	 * @param entityId PK of this entity.
 	 */
 	public void setEntityId(final long entityId) {
 		this.entityId = entityId;

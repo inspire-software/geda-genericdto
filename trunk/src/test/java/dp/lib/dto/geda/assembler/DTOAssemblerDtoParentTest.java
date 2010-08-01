@@ -129,7 +129,7 @@ public class DTOAssemblerDtoParentTest {
 	}
 
 	/**
-	 * Test to make sure that if dto parent field is null it is set to null in entity
+	 * Test to make sure that if dto parent field is null it is set to null in entity.
 	 */
 	@Test
 	public void testDtoParentIsSetToNullIfDtoDataIsNull() {

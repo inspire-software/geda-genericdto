@@ -27,7 +27,7 @@ import org.junit.Test;
 public class DTOAssemblerBatchTest {
 
 	/**
-	 * Test that AssembleDtos throws {@link IllegalArgumentException} if dtos is null
+	 * Test that AssembleDtos throws {@link IllegalArgumentException} if dtos is null.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAssembleDtosThrowsExceptionForNullDtoCollection() {
@@ -38,7 +38,7 @@ public class DTOAssemblerBatchTest {
 	}
 	
 	/**
-	 * Test that AssembleDtos throws {@link IllegalArgumentException} if dtos is not empty
+	 * Test that AssembleDtos throws {@link IllegalArgumentException} if dtos is not empty.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAssembleDtosThrowsExceptionForNonEmptyDtoCollection() {
@@ -52,7 +52,7 @@ public class DTOAssemblerBatchTest {
 	}
 	
 	/**
-	 * Test that AssembleDtos throws {@link IllegalArgumentException} if entities is null
+	 * Test that AssembleDtos throws {@link IllegalArgumentException} if entities is null.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAssembleDtosThrowsExceptionForNullEntitiesCollection() {
@@ -95,7 +95,7 @@ public class DTOAssemblerBatchTest {
 	}
 	
 	/**
-	 * Test that AssembleEntities throws {@link IllegalArgumentException} if dto is null
+	 * Test that AssembleEntities throws {@link IllegalArgumentException} if dto is null.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAssembleEntitiesThrowsExceptionForNullDtoCollection() {
@@ -106,7 +106,7 @@ public class DTOAssemblerBatchTest {
 	}
 	
 	/**
-	 * Test that AssembleEntitie throws {@link IllegalArgumentException} if entities is null
+	 * Test that AssembleEntitie throws {@link IllegalArgumentException} if entities is null.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAssembleEntitieThrowsExceptionForNullEntitiesCollection() {
@@ -117,7 +117,7 @@ public class DTOAssemblerBatchTest {
 	}
 	
 	/**
-	 * Test that AssembleEntities throws {@link IllegalArgumentException} if entities is not empty
+	 * Test that AssembleEntities throws {@link IllegalArgumentException} if entities is not empty.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testAssembleEntitiesThrowsExceptionForNonEmptyEntityCollection() {

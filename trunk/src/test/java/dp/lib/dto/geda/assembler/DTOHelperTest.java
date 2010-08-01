@@ -28,6 +28,11 @@ import org.junit.Test;
  */
 public class DTOHelperTest {
 
+	private static final int I_4 = 4;
+	private static final int I_3 = 3;
+	private static final int I_5 = 5;
+	private static final long L_3 = 3L;
+
 	/**
 	 * Test that loading map works.
 	 */
@@ -38,7 +43,7 @@ public class DTOHelperTest {
 		final Map<String, Object> values = new HashMap<String, Object>();
 		values.put("myBoolean", true);
 		values.put("myDouble", new Double(2));
-		values.put("myLong", 3L);
+		values.put("myLong", L_3);
 		values.put("myString", null);
 		
 		assertNull(dto.getMyBoolean());
@@ -50,7 +55,7 @@ public class DTOHelperTest {
 		
 		assertEquals(true, dto.getMyBoolean());
 		assertEquals(new Double(2), dto.getMyDouble());
-		assertEquals(Long.valueOf(3L), dto.getMyLong());
+		assertEquals(Long.valueOf(L_3), dto.getMyLong());
 		assertNull(dto.getMyString());
 		
 		values.put("myString", "test");
@@ -59,7 +64,7 @@ public class DTOHelperTest {
 		
 		assertEquals(true, dto.getMyBoolean());
 		assertEquals(new Double(2), dto.getMyDouble());
-		assertEquals(Long.valueOf(3L), dto.getMyLong());
+		assertEquals(Long.valueOf(L_3), dto.getMyLong());
 		assertEquals("test", dto.getMyString());
 		
 	}
@@ -77,18 +82,18 @@ public class DTOHelperTest {
 		assertNull(dto.getMyLong());
 		assertNull(dto.getMyString());
 		
-		DTOHelper.load(dto, "myBoolean", true, "myDouble", new Double(2), "myLong", 3L, "myString", null);
+		DTOHelper.load(dto, "myBoolean", true, "myDouble", new Double(2), "myLong", L_3, "myString", null);
 		
 		assertEquals(true, dto.getMyBoolean());
 		assertEquals(new Double(2), dto.getMyDouble());
-		assertEquals(Long.valueOf(3L), dto.getMyLong());
+		assertEquals(Long.valueOf(L_3), dto.getMyLong());
 		assertNull(dto.getMyString());
 		
 		DTOHelper.load(dto, "myString", "test");
 		
 		assertEquals(true, dto.getMyBoolean());
 		assertEquals(new Double(2), dto.getMyDouble());
-		assertEquals(Long.valueOf(3L), dto.getMyLong());
+		assertEquals(Long.valueOf(L_3), dto.getMyLong());
 		assertEquals("test", dto.getMyString());
 		
 	}
@@ -102,12 +107,12 @@ public class DTOHelperTest {
 		final TestDto2Class dto = new TestDto2Class();
 		dto.setMyBoolean(true);
 		dto.setMyDouble(new Double(2));
-		dto.setMyLong(3L);
+		dto.setMyLong(L_3);
 		dto.setMyString("test");
 		
 		assertEquals(true, dto.getMyBoolean());
 		assertEquals(new Double(2), dto.getMyDouble());
-		assertEquals(Long.valueOf(3L), dto.getMyLong());
+		assertEquals(Long.valueOf(L_3), dto.getMyLong());
 		assertEquals("test", dto.getMyString());
 		
 		Map<String, Object> values;
@@ -119,7 +124,7 @@ public class DTOHelperTest {
 		assertEquals(true, values.get("myBoolean"));
 		assertEquals(true, values.get("myBoolean"));
 		assertEquals(new Double(2), values.get("myDouble"));
-		assertEquals(Long.valueOf(3L), values.get("myLong"));
+		assertEquals(Long.valueOf(L_3), values.get("myLong"));
 		assertEquals("test", values.get("myString"));
 		
 		values = DTOHelper.unloadMap(dto, "myBoolean", "myLong");
@@ -128,7 +133,7 @@ public class DTOHelperTest {
 		assertEquals(2, values.size());
 		assertEquals(true, values.get("myBoolean"));
 		assertNull(values.get("myDouble"));
-		assertEquals(Long.valueOf(3L), values.get("myLong"));
+		assertEquals(Long.valueOf(L_3), values.get("myLong"));
 		assertNull(values.get("myString"));
 		
 	}
@@ -142,12 +147,12 @@ public class DTOHelperTest {
 		final TestDto2Class dto = new TestDto2Class();
 		dto.setMyBoolean(true);
 		dto.setMyDouble(new Double(2));
-		dto.setMyLong(3L);
+		dto.setMyLong(L_3);
 		dto.setMyString("test");
 		
 		assertEquals(true, dto.getMyBoolean());
 		assertEquals(new Double(2), dto.getMyDouble());
-		assertEquals(Long.valueOf(3L), dto.getMyLong());
+		assertEquals(Long.valueOf(L_3), dto.getMyLong());
 		assertEquals("test", dto.getMyString());
 		
 		Object[] values;
@@ -155,19 +160,19 @@ public class DTOHelperTest {
 		values = DTOHelper.unloadValues(dto);
 		
 		assertNotNull(values);
-		assertEquals(5, values.length);
+		assertEquals(I_5, values.length);
 		assertEquals(TestDto2Class.class, values[0]);
 		assertEquals(true, values[1]);
 		assertEquals(new Double(2), values[2]);
-		assertEquals(Long.valueOf(3L), values[3]);
-		assertEquals("test", values[4]);
+		assertEquals(Long.valueOf(L_3), values[I_3]);
+		assertEquals("test", values[I_4]);
 		
 		values = DTOHelper.unloadValues(dto, "myBoolean", "myLong");
 		
 		assertNotNull(values);
 		assertEquals(2, values.length);
 		assertEquals(true, values[0]);
-		assertEquals(Long.valueOf(3L), values[1]);
+		assertEquals(Long.valueOf(L_3), values[1]);
 		
 	}
 	

@@ -27,7 +27,7 @@ public interface TestEntity11ParentInterface {
 	 */
 	long getEntityId();
 	/**
-	 * @param parentId PK of this entity.
+	 * @param entityId PK of this entity.
 	 */
 	void setEntityId(final long entityId);
 	/**

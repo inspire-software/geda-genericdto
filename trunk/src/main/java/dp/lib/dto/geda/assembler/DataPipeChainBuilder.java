@@ -26,7 +26,7 @@ import dp.lib.dto.geda.adapter.meta.PipeMetadata;
 @SuppressWarnings("unchecked")
 final class DataPipeChainBuilder {
 	
-	public DataPipeChainBuilder() {
+	private DataPipeChainBuilder() {
 		// prevent instantiation
 	}
 	

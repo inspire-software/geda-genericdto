@@ -17,8 +17,7 @@ import dp.lib.dto.geda.adapter.BeanFactory;
  * 
  * @author DPavlov
  */
-public interface PipeMetadata
-{
+public interface PipeMetadata {
 
 	/**
 	 * @return dtoFieldName key for accessing field on DTO object

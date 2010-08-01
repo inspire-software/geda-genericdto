@@ -33,7 +33,7 @@ final class MetadataChainBuilder {
 	
 	/**
 	 * Build metadata chain for this field.
-	 * @param dtoField
+	 * @param dtoField fiel to build pipe for
 	 * @return metadata chain.
 	 */
 	public static List<PipeMetadata> build(final Field dtoField) {

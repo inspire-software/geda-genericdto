@@ -35,12 +35,17 @@ public class TestDto12CollectionClass implements TestDto12CollectionIterface {
 				   entityGenericType = TestEntity12CollectionItemInterface.class)
 	private Collection<TestDto12CollectionItemIterface> items;
 
+	/**
+	 * @return items
+	 */
 	public Collection<TestDto12CollectionItemIterface> getItems() {
 		return items;
 	}
 
-	
-	public void setItems(Collection<TestDto12CollectionItemIterface> items) {
+	/**
+	 * @param items items
+	 */	
+	public void setItems(final Collection<TestDto12CollectionItemIterface> items) {
 		this.items = items;
 	} 
 	
