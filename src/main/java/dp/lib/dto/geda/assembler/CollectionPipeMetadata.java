@@ -73,7 +73,7 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 	/**
 	 * @return DTO collection impl class
 	 */
-	public Class<? extends Collection> getDtoCollectionClass() {
+	public Class< ? extends Collection> getDtoCollectionClass() {
 		return dtoCollectionClass;
 	}
 	
@@ -87,7 +87,7 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 	/**
 	 * @return entity collection impl class
 	 */
-	public Class<? extends Collection> getEntityCollectionClass() {
+	public Class< ? extends Collection> getEntityCollectionClass() {
 		return entityCollectionClass;
 	}
 	
@@ -102,7 +102,7 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 	/**
 	 * @return the entity's collection generic type to identity the type of items in entity collection.
 	 */
-	public Class<?> getReturnType() {
+	public Class< ? > getReturnType() {
 		return returnType;
 	}
 

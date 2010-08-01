@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -89,9 +90,7 @@ final class PropertyInspector {
 		if (descs == null || descs.length == 0) {
 			return;
 		}
-		for (PropertyDescriptor item : descs) {
-			list.add(item);
-		}
+		list.addAll(Arrays.asList(descs));
 	}
 
 	/**

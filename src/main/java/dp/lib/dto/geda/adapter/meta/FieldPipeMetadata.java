@@ -15,8 +15,7 @@ package dp.lib.dto.geda.adapter.meta;
  * 
  * @author DPavlov
  */
-public interface FieldPipeMetadata extends PipeMetadata
-{
+public interface FieldPipeMetadata extends PipeMetadata {
 
 	/**
 	 * @return converter key to use.

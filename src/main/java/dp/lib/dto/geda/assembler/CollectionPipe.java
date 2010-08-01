@@ -105,8 +105,8 @@ class CollectionPipe implements Pipe {
 
             } catch (IllegalArgumentException iae) {
                 if (iae.getMessage().startsWith("This assembler is only applicable for entity")) {
-                    throw new IllegalArgumentException("A missmatch in return type of entity is detected," +
-                            "please check @DtoCollection.entityGenericType()", iae);
+                    throw new IllegalArgumentException("A missmatch in return type of entity is detected," 
+                    		+ "please check @DtoCollection.entityGenericType()", iae);
                 }
                 throw iae;
             }
@@ -164,17 +164,17 @@ class CollectionPipe implements Pipe {
 
     }
     
-	private DTOAssembler lazyCreateAssembler(DTOAssembler assembler, Object dtoItem) {
+	private DTOAssembler lazyCreateAssembler(final DTOAssembler assembler, final Object dtoItem) {
 		if (assembler == null) {
 		    try {
 		    	if (Object.class.equals(this.meta.getReturnType())) {
 		    		throw new IllegalArgumentException("This mapping requires a genericReturnType for DtoCollection mapping.");
 		    	}
-		        assembler = DTOAssembler.newAssembler(dtoItem.getClass(), this.meta.getReturnType());
+		        return DTOAssembler.newAssembler(dtoItem.getClass(), this.meta.getReturnType());
 		    } catch (IllegalArgumentException iae) {
 		        if (iae.getMessage().startsWith("This assembler is only applicable for entity")) {
-		            throw new IllegalArgumentException("A missmatch in return type of entity is detected," +
-		                    "please check @DtoCollection.entityGenericType()", iae);
+		            throw new IllegalArgumentException("A missmatch in return type of entity is detected," 
+		            		+ "please check @DtoCollection.entityGenericType()", iae);
 		        }
 		        throw iae;
 		    }   
@@ -182,7 +182,8 @@ class CollectionPipe implements Pipe {
 		return assembler;
 	}
 
-    private void addOrUpdateItems(final Object dto, final Map<String, Object> converters, final BeanFactory entityBeanFactory, final Collection original, final Collection dtos) {
+    private void addOrUpdateItems(final Object dto, final Map<String, Object> converters, 
+    		final BeanFactory entityBeanFactory, final Collection original, final Collection dtos) {
 
         DTOAssembler assembler = null;
         final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();

@@ -83,6 +83,14 @@ final class PipeValidator {
 
     }
     
+    /**
+     * Validate that method is not null.
+     * 
+     * @param meth method to check
+     * @param desc description of failure
+     * 
+     * @throws IllegalArgumentException if method is null with some sensible message
+     */
     static void validatePipeNonNull(final Method meth, final String desc) throws IllegalArgumentException {
     	if (meth == null) {
     		throw new IllegalArgumentException("Data pipe method for [" + desc 

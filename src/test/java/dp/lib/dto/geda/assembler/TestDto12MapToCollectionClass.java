@@ -38,12 +38,17 @@ public class TestDto12MapToCollectionClass implements TestDto12MapIterface {
 			   entityCollectionMapKey = "name")
 	private Map<String, TestDto12CollectionItemIterface> items;
 
+	/**
+	 * @return items.
+	 */
 	public Map<String, TestDto12CollectionItemIterface> getItems() {
 		return items;
 	}
 
-	
-	public void setItems(Map<String, TestDto12CollectionItemIterface> items) {
+	/**
+	 * @param items items
+	 */
+	public void setItems(final Map<String, TestDto12CollectionItemIterface> items) {
 		this.items = items;
 	} 
 	

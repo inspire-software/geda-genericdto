@@ -30,7 +30,7 @@ public class TestEntity12WrapCollectionClass implements TestEntity12WrapCollecti
 	}
 
 	/** {@inheritDoc} */
-	public void setCollectionWrapper(TestEntity12CollectionInterface collectionWrapper) {
+	public void setCollectionWrapper(final TestEntity12CollectionInterface collectionWrapper) {
 		this.collectionWrapper = collectionWrapper;
 	}
 

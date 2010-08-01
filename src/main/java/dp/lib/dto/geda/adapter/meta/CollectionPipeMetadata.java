@@ -25,7 +25,7 @@ public interface CollectionPipeMetadata extends PipeMetadata {
 	/**
 	 * @return DTO collection impl class
 	 */
-	Class<? extends Collection> getDtoCollectionClass();
+	Class< ? extends Collection> getDtoCollectionClass();
 
 	/**
 	 * @return new collection instance.
@@ -35,7 +35,7 @@ public interface CollectionPipeMetadata extends PipeMetadata {
 	/**
 	 * @return entity collection impl class
 	 */
-	Class<? extends Collection> getEntityCollectionClass();
+	Class< ? extends Collection> getEntityCollectionClass();
 
 	/**
 	 * @return new collection instance.
@@ -45,7 +45,7 @@ public interface CollectionPipeMetadata extends PipeMetadata {
 	/**
 	 * @return the entity's collection generic type to identity the type of items in entity collection.
 	 */
-	Class<?> getReturnType();
+	Class< ? > getReturnType();
 
 	/**
 	 * @return matcher instance that will help synchronize collections.

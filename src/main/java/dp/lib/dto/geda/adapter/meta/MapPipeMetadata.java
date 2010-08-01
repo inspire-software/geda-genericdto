@@ -45,7 +45,7 @@ public interface MapPipeMetadata extends PipeMetadata {
 	/**
 	 * @return the entity's collection/ map item generic type to identity the type of items in entity collection.
 	 */
-	Class<?> getReturnType();
+	Class< ? > getReturnType();
 	
 	/**
 	 * @return property whose value will be used as key for dto map.

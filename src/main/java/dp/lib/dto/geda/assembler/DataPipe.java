@@ -192,8 +192,7 @@ class DataPipe implements Pipe {
 	}
 
 	private Object getDtoValue(final Object dtoData, final Object entity, final Map<String, Object> converters,
-			final BeanFactory entityBeanFactory)
-	{
+			final BeanFactory entityBeanFactory) {
 		final Object dtoValue;
         if (usesConverter()) {
             if (entity instanceof NewDataProxy) {

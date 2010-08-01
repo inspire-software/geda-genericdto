@@ -107,7 +107,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
 	/**
 	 * @return the entity's collection generic type to identity the type of items in entity collection.
 	 */
-	public Class<?> getReturnType() {
+	public Class< ? > getReturnType() {
 		return returnType;
 	}
 	

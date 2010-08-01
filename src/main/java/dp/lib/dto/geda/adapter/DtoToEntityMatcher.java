@@ -16,6 +16,10 @@ package dp.lib.dto.geda.adapter;
  * match true will allow {@link dp.lib.dto.geda.assembler.Pipe} to determine whether
  * the entity has been removed, updated or DTO is to be added as new entity.
  * <p/>
+ * 
+ * @param <DTO> dto class
+ * @param <Entity> entity class
+ * 
  * User: Denis Pavlov
  * Date: Jan 25, 2010
  * Time: 1:05:45 PM
