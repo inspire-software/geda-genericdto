@@ -60,28 +60,24 @@ public final class DTOAssembler {
 	}
 
 	private void mapRelationMapping(final Class dto, final Class entity) {		
-		try {
-			
-			final PropertyDescriptor[] dtoPropertyDescriptors = 
-				Introspector.getBeanInfo(dto).getPropertyDescriptors();
-			final PropertyDescriptor[] entityPropertyDescriptors = 
-				Introspector.getBeanInfo(entity).getPropertyDescriptors();
 
+		final PropertyDescriptor[] dtoPropertyDescriptors = 
+			PropertyInspector.getPropertyDescriptorsForClass(dto);
+		final PropertyDescriptor[] entityPropertyDescriptors = 
+			PropertyInspector.getPropertyDescriptorsForClass(entity);
+
+		
+		final Field[] dtoFields = dto.getDeclaredFields();
+		for (Field dtoField : dtoFields) {
 			
-			final Field[] dtoFields = dto.getDeclaredFields();
-			for (Field dtoField : dtoFields) {
-				
-				final List<PipeMetadata> metas = MetadataChainBuilder.build(dtoField);
-				if (metas == null || metas.isEmpty()) {
-					continue;
-				}
-				final Pipe pipe = createPipeChain(dtoClass, dtoPropertyDescriptors, entityClass, entityPropertyDescriptors, dtoField, metas, 0);
-				final String binding = pipe.getBinding();
-				validateNewBinding(binding);
-				relationMapping.put(binding, pipe);
+			final List<PipeMetadata> metas = MetadataChainBuilder.build(dtoField);
+			if (metas == null || metas.isEmpty()) {
+				continue;
 			}
-		} catch (IntrospectionException intr) {
-			throw new IllegalArgumentException(intr);
+			final Pipe pipe = createPipeChain(dtoClass, dtoPropertyDescriptors, entityClass, entityPropertyDescriptors, dtoField, metas, 0);
+			final String binding = pipe.getBinding();
+			validateNewBinding(binding);
+			relationMapping.put(binding, pipe);
 		}
 	}
 	
