@@ -484,5 +484,61 @@ public class DTOAssemblerMappingTest {
 		
 	}
 	
+	/**
+	 * Test that if @Dto does not specify class name for entity constructor fails with 
+	 * {@link IllegalArgumentException}.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testDtoEntityClassAutoBindingWhenNotSpecified() {
+		
+		DTOAssembler.newAssembler(TestDto10Class.class);
+		
+	}
+	
+	/**
+	 * Test that if @Dto specifies class name for entity that cannot be loaded the 
+	 * constructor fails with {@link IllegalArgumentException}.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testDtoEntityClassAutoBindingWhenBadClassName() {
+		
+		DTOAssembler.newAssembler(TestDto13Class.class);
+		
+	}
+	
+	/**
+	 * Test that if @Dto specifies class name for entity the assembler is auto created
+	 * for that class or interface.
+	 */
+	@Test
+	public void testDtoEntityClassAutoBinding() {
+		
+		final TestDto1Interface dto = new TestDto1Class();
+		final TestEntity1Interface entity = new TestEntity1Class();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class);
+		
+		dto.setMyLong(1L);
+		dto.setMyDouble(0.2d);
+		dto.setMyString("string");
+		
+		assembler.assembleEntity(dto, entity, null, null);
+		
+		assertEquals(Long.valueOf(1L), entity.getEntityId());
+		assertEquals(Double.valueOf(0.2d), entity.getNumber());
+		assertEquals("string", entity.getName());
+		
+		entity.setEntityId(2L);
+		entity.setNumber(2d);
+		entity.setName("name");
+		
+		assembler.assembleDto(dto, entity, null, null);
+		
+		assertEquals(Long.valueOf(2L), dto.getMyLong());
+		assertEquals(Double.valueOf(2d), dto.getMyDouble());
+		assertEquals("name", dto.getMyString());
+		
+	}
+	
 	
 }

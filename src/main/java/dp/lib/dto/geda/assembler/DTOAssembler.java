@@ -121,32 +121,62 @@ public final class DTOAssembler {
                     + dtoClass.getCanonicalName());
         }
     }
+    
+    /**
+     * @param dto Dto concrete class that is annotated.
+     * @param entity the entity class or interface that has appropriate getters and setters
+     * @return assembler instance for this conversion.
+     * @throws IllegalArgumentException if dto class is not annotated 
+     *         with {@link dp.lib.dto.geda.annotations.Dto}, or if Dto annotation mapping is not correct
+     *         in respect to entity object
+     */
+    public static DTOAssembler newAssembler(
+    		final Class< ? > dto, final Class< ? > entity) throws IllegalArgumentException {
+    	
+    	if (dto.getAnnotation(Dto.class) == null) {
+    		throw new IllegalArgumentException("Dto " + dto.getName() + " must be annotated with @Dto");
+    	}
+    	
+    	return createNewAssembler(dto, entity);
+    }
+
+	private static DTOAssembler createNewAssembler(final Class<?> dto, final Class<?> entity) {
+		final String key = createAssemberKey(dto, entity);
+    	
+    	if (CACHE.containsKey(key)) {
+    		return CACHE.get(key);
+    	}
+    	
+    	final DTOAssembler assembler = new DTOAssembler(dto, entity);
+    	CACHE.put(key, assembler);
+    	
+    	return assembler;
+	}
     	
 	/**
-	 * @param dto Dto concrete class that is annotated.
-	 * @param entity the entity class or interface that has appropriate getters and setters
+	 * @param dto Dto concrete class that is annotated and value attribute of Dto is supplied.
 	 * @return assembler instance for this conversion.
 	 * @throws IllegalArgumentException if dto class is not annotated 
 	 *         with {@link dp.lib.dto.geda.annotations.Dto}, or if Dto annotation mapping is not correct
 	 *         in respect to entity object
 	 */
 	public static DTOAssembler newAssembler(
-			final Class< ? > dto, final Class< ? > entity) throws IllegalArgumentException {
+			final Class< ? > dto) throws IllegalArgumentException {
 		
-		if (dto.getAnnotation(Dto.class) == null) {
-			throw new IllegalArgumentException("Dto " + dto.getName() + " must be annotated with @Dto");
+		final Dto ann = dto.getAnnotation(Dto.class);
+		if (ann == null || ann.value() == null || ann.value().length() == 0) {
+			throw new IllegalArgumentException("Dto " + dto.getName() + " must be annotated with @Dto and value paramter is specified");
 		}
 		
-		final String key = createAssemberKey(dto, entity);
+		Class entity = null;
 		
-		if (CACHE.containsKey(key)) {
-			return CACHE.get(key);
+		try {
+			entity = Class.forName(ann.value());
+		} catch (ClassNotFoundException cnfe) {
+			throw new IllegalArgumentException("Specified entity class " + ann.value() + " for Dto " + dto.getName() + " cannot be loaded...");
 		}
 		
-		final DTOAssembler assembler = new DTOAssembler(dto, entity);
-		CACHE.put(key, assembler);
-		
-		return assembler;
+		return createNewAssembler(dto, entity);
 	}
 
 	private static <DTO, Entity> String createAssemberKey(final Class<DTO> dto,
