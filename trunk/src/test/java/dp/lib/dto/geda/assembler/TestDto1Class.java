@@ -21,7 +21,7 @@ import org.junit.Ignore;
  * @since 1.0.0
  *
  */
-@Dto
+@Dto("dp.lib.dto.geda.assembler.TestEntity1Class")
 @Ignore
 class TestDto1Class implements TestDto1Interface {
 

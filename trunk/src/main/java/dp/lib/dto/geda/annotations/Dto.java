@@ -24,4 +24,10 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Dto {
 	
+	/**
+	 * textual reference to class that will be binded to dto.
+	 * E.g. dp.lib.dto.geda.expample.MyEntityClass or dp.lib.dto.geda.expample.MyEntityInterface
+	 */
+	String value() default "";
+	
 }

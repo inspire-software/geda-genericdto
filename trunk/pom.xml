@@ -12,7 +12,7 @@
   <groupId>dp.lib</groupId>
   <artifactId>dp.lib-dto.GeDA</artifactId>
   <name>DP DTO Package</name>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <description>Provides serveral utilities managing DTO's in n-tier applications</description>
   <packaging>jar</packaging>
   
