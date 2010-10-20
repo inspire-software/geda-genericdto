@@ -11,8 +11,6 @@
 
 package dp.lib.dto.geda.adapter.repository;
 
-import dp.lib.dto.geda.adapter.ValueConverter;
-
 import java.io.Serializable;
 import java.util.Map;
 
@@ -28,19 +26,36 @@ public interface ValueConverterRepository extends Serializable {
     /**
      * @return all converters mapped for this repository.
      */
-    Map<String, ValueConverter> getAll();
+    Map<String, Object> getAll();
+    
+    /**
+     * Register a new converter in this repository.
+     * 
+     * @param key converter key
+     * @param converter converter to register
+     * @throws IllegalArgumentException in case if key is already used in this repository.
+     */
+    void registerValueConverter(String key, Object converter) throws IllegalArgumentException;
 
+    /**
+     * Removes converter under specified key. If no converter uses this key in this repository
+     * silently does nothing.
+     * 
+     * @param key converter key
+     */
+    void removeValueConverter(String key);
+    
     /**
      * @param keys keys for converters.
      * 
      * @return all converters mapped for this repository.
      */
-    Map<String, ValueConverter> getByKeysAsMap(final String ... keys);
+    Map<String, Object> getByKeysAsMap(final String ... keys);
 
     /**
      * @param key value converter key.
      * @return value converter for given key.
      */
-    ValueConverter getByKey(final String key);
+    <T> T getByKey(final String key);
 
 }
