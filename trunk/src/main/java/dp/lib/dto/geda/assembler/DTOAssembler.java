@@ -240,7 +240,7 @@ public final class DTOAssembler {
 					dtos.add(dto);
 				} catch (Exception exp) {
 					throw new IllegalArgumentException(
-							"Unable to create dto instance for: " + this.dtoClass.getName());
+							"Unable to create dto instance for: " + this.dtoClass.getName(), exp);
 				}
 			}
 			
