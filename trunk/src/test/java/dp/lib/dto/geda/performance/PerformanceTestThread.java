@@ -84,7 +84,7 @@ public class PerformanceTestThread implements Runnable
 		final long manualMillis = (endManual.getTime() - startManual.getTime());
 		System.out.println(endManual + " - finished manual copy in " + manualMillis + " millis");
 		
-		System.out.println("Performance " + (manualMillis /assemblyMillis) * 100 + "%");
+		System.out.println("Performance " + ((double) manualMillis / (double) assemblyMillis) * 100 + "%");
 		
 		
 	}

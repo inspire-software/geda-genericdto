@@ -27,5 +27,10 @@ public interface DataWriter {
 	 * @param value data to be set.
 	 */
 	void write(Object source, Object value);
+	
+	/**
+	 * @return return the class for the parameter value
+	 */
+	Class< ? > getParameterType();
 
 }

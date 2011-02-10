@@ -12,7 +12,6 @@
 package dp.lib.dto.geda.assembler;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.meta.PipeMetadata;
@@ -30,7 +29,7 @@ class NewDataProxy {
 	private final PipeMetadata meta;
 	private final boolean dto;
 	private final Object parentEntity;
-	private final Method entityWrite;
+	private final DataWriter entityWrite;
 	
 	/**
 	 * Constructor for proxy object that creates an entity only when it is needed.
@@ -46,7 +45,7 @@ class NewDataProxy {
 			final PipeMetadata meta,
 			final boolean dto,
 			final Object parentEntity,
-			final Method entityWrite) throws IllegalArgumentException {
+			final DataWriter entityWrite) throws IllegalArgumentException {
 
 		this.beanFactory = beanFactory;
 		this.meta = meta;
@@ -90,7 +89,7 @@ class NewDataProxy {
 			newObject = this.meta.newEntityBean(this.beanFactory);
 		}
 
-		this.entityWrite.invoke(parentObject, newObject);
+		this.entityWrite.write(parentObject, newObject);
 		return newObject;
 	}
 	

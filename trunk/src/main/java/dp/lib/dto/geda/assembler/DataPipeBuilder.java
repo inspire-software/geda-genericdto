@@ -37,6 +37,8 @@ final class DataPipeBuilder {
 	
 	/**
 	 * Builds the pipe.
+	 * 
+	 * @param synthesizer method synthesizer
 	 * @param dtoClass dto class
 	 * @param entityClass entity class
 	 * @param dtoPropertyDescriptors all DTO descriptors.
@@ -46,6 +48,7 @@ final class DataPipeBuilder {
 	 * @throws IllegalArgumentException when fails to find descriptors for fields
 	 */
 	public static Pipe build(
+			final MethodSynthesizer synthesizer,
 			final Class dtoClass, final Class entityClass,
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
@@ -57,7 +60,7 @@ final class DataPipeBuilder {
 		final PropertyDescriptor entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
 				dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
 		
-		final Method dtoParentReadMethod;
+		final DataReader dtoParentReadMethod;
 		
 
 		if (meta.isChild()) {
@@ -66,7 +69,7 @@ final class DataPipeBuilder {
 			final PropertyDescriptor[] dtoSubPropertyDescriptors = PropertyInspector.getPropertyDescriptorsForClass(returnType);
 			final PropertyDescriptor dtoParentDesc = PropertyInspector.getDtoPropertyDescriptorForField(
 					dtoClass, meta.getParentEntityPrimaryKeyField(), dtoSubPropertyDescriptors);
-			dtoParentReadMethod = dtoParentDesc.getReadMethod();
+			dtoParentReadMethod = synthesizer.synthesizeReader(dtoParentDesc);
 
 		} else {
 			
@@ -75,11 +78,11 @@ final class DataPipeBuilder {
 		}
 		
 		return new DataPipe(
-				dtoFieldDesc.getReadMethod(),
-				dtoFieldDesc.getWriteMethod(),
+				synthesizer.synthesizeReader(dtoFieldDesc),
+				synthesizer.synthesizeWriter(dtoFieldDesc),
 				dtoParentReadMethod,
-				entityFieldDesc.getReadMethod(),
-				entityFieldDesc.getWriteMethod(),
+				synthesizer.synthesizeReader(entityFieldDesc),
+				synthesizer.synthesizeWriter(entityFieldDesc),
 				meta
 		);
 	}

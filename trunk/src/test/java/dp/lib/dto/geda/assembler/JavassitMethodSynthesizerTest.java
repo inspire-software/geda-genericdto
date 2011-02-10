@@ -12,6 +12,11 @@
 package dp.lib.dto.geda.assembler;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -37,6 +42,25 @@ public class JavassitMethodSynthesizerTest
 		);
 		
 		assertEquals("Hello", readerMyString.read(dto));
+		assertEquals(String.class, readerMyString.getReturnType());
+		
+	}
+
+	@Test
+	public void testSynthesizeReaderOnClassOnPrimitive() {
+		
+		final TestEntity3Class dto = new TestEntity3Class();
+		dto.setDecision(true);
+		
+		final DataReader readerMyString = new JavassitMethodSynthesizer().synthesizeReader(
+				PropertyInspector.getDtoPropertyDescriptorForField(
+						TestEntity3Class.class, "decision", 
+						PropertyInspector.getPropertyDescriptorsForClass(TestEntity3Class.class)		
+				)		
+		);
+		
+		assertTrue((Boolean) readerMyString.read(dto));
+		assertEquals(Boolean.class, readerMyString.getReturnType());
 		
 	}
 
@@ -54,6 +78,41 @@ public class JavassitMethodSynthesizerTest
 		);
 		
 		assertEquals("Hello", readerMyString.read(dto));
+		assertEquals(String.class, readerMyString.getReturnType());
+		
+	}
+	
+	@Test
+	public void testSynthesizeReaderOnCollectionReturnType() {
+		
+		final TestDto12CollectionClass dto = new TestDto12CollectionClass();
+		
+		final DataReader readerMyString = new JavassitMethodSynthesizer().synthesizeReader(
+				PropertyInspector.getDtoPropertyDescriptorForField(
+						TestDto12CollectionClass.class, "items", 
+						PropertyInspector.getPropertyDescriptorsForClass(TestDto12CollectionClass.class)		
+				)		
+		);
+		
+		assertNull(readerMyString.read(dto));
+		assertEquals(Collection.class, readerMyString.getReturnType());
+		
+	}
+	
+	@Test
+	public void testSynthesizeReaderOnMapReturnType() {
+		
+		final TestDto12MapToMapClass dto = new TestDto12MapToMapClass();
+		
+		final DataReader readerMyString = new JavassitMethodSynthesizer().synthesizeReader(
+				PropertyInspector.getDtoPropertyDescriptorForField(
+						TestDto12MapToMapClass.class, "items", 
+						PropertyInspector.getPropertyDescriptorsForClass(TestDto12MapToMapClass.class)		
+				)		
+		);
+		
+		assertNull(readerMyString.read(dto));
+		assertEquals(Map.class, readerMyString.getReturnType());
 		
 	}
 	
@@ -63,14 +122,15 @@ public class JavassitMethodSynthesizerTest
 		final TestDto1Class dto = new TestDto1Class();
 		dto.setMyString("Hello");
 		
-		final DataWriter readerMyString = new JavassitMethodSynthesizer().synthesizeWriter(
+		final DataWriter writerMyString = new JavassitMethodSynthesizer().synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Class.class, "myString", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestDto1Class.class)		
 				)		
 		);
 		
-		readerMyString.write(dto, "Goodbye");
+		assertEquals(String.class, writerMyString.getParameterType());
+		writerMyString.write(dto, "Goodbye");
 		assertEquals("Goodbye", dto.getMyString());
 		
 	}
@@ -81,14 +141,15 @@ public class JavassitMethodSynthesizerTest
 		final TestDto1Interface dto = new TestDto1Class();
 		dto.setMyString("Hello");
 		
-		final DataWriter readerMyString = new JavassitMethodSynthesizer().synthesizeWriter(
+		final DataWriter writerMyString = new JavassitMethodSynthesizer().synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "myString", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestDto1Interface.class)		
 				)		
 		);
 		
-		readerMyString.write(dto, "Goodbye");
+		assertEquals(String.class, writerMyString.getParameterType());
+		writerMyString.write(dto, "Goodbye");
 		assertEquals("Goodbye", dto.getMyString());
 		
 	}

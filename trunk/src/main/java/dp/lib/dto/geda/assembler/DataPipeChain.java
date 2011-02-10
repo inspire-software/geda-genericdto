@@ -11,7 +11,6 @@
 package dp.lib.dto.geda.assembler;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
@@ -29,8 +28,8 @@ class DataPipeChain implements Pipe {
 
 	private final PipeMetadata meta;
 	
-	private final Method entityRead;
-	private final Method entityWrite;
+	private final DataReader entityRead;
+	private final DataWriter entityWrite;
 
 	private final Pipe pipe;
 	
@@ -40,8 +39,8 @@ class DataPipeChain implements Pipe {
 	 * @param pipe the inner pipe.
 	 * @param meta meta data for this data delegate
 	 */
-	public DataPipeChain(final Method entityRead, 
-					     final Method entityWrite,
+	public DataPipeChain(final DataReader entityRead, 
+					     final DataWriter entityWrite,
 						 final Pipe pipe,
 						 final PipeMetadata meta) {
 		this.entityRead = entityRead;
@@ -63,7 +62,7 @@ class DataPipeChain implements Pipe {
 
 		Object entityDataDelegate = null;
 		if (!(entity instanceof NewDataProxy)) {
-			entityDataDelegate = this.entityRead.invoke(entity);
+			entityDataDelegate = this.entityRead.read(entity);
 		}
 		if (entityDataDelegate == null) {
 			
@@ -90,7 +89,7 @@ class DataPipeChain implements Pipe {
 			return;
 		}
 
-		final Object entityDataDelegate = this.entityRead.invoke(entity);
+		final Object entityDataDelegate = this.entityRead.read(entity);
 		pipe.writeFromEntityToDto(entityDataDelegate, dto, converters, dtoBeanFactory);
 		
 	}
