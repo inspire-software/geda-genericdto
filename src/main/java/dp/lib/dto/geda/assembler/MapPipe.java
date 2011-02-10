@@ -12,7 +12,6 @@
 package dp.lib.dto.geda.assembler;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -35,13 +34,13 @@ class MapPipe implements Pipe {
 
     private final MapPipeMetadata meta;
 
-	private final Method dtoRead;
-	private final Method dtoWrite;
+	private final DataReader dtoRead;
+	private final DataWriter dtoWrite;
 
-	private final Method entityRead;
-	private final Method entityWrite;
+	private final DataReader entityRead;
+	private final DataWriter entityWrite;
 	
-	private final Method entityCollectionKeyRead;
+	private final DataReader entityCollectionKeyRead;
 
     /**
 	 * @param dtoRead method for reading data from DTO field
@@ -51,11 +50,11 @@ class MapPipe implements Pipe {
      * @param entityCollectionKeyRead for reading the key of collection
      * @param meta collection pipe meta
      */
-    MapPipe(final Method dtoRead,
-                   final Method dtoWrite,
-                   final Method entityRead,
-                   final Method entityWrite,
-                   final Method entityCollectionKeyRead,
+    MapPipe(final DataReader dtoRead,
+                   final DataWriter dtoWrite,
+                   final DataReader entityRead,
+                   final DataWriter entityWrite,
+                   final DataReader entityCollectionKeyRead,
                    final MapPipeMetadata meta) {
     	
     	this.meta = meta;
@@ -88,7 +87,7 @@ class MapPipe implements Pipe {
                                      final BeanFactory dtoBeanFactory)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-        final Object entityCollection = this.entityRead.invoke(entity);
+        final Object entityCollection = this.entityRead.read(entity);
 
         if (entityCollection instanceof Collection) {
             final Collection entities = (Collection) entityCollection;
@@ -102,14 +101,14 @@ class MapPipe implements Pipe {
 
                 for (Object object : entities) {
 
-                	final Object key = this.entityCollectionKeyRead.invoke(object);
+                	final Object key = this.entityCollectionKeyRead.read(object);
                     assembler.assembleDto(newDto, object, converters, dtoBeanFactory);
                     dtos.put(key, newDto);
 
                     newDto = this.meta.newDtoBean(dtoBeanFactory);
                 }
 
-                this.dtoWrite.invoke(dto, dtos);
+                this.dtoWrite.write(dto, dtos);
 
             } catch (IllegalArgumentException iae) {
                 if (iae.getMessage().startsWith("This assembler is only applicable for entity")) {
@@ -139,7 +138,7 @@ class MapPipe implements Pipe {
                     newDto = this.meta.newDtoBean(dtoBeanFactory);
                 }
 
-                this.dtoWrite.invoke(dto, dtos);
+                this.dtoWrite.write(dto, dtos);
 
             } catch (IllegalArgumentException iae) {
                 if (iae.getMessage().startsWith("This assembler is only applicable for entity")) {
@@ -164,7 +163,7 @@ class MapPipe implements Pipe {
            return;
        }
 
-       final Object dtoColl = this.dtoRead.invoke(dto);
+       final Object dtoColl = this.dtoRead.read(dto);
 
        if (dtoColl instanceof Map) {
            // need to synch
@@ -176,7 +175,7 @@ class MapPipe implements Pipe {
         	   entity = entityObj;
            }
            
-           final Object originalEntityColl = this.entityRead.invoke(entity);
+           final Object originalEntityColl = this.entityRead.read(entity);
 
     	   
            Object original = null;
@@ -184,7 +183,7 @@ class MapPipe implements Pipe {
                original = originalEntityColl;
            } else {
                original = this.meta.newEntityMapOrCollection();
-               this.entityWrite.invoke(entity,  original);
+               this.entityWrite.write(entity,  original);
            }
 
            final Map dtos = (Map) dtoColl;
@@ -198,7 +197,7 @@ class MapPipe implements Pipe {
            }    
 
        } else if (entityObj != null && !(entityObj instanceof NewDataProxy)) {
-    	   final Object originalEntityColl = this.entityRead.invoke(entityObj);
+    	   final Object originalEntityColl = this.entityRead.read(entityObj);
     	   if (originalEntityColl instanceof Collection) {
 	           // if there were items then clear it
 	           ((Collection) originalEntityColl).clear();

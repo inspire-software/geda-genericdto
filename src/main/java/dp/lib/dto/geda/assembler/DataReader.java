@@ -28,4 +28,9 @@ public interface DataReader {
 	 */
 	Object read(Object source);
 	
+	/**
+	 * @return return the class for this return type
+	 */
+	Class< ? > getReturnType();
+	
 }

@@ -10,8 +10,6 @@
 
 package dp.lib.dto.geda.assembler;
 
-import java.lang.reflect.Method;
-
 import dp.lib.dto.geda.annotations.Dto;
 
 /**
@@ -38,10 +36,10 @@ final class PipeValidator {
      * @throws IllegalArgumentException if any of pipe is null (exception is thrown with
      *         a bit more clarification then the generic one).
      */
-    static void validatePipeNonNull(final Method dtoRead,
-                                  final Method dtoWrite,
-                                  final Method entityRead,
-                                  final Method entityWrite)
+    static void validatePipeNonNull(final DataReader dtoRead,
+                                    final DataWriter dtoWrite,
+                                    final DataReader entityRead,
+                                    final DataWriter entityWrite)
             throws IllegalArgumentException {
 
     	validateReadPipeNonNull(dtoWrite, entityRead);
@@ -57,8 +55,8 @@ final class PipeValidator {
      * @throws IllegalArgumentException if any of pipe is null (exception is thrown with
      *         a bit more clarification then the generic one).
      */
-    static void validateReadPipeNonNull(final Method dtoWrite,
-    										 final Method entityRead)
+    static void validateReadPipeNonNull(final DataWriter dtoWrite,
+    									final DataReader entityRead)
     	throws IllegalArgumentException {
     	
     	validatePipeNonNull(entityRead, "Entity read i.e. Entity.get()");
@@ -74,8 +72,8 @@ final class PipeValidator {
      * @throws IllegalArgumentException if any of pipe is null (exception is thrown with
      *         a bit more clarification then the generic one).
      */
-    static void validateWritePipeNonNull(final Method dtoRead,
-            								  final Method entityWrite)
+    static void validateWritePipeNonNull(final DataReader dtoRead,
+            						     final DataWriter entityWrite)
     	throws IllegalArgumentException {
     	
     	validatePipeNonNull(dtoRead, "DTO read i.e. DTO.get()");
@@ -91,7 +89,7 @@ final class PipeValidator {
      * 
      * @throws IllegalArgumentException if method is null with some sensible message
      */
-    static void validatePipeNonNull(final Method meth, final String desc) throws IllegalArgumentException {
+    static void validatePipeNonNull(final Object meth, final String desc) throws IllegalArgumentException {
     	if (meth == null) {
     		throw new IllegalArgumentException("Data pipe method for [" + desc 
     				+ "] is not initialized. Please check parameter and return types of your getters/setters");
@@ -109,10 +107,10 @@ final class PipeValidator {
      * @throws IllegalArgumentException if arguments do not match (exception is thrown with
      *         a bit more clarification then the generic one).
      */
-    static void validatePipeTypes(final Method dtoRead,
-                                  final Method dtoWrite,
-                                  final Method entityRead,
-                                  final Method entityWrite)
+    static void validatePipeTypes(final DataReader dtoRead,
+                                  final DataWriter dtoWrite,
+                                  final DataReader entityRead,
+                                  final DataWriter entityWrite)
             throws IllegalArgumentException {
 
         validateReadPipeTypes(dtoWrite, entityRead);
@@ -143,11 +141,11 @@ final class PipeValidator {
      * @throws IllegalArgumentException if arguments do not match (exception is thrown with
      *         a bit more clarification then the generic one).
      */
-    static void validateReadPipeTypes(final Method dtoWrite,
-                                       final Method entityRead)
+    static void validateReadPipeTypes(final DataWriter dtoWrite,
+                                       final DataReader entityRead)
             throws IllegalArgumentException {
 
-        final Class< ? > dtoWriteClass = dtoWrite.getParameterTypes()[0];
+        final Class< ? > dtoWriteClass = dtoWrite.getParameterType();
         final Class< ? > entityReadClass = entityRead.getReturnType();
 
         
@@ -165,7 +163,7 @@ final class PipeValidator {
         		&& !sameDataType(dtoWriteClass, entityReadClass)
         	) {
             throw new IllegalArgumentException("Type mismatch is detected for: DTO write {" + dtoWrite
-                    + "} and Entity read {" + entityRead + "}. Consider using a converter.");
+                    + "}{" + dtoWriteClass + "} and Entity read {" + entityRead + "}{" + entityReadClass + "}. Consider using a converter.");
         }
     }
 
@@ -178,12 +176,12 @@ final class PipeValidator {
      * @throws IllegalArgumentException if arguments do not match (exception is thrown with
      *         a bit more clarification then the generic one).
      */
-    static void validateWritePipeTypes(final Method dtoRead,
-                                      final Method entityWrite)
+    static void validateWritePipeTypes(final DataReader dtoRead,
+                                      final DataWriter entityWrite)
             throws IllegalArgumentException {
 
         final Class< ? > dtoReadClass = dtoRead.getReturnType();
-        final Class< ? > entityWriteClass = entityWrite.getParameterTypes()[0];
+        final Class< ? > entityWriteClass = entityWrite.getParameterType();
 
         // Object checking is for generics - they are too much effort just let it go
         if (

@@ -12,7 +12,6 @@
 package dp.lib.dto.geda.assembler;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,11 +32,11 @@ class CollectionPipe implements Pipe {
 
     private final CollectionPipeMetadata meta;
 
-	private final Method dtoRead;
-	private final Method dtoWrite;
+	private final DataReader dtoRead;
+	private final DataWriter dtoWrite;
 
-	private final Method entityRead;
-	private final Method entityWrite;
+	private final DataReader entityRead;
+	private final DataWriter entityWrite;
 
     /**
 	 * @param dtoRead method for reading data from DTO field
@@ -46,10 +45,10 @@ class CollectionPipe implements Pipe {
      * @param entityWrite method for writting data to Entity field
      * @param meta collection pipe meta
      */
-    CollectionPipe(final Method dtoRead,
-                   final Method dtoWrite,
-                   final Method entityRead,
-                   final Method entityWrite,
+    CollectionPipe(final DataReader dtoRead,
+                   final DataWriter dtoWrite,
+                   final DataReader entityRead,
+                   final DataWriter entityWrite,
                    final CollectionPipeMetadata meta) {
     	
     	this.meta = meta;
@@ -81,7 +80,7 @@ class CollectionPipe implements Pipe {
                                      final BeanFactory dtoBeanFactory)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-        final Object entityCollection = this.entityRead.invoke(entity);
+        final Object entityCollection = this.entityRead.read(entity);
 
         if (entityCollection instanceof Collection) {
             final Collection entities = (Collection) entityCollection;
@@ -101,7 +100,7 @@ class CollectionPipe implements Pipe {
                     newDto = this.meta.newDtoBean(dtoBeanFactory);
                 }
 
-                this.dtoWrite.invoke(dto, dtos);
+                this.dtoWrite.write(dto, dtos);
 
             } catch (IllegalArgumentException iae) {
                 if (iae.getMessage().startsWith("This assembler is only applicable for entity")) {
@@ -126,7 +125,7 @@ class CollectionPipe implements Pipe {
            return;
        }
 
-       final Object dtoColl = this.dtoRead.invoke(dto);
+       final Object dtoColl = this.dtoRead.read(dto);
 
        if (dtoColl instanceof Collection) {
            // need to synch
@@ -138,14 +137,14 @@ class CollectionPipe implements Pipe {
         	   entity = entityObj;
            }
            
-           final Object originalEntityColl = this.entityRead.invoke(entity);
+           final Object originalEntityColl = this.entityRead.read(entity);
 
            Collection original = null;
            if (originalEntityColl instanceof Collection) {
                original = (Collection) originalEntityColl;
            } else {
                original = this.meta.newEntityCollection();
-               this.entityWrite.invoke(entity,  original);
+               this.entityWrite.write(entity,  original);
            }
 
            final Collection dtos = (Collection) dtoColl;
@@ -155,7 +154,7 @@ class CollectionPipe implements Pipe {
            addOrUpdateItems(dto, converters, entityBeanFactory, original, dtos);
 
        } else if (entityObj != null && !(entityObj instanceof NewDataProxy)) {
-    	   final Object originalEntityColl = this.entityRead.invoke(entityObj);
+    	   final Object originalEntityColl = this.entityRead.read(entityObj);
     	   if (originalEntityColl instanceof Collection) {
 	          // if there were items then clear it
 	          ((Collection) originalEntityColl).clear();

@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
@@ -35,12 +36,59 @@ import dp.lib.dto.geda.annotations.Dto;
 @SuppressWarnings("unchecked")
 public final class DTOAssembler {
 	
-	private static final Map<String, DTOAssembler> CACHE = new HashMap<String, DTOAssembler>();	
+	/**
+	 * int number that allows to define the number of DTOAssembler.CACHE.put() calls after which cache cleanup is launched.
+	 * Default setting for this is 50 (i.e. after 50 put's the clean up is launched).
+	 */
+	public static final String SETTING_ASSEMBLER_CACHE_CLEANUP_CYCLE = "dp.lib.dto.geda.assembler.DTOAssembler.ASSEMBLER_CACHE_CLEANUP_CYCLE";
+	/**
+	 * int number that allows to define the number of JavassitMethodSynthesizer.READER_CACHE.put() calls after which cache cleanup is launched.
+	 * Default setting for this is 100 (i.e. after 100 put's the clean up is launched).
+	 */
+	public static final String SETTING_DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE = "dp.lib.dto.geda.assembler.DTOAssembler.DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE";
+
+	/**
+	 * int number that allows to define the number of JavassitMethodSynthesizer.WRITER_CACHE.put() calls after which cache cleanup is launched.
+	 * Default setting for this is 100 (i.e. after 100 put's the clean up is launched).
+	 */
+	public static final String SETTING_DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE = "dp.lib.dto.geda.assembler.DTOAssembler.DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE";
+	
+	
+	private static final Cache<String, DTOAssembler> CACHE = new SoftReferenceCache<String, DTOAssembler>(50);	
+	
+	/**
+	 * Setup allows to configure some of the behaviour of GeDA. Currently it is used to tune the caching cleanup cycles.
+	 * There are two caches used in GeDA:
+	 * <ul>
+	 * <li>DTOAssembler cache - that caches the assemblers instances</li>
+	 * <li>Dynamic classes cache - that caches the instances of {@link DataReader}s and {@link DataWriter}s</li>
+	 * </ul>
+	 * 
+	 * @param props properties with key specified by DTOAssembler.SETTINGS_* keys
+	 * 
+	 * @throws NumberFormatException if the number of cycles specified in properties cannot be converted to int.
+	 */
+	public static void setup(final Properties props) throws NumberFormatException {
+		final String assemblerCache = props.getProperty(SETTING_ASSEMBLER_CACHE_CLEANUP_CYCLE);
+		final String javassistReaderCache = props.getProperty(SETTING_DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE);
+		final String javassistWriterCache = props.getProperty(SETTING_DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE);
+		if (assemblerCache != null) {
+			((SoftReferenceCache<String, DTOAssembler>) CACHE).setCleanUpCycle(Integer.valueOf(assemblerCache));
+		}
+		if (javassistReaderCache != null) {
+			((JavassitMethodSynthesizer) SYNTHESIZER).setCleanUpReaderCycle(Integer.valueOf(javassistReaderCache));
+		}
+		if (javassistWriterCache != null) {
+			((JavassitMethodSynthesizer) SYNTHESIZER).setCleanUpWriterCycle(Integer.valueOf(javassistWriterCache));
+		}
+	}
 	
 	private final Class dtoClass;
 	private final Class entityClass;
 	
 	private final Map<String, Pipe> relationMapping = new HashMap<String, Pipe>();
+	
+	private static final MethodSynthesizer SYNTHESIZER = new JavassitMethodSynthesizer(); 
 	
 	private DTOAssembler(final Class dto, final Class entity) 
 		throws IllegalArgumentException {
@@ -89,13 +137,13 @@ public final class DTOAssembler {
 		if (index + 1 == metas.size()) {
 			if (meta instanceof FieldPipeMetadata) {
 				// create field pipe
-				return DataPipeBuilder.build(dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
+				return DataPipeBuilder.build(SYNTHESIZER, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
 			} else if (meta instanceof CollectionPipeMetadata) {
 				// create collection
-				return CollectionPipeBuilder.build(dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (CollectionPipeMetadata) meta);
+				return CollectionPipeBuilder.build(SYNTHESIZER, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (CollectionPipeMetadata) meta);
 			} else if (meta instanceof MapPipeMetadata) {
 				// create map
-				return MapPipeBuilder.build(dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (MapPipeMetadata) meta);
+				return MapPipeBuilder.build(SYNTHESIZER, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (MapPipeMetadata) meta);
 			} else {
 				throw new IllegalArgumentException("Unknown pipe meta: " + meta.getClass());
 			}
@@ -106,7 +154,7 @@ public final class DTOAssembler {
 		final PropertyDescriptor[] nestedEntityPropertyDescriptors = PropertyInspector.getPropertyDescriptorsForClassReturnedByGet(nested);
 		
 		// build a chain pipe
-		return DataPipeChainBuilder.build(dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, meta, 
+		return DataPipeChainBuilder.build(SYNTHESIZER, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, meta, 
 				createPipeChain(dto, dtoPropertyDescriptors, entity, nestedEntityPropertyDescriptors, dtoField, metas, index + 1)	
 			);
 		
@@ -141,13 +189,11 @@ public final class DTOAssembler {
 	private static DTOAssembler createNewAssembler(final Class<?> dto, final Class<?> entity) {
 		final String key = createAssemberKey(dto, entity);
     	
-    	if (CACHE.containsKey(key)) {
-    		return CACHE.get(key);
-    	}
-    	
-    	final DTOAssembler assembler = new DTOAssembler(dto, entity);
-    	CACHE.put(key, assembler);
-    	
+		DTOAssembler assembler = CACHE.get(key);
+		if (assembler == null) {
+			assembler = new DTOAssembler(dto, entity);
+	    	CACHE.put(key, assembler);
+		}
     	return assembler;
 	}
     	

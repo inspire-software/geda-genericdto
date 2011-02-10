@@ -12,7 +12,6 @@
 package dp.lib.dto.geda.assembler;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 
 import dp.lib.dto.geda.adapter.meta.PipeMetadata;
 
@@ -32,6 +31,8 @@ final class DataPipeChainBuilder {
 	
 	/**
 	 * Builds the pipe.
+	 * 
+	 * @param synthesizer method synthesizer
 	 * @param dtoClass dto class
 	 * @param entityClass entity class
 	 * @param dtoPropertyDescriptors all DTO descriptors.
@@ -42,6 +43,7 @@ final class DataPipeChainBuilder {
 	 * @throws IllegalArgumentException when fails to find descriptors for fields
 	 */
 	public static Pipe build(
+			final MethodSynthesizer synthesizer,
 			final Class dtoClass, final Class entityClass,
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
@@ -50,8 +52,8 @@ final class DataPipeChainBuilder {
 		final PropertyDescriptor entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
 				dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
 		
-		final Method entityFieldRead = entityFieldDesc.getReadMethod();
-		final Method entityFieldWrite = entityFieldDesc.getWriteMethod();
+		final DataReader entityFieldRead = synthesizer.synthesizeReader(entityFieldDesc);
+		final DataWriter entityFieldWrite = synthesizer.synthesizeWriter(entityFieldDesc);
 		
 		return new DataPipeChain(entityFieldRead, entityFieldWrite, pipe, meta);
 		

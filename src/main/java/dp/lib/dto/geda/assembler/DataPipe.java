@@ -12,7 +12,6 @@
 package dp.lib.dto.geda.assembler;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
@@ -32,15 +31,15 @@ class DataPipe implements Pipe {
 	
     private final FieldPipeMetadata meta;
     
-    private final Method dtoParentKeyRead;
+    private final DataReader dtoParentKeyRead;
 
-    private final Method dtoRead;
-	private final Method dtoWrite;
+    private final DataReader dtoRead;
+	private final DataWriter dtoWrite;
 	
-	private final Method entityRead;
-	private final Method entityWrite;
+	private final DataReader entityRead;
+	private final DataWriter entityWrite;
 	
-	private static final Object[] NULL = { null };
+	private static final Object NULL = null;
 	
 	/**
 	 * @param dtoRead method for reading data from DTO field
@@ -50,11 +49,11 @@ class DataPipe implements Pipe {
 	 * @param entityWrite method for writting data to Entity field
 	 * @param meta meta data for this pipe.
 	 */
-	public DataPipe(final Method dtoRead,
-					final Method dtoWrite,
-					final Method dtoParentKeyRead,
-					final Method entityRead,
-					final Method entityWrite,
+	public DataPipe(final DataReader dtoRead,
+					final DataWriter dtoWrite,
+					final DataReader dtoParentKeyRead,
+					final DataReader entityRead,
+					final DataWriter entityWrite,
 					final FieldPipeMetadata meta) {
 		
 		this.meta = meta;
@@ -110,7 +109,7 @@ class DataPipe implements Pipe {
 			return;
 		}
 
-		final Object entityData = this.entityRead.invoke(entity);
+		final Object entityData = this.entityRead.read(entity);
 
 		if (entityData != null) {
 	        if (hasSubEntity()) {
@@ -120,15 +119,15 @@ class DataPipe implements Pipe {
 	        } else {
 			
 	            if (usesConverter()) {
-	                this.dtoWrite.invoke(dto, getConverter(converters).convertToDto(entityData, dtoBeanFactory));
+	                this.dtoWrite.write(dto, getConverter(converters).convertToDto(entityData, dtoBeanFactory));
 	            } else {
-	                this.dtoWrite.invoke(dto, entityData);
+	                this.dtoWrite.write(dto, entityData);
 	            }
 	            
 	        }
 		} else {
 			
-			this.dtoWrite.invoke(dto, NULL);
+			this.dtoWrite.write(dto, NULL);
 		
 		}
 	}
@@ -161,7 +160,7 @@ class DataPipe implements Pipe {
 		}
 
 		
-        final Object dtoData = this.dtoRead.invoke(dto);
+        final Object dtoData = this.dtoRead.read(dto);
         
         if (this.meta.isChild()) {
         	
@@ -181,11 +180,11 @@ class DataPipe implements Pipe {
                 assembleSubEntity(dtoValue, parentEntity, converters, entityBeanFactory);
                 
             } else {
-                this.entityWrite.invoke(parentEntity, dtoValue);
+                this.entityWrite.write(parentEntity, dtoValue);
             }
         } else if (entity != null && !(entity instanceof NewDataProxy)) {
             // if the dtoValue is null the setting only makes sense if the entity bean existed.
-            this.entityWrite.invoke(entity, NULL);
+            this.entityWrite.write(entity, NULL);
         }
 
 
@@ -210,13 +209,13 @@ class DataPipe implements Pipe {
 			final Map<String, Object> converters, final BeanFactory entityBeanFactory) 
 		throws IllegalAccessException, InvocationTargetException {
 		
-		Object dataEntity = this.entityRead.invoke(parentEntity);
+		Object dataEntity = this.entityRead.read(parentEntity);
 		if (dataEntity == null) {
 		    if (entityBeanFactory == null || this.meta.getEntityBeanKey() == null) {
 		        throw new IllegalArgumentException("Need to specify bean factory and bean key for DTO's entity " + dtoValue.getClass());
 		    }
 		    dataEntity = this.meta.newEntityBean(entityBeanFactory);
-		    this.entityWrite.invoke(parentEntity, dataEntity);
+		    this.entityWrite.write(parentEntity, dataEntity);
 		}
 
 		final DTOAssembler assembler = DTOAssembler.newAssembler(dtoValue.getClass(), dataEntity.getClass());
@@ -237,12 +236,12 @@ class DataPipe implements Pipe {
 		if (dtoData == null) {
 			if (entity != null) {
 		        // if the dtoValue is null the setting only makes sense if the entity bean existed.
-		        this.entityWrite.invoke(entity, NULL);
+		        this.entityWrite.write(entity, NULL);
 		    }
 		} else {
 			
-			final Object primaryKey = this.dtoParentKeyRead.invoke(dtoData);
-			final Class returnType = (Class) this.entityRead.getGenericReturnType();
+			final Object primaryKey = this.dtoParentKeyRead.read(dtoData);
+			final Class returnType = this.entityRead.getReturnType();
 			if (entityBeanFactory == null || this.meta.getEntityBeanKey() == null) {
 		        throw new IllegalArgumentException("Need to specify bean factory and bean key for DTO's entity " + dtoData.getClass());
 		    }
@@ -250,9 +249,9 @@ class DataPipe implements Pipe {
 			final Object entityForPk = getRetriever(converters).retrieveByPrimaryKey(returnType, beanClass, primaryKey);
 			if (entityForPk == null) { 
 				// we did not find anything, so null it. Maybe need to throw exception here or maybe it is retiriever's job?
-				this.entityWrite.invoke(entity, NULL);
+				this.entityWrite.write(entity, NULL);
 			} else {
-				this.entityWrite.invoke(entity, entityForPk);
+				this.entityWrite.write(entity, entityForPk);
 			}
 		}
 	}
