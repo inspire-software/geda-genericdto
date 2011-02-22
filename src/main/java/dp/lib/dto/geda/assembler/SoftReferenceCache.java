@@ -13,8 +13,8 @@ package dp.lib.dto.geda.assembler;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * GC friendly implementation of cache using SoftReferences.
@@ -24,8 +24,8 @@ import java.util.Map;
  */
 public class SoftReferenceCache<K, V> implements Cache<K, V> {
 
-	private final Map<K, SoftReference<V>> cache = new HashMap<K, SoftReference<V>>();
-	private final Map<SoftReference<V>, K> cacheKeys = new HashMap<SoftReference<V>, K>();
+	private final Map<K, SoftReference<V>> cache = new ConcurrentHashMap<K, SoftReference<V>>();
+	private final Map<SoftReference<V>, K> cacheKeys = new ConcurrentHashMap<SoftReference<V>, K>();
 	
 	private final ReferenceQueue<V> refQueue = new ReferenceQueue<V>();
 	private int cleanUpCycle;

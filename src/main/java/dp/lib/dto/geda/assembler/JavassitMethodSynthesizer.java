@@ -7,6 +7,8 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -27,8 +29,11 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(JavassitMethodSynthesizer.class);
 	
-	private static final Cache<String, DataReader> READER_CACHE = new SoftReferenceCache<String, DataReader>(100);
-	private static final Cache<String, DataWriter> WRITER_CACHE = new SoftReferenceCache<String, DataWriter>(100);
+	private final Lock readLock = new ReentrantLock();
+	private final Lock writeLock = new ReentrantLock();
+	
+	private static final Cache<String, Object> READER_CACHE = new SoftReferenceCache<String, Object>(100);
+	private static final Cache<String, Object> WRITER_CACHE = new SoftReferenceCache<String, Object>(100);
 	
 	private static final Map<String, String> PRIMITIVE_TO_WRAPPER = new HashMap<String, String>();
 	static {
@@ -55,11 +60,11 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	}
 	
 	public void setCleanUpReaderCycle(final int cleanUpReaderCycle) {
-		((SoftReferenceCache<String, DataReader>) READER_CACHE).setCleanUpCycle(cleanUpReaderCycle);
+		((SoftReferenceCache<String, Object>) READER_CACHE).setCleanUpCycle(cleanUpReaderCycle);
 	}
 
 	public void setCleanUpWriterCycle(final int cleanUpWriterCycle) {
-		((SoftReferenceCache<String, DataWriter>) WRITER_CACHE).setCleanUpCycle(cleanUpWriterCycle);
+		((SoftReferenceCache<String, Object>) WRITER_CACHE).setCleanUpCycle(cleanUpWriterCycle);
 	}
 	
 	/** {@inheritDoc} */
@@ -74,20 +79,40 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		
 		DataReader reader;
 		
-		// 1. Try to get cached instance
-		reader = READER_CACHE.get(readerClassName);
-		if (reader != null) {
-			return reader;
+		reader = getFromCacheOrCreateFromClassLoader(readerClassName, READER_CACHE, getClassLoader());
+		
+		if (reader == null) {
+			readLock.lock();
+			try {
+				do {
+					reader = makeReaderClass(ClassPool.getDefault(), readerClassName, sourceClassNameFull, sourceClassGetterMethodName, readMethod.getGenericReturnType());
+					if (reader == null) {
+						reader = getFromCacheOrCreateFromClassLoader(readerClassName, READER_CACHE, getClassLoader());
+					}
+				} while (reader == null);
+			} finally {
+				readLock.unlock();
+			}
+		}
+		return reader;
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> T getFromCacheOrCreateFromClassLoader(final String readerClassName, 
+													  final Cache<String, Object> cache, 
+													  final ClassLoader classLoader) {
+		Object instance;
+
+		instance = cache.get(readerClassName);
+		if (instance != null) {
+			return (T) instance;
 		}
 		
-		// 2. Try to check if we have class in the class loader.
-		reader = createInstanceFromClassLoader(getClassLoader(), readerClassName);
-		if (reader != null) {
-			return reader;
+		instance = createInstanceFromClassLoader(getClassLoader(), readerClassName);
+		if (instance != null) {
+			return (T) instance;
 		}
-		
-		// 3. It cannot be found anywhere so we need to make one.
-		return makeReaderClass(ClassPool.getDefault(), readerClassName, sourceClassNameFull, sourceClassGetterMethodName, readMethod.getGenericReturnType());
+		return null;
 	}
 
 	private DataReader makeReaderClass(final ClassPool pool, 
@@ -162,7 +187,8 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		} catch (NotFoundException nfe) {
 			throw new IllegalArgumentException("Unable to create class: " + readerClassName, nfe);
 		} catch (CannotCompileException cce) {
-			throw new IllegalArgumentException("Unable to create method in class: " + readerClassName, cce);
+			LOG.warn("Unable to create method in class: " + readerClassName + "... posibly class already loaded");
+			return null;
 		} catch (InstantiationException ite) {
 			throw new IllegalArgumentException("Unable to instantiate class: " + readerClassName, ite);
 		} catch (IllegalAccessException iae) {
@@ -182,20 +208,21 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		
 		DataWriter writer;
 
-		// 1. Try to get cached instance
-		writer = WRITER_CACHE.get(writerClassName);
-		if (writer != null) {
-			return writer;
+		writer = getFromCacheOrCreateFromClassLoader(writerClassName, WRITER_CACHE, getClassLoader());
+		if (writer == null) {
+			writeLock.lock();
+			try {
+				do {
+					writer = makeWriterClass(ClassPool.getDefault(), writerClassName, classNameFull, methodName, writeMethod.getParameterTypes()[0]);
+					if (writer == null) {
+						writer = getFromCacheOrCreateFromClassLoader(writerClassName, WRITER_CACHE, getClassLoader());
+					}
+				} while (writer == null);
+			} finally {
+				writeLock.unlock();
+			}
 		}
-		
-		// 2. Try to check if we have class in the class loader.
-		writer = createInstanceFromClassLoader(getClassLoader(), writerClassName);
-		if (writer != null) {
-			return writer;
-		}
-		
-		// 3. It cannot be found anywhere so we need to make one.
-		return makeWriterClass(ClassPool.getDefault(), writerClassName, classNameFull, methodName, writeMethod.getParameterTypes()[0]);
+		return writer;
 	}
 
 	private DataWriter makeWriterClass(final ClassPool pool, 
@@ -256,7 +283,8 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		} catch (NotFoundException nfe) {
 			throw new IllegalArgumentException("Unable to create class: " + writerClassName, nfe);
 		} catch (CannotCompileException cce) {
-			throw new IllegalArgumentException("Unable to create method in class: " + writerClassName, cce);
+			LOG.warn("Unable to create method in class: " + writerClassName + "... possibly class had been loaded");
+			return null;
 		} catch (InstantiationException ite) {
 			throw new IllegalArgumentException("Unable to instantiate class: " + writerClassName, ite);
 		} catch (IllegalAccessException iae) {

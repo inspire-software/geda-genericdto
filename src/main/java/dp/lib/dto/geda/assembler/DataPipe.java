@@ -192,17 +192,13 @@ class DataPipe implements Pipe {
 
 	private Object getDtoValue(final Object dtoData, final Object entity, final Map<String, Object> converters,
 			final BeanFactory entityBeanFactory) {
-		final Object dtoValue;
         if (usesConverter()) {
             if (entity instanceof NewDataProxy) {
-                dtoValue = getConverter(converters).convertToEntity(dtoData, null, entityBeanFactory);
-            } else {
-                dtoValue = getConverter(converters).convertToEntity(dtoData, entity, entityBeanFactory);
+                return getConverter(converters).convertToEntity(dtoData, null, entityBeanFactory);
             }
-        } else {
-            dtoValue = dtoData;
+            return getConverter(converters).convertToEntity(dtoData, entity, entityBeanFactory);
         }
-		return dtoValue;
+        return dtoData;
 	}
 
 	private void assembleSubEntity(final Object dtoValue, final Object parentEntity,
@@ -247,12 +243,8 @@ class DataPipe implements Pipe {
 		    }
 			final Class beanClass = this.meta.newEntityBean(entityBeanFactory).getClass(); // overhead but need to be stateless!!!
 			final Object entityForPk = getRetriever(converters).retrieveByPrimaryKey(returnType, beanClass, primaryKey);
-			if (entityForPk == null) { 
-				// we did not find anything, so null it. Maybe need to throw exception here or maybe it is retiriever's job?
-				this.entityWrite.write(entity, NULL);
-			} else {
-				this.entityWrite.write(entity, entityForPk);
-			}
+			// if we did not find anything, setting null. Maybe need to throw exception here or maybe it is retiriever's job?
+			this.entityWrite.write(entity, entityForPk);
 		}
 	}
 	
