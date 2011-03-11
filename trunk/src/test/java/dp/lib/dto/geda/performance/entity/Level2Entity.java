@@ -1,9 +1,29 @@
+
+/*
+ * This code is distributed under The GNU Lesser General Public License (LGPLv3)
+ * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright Denis Pavlov 2009
+ * Web: http://www.inspire-software.com
+ * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+ */
+
 package dp.lib.dto.geda.performance.entity;
 
+import org.junit.Ignore;
+
+import dp.lib.dto.geda.performance.Level2;
+import dp.lib.dto.geda.performance.Level3;
+import dp.lib.dto.geda.performance.Verifiable;
 
 
-public class Level2Entity
-{
+/**
+ * Level 2 entity
+ * 
+ * @author DPavlov
+ */
+@Ignore
+public class Level2Entity implements Verifiable, Level2 {
 	
 	private String field1;
 	private String field2;
@@ -26,11 +46,11 @@ public class Level2Entity
 	private String field19;
 	private String field20;
 	
-	private Level3Entity entity1;
-	private Level3Entity entity2;
-	private Level3Entity entity3;
-	private Level3Entity entity4;
-	private Level3Entity entity5;
+	private Level3 entity1;
+	private Level3 entity2;
+	private Level3 entity3;
+	private Level3 entity4;
+	private Level3 entity5;
 	
 	
 	
@@ -44,7 +64,7 @@ public class Level2Entity
 			String field7, String field8, String field9, String field10, String field11, String field12, 
 			String field13, String field14, String field15, String field16, String field17, String field18, 
 			String field19, String field20,
-			Level3Entity entity1, Level3Entity entity2, Level3Entity entity3, Level3Entity entity4, Level3Entity entity5)
+			Level3 entity1, Level3 entity2, Level3 entity3, Level3 entity4, Level3 entity5)
 	{
 		super();
 		this.entity1 = entity1;
@@ -237,53 +257,228 @@ public class Level2Entity
 	}
 
 	
-	public Level3Entity getEntity1() {
+	public Level3 getEntity1() {
 		return entity1;
 	}
 
 	
-	public void setEntity1(Level3Entity entity1) {
+	public void setEntity1(Level3 entity1) {
 		this.entity1 = entity1;
 	}
 
 	
-	public Level3Entity getEntity2() {
+	public Level3 getEntity2() {
 		return entity2;
 	}
 
 	
-	public void setEntity2(Level3Entity entity2) {
+	public void setEntity2(Level3 entity2) {
 		this.entity2 = entity2;
 	}
 
 	
-	public Level3Entity getEntity3() {
+	public Level3 getEntity3() {
 		return entity3;
 	}
 
 	
-	public void setEntity3(Level3Entity entity3) {
+	public void setEntity3(Level3 entity3) {
 		this.entity3 = entity3;
 	}
 
 	
-	public Level3Entity getEntity4() {
+	public Level3 getEntity4() {
 		return entity4;
 	}
 
 	
-	public void setEntity4(Level3Entity entity4) {
+	public void setEntity4(Level3 entity4) {
 		this.entity4 = entity4;
 	}
 
 	
-	public Level3Entity getEntity5() {
+	public Level3 getEntity5() {
 		return entity5;
 	}
 
 	
-	public void setEntity5(Level3Entity entity5) {
+	public void setEntity5(Level3 entity5) {
 		this.entity5 = entity5;
 	}
 
+
+	public boolean isValid(Object predicate) {
+		if (this == predicate)
+			return true;
+		if (predicate == null)
+			return false;
+		if (!(predicate instanceof Level2))
+			return false;
+		Level2 other = (Level2) predicate;
+		if (entity1 == null) {
+			if (other.getEntity1() != null)
+				return false;
+		} else if (!entity1.equals(other.getEntity1()))
+			return false;
+		if (entity2 == null) {
+			if (other.getEntity2() != null)
+				return false;
+		} else if (!entity2.equals(other.getEntity2()))
+			return false;
+		if (entity3 == null) {
+			if (other.getEntity3() != null)
+				return false;
+		} else if (!entity3.equals(other.getEntity3()))
+			return false;
+		if (entity4 == null) {
+			if (other.getEntity4() != null)
+				return false;
+		} else if (!entity4.equals(other.getEntity4()))
+			return false;
+		if (entity5 == null) {
+			if (other.getEntity5() != null)
+				return false;
+		} else if (!entity5.equals(other.getEntity5()))
+			return false;
+		if (field1 == null) {
+			if (other.getField1() != null)
+				return false;
+		} else if (!field1.equals(other.getField1()))
+			return false;
+		if (field10 == null) {
+			if (other.getField10() != null)
+				return false;
+		} else if (!field10.equals(other.getField10()))
+			return false;
+		if (field11 == null) {
+			if (other.getField11() != null)
+				return false;
+		} else if (!field11.equals(other.getField11()))
+			return false;
+		if (field12 == null) {
+			if (other.getField12() != null)
+				return false;
+		} else if (!field12.equals(other.getField12()))
+			return false;
+		if (field13 == null) {
+			if (other.getField13() != null)
+				return false;
+		} else if (!field13.equals(other.getField13()))
+			return false;
+		if (field14 == null) {
+			if (other.getField14() != null)
+				return false;
+		} else if (!field14.equals(other.getField14()))
+			return false;
+		if (field15 == null) {
+			if (other.getField15() != null)
+				return false;
+		} else if (!field15.equals(other.getField15()))
+			return false;
+		if (field16 == null) {
+			if (other.getField16() != null)
+				return false;
+		} else if (!field16.equals(other.getField16()))
+			return false;
+		if (field17 == null) {
+			if (other.getField17() != null)
+				return false;
+		} else if (!field17.equals(other.getField17()))
+			return false;
+		if (field18 == null) {
+			if (other.getField18() != null)
+				return false;
+		} else if (!field18.equals(other.getField18()))
+			return false;
+		if (field19 == null) {
+			if (other.getField19() != null)
+				return false;
+		} else if (!field19.equals(other.getField19()))
+			return false;
+		if (field2 == null) {
+			if (other.getField2() != null)
+				return false;
+		} else if (!field2.equals(other.getField2()))
+			return false;
+		if (field20 == null) {
+			if (other.getField20() != null)
+				return false;
+		} else if (!field20.equals(other.getField20()))
+			return false;
+		if (field3 == null) {
+			if (other.getField3() != null)
+				return false;
+		} else if (!field3.equals(other.getField3()))
+			return false;
+		if (field4 == null) {
+			if (other.getField4() != null)
+				return false;
+		} else if (!field4.equals(other.getField4()))
+			return false;
+		if (field5 == null) {
+			if (other.getField5() != null)
+				return false;
+		} else if (!field5.equals(other.getField5()))
+			return false;
+		if (field6 == null) {
+			if (other.getField6() != null)
+				return false;
+		} else if (!field6.equals(other.getField6()))
+			return false;
+		if (field7 == null) {
+			if (other.getField7() != null)
+				return false;
+		} else if (!field7.equals(other.getField7()))
+			return false;
+		if (field8 == null) {
+			if (other.getField8() != null)
+				return false;
+		} else if (!field8.equals(other.getField8()))
+			return false;
+		if (field9 == null) {
+			if (other.getField9() != null)
+				return false;
+		} else if (!field9.equals(other.getField9()))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((entity1 == null) ? 0 : entity1.hashCode());
+		result = prime * result + ((entity2 == null) ? 0 : entity2.hashCode());
+		result = prime * result + ((entity3 == null) ? 0 : entity3.hashCode());
+		result = prime * result + ((entity4 == null) ? 0 : entity4.hashCode());
+		result = prime * result + ((entity5 == null) ? 0 : entity5.hashCode());
+		result = prime * result + ((field1 == null) ? 0 : field1.hashCode());
+		result = prime * result + ((field10 == null) ? 0 : field10.hashCode());
+		result = prime * result + ((field11 == null) ? 0 : field11.hashCode());
+		result = prime * result + ((field12 == null) ? 0 : field12.hashCode());
+		result = prime * result + ((field13 == null) ? 0 : field13.hashCode());
+		result = prime * result + ((field14 == null) ? 0 : field14.hashCode());
+		result = prime * result + ((field15 == null) ? 0 : field15.hashCode());
+		result = prime * result + ((field16 == null) ? 0 : field16.hashCode());
+		result = prime * result + ((field17 == null) ? 0 : field17.hashCode());
+		result = prime * result + ((field18 == null) ? 0 : field18.hashCode());
+		result = prime * result + ((field19 == null) ? 0 : field19.hashCode());
+		result = prime * result + ((field2 == null) ? 0 : field2.hashCode());
+		result = prime * result + ((field20 == null) ? 0 : field20.hashCode());
+		result = prime * result + ((field3 == null) ? 0 : field3.hashCode());
+		result = prime * result + ((field4 == null) ? 0 : field4.hashCode());
+		result = prime * result + ((field5 == null) ? 0 : field5.hashCode());
+		result = prime * result + ((field6 == null) ? 0 : field6.hashCode());
+		result = prime * result + ((field7 == null) ? 0 : field7.hashCode());
+		result = prime * result + ((field8 == null) ? 0 : field8.hashCode());
+		result = prime * result + ((field9 == null) ? 0 : field9.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return isValid(obj);
+	}
+	
+	
 }

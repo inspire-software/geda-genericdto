@@ -1,24 +1,52 @@
+
+/*
+ * This code is distributed under The GNU Lesser General Public License (LGPLv3)
+ * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright Denis Pavlov 2009
+ * Web: http://www.inspire-software.com
+ * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+ */
+
 package dp.lib.dto.geda.performance;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
+
+import org.junit.Ignore;
 
 import dp.lib.dto.geda.performance.entity.Level1Entity;
 import dp.lib.dto.geda.performance.entity.Level2Entity;
 import dp.lib.dto.geda.performance.entity.Level3Entity;
 
+/**
+ * Service class to build large samples of DTO's and Entities to test GeDA under load and in
+ * multi-threading environment.
+ * 
+ * @author DPavlov
+ */
+@Ignore
+public class Sampler {
 
-public class Sampler
-{
-
-	public Collection<Level1Entity> getLevel1Entities(final int id, final int count, final int subCount) {
-		final Collection<Level1Entity> coll = new ArrayList<Level1Entity>();
+	/**
+	 * @param id start counter for ids
+	 * @param count count of level 1 entities
+	 * @param subCount count of level 2 entities
+	 * @return spawn sample of {@link Level1Entity} entities
+	 */
+	public List<Level1Entity> getLevel1Entities(final int id, final int count, final int subCount) {
+		final List<Level1Entity> coll = new ArrayList<Level1Entity>();
 		for (int i = 0; i < count; i++) {
 			coll.add(getLevel1Entity(id + 10000000 * i, subCount));
 		}
 		return coll;
 	}
 
+	/**
+	 * @param id id of this entity
+	 * @param subCount count of sub entities in the collections
+	 * @return level 1 entity
+	 */
 	public Level1Entity getLevel1Entity(final int id, final int subCount) {
 		
 		return new Level1Entity(String.valueOf(id),
@@ -50,14 +78,23 @@ public class Sampler
 		
 	}
 	
-	public Collection<Level2Entity> getLevel2Entities(final int id, final int count) {
-		final Collection<Level2Entity> coll = new ArrayList<Level2Entity>();
+	/**
+	 * @param id initial id (100 + id)
+	 * @param count number of entities to spawn
+	 * @return spawn level 2 entities
+	 */
+	public List<Level2Entity> getLevel2Entities(final int id, final int count) {
+		final List<Level2Entity> coll = new ArrayList<Level2Entity>();
 		for (int i = 0; i < count; i++) {
 			coll.add(getLevel2Entity(id + 100 * i));
 		}
 		return coll;
 	}
 	
+	/**
+	 * @param id id of this entity
+	 * @return level 2 entity
+	 */
 	public Level2Entity getLevel2Entity(final int id) {
 		
 		return new Level2Entity(String.valueOf(id),
@@ -89,7 +126,22 @@ public class Sampler
 		
 	}
 	
+	/**
+	 * @param count number of entities to spawn
+	 * @return lis of level 3 entities
+	 */
+	public List<Level3Entity> getLevel3Entities(final int count) {
+		final List<Level3Entity> coll = new ArrayList<Level3Entity>();
+		for (int i = 0; i < count; i++) {
+			coll.add(getLevel3Entity(i));
+		}
+		return coll;
+	}
 	
+	/**
+	 * @param id id
+	 * @return level 3 entity instance
+	 */
 	public Level3Entity getLevel3Entity(final int id) {
 		
 		return new Level3Entity(String.valueOf(id),

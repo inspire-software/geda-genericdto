@@ -1,19 +1,37 @@
+
+/*
+ * This code is distributed under The GNU Lesser General Public License (LGPLv3)
+ * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright Denis Pavlov 2009
+ * Web: http://www.inspire-software.com
+ * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+ */
+
 package dp.lib.dto.geda.performance.dto;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
+
+import org.junit.Ignore;
 
 import dp.lib.dto.geda.annotations.Dto;
 import dp.lib.dto.geda.annotations.DtoCollection;
 import dp.lib.dto.geda.annotations.DtoField;
+import dp.lib.dto.geda.performance.Level1;
+import dp.lib.dto.geda.performance.Verifiable;
 import dp.lib.dto.geda.performance.dto.matcher.Level2DtoMatcher;
 import dp.lib.dto.geda.performance.entity.Level1Entity;
 import dp.lib.dto.geda.performance.entity.Level2Entity;
 
-
+/**
+ * Level 1 DTO
+ * 
+ * @author DPavlov
+ */
 @Dto
-public class Level1Dto
-{
+@Ignore
+public class Level1Dto implements Verifiable, Level1<Level2Dto> {
 	
 	@DtoField
 	private String field1;
@@ -57,15 +75,15 @@ public class Level1Dto
 	private String field20;
 	
 	@DtoCollection(dtoToEntityMatcher = Level2DtoMatcher.class, entityGenericType = Level2Entity.class, dtoBeanKey = "lvl2")
-	private Collection<Level2Dto> collection1;
+	private List<Level2Dto> collection1;
 	@DtoCollection(dtoToEntityMatcher = Level2DtoMatcher.class, entityGenericType = Level2Entity.class, dtoBeanKey = "lvl2")
-	private Collection<Level2Dto> collection2;
+	private List<Level2Dto> collection2;
 	@DtoCollection(dtoToEntityMatcher = Level2DtoMatcher.class, entityGenericType = Level2Entity.class, dtoBeanKey = "lvl2")
-	private Collection<Level2Dto> collection3;
+	private List<Level2Dto> collection3;
 	@DtoCollection(dtoToEntityMatcher = Level2DtoMatcher.class, entityGenericType = Level2Entity.class, dtoBeanKey = "lvl2")
-	private Collection<Level2Dto> collection4;
+	private List<Level2Dto> collection4;
 	@DtoCollection(dtoToEntityMatcher = Level2DtoMatcher.class, entityGenericType = Level2Entity.class, dtoBeanKey = "lvl2")
-	private Collection<Level2Dto> collection5;
+	private List<Level2Dto> collection5;
 	
 	public Level1Dto() {
 	}
@@ -101,8 +119,8 @@ public class Level1Dto
 	
 	}
 	
-	private Collection<Level2Dto> copyCollection(Collection<Level2Entity> entities) {
-		final Collection<Level2Dto> coll = new ArrayList<Level2Dto>();
+	private List<Level2Dto> copyCollection(List<Level2Entity> entities) {
+		final List<Level2Dto> coll = new ArrayList<Level2Dto>();
 		for (Level2Entity entity : entities) {
 			coll.add(new Level2Dto(entity));
 		}
@@ -270,53 +288,228 @@ public class Level1Dto
 	}
 
 	
-	public Collection<Level2Dto> getCollection1() {
+	public List<Level2Dto> getCollection1() {
 		return collection1;
 	}
 
 	
-	public void setCollection1(Collection<Level2Dto> collection1) {
+	public void setCollection1(List<Level2Dto> collection1) {
 		this.collection1 = collection1;
 	}
 
 	
-	public Collection<Level2Dto> getCollection2() {
+	public List<Level2Dto> getCollection2() {
 		return collection2;
 	}
 
 	
-	public void setCollection2(Collection<Level2Dto> collection2) {
+	public void setCollection2(List<Level2Dto> collection2) {
 		this.collection2 = collection2;
 	}
 
 	
-	public Collection<Level2Dto> getCollection3() {
+	public List<Level2Dto> getCollection3() {
 		return collection3;
 	}
 
 	
-	public void setCollection3(Collection<Level2Dto> collection3) {
+	public void setCollection3(List<Level2Dto> collection3) {
 		this.collection3 = collection3;
 	}
 
 	
-	public Collection<Level2Dto> getCollection4() {
+	public List<Level2Dto> getCollection4() {
 		return collection4;
 	}
 
 	
-	public void setCollection4(Collection<Level2Dto> collection4) {
+	public void setCollection4(List<Level2Dto> collection4) {
 		this.collection4 = collection4;
 	}
 
 	
-	public Collection<Level2Dto> getCollection5() {
+	public List<Level2Dto> getCollection5() {
 		return collection5;
 	}
 
 	
-	public void setCollection5(Collection<Level2Dto> collection5) {
+	public void setCollection5(List<Level2Dto> collection5) {
 		this.collection5 = collection5;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean isValid(Object predicate) {
+
+		if (this == predicate)
+			return true;
+		if (predicate == null)
+			return false;
+		if (!(predicate instanceof Level1))
+			return false;
+		Level1 other = (Level1) predicate;
+		if (collection1 == null) {
+			if (other.getCollection1() != null)
+				return false;
+		} else if (collection1.size() != other.getCollection1().size() || !collection1.containsAll(other.getCollection1()))
+			return false;
+		if (collection2 == null) {
+			if (other.getCollection2() != null)
+				return false;
+		} else if (collection2.size() != other.getCollection2().size() || !collection2.containsAll(other.getCollection2()))
+			return false;
+		if (collection3 == null) {
+			if (other.getCollection3() != null)
+				return false;
+		} else if (collection3.size() != other.getCollection3().size() || !collection3.containsAll(other.getCollection3()))
+			return false;
+		if (collection4 == null) {
+			if (other.getCollection4() != null)
+				return false;
+		} else if (collection4.size() != other.getCollection4().size() || !collection4.containsAll(other.getCollection4()))
+			return false;
+		if (collection5 == null) {
+			if (other.getCollection5() != null)
+				return false;
+		} else if (collection5.size() != other.getCollection5().size() || !collection5.containsAll(other.getCollection5()))
+			return false;
+		if (field1 == null) {
+			if (other.getField1() != null)
+				return false;
+		} else if (!field1.equals(other.getField1()))
+			return false;
+		if (field10 == null) {
+			if (other.getField10() != null)
+				return false;
+		} else if (!field10.equals(other.getField10()))
+			return false;
+		if (field11 == null) {
+			if (other.getField11() != null)
+				return false;
+		} else if (!field11.equals(other.getField11()))
+			return false;
+		if (field12 == null) {
+			if (other.getField12() != null)
+				return false;
+		} else if (!field12.equals(other.getField12()))
+			return false;
+		if (field13 == null) {
+			if (other.getField13() != null)
+				return false;
+		} else if (!field13.equals(other.getField13()))
+			return false;
+		if (field14 == null) {
+			if (other.getField14() != null)
+				return false;
+		} else if (!field14.equals(other.getField14()))
+			return false;
+		if (field15 == null) {
+			if (other.getField15() != null)
+				return false;
+		} else if (!field15.equals(other.getField15()))
+			return false;
+		if (field16 == null) {
+			if (other.getField16() != null)
+				return false;
+		} else if (!field16.equals(other.getField16()))
+			return false;
+		if (field17 == null) {
+			if (other.getField17() != null)
+				return false;
+		} else if (!field17.equals(other.getField17()))
+			return false;
+		if (field18 == null) {
+			if (other.getField18() != null)
+				return false;
+		} else if (!field18.equals(other.getField18()))
+			return false;
+		if (field19 == null) {
+			if (other.getField19() != null)
+				return false;
+		} else if (!field19.equals(other.getField19()))
+			return false;
+		if (field2 == null) {
+			if (other.getField2() != null)
+				return false;
+		} else if (!field2.equals(other.getField2()))
+			return false;
+		if (field20 == null) {
+			if (other.getField20() != null)
+				return false;
+		} else if (!field20.equals(other.getField20()))
+			return false;
+		if (field3 == null) {
+			if (other.getField3() != null)
+				return false;
+		} else if (!field3.equals(other.getField3()))
+			return false;
+		if (field4 == null) {
+			if (other.getField4() != null)
+				return false;
+		} else if (!field4.equals(other.getField4()))
+			return false;
+		if (field5 == null) {
+			if (other.getField5() != null)
+				return false;
+		} else if (!field5.equals(other.getField5()))
+			return false;
+		if (field6 == null) {
+			if (other.getField6() != null)
+				return false;
+		} else if (!field6.equals(other.getField6()))
+			return false;
+		if (field7 == null) {
+			if (other.getField7() != null)
+				return false;
+		} else if (!field7.equals(other.getField7()))
+			return false;
+		if (field8 == null) {
+			if (other.getField8() != null)
+				return false;
+		} else if (!field8.equals(other.getField8()))
+			return false;
+		if (field9 == null) {
+			if (other.getField9() != null)
+				return false;
+		} else if (!field9.equals(other.getField9()))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((collection1 == null) ? 0 : collection1.hashCode());
+		result = prime * result + ((collection2 == null) ? 0 : collection2.hashCode());
+		result = prime * result + ((collection3 == null) ? 0 : collection3.hashCode());
+		result = prime * result + ((collection4 == null) ? 0 : collection4.hashCode());
+		result = prime * result + ((collection5 == null) ? 0 : collection5.hashCode());
+		result = prime * result + ((field1 == null) ? 0 : field1.hashCode());
+		result = prime * result + ((field10 == null) ? 0 : field10.hashCode());
+		result = prime * result + ((field11 == null) ? 0 : field11.hashCode());
+		result = prime * result + ((field12 == null) ? 0 : field12.hashCode());
+		result = prime * result + ((field13 == null) ? 0 : field13.hashCode());
+		result = prime * result + ((field14 == null) ? 0 : field14.hashCode());
+		result = prime * result + ((field15 == null) ? 0 : field15.hashCode());
+		result = prime * result + ((field16 == null) ? 0 : field16.hashCode());
+		result = prime * result + ((field17 == null) ? 0 : field17.hashCode());
+		result = prime * result + ((field18 == null) ? 0 : field18.hashCode());
+		result = prime * result + ((field19 == null) ? 0 : field19.hashCode());
+		result = prime * result + ((field2 == null) ? 0 : field2.hashCode());
+		result = prime * result + ((field20 == null) ? 0 : field20.hashCode());
+		result = prime * result + ((field3 == null) ? 0 : field3.hashCode());
+		result = prime * result + ((field4 == null) ? 0 : field4.hashCode());
+		result = prime * result + ((field5 == null) ? 0 : field5.hashCode());
+		result = prime * result + ((field6 == null) ? 0 : field6.hashCode());
+		result = prime * result + ((field7 == null) ? 0 : field7.hashCode());
+		result = prime * result + ((field8 == null) ? 0 : field8.hashCode());
+		result = prime * result + ((field9 == null) ? 0 : field9.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return isValid(obj);
 	}
 	
 	

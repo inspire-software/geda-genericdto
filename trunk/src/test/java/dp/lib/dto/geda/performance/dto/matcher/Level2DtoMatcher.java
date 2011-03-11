@@ -1,15 +1,32 @@
+
+/*
+ * This code is distributed under The GNU Lesser General Public License (LGPLv3)
+ * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright Denis Pavlov 2009
+ * Web: http://www.inspire-software.com
+ * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+ */
+
 package dp.lib.dto.geda.performance.dto.matcher;
 
+import org.junit.Ignore;
+
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
-import dp.lib.dto.geda.performance.dto.Level2Dto;
-import dp.lib.dto.geda.performance.entity.Level2Entity;
+import dp.lib.dto.geda.performance.Level2;
 
-
-public class Level2DtoMatcher implements DtoToEntityMatcher<Level2Dto, Level2Entity>
+/**
+ * Simple matched by primary key.
+ * 
+ * @author DPavlov
+ */
+@Ignore
+public class Level2DtoMatcher implements DtoToEntityMatcher<Level2, Level2>
 {
 
-	public boolean match(Level2Dto dto, Level2Entity entity) {
-		return dto != null && dto.getField1() != null && entity != null && dto.getField1().equals(entity.getField1());
+	public boolean match(Level2 dto, Level2 entity) {
+		return dto != null && dto.getField1() != null 
+			&& entity != null && dto.getField1().equals(entity.getField1());
 	}
 
 }
