@@ -116,7 +116,7 @@ public class DTOAssemblerDtoMapTest {
 	 * Test that DTO map correctly maps to entity collection.
 	 */
 	@Test
-	public void testMapToMapMapping() {
+	public void testMapToMapValueMapping() {
 		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
 		eItem1.setName("itm1");
 		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
@@ -132,7 +132,7 @@ public class DTOAssemblerDtoMapTest {
 		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eMap.getClass());
 		
 		assembler.assembleDto(dMap, eMap, null, new BeanFactory() {
-
+			
 			public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
@@ -160,7 +160,7 @@ public class DTOAssemblerDtoMapTest {
 		dMap.getItems().put("itm3", dto3);
 		
 		dMap.getItems().remove("itm1"); // first
-
+		
 		assembler.assembleEntity(dMap, eMap, null, new BeanFactory() {
 			
 			public Object get(final String entityBeanKey) {
@@ -181,6 +181,88 @@ public class DTOAssemblerDtoMapTest {
 				assertEquals("itm2", eMap.getItems().get(key).getName());
 			} else if ("itm3".equals(key)) {
 				assertEquals("itm3", eMap.getItems().get(key).getName());
+			} else {
+				fail("Unknown key");
+			}
+		}	
+		
+	}
+	
+	/**
+	 * Test that DTO map correctly maps to entity collection.
+	 */
+	@Test
+	public void testMapToMapKeyMapping() {
+		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+		eItem1.setName("itm1");
+		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+		eItem2.setName("itm2");
+		
+		final TestEntity12MapByKeyInterface eMap = new TestEntity12MapByKeyClass();
+		eMap.setItems(new HashMap<TestEntity12CollectionItemInterface, String>());
+		eMap.getItems().put(eItem1, "itm1");
+		eMap.getItems().put(eItem2, "itm2");
+		
+		final TestDto12MapByKeyIterface dMap = new TestDto12MapToMapByKeyClass();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eMap.getClass());
+		
+		assembler.assembleDto(dMap, eMap, null, new BeanFactory() {
+
+			public Object get(final String entityBeanKey) {
+				if ("dtoItem".equals(entityBeanKey)) {
+					return new TestDto12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(dMap.getItems());
+		assertEquals(2, dMap.getItems().size());
+		final Set<TestDto12CollectionItemIterface> keys = dMap.getItems().keySet();
+		TestDto12CollectionItemIterface dItem1 = null;
+		TestDto12CollectionItemIterface dItem2 = null;
+		for (TestDto12CollectionItemIterface key : keys) {
+			if ("itm1".equals(key.getName())) {
+				assertEquals("itm1", dMap.getItems().get(key));
+				dItem1 = key;
+			} else if ("itm2".equals(key.getName())) {
+				assertEquals("itm2", dMap.getItems().get(key));
+				dItem2 = key;
+			} else {
+				fail("Unknown key");
+			}
+		}
+		
+		final TestDto12CollectionItemClass dto3 = new TestDto12CollectionItemClass();
+		dto3.setName("itm3");
+		dMap.getItems().put(dto3, "itm3");
+		
+		dMap.getItems().put(dItem2, "itm no 2");
+		
+		dMap.getItems().remove(dItem1); // first
+
+		assembler.assembleEntity(dMap, eMap, null, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("entityItem".equals(entityBeanKey)) {
+					return new TestEntity12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(eMap.getItems());
+		assertEquals(2, eMap.getItems().size());
+		
+		final Set<TestEntity12CollectionItemInterface> ekeys = eMap.getItems().keySet();
+		for (TestEntity12CollectionItemInterface key : ekeys) {
+			if ("itm2".equals(key.getName())) {
+				assertEquals("itm no 2", eMap.getItems().get(key));
+			} else if ("itm3".equals(key.getName())) {
+				assertEquals("itm3", eMap.getItems().get(key));
 			} else {
 				fail("Unknown key");
 			}

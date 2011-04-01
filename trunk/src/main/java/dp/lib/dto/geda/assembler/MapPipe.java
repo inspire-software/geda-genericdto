@@ -125,16 +125,23 @@ class MapPipe implements Pipe {
             final Map dtos = this.meta.newDtoMap();
 
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
+            
+            final boolean useKey = this.meta.isEntityMapKey();
 
             try {
                 final DTOAssembler assembler = DTOAssembler.newAssembler(newDto.getClass(), this.meta.getReturnType());
 
                 for (Object key : entities.keySet()) {
 
-                	final Object object = entities.get(key);
-                    assembler.assembleDto(newDto, object, converters, dtoBeanFactory);
-                    dtos.put(key, newDto);
-
+                	if (useKey) {
+                		final Object value = entities.get(key);
+                		assembler.assembleDto(newDto, key, converters, dtoBeanFactory);
+                		dtos.put(newDto, value);
+                	} else {
+	                	final Object object = entities.get(key);
+	                    assembler.assembleDto(newDto, object, converters, dtoBeanFactory);
+	                    dtos.put(key, newDto);
+                	}
                     newDto = this.meta.newDtoBean(dtoBeanFactory);
                 }
 
@@ -268,6 +275,7 @@ class MapPipe implements Pipe {
 
         DTOAssembler assembler = null;
         final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
+        final boolean useKey = this.meta.isEntityMapKey();
         for (Object dtoKey : dtos.keySet()) {
 
         	try {
@@ -276,9 +284,15 @@ class MapPipe implements Pipe {
 	            for (Object orKey : original.keySet()) {
 	
 	                if (matcher.match(dtoKey, orKey)) {
-	                	final Object orItem = original.get(orKey);
-	                	assembler = lazyCreateAssembler(assembler, dtoItem);
-	                    assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
+	                	if (useKey) {
+		                	assembler = lazyCreateAssembler(assembler, dtoKey);
+		                    assembler.assembleEntity(dtoKey, orKey, converters, entityBeanFactory);
+		                    original.put(orKey, dtoItem);
+	                	} else {
+		                	final Object orItem = original.get(orKey);
+		                	assembler = lazyCreateAssembler(assembler, dtoItem);
+		                    assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
+	                	}
 	                    toAdd = false;
 	                    break;
 	                }
@@ -286,10 +300,17 @@ class MapPipe implements Pipe {
 	            }
 	
 	            if (toAdd) {
-	                assembler = lazyCreateAssembler(assembler, dtoItem);
-	                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
-	                assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
-	                original.put(dtoKey, newItem);
+	            	if (useKey) {
+	            		assembler = lazyCreateAssembler(assembler, dtoKey);
+		                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+		                assembler.assembleEntity(dtoKey, newItem, converters, entityBeanFactory);
+		                original.put(newItem, dtoItem);
+	            	} else {
+		                assembler = lazyCreateAssembler(assembler, dtoItem);
+		                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+		                assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
+		                original.put(dtoKey, newItem);
+	            	}
 	            }
         	} catch (IllegalArgumentException iae) {
 				if (iae.getMessage().startsWith("This assembler is only applicable for entity:")) {
