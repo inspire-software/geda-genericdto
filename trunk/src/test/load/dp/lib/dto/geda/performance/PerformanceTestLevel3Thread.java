@@ -36,6 +36,8 @@ public class PerformanceTestLevel3Thread implements Runnable {
 	
 	private final ShutdownListener listener;
 	
+	private final StringBuilder out = new StringBuilder();
+	
 	public PerformanceTestLevel3Thread(final int lvl3, final ShutdownListener listener) {
 		this.lvl3 = lvl3;
 		this.listener = listener;
@@ -48,17 +50,17 @@ public class PerformanceTestLevel3Thread implements Runnable {
 		
 		final Date start = new Date(); 
 		
-		System.out.println(start + " - Initializing GeDA performance test on " + allCount + " entities");
+		out.append(start + " - Initializing GeDA performance test on " + allCount + " entities\n");
 		
 		final List<Level3Entity> testSample = sampler.getLevel3Entities(allCount); 
 		
 		final Date assemberStart = new Date();
-		System.out.println(assemberStart + " - Finished creating objects in " + (assemberStart.getTime() - start.getTime()) + " millis");
+		out.append(assemberStart + " - Finished creating objects in " + (assemberStart.getTime() - start.getTime()) + " millis\n");
 		
-		System.out.println(assemberStart + " - Initializing assembler");
+		out.append(assemberStart + " - Initializing assembler");
 		final DTOAssembler assembler = DTOAssembler.newAssembler(Level3Dto.class, Level3Entity.class);
 		final Date assemberEnd = new Date();
-		System.out.println(assemberEnd + " - Initialized assembler in " + (assemberEnd.getTime() - assemberStart.getTime()) + " millis");
+		out.append(assemberEnd + " - Initialized assembler in " + (assemberEnd.getTime() - assemberStart.getTime()) + " millis\n");
 		
 		List<Level1Dto> dtos = new ArrayList<Level1Dto>();
 		long assemblyMillis = 0L;
@@ -66,27 +68,27 @@ public class PerformanceTestLevel3Thread implements Runnable {
 		try {
 		
 			final Date startProcess = new Date();
-			System.out.println(startProcess + " - started assembly on " 
-					+ allCount + " entities)");
+			out.append(startProcess + " - started assembly on " 
+					+ allCount + " entities)\n");
 			
 			assembler.assembleDtos(dtos, testSample, null, getFactory());
 			
 			final Date end = new Date();
 			assemblyMillis = (end.getTime() - startProcess.getTime());
-			System.out.println(end + " - finished in " + assemblyMillis + " millis");
+			out.append(end + " - finished in " + assemblyMillis + " millis\n");
 			
 			dtos = null;
 			
 		} catch (IllegalArgumentException iae) {
-			System.out.println(iae.getMessage());
+			out.append(iae.getMessage()).append("\n");
 			if (iae.getCause() != null) {
-				System.out.println(iae.getCause().getMessage());
+				out.append(iae.getCause().getMessage()).append("\n");
 			}
 			iae.printStackTrace();
 		}
 		
 		final Date startManual = new Date();
-		System.out.println(startManual + " - trying manual copy");
+		out.append(startManual + " - trying manual copy\n");
 		
 		final List<Level3Dto> manualDto = new ArrayList<Level3Dto>();
 		for (Level3Entity entity : testSample) {
@@ -94,9 +96,9 @@ public class PerformanceTestLevel3Thread implements Runnable {
 		}
 		final Date endManual = new Date();
 		final long manualMillis = (endManual.getTime() - startManual.getTime());
-		System.out.println(endManual + " - finished manual copy in " + manualMillis + " millis");
+		out.append(endManual + " - finished manual copy in " + manualMillis + " millis\n");
 		
-		System.out.println("Performance " + ((double) manualMillis / (double) assemblyMillis) * 100 + "%");
+		out.append("Performance " + ((double) manualMillis / (double) assemblyMillis) * 100 + "%\n");
 		
 		this.listener.notifyFinished(this);
 		
@@ -118,5 +120,13 @@ public class PerformanceTestLevel3Thread implements Runnable {
 			
 		};
 	}
+	
+
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return out.toString();
+	}
+
 	
 }
