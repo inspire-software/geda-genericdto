@@ -51,6 +51,11 @@ public interface MapPipeMetadata extends PipeMetadata {
 	 * @return property whose value will be used as key for dto map.
 	 */
 	String getMapKeyForCollection();
+	
+	/**
+	 * @return true if map key is entity object, false if map value is entity object.
+	 */
+	boolean isEntityMapKey();
 
 	/**
 	 * @return matcher instance that will help synchronize collections/maps.

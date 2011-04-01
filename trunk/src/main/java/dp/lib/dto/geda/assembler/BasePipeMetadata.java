@@ -67,11 +67,7 @@ class BasePipeMetadata implements PipeMetadata {
 		return dtoBeanKey;
 	}
 	
-	/**
-	 * @param factory dto bean factory
-	 * @return new instance of DTO bean
-	 * @throws IllegalArgumentException if bean cannot be create using factory provided
-	 */
+	/** {@inheritDoc} */
 	public Object newDtoBean(final BeanFactory factory) throws IllegalArgumentException {
 		return newBean(this.getDtoBeanKey(), factory);
 	}
@@ -81,11 +77,7 @@ class BasePipeMetadata implements PipeMetadata {
 		return entityBeanKey;
 	}
 	
-	/**
-	 * @param factory dto bean factory
-	 * @return new instance of DTO bean
-	 * @throws IllegalArgumentException if bean cannot be create using factory provided
-	 */
+	/** {@inheritDoc} */
 	public Object newEntityBean(final BeanFactory factory) throws IllegalArgumentException {
 		return newBean(this.getEntityBeanKey(), factory);
 	}

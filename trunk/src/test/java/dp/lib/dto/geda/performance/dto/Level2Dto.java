@@ -20,7 +20,7 @@ import dp.lib.dto.geda.performance.Verifiable;
 import dp.lib.dto.geda.performance.entity.Level2Entity;
 
 /**
- * Level 2 DTO
+ * Level 2 DTO.
  * 
  * @author DPavlov
  */

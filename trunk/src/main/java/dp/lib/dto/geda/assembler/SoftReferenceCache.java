@@ -21,6 +21,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @author DPavlov
  * @since 1.1.0
+ * 
+ * @param <K> key
+ * @param <V> value
+ * 
  */
 public class SoftReferenceCache<K, V> implements Cache<K, V> {
 
@@ -35,13 +39,13 @@ public class SoftReferenceCache<K, V> implements Cache<K, V> {
 	 * @param cleanUpCycle number of put calls before we run through cache to
 	 *        clean up enqueued references.
 	 */
-	public SoftReferenceCache(int cleanUpCycle) {
+	public SoftReferenceCache(final int cleanUpCycle) {
 		this.cleanUpCycle = cleanUpCycle;
 		this.currentCycle = 0;
 	}
 
 	/** {@inheritDoc} */
-	public synchronized V get(K key) {
+	public synchronized V get(final K key) {
 		SoftReference<V> val = cache.get(key);
 		if (val != null) {
 			if (val.isEnqueued()) {
@@ -53,7 +57,7 @@ public class SoftReferenceCache<K, V> implements Cache<K, V> {
 	}
 
 	/** {@inheritDoc} */
-	public synchronized void put(K key, V value) {
+	public synchronized void put(final K key, final V value) {
 		final SoftReference<V> ref = new SoftReference<V>(value, refQueue);
 		cache.put(key, ref);
 		cacheKeys.put(ref, key);
@@ -65,7 +69,13 @@ public class SoftReferenceCache<K, V> implements Cache<K, V> {
 		}
 	}
 	
-	public void setCleanUpCycle(int cleanUpCycle) {
+	/**
+	 * Number of calls to {@link #put(Object, Object)} method before the cache is examined in order
+	 * to clean up obsolete entities.
+	 * 
+	 * @param cleanUpCycle clean up cycle
+	 */
+	public void setCleanUpCycle(final int cleanUpCycle) {
 		this.cleanUpCycle = cleanUpCycle;
 	}
 

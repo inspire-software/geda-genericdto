@@ -16,7 +16,7 @@ import dp.lib.dto.geda.performance.Level3;
 import dp.lib.dto.geda.performance.Verifiable;
 
 /**
- * Level 3 entity
+ * Level 3 entity.
  * 
  * @author DPavlov
  */

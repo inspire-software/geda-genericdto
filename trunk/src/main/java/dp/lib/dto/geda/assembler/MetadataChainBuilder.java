@@ -124,6 +124,7 @@ final class MetadataChainBuilder {
 				dtoMapAnn.entityMapOrCollectionClass(),
 				dtoMapAnn.entityGenericType(),
 				dtoMapAnn.entityCollectionMapKey(),
+				dtoMapAnn.useEntityMapKey(),
 				dtoMapAnn.dtoToEntityMatcher()
 			));
 		}

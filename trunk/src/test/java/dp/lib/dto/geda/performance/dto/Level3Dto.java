@@ -17,7 +17,7 @@ import dp.lib.dto.geda.annotations.DtoField;
 import dp.lib.dto.geda.performance.Level3;
 
 /**
- * Level 3 DTO
+ * Level 3 DTO.
  * 
  * @author DPavlov
  */

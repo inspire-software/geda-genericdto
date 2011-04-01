@@ -16,6 +16,10 @@ package dp.lib.dto.geda.assembler;
  * 
  * @author DPavlov
  * @since 1.1.0
+ * 
+ * @param <K> key
+ * @param <V> value
+ * 
  */
 public interface Cache<K, V> {
 
@@ -26,8 +30,8 @@ public interface Cache<K, V> {
 	V get(K key);
 	
 	/**
-	 * @param key
-	 * @param value
+	 * @param key cache key
+	 * @param value cache value
 	 */
 	void put(K key, V value);
 	

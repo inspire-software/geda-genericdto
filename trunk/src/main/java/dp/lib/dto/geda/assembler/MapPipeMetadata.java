@@ -32,6 +32,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
 
     private final Class< ? > returnType;
     private final String mapKeyForCollection;
+    private final boolean entityMapKey;
     
     private final DtoToEntityMatcher dtoToEntityMatcher;
     
@@ -44,6 +45,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
      * @param dtoMapClass the dto collection class for creating new collection instance
      * @param entityMapOrCollectionClass the entity collection/map class for creating new collection/map instance
      * @param mapKeyForCollection property whose value will be used as key for dto map.
+     * @param entityMapKey true if map key is entity object, false if map value is entity object.
      * @param returnType the generic return time for entity collection
      * @param dtoToEntityMatcherClass matcher for synchronising collections
 	 */
@@ -56,6 +58,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
 							 final Class< ? > entityMapOrCollectionClass, 
 							 final Class< ? > returnType,
 							 final String mapKeyForCollection,
+							 final boolean entityMapKey,
 							 final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcherClass) {
 		
 		super(dtoFieldName, entityFieldName, dtoBeanKey, entityBeanKey, readOnly);
@@ -63,6 +66,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
 		this.entityMapOrCollectionClass = entityMapOrCollectionClass;
 		this.returnType = returnType;
 		this.mapKeyForCollection = mapKeyForCollection;
+		this.entityMapKey = entityMapKey;
 		
 		if (CACHE.containsKey(dtoToEntityMatcherClass)) {
 			this.dtoToEntityMatcher = CACHE.get(dtoToEntityMatcherClass);
@@ -75,52 +79,43 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
 
 	}
 
-	/**
-	 * @return DTO collection impl class
-	 */
+	/** {@inheritDoc} */
 	public Class< ? > getDtoMapClass() {
 		return dtoMapClass;
 	}
 	
-	/**
-	 * @return new collection instance.
-	 */
+	/** {@inheritDoc} */
 	public Map newDtoMap() {
 		return newCollection(getDtoMapClass(), " Dto field: " + this.getDtoFieldName());
 	}
 
-	/**
-	 * @return entity collection impl class
-	 */
+	/** {@inheritDoc} */
 	public Class< ? > getEntityMapOrCollectionClass() {
 		return entityMapOrCollectionClass;
 	}
 	
-	/**
-	 * @return new collection instance.
-	 */
+	/** {@inheritDoc} */
 	public Object newEntityMapOrCollection() {
 		return newCollection(getEntityMapOrCollectionClass(), " Entity field: " + this.getEntityFieldName());
 	}
 
 
-	/**
-	 * @return the entity's collection generic type to identity the type of items in entity collection.
-	 */
+	/** {@inheritDoc} */
 	public Class< ? > getReturnType() {
 		return returnType;
 	}
 	
-	/**
-	 * @return property whose value will be used as key for dto map.
-	 */
+	/** {@inheritDoc} */
 	public String getMapKeyForCollection() {
 		return mapKeyForCollection;
 	}
+	
+	/** {@inheritDoc} */
+	public boolean isEntityMapKey() {
+		return entityMapKey;
+	}
 
-	/**
-	 * @return matcher instance that will help synchronize collections.
-	 */
+	/** {@inheritDoc} */
 	public DtoToEntityMatcher getDtoToEntityMatcher() {
 		return dtoToEntityMatcher;
 	}

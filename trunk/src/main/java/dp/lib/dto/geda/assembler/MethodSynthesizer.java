@@ -20,8 +20,7 @@ import java.beans.PropertyDescriptor;
  * @since 1.1.0
  *
  */
-public interface MethodSynthesizer
-{
+public interface MethodSynthesizer {
 
 	/**
 	 * Create dynamic class.

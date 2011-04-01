@@ -517,15 +517,17 @@ public class DTOAssemblerMappingTest {
 		final TestEntity1Interface entity = new TestEntity1Class();
 		
 		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class);
+
+		final double myDouble = 0.2d;
 		
 		dto.setMyLong(1L);
-		dto.setMyDouble(0.2d);
+		dto.setMyDouble(myDouble);
 		dto.setMyString("string");
 		
 		assembler.assembleEntity(dto, entity, null, null);
 		
 		assertEquals(Long.valueOf(1L), entity.getEntityId());
-		assertEquals(Double.valueOf(0.2d), entity.getNumber());
+		assertEquals(Double.valueOf(myDouble), entity.getNumber());
 		assertEquals("string", entity.getName());
 		
 		entity.setEntityId(2L);

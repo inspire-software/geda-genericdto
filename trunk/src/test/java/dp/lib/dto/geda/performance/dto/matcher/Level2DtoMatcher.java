@@ -21,10 +21,10 @@ import dp.lib.dto.geda.performance.Level2;
  * @author DPavlov
  */
 @Ignore
-public class Level2DtoMatcher implements DtoToEntityMatcher<Level2, Level2>
-{
+public class Level2DtoMatcher implements DtoToEntityMatcher<Level2, Level2> {
 
-	public boolean match(Level2 dto, Level2 entity) {
+	/** {@inheritDoc} */
+	public boolean match(final Level2 dto, final Level2 entity) {
 		return dto != null && dto.getField1() != null 
 			&& entity != null && dto.getField1().equals(entity.getField1());
 	}

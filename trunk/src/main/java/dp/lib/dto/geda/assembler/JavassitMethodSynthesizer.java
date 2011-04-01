@@ -59,16 +59,22 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		WRAPPER_TO_PRIMITIVE.put("char", 	".charValue()");
 	}
 	
+	/**
+	 * @param cleanUpReaderCycle reader cache clean up cycle
+	 */
 	public void setCleanUpReaderCycle(final int cleanUpReaderCycle) {
 		((SoftReferenceCache<String, Object>) READER_CACHE).setCleanUpCycle(cleanUpReaderCycle);
 	}
 
+	/**
+	 * @param cleanUpWriterCycle writer cache clean up cycle
+	 */
 	public void setCleanUpWriterCycle(final int cleanUpWriterCycle) {
 		((SoftReferenceCache<String, Object>) WRITER_CACHE).setCleanUpCycle(cleanUpWriterCycle);
 	}
 	
 	/** {@inheritDoc} */
-	public DataReader synthesizeReader(PropertyDescriptor descriptor) {
+	public DataReader synthesizeReader(final PropertyDescriptor descriptor) {
 				
 		final Method readMethod = descriptor.getReadMethod();
 		
@@ -85,7 +91,8 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			readLock.lock();
 			try {
 				do {
-					reader = makeReaderClass(ClassPool.getDefault(), readerClassName, sourceClassNameFull, sourceClassGetterMethodName, readMethod.getGenericReturnType());
+					reader = makeReaderClass(ClassPool.getDefault(), 
+							readerClassName, sourceClassNameFull, sourceClassGetterMethodName, readMethod.getGenericReturnType());
 					if (reader == null) {
 						reader = getFromCacheOrCreateFromClassLoader(readerClassName, READER_CACHE, getClassLoader());
 					}
@@ -197,7 +204,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	}
 
 	/** {@inheritDoc} */
-	public DataWriter synthesizeWriter(PropertyDescriptor descriptor) {
+	public DataWriter synthesizeWriter(final PropertyDescriptor descriptor) {
 		final Method writeMethod = descriptor.getWriteMethod();
 		
 		final String classNameFull = writeMethod.getDeclaringClass().getCanonicalName();
@@ -311,7 +318,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		}
 	}
 	
-	private String generateClassName(String prefix, String declaringClass, String methodName) {
+	private String generateClassName(final String prefix, final String declaringClass, final String methodName) {
 		return declaringClass + prefix + "M" + methodName;
 	}
 	
