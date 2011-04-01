@@ -24,15 +24,19 @@ import org.junit.Test;
  */
 public class RunGeDARun {
 	
+	/**
+	 * Executors shutdown listener.
+	 */
 	private class ExecutorListener implements ShutdownListener {
 		
+		private static final int SLEEP = 1000;
 		private final ExecutorService service;
 		private final Map<Object, Boolean> observables = new HashMap<Object, Boolean>();
 		private boolean keepAlive = true;
 		
 		public void keepAlive() throws InterruptedException {
 			while (keepAlive) {
-				Thread.sleep(1000);
+				Thread.sleep(SLEEP);
 			}
 		}
 		
@@ -40,11 +44,14 @@ public class RunGeDARun {
 			this.service = service;
 		}
 
-		public synchronized void addObservable(Object object) {
+		public synchronized void addObservable(final Object object) {
 			this.observables.put(object, Boolean.FALSE);
 		}
 
-		public synchronized void notifyFinished(Object object) {
+		public synchronized void notifyFinished(final Object object) {
+
+			System.out.println(object.toString());
+			
 			this.observables.put(object, Boolean.TRUE);
 			for (Boolean isFinished : observables.values()) {
 				if (!isFinished) {
@@ -56,7 +63,6 @@ public class RunGeDARun {
 		}
 		
 	};
-	
 	
 	@Test
 	public void test1Thread1TaskLevel3() throws InterruptedException {

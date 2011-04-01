@@ -14,6 +14,7 @@ import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.LoaderClassPath;
 import javassist.NotFoundException;
 
 import org.slf4j.Logger;
@@ -59,6 +60,15 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		WRAPPER_TO_PRIMITIVE.put("char", 	".charValue()");
 	}
 	
+	private final ClassPool pool = new ClassPool(true);
+	
+	/**
+	 * Default constructor that adds GeDA path to pool for generating files.
+	 */
+	public JavassitMethodSynthesizer() {
+		pool.appendClassPath(new LoaderClassPath(DTOAssembler.class.getClassLoader()));
+	}
+	
 	/**
 	 * @param cleanUpReaderCycle reader cache clean up cycle
 	 */
@@ -91,7 +101,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			readLock.lock();
 			try {
 				do {
-					reader = makeReaderClass(ClassPool.getDefault(), 
+					reader = makeReaderClass(pool, getClassLoader(), 
 							readerClassName, sourceClassNameFull, sourceClassGetterMethodName, readMethod.getGenericReturnType());
 					if (reader == null) {
 						reader = getFromCacheOrCreateFromClassLoader(readerClassName, READER_CACHE, getClassLoader());
@@ -115,7 +125,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			return (T) instance;
 		}
 		
-		instance = createInstanceFromClassLoader(getClassLoader(), readerClassName);
+		instance = createInstanceFromClassLoader(classLoader, readerClassName);
 		if (instance != null) {
 			return (T) instance;
 		}
@@ -123,6 +133,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	}
 
 	private DataReader makeReaderClass(final ClassPool pool, 
+			final ClassLoader loader,
 			final String readerClassName, 
 			final String sourceClassNameFull,
 			final String sourceClassGetterMethodName, 
@@ -186,7 +197,8 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			ctClass.addMethod(methodGetReturnType);
 			ctClass.detach();
 			
-			final DataReader reader = (DataReader) ctClass.toClass(getClassLoader()).newInstance();
+			final DataReader reader = (DataReader) ctClass.toClass(
+					loader, DataReader.class.getProtectionDomain()).newInstance();
 			READER_CACHE.put(readerClassName, reader);
 			
 			return reader;
@@ -220,7 +232,8 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			writeLock.lock();
 			try {
 				do {
-					writer = makeWriterClass(ClassPool.getDefault(), writerClassName, classNameFull, methodName, writeMethod.getParameterTypes()[0]);
+					writer = makeWriterClass(pool, getClassLoader(), 
+							writerClassName, classNameFull, methodName, writeMethod.getParameterTypes()[0]);
 					if (writer == null) {
 						writer = getFromCacheOrCreateFromClassLoader(writerClassName, WRITER_CACHE, getClassLoader());
 					}
@@ -232,7 +245,8 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		return writer;
 	}
 
-	private DataWriter makeWriterClass(final ClassPool pool, 
+	private DataWriter makeWriterClass(final ClassPool pool,
+			final ClassLoader loader,
 			final String writerClassName, 
 			final String sourceClassNameFull,
 			final String sourceClassSetterMethodName, 
@@ -282,7 +296,8 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			ctClass.addMethod(methodGetParameterType);
 			ctClass.detach();
 			
-			final DataWriter writer = (DataWriter) ctClass.toClass(getClassLoader()).newInstance();
+			final DataWriter writer = (DataWriter) ctClass.toClass(
+					loader, DataWriter.class.getProtectionDomain()).newInstance();
 			WRITER_CACHE.put(writerClassName, writer);
 			
 			return writer;
@@ -300,13 +315,13 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	}
 	
 	private ClassLoader getClassLoader() {
-		return this.getClass().getClassLoader();
+		return DTOAssembler.class.getClassLoader();
 	}
 	
 	@SuppressWarnings("unchecked")
 	private <T> T createInstanceFromClassLoader(final ClassLoader cl, final String clazzName) {
 		try {
-			final Class< ? > clazz = Class.forName(clazzName, true, getClassLoader());
+			final Class< ? > clazz = Class.forName(clazzName, true, cl);
 			return (T) clazz.newInstance();
 		} catch (ClassNotFoundException cnfe) {
 			// That's OK we don't have it

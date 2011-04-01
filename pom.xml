@@ -81,13 +81,19 @@
 	<dependency>
 	    <groupId>javassist</groupId>
 	    <artifactId>javassist</artifactId>
-	    <version>3.1</version>
+	    <version>3.8.0.GA</version>
 	    <scope>runtime</scope>
 	</dependency>
 	<dependency>
 	  <groupId>junit</groupId>
 	  <artifactId>junit</artifactId>
 	  <version>4.6</version>
+	  <scope>test</scope>
+	</dependency>
+	<dependency>
+	  <groupId>servletapi</groupId>
+	  <artifactId>servletapi</artifactId>
+	  <version>2.4</version>
 	  <scope>test</scope>
 	</dependency>
 	<dependency>
