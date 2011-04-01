@@ -40,18 +40,21 @@ public final class DTOAssembler {
 	 * int number that allows to define the number of DTOAssembler.CACHE.put() calls after which cache cleanup is launched.
 	 * Default setting for this is 50 (i.e. after 50 put's the clean up is launched).
 	 */
-	public static final String SETTING_ASSEMBLER_CACHE_CLEANUP_CYCLE = "dp.lib.dto.geda.assembler.DTOAssembler.ASSEMBLER_CACHE_CLEANUP_CYCLE";
+	public static final String SETTING_ASSEMBLER_CACHE_CLEANUP_CYCLE = 
+		"dp.lib.dto.geda.assembler.DTOAssembler.ASSEMBLER_CACHE_CLEANUP_CYCLE";
 	/**
 	 * int number that allows to define the number of JavassitMethodSynthesizer.READER_CACHE.put() calls after which cache cleanup is launched.
 	 * Default setting for this is 100 (i.e. after 100 put's the clean up is launched).
 	 */
-	public static final String SETTING_DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE = "dp.lib.dto.geda.assembler.DTOAssembler.DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE";
+	public static final String SETTING_DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE = 
+		"dp.lib.dto.geda.assembler.DTOAssembler.DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE";
 
 	/**
 	 * int number that allows to define the number of JavassitMethodSynthesizer.WRITER_CACHE.put() calls after which cache cleanup is launched.
 	 * Default setting for this is 100 (i.e. after 100 put's the clean up is launched).
 	 */
-	public static final String SETTING_DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE = "dp.lib.dto.geda.assembler.DTOAssembler.DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE";
+	public static final String SETTING_DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE = 
+		"dp.lib.dto.geda.assembler.DTOAssembler.DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE";
 	
 	
 	private static final Cache<String, DTOAssembler> CACHE = new SoftReferenceCache<String, DTOAssembler>(50);	
@@ -137,13 +140,16 @@ public final class DTOAssembler {
 		if (index + 1 == metas.size()) {
 			if (meta instanceof FieldPipeMetadata) {
 				// create field pipe
-				return DataPipeBuilder.build(SYNTHESIZER, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
+				return DataPipeBuilder.build(SYNTHESIZER, 
+						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
 			} else if (meta instanceof CollectionPipeMetadata) {
 				// create collection
-				return CollectionPipeBuilder.build(SYNTHESIZER, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (CollectionPipeMetadata) meta);
+				return CollectionPipeBuilder.build(SYNTHESIZER, 
+						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (CollectionPipeMetadata) meta);
 			} else if (meta instanceof MapPipeMetadata) {
 				// create map
-				return MapPipeBuilder.build(SYNTHESIZER, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (MapPipeMetadata) meta);
+				return MapPipeBuilder.build(SYNTHESIZER, 
+						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (MapPipeMetadata) meta);
 			} else {
 				throw new IllegalArgumentException("Unknown pipe meta: " + meta.getClass());
 			}
@@ -186,7 +192,7 @@ public final class DTOAssembler {
     	return createNewAssembler(dto, entity);
     }
 
-	private static DTOAssembler createNewAssembler(final Class<?> dto, final Class<?> entity) {
+	private static DTOAssembler createNewAssembler(final Class< ? > dto, final Class< ? > entity) {
 		final String key = createAssemberKey(dto, entity);
     	
 		DTOAssembler assembler = CACHE.get(key);

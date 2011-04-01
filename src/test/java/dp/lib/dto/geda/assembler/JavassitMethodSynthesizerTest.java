@@ -25,9 +25,11 @@ import org.junit.Test;
  * 
  * @author DPavlov
  */
-public class JavassitMethodSynthesizerTest
-{
+public class JavassitMethodSynthesizerTest {
 	
+	/**
+	 * Test reader creation using class as base for class.
+	 */
 	@Test
 	public void testSynthesizeReaderOnClass() {
 		
@@ -46,6 +48,9 @@ public class JavassitMethodSynthesizerTest
 		
 	}
 
+	/**
+	 * Test reader creation using class as base for class when value is primitive.
+	 */
 	@Test
 	public void testSynthesizeReaderOnClassOnPrimitive() {
 		
@@ -64,6 +69,9 @@ public class JavassitMethodSynthesizerTest
 		
 	}
 
+	/**
+	 * Test reader creation using interface as base for class.
+	 */
 	@Test
 	public void testSynthesizeReaderOnInterface() {
 		
@@ -82,6 +90,9 @@ public class JavassitMethodSynthesizerTest
 		
 	}
 	
+	/**
+	 * Test reader creation with collection properties.
+	 */
 	@Test
 	public void testSynthesizeReaderOnCollectionReturnType() {
 		
@@ -99,6 +110,9 @@ public class JavassitMethodSynthesizerTest
 		
 	}
 	
+	/**
+	 * Test reader creation with map properties.
+	 */
 	@Test
 	public void testSynthesizeReaderOnMapReturnType() {
 		
@@ -116,6 +130,9 @@ public class JavassitMethodSynthesizerTest
 		
 	}
 	
+	/**
+	 * Test writer creation using class as base for class.
+	 */
 	@Test
 	public void testSynthesizeWriterOnClass() {
 		
@@ -135,6 +152,9 @@ public class JavassitMethodSynthesizerTest
 		
 	}
 
+	/**
+	 * Test writer creation using interface as base for class.
+	 */
 	@Test
 	public void testSynthesizeWriterOnInterface() {
 		

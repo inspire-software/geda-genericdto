@@ -31,8 +31,7 @@ import dp.lib.dto.geda.adapter.repository.ValueConverterRepository;
  * @since 1.0.0
  *
  */
-public class ValueConverterRepositoryImplTest
-{
+public class ValueConverterRepositoryImplTest {
 
 	/**
 	 * Test basic methods for repository.
@@ -66,6 +65,9 @@ public class ValueConverterRepositoryImplTest
 		
 	}
 	
+	/**
+	 * Test register methods for repository.
+	 */
 	@Test
 	public void testRegisterValueConverter() {
 		
@@ -88,6 +90,9 @@ public class ValueConverterRepositoryImplTest
 		
 	}
 	
+	/**
+	 * Test duplicate keys.
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testRegisterValueConverterFailForDuplicateKey() {
 		

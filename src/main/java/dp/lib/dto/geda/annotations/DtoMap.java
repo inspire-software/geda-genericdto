@@ -73,6 +73,13 @@ public @interface DtoMap {
      * to be the key in the dto map.
      */
     String entityCollectionMapKey() default "";
+    
+    /**
+     * If entity property is a map there are two options: to use map values as source
+     * for DTO's (default behaviour when {@link #useEntityMapKey()} is false); alternatively
+     * use map keys as source for DTO's (set {@link #useEntityMapKey()} to true).
+     */
+    boolean useEntityMapKey() default false;
 
     /**
      * Matcher used to synchronize collection of DTO's and Entities.

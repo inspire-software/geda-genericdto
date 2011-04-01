@@ -70,45 +70,32 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 
 	}
 
-	/**
-	 * @return DTO collection impl class
-	 */
+	/** {@inheritDoc} */
 	public Class< ? extends Collection> getDtoCollectionClass() {
 		return dtoCollectionClass;
 	}
 	
-	/**
-	 * @return new collection instance.
-	 */
+	/** {@inheritDoc} */
 	public Collection newDtoCollection() {
 		return newCollection(getDtoCollectionClass(), " Dto field: " + this.getDtoFieldName());
 	}
 
-	/**
-	 * @return entity collection impl class
-	 */
+	/** {@inheritDoc} */
 	public Class< ? extends Collection> getEntityCollectionClass() {
 		return entityCollectionClass;
 	}
 	
-	/**
-	 * @return new collection instance.
-	 */
+	/** {@inheritDoc} */
 	public Collection newEntityCollection() {
 		return newCollection(getEntityCollectionClass(), " Entity field: " + this.getEntityFieldName());
 	}
 
-
-	/**
-	 * @return the entity's collection generic type to identity the type of items in entity collection.
-	 */
+	/** {@inheritDoc} */
 	public Class< ? > getReturnType() {
 		return returnType;
 	}
 
-	/**
-	 * @return matcher instance that will help synchronize collections.
-	 */
+	/** {@inheritDoc} */
 	public DtoToEntityMatcher getDtoToEntityMatcher() {
 		return dtoToEntityMatcher;
 	}

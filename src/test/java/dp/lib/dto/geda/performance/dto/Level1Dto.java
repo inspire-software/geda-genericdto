@@ -25,7 +25,7 @@ import dp.lib.dto.geda.performance.entity.Level1Entity;
 import dp.lib.dto.geda.performance.entity.Level2Entity;
 
 /**
- * Level 1 DTO
+ * Level 1 DTO.
  * 
  * @author DPavlov
  */
