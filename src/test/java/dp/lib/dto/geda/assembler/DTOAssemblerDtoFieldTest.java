@@ -157,7 +157,7 @@ public class DTOAssemblerDtoFieldTest {
 		subEntity.setIm2("im2");
 		subEntity.setIm3("im3");
 		entity.setNested(subEntity);
-	
+		
 		final DTOAssembler assembler =
 			DTOAssembler.newAssembler(TestDto10Class.class, TestEntity10Class.class);
 		
@@ -194,6 +194,37 @@ public class DTOAssemblerDtoFieldTest {
 		assertEquals("dto1", entity.getNested().getIm1());
 		assertEquals("dto2", entity.getNested().getIm2());
 		assertEquals("dto3", entity.getNested().getIm3());
+		
+		
+	}
+	
+	/**
+	 * Refer to Test*14* classes to see setup for a nested interface inheritance 
+	 * in entity.
+	 */
+	@Test
+	public void testVerticalMultiInheritaceInInterfaces() {
+		final TestDto14IfaceDescriptable dto = new TestDto14Class();
+		
+		final TestEntity14IfaceDescriptable entity = new TestEntity14Class();
+		entity.setName("name");
+		entity.setDesc("desc");
+	
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(dto.getClass(), TestEntity14IfaceDescriptable.class);
+		
+		assembler.assembleDto(dto, entity, null, null);
+		
+		assertEquals("name", dto.getName());
+		assertEquals("desc", dto.getDesc());
+		
+		dto.setName("Name DTO");
+		dto.setDesc("Desc DTO");
+		
+		assembler.assembleEntity(dto, entity, null, null);
+		
+		assertEquals("Name DTO", entity.getName());
+		assertEquals("Desc DTO", entity.getDesc());
 
 	
 	}

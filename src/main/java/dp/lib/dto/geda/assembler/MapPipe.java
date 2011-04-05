@@ -57,20 +57,24 @@ class MapPipe implements Pipe {
                    final DataReader entityCollectionKeyRead,
                    final MapPipeMetadata meta) {
     	
-    	this.meta = meta;
-
-        this.dtoWrite = dtoWrite;
-        this.entityRead = entityRead;
-        this.entityCollectionKeyRead = entityCollectionKeyRead;
-
-        if (this.meta.isReadOnly()) {
-			this.dtoRead = null;
-			this.entityWrite = null;
-            PipeValidator.validateReadPipeTypes(this.dtoWrite, this.entityRead);
-		} else {
-			this.dtoRead = dtoRead;
-			this.entityWrite = entityWrite;
-            PipeValidator.validatePipeTypes(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
+    	try {
+	    	this.meta = meta;
+	
+	        this.dtoWrite = dtoWrite;
+	        this.entityRead = entityRead;
+	        this.entityCollectionKeyRead = entityCollectionKeyRead;
+	
+	        if (this.meta.isReadOnly()) {
+				this.dtoRead = null;
+				this.entityWrite = null;
+	            PipeValidator.validateReadPipeTypes(this.dtoWrite, this.entityRead);
+			} else {
+				this.dtoRead = dtoRead;
+				this.entityWrite = entityWrite;
+	            PipeValidator.validatePipeTypes(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
+			}
+		} catch (IllegalArgumentException iae) {
+			throw new IllegalArgumentException("Dto Field: " + this.meta.getDtoFieldName(), iae);
 		}
 
     }

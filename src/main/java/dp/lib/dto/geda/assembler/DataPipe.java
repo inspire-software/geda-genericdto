@@ -56,39 +56,43 @@ class DataPipe implements Pipe {
 					final DataWriter entityWrite,
 					final FieldPipeMetadata meta) {
 		
-		this.meta = meta;
-
-		this.dtoWrite = dtoWrite;
-		this.entityRead = entityRead;
-		if (meta.isReadOnly()) {
-			
-			PipeValidator.validateReadPipeNonNull(this.dtoWrite, this.entityRead);
-			
-			this.dtoRead = null;
-			this.entityWrite = null;
-            if (!usesConverter()) {
-                PipeValidator.validateReadPipeTypes(this.dtoWrite, this.entityRead);
-            }
-		} else {
-			
-			this.dtoRead = dtoRead;
-			this.entityWrite = entityWrite;
-
-			PipeValidator.validatePipeNonNull(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
-			
-			if (!usesConverter()) {
-                PipeValidator.validatePipeTypes(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
-            }
-		}
-		if (this.meta.isChild()) {
-			
-			this.dtoParentKeyRead = dtoParentKeyRead;
-			PipeValidator.validatePipeNonNull(this.dtoParentKeyRead, "parentKey pipe is null");
-			
-		} else {
-			
-			this.dtoParentKeyRead = null;
-			
+		try {
+			this.meta = meta;
+	
+			this.dtoWrite = dtoWrite;
+			this.entityRead = entityRead;
+			if (meta.isReadOnly()) {
+				
+				PipeValidator.validateReadPipeNonNull(this.dtoWrite, this.entityRead);
+				
+				this.dtoRead = null;
+				this.entityWrite = null;
+	            if (!usesConverter()) {
+	                PipeValidator.validateReadPipeTypes(this.dtoWrite, this.entityRead);
+	            }
+			} else {
+				
+				this.dtoRead = dtoRead;
+				this.entityWrite = entityWrite;
+	
+				PipeValidator.validatePipeNonNull(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
+				
+				if (!usesConverter()) {
+	                PipeValidator.validatePipeTypes(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
+	            }
+			}
+			if (this.meta.isChild()) {
+				
+				this.dtoParentKeyRead = dtoParentKeyRead;
+				PipeValidator.validatePipeNonNull(this.dtoParentKeyRead, "parentKey pipe is null");
+				
+			} else {
+				
+				this.dtoParentKeyRead = null;
+				
+			}
+		} catch (IllegalArgumentException iae) {
+			throw new IllegalArgumentException("Dto Field: " + this.meta.getDtoFieldName(), iae);
 		}
 		
 	}
