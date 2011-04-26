@@ -82,7 +82,7 @@ final class DataPipeBuilder {
 				synthesizer.synthesizeWriter(dtoFieldDesc),
 				dtoParentReadMethod,
 				synthesizer.synthesizeReader(entityFieldDesc),
-				synthesizer.synthesizeWriter(entityFieldDesc),
+				meta.isReadOnly() ? null : synthesizer.synthesizeWriter(entityFieldDesc),
 				meta
 		);
 	}

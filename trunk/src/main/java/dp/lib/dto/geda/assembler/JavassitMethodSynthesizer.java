@@ -1,5 +1,9 @@
 package dp.lib.dto.geda.assembler;
 
+import javassist.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -9,16 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
-import javassist.NotFoundException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Javassist implementation.
@@ -87,6 +81,9 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	public DataReader synthesizeReader(final PropertyDescriptor descriptor) {
 				
 		final Method readMethod = descriptor.getReadMethod();
+        if (readMethod == null) {
+            throw new IllegalArgumentException("No read method for: " + descriptor.getName());
+        }
 		
 		final String sourceClassNameFull = readMethod.getDeclaringClass().getCanonicalName();
 		final String sourceClassGetterMethodName = readMethod.getName();
@@ -218,7 +215,10 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	/** {@inheritDoc} */
 	public DataWriter synthesizeWriter(final PropertyDescriptor descriptor) {
 		final Method writeMethod = descriptor.getWriteMethod();
-		
+        if (writeMethod == null) {
+            throw new IllegalArgumentException("No write method for: " + descriptor.getName());
+        }
+
 		final String classNameFull = writeMethod.getDeclaringClass().getCanonicalName();
 		final String methodName = writeMethod.getName();
 		

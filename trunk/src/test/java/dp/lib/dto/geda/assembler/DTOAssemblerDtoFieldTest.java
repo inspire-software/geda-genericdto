@@ -228,5 +228,32 @@ public class DTOAssemblerDtoFieldTest {
 
 	
 	}
+
+    /**
+     * Test immutable objects for entities (no setters) with read only DTO's
+     */
+    @Test
+    public void testImmutableEntityObjectMapping() {
+        final TestDto15Class dto = new TestDto15Class();
+
+        final TestEntity15Class entity = new TestEntity15Class("name", "desc");
+
+        final DTOAssembler assembler =
+            DTOAssembler.newAssembler(TestDto15Class.class, TestEntity15Class.class);
+
+        assembler.assembleDto(dto, entity, null, null);
+
+        assertEquals("name", dto.getName());
+        assertEquals("desc", dto.getDesc());
+
+        dto.setName("Name DTO");
+        dto.setDesc("Desc DTO");
+
+        assembler.assembleEntity(dto, entity, null, null);
+
+        assertEquals("name", entity.getName());
+        assertEquals("desc", entity.getDesc());
+
+    }
 	
 }

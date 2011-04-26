@@ -11,9 +11,9 @@
 
 package dp.lib.dto.geda.assembler;
 
-import java.beans.PropertyDescriptor;
-
 import dp.lib.dto.geda.adapter.meta.PipeMetadata;
+
+import java.beans.PropertyDescriptor;
 
 /**
  * Assembles DataPipe.
@@ -53,7 +53,7 @@ final class DataPipeChainBuilder {
 				dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
 		
 		final DataReader entityFieldRead = synthesizer.synthesizeReader(entityFieldDesc);
-		final DataWriter entityFieldWrite = synthesizer.synthesizeWriter(entityFieldDesc);
+		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : synthesizer.synthesizeWriter(entityFieldDesc);
 		
 		return new DataPipeChain(entityFieldRead, entityFieldWrite, pipe, meta);
 		
