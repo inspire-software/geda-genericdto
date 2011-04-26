@@ -11,9 +11,9 @@
 
 package dp.lib.dto.geda.assembler;
 
-import java.beans.PropertyDescriptor;
-
 import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
+
+import java.beans.PropertyDescriptor;
 
 /**
  * Assembles CollectionPipe.
@@ -52,7 +52,7 @@ final class CollectionPipeBuilder {
         		dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
 
 		final DataReader entityFieldRead = synthesizer.synthesizeReader(entityFieldDesc);
-		final DataWriter entityFieldWrite = synthesizer.synthesizeWriter(entityFieldDesc);
+		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : synthesizer.synthesizeWriter(entityFieldDesc);
 
         final PropertyDescriptor dtoFieldDesc = PropertyInspector.getDtoPropertyDescriptorForField(
         		dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);

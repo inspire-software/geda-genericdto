@@ -10,19 +10,11 @@
 
 package dp.lib.dto.geda.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-
+import dp.lib.dto.geda.adapter.BeanFactory;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
+import java.util.*;
 
 /**
  * DTOAssembler test.
@@ -448,5 +440,54 @@ public class DTOAssemblerDtoCollectionTest {
 		assertTrue(item1b && item2b && item3b);
 
 	}
+
+    /**
+     * Test that collection pipe coes with no setter immutable entity beans.
+     */
+    @Test
+    public void testCollectionMappingWithImmutableEntityForReadOnly() {
+
+        final TestEntity16Class entities = new TestEntity16Class(
+            (Collection) Arrays.asList(
+                new TestEntity15Class("1", "one"),
+                new TestEntity15Class("2", "two"),
+                new TestEntity15Class("3", "three")
+            )
+        );
+
+        final TestDto16Class dtos = new TestDto16Class();
+
+        final DTOAssembler assembler = DTOAssembler.newAssembler(
+                TestDto16Class.class, TestEntity16Class.class);
+
+        assembler.assembleDto(dtos, entities, null, new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("TestDto15Class".equals(entityBeanKey)) {
+                    return new TestDto15Class();
+                }
+                return null;
+            }
+        });
+
+        assertNotNull(dtos.getItems());
+        assertEquals(3, dtos.getItems().size());
+        final Iterator<TestDto15Class> iterDto = dtos.getItems().iterator();
+        assertEquals("1", iterDto.next().getName());
+        assertEquals("2", iterDto.next().getName());
+        assertEquals("3", iterDto.next().getName());
+
+        for (TestDto15Class dtoItem : dtos.getItems()) {
+            dtoItem.setName("DTO_" + dtoItem.getName());
+        }
+
+        assembler.assembleEntity(dtos, entities, null, null);
+        assertNotNull(entities.getItems());
+        assertEquals(3, entities.getItems().size());
+        final Iterator<TestEntity15Class> iterEntity = entities.getItems().iterator();
+        assertEquals("1", iterEntity.next().getName());
+        assertEquals("2", iterEntity.next().getName());
+        assertEquals("3", iterEntity.next().getName());
+
+    }
 	
 }
