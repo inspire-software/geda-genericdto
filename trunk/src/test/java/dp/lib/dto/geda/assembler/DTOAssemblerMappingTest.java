@@ -13,6 +13,13 @@ package dp.lib.dto.geda.assembler;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -517,7 +524,7 @@ public class DTOAssemblerMappingTest {
 		final TestEntity1Interface entity = new TestEntity1Class();
 		
 		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class);
-
+		
 		final double myDouble = 0.2d;
 		
 		dto.setMyLong(1L);
@@ -539,6 +546,76 @@ public class DTOAssemblerMappingTest {
 		assertEquals(Long.valueOf(2L), dto.getMyLong());
 		assertEquals(Double.valueOf(2d), dto.getMyDouble());
 		assertEquals("name", dto.getMyString());
+		
+	}
+	
+	/**
+	 * Test that assembler copes with generic DTO and Entity types.
+	 */
+	@Test
+	public void testDtoEntityClassGenericMapping() {
+		
+		final TestDto18Class dto = new TestDto18Class();
+		final TestEntity18Class entity = new TestEntity18Class();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dto.getClass(), entity.getClass());
+
+		final TestDto18aClass<String> item = new TestDto18aClass<String>();
+		item.setMyProp("item");
+
+		dto.setMyProp("prop");
+		final List<TestDto18aClass<String>> coll = new ArrayList<TestDto18aClass<String>>();
+		coll.add(item);
+		dto.setMyColl(coll);
+		final Map<String, TestDto18aClass<String>> map = new HashMap<String, TestDto18aClass<String>>();
+		map.put("m1", item);
+		dto.setMyMap(map);
+		
+		assembler.assembleEntity(dto, entity, null, new BeanFactory() {
+
+			public Object get(final String entityBeanKey) {
+				return new TestEntity18aClass<String>();
+			}
+			
+		});
+		
+		assertEquals("prop", entity.getMyProp());
+		
+		assertNotNull(entity.getMyColl());
+		assertNotSame(dto.getMyColl(), entity.getMyColl());
+		assertEquals(1, entity.getMyColl().size());
+		assertEquals("item", entity.getMyColl().iterator().next().getMyProp());
+		
+		assertNotNull(entity.getMyMap());
+		assertNotSame(dto.getMyMap(), entity.getMyMap());
+		assertEquals(1, entity.getMyMap().size());
+		assertEquals("item", entity.getMyMap().iterator().next().getMyProp());
+		
+		entity.setMyProp("e1");
+		entity.getMyColl().iterator().next().setMyProp("ci1");
+		entity.getMyMap().iterator().next().setMyProp("mi1");
+		
+		assembler.assembleDto(dto, entity, null, new BeanFactory() {
+
+			public Object get(final String entityBeanKey) {
+				return new TestDto18aClass<String>();
+			}
+			
+		});
+		
+		assertEquals("e1", dto.getMyProp());
+		
+		assertNotNull(dto.getMyColl());
+		assertNotSame(dto.getMyColl(), entity.getMyColl());
+		assertEquals(1, dto.getMyColl().size());
+		assertEquals("ci1", dto.getMyColl().iterator().next().getMyProp());
+		
+		assertNotNull(entity.getMyMap());
+		assertNotSame(dto.getMyMap(), entity.getMyMap());
+		assertEquals(1, dto.getMyMap().size());
+		assertTrue(dto.getMyMap().containsKey("mi1"));
+		assertEquals("mi1", dto.getMyMap().get("mi1").getMyProp());
+		
 		
 	}
 	

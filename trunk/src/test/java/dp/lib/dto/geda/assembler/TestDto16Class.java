@@ -28,8 +28,10 @@ import java.util.Collection;
 @Dto
 public class TestDto16Class {
 
+	/** Basic matcher. */
     public static class TestDto16Matcher implements DtoToEntityMatcher<TestDto15Class, TestEntity15Class> {
-        public boolean match(final TestDto15Class testDto15Class, final TestEntity15Class testEntity15Class) {
+    	/** {@inheritDoc} */
+    	public boolean match(final TestDto15Class testDto15Class, final TestEntity15Class testEntity15Class) {
             return testDto15Class.getName().equals(testEntity15Class.getName());
         }
     }
