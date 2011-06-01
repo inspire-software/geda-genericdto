@@ -77,7 +77,7 @@ public class ValueConverterRepositoryImpl implements ValueConverterRepository {
     }
 
     /** {@inheritDoc} */
-	public void registerValueConverter(String key, Object converter) throws IllegalArgumentException {
+	public void registerValueConverter(final String key, final Object converter) throws IllegalArgumentException {
 		if (repository.containsKey(key)) {
 			throw new IllegalArgumentException("Key [" + key + "] is already assined a converter.");
 		}
@@ -85,7 +85,7 @@ public class ValueConverterRepositoryImpl implements ValueConverterRepository {
 	}
 
 	/** {@inheritDoc} */
-	public void removeValueConverter(String key) {
+	public void removeValueConverter(final String key) {
 		repository.remove(key);		
 	}
     

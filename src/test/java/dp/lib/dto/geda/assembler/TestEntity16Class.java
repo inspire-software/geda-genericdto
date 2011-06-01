@@ -26,6 +26,9 @@ public class TestEntity16Class {
 
 	private final Collection<TestEntity15Class> items;
 
+	/**
+	 * @param items items
+	 */
     public TestEntity16Class(final Collection<TestEntity15Class> items) {
         this.items = items;
     }

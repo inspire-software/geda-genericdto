@@ -53,6 +53,7 @@ public interface ValueConverterRepository extends Serializable {
     Map<String, Object> getByKeysAsMap(final String ... keys);
 
     /**
+     * @param <T> convenience type coercing
      * @param key value converter key.
      * @return value converter for given key.
      */

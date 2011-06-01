@@ -14,6 +14,7 @@ package dp.lib.dto.geda.assembler;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +103,12 @@ public final class DTOAssembler {
 		while (dtoMap != null) { // when we reach Object.class this should be null
 			
 			mapRelationMapping(dtoMap, entity);
-			dtoMap = (Class) dtoMap.getGenericSuperclass();
+			Object supType = dtoMap.getGenericSuperclass();
+			if (supType instanceof ParameterizedType) {
+				dtoMap = (Class) ((ParameterizedType) supType).getRawType();
+			} else {
+				dtoMap = (Class) supType;
+			}
 			
 		}
 		

@@ -25,6 +25,10 @@ public class TestEntity15Class {
 	private final String name;
 	private final String desc;
 
+	/**
+	 * @param name name
+	 * @param desc desc
+	 */
     public TestEntity15Class(final String name, final String desc) {
         this.name = name;
         this.desc = desc;
