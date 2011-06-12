@@ -17,6 +17,8 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.GeDAException;
 
 /**
  * DTOAssembler test.
@@ -29,9 +31,11 @@ public class DTOAssemblerDtoFieldTest {
 
 	/**
 	 * Test that names are extracted from field name if binding is not specified.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testAutowireNames() {
+	public void testAutowireNames() throws GeDAException {
 		
 		final String name = "testName";
 		final String name2 = "testAnotherName";
@@ -60,9 +64,11 @@ public class DTOAssemblerDtoFieldTest {
 	
 	/**
 	 * Test the inheritance of DtoField does not break data pipes.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testInheritanceOfDtoFields() {
+	public void testInheritanceOfDtoFields() throws GeDAException {
 		
 		final String name = "name";
 		final String nameChild = "nameChild";
@@ -99,9 +105,11 @@ public class DTOAssemblerDtoFieldTest {
 	/**
 	 * Test that if mapping is specified with a readOnly property with a nesting, 
 	 * then when write to entity is invoked the higher level object is not created via proxy. 
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testNullObjectWithReadOnlyMappingAndLayeredNestingDoesNotRequireBeanFactory() {
+	public void testNullObjectWithReadOnlyMappingAndLayeredNestingDoesNotRequireBeanFactory() throws GeDAException {
 		final TestDto4DelegatingReadOnlyClass dto = new TestDto4DelegatingReadOnlyClass();
 		dto.setNestedString("ReadOnly");
 		
@@ -123,9 +131,11 @@ public class DTOAssemblerDtoFieldTest {
 	 * Test that if mapping is specified without a readOnly property with a nesting, 
 	 * then when write to entity is invoked the higher level object is created via proxy
 	 * and exception is thrown if no beanFactory exists. 
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testNullObjectWithoutReadOnlyMappingAndLayeredNestingDoesNotRequireBeanFactory() {
+	@Test(expected = BeanFactoryNotFoundException.class)
+	public void testNullObjectWithoutReadOnlyMappingAndLayeredNestingDoesNotRequireBeanFactory() throws GeDAException {
 		final TestDto4DelegatingWritableClass dto = new TestDto4DelegatingWritableClass();
 		dto.setNestedString("ReadOnly");
 		
@@ -146,9 +156,11 @@ public class DTOAssemblerDtoFieldTest {
 	 * exposed as an interface that is a composite of serveral interfaces including
 	 * generics. This test shows that such mapping is correctly handled and properties 
 	 * are resolved.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testMultiInheritaceInInterfacesForNestedProperties() {
+	public void testMultiInheritaceInInterfacesForNestedProperties() throws GeDAException {
 		final TestDto10Class dto = new TestDto10Class();
 		
 		final TestEntity10Class entity = new TestEntity10Class();
@@ -201,9 +213,11 @@ public class DTOAssemblerDtoFieldTest {
 	/**
 	 * Refer to Test*14* classes to see setup for a nested interface inheritance 
 	 * in entity.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testVerticalMultiInheritaceInInterfaces() {
+	public void testVerticalMultiInheritaceInInterfaces() throws GeDAException {
 		final TestDto14IfaceDescriptable dto = new TestDto14Class();
 		
 		final TestEntity14IfaceDescriptable entity = new TestEntity14Class();
@@ -230,10 +244,12 @@ public class DTOAssemblerDtoFieldTest {
 	}
 
     /**
-     * Test immutable objects for entities (no setters) with read only DTO's
+     * Test immutable objects for entities (no setters) with read only DTO's.
+	 * 
+	 * @throws GeDAException exception
      */
     @Test
-    public void testImmutableEntityObjectMapping() {
+    public void testImmutableEntityObjectMapping() throws GeDAException {
         final TestDto15Class dto = new TestDto15Class();
 
         final TestEntity15Class entity = new TestEntity15Class("name", "desc");

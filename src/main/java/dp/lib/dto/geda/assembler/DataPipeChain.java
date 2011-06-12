@@ -10,11 +10,29 @@
 
 package dp.lib.dto.geda.assembler;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.meta.PipeMetadata;
+import dp.lib.dto.geda.exception.AnnotationDuplicateBindingException;
+import dp.lib.dto.geda.exception.AnnotationMissingBeanKeyException;
+import dp.lib.dto.geda.exception.AnnotationMissingBindingException;
+import dp.lib.dto.geda.exception.AnnotationMissingException;
+import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
+import dp.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
+import dp.lib.dto.geda.exception.EntityRetrieverNotFoundException;
+import dp.lib.dto.geda.exception.GeDARuntimeException;
+import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
+import dp.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
+import dp.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
+import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
+import dp.lib.dto.geda.exception.InspectionScanningException;
+import dp.lib.dto.geda.exception.NotEntityRetrieverException;
+import dp.lib.dto.geda.exception.NotValueConverterException;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
+import dp.lib.dto.geda.exception.ValueConverterNotFoundException;
 
 
 /**
@@ -56,9 +74,14 @@ class DataPipeChain implements Pipe {
 
 	/** {@inheritDoc} */
 	public void writeFromDtoToEntity(final Object entity, final Object dto,
-			final Map<String, Object> converters, final BeanFactory entityBeanFactory)
-			throws IllegalArgumentException, IllegalAccessException,
-			InvocationTargetException {
+			final Map<String, Object> converters, final BeanFactory entityBeanFactory) 
+		throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, NotEntityRetrieverException, 
+		       EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, 
+		       AnnotationMissingBeanKeyException, AnnotationMissingException, UnableToCreateInstanceException, 
+		       CollectionEntityGenericReturnTypeException, InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, 
+		       InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
+		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
+		       AnnotationDuplicateBindingException {
 
 		Object entityDataDelegate = null;
 		if (!(entity instanceof NewDataProxy)) {
@@ -81,9 +104,13 @@ class DataPipeChain implements Pipe {
 
 	/** {@inheritDoc} */
 	public void writeFromEntityToDto(final Object entity, final Object dto,
-			final Map<String, Object> converters, final BeanFactory dtoBeanFactory)
-			throws IllegalArgumentException, IllegalAccessException,
-			InvocationTargetException {
+			final Map<String, Object> converters, final BeanFactory dtoBeanFactory) 
+		throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, AnnotationMissingException, 
+		       NotValueConverterException, ValueConverterNotFoundException, UnableToCreateInstanceException, 
+		       CollectionEntityGenericReturnTypeException, InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, 
+		       InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
+		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
+		       AnnotationDuplicateBindingException {
 		
 		if (entity == null) {
 			return;

@@ -79,7 +79,7 @@ public class PerformanceTestLevel3Thread implements Runnable {
 			
 			dtos = null;
 			
-		} catch (IllegalArgumentException iae) {
+		} catch (Exception iae) {
 			out.append(iae.getMessage()).append("\n");
 			if (iae.getCause() != null) {
 				out.append(iae.getCause().getMessage()).append("\n");

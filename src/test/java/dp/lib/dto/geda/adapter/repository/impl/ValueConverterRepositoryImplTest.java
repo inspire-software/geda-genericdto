@@ -23,6 +23,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import dp.lib.dto.geda.adapter.repository.ValueConverterRepository;
+import dp.lib.dto.geda.exception.DuplicateValueConverterKeyException;
 
 /**
  * ValueConverterRepository test.
@@ -67,9 +68,11 @@ public class ValueConverterRepositoryImplTest {
 	
 	/**
 	 * Test register methods for repository.
+	 * 
+	 * @throws DuplicateValueConverterKeyException duplicate exception 
 	 */
 	@Test
-	public void testRegisterValueConverter() {
+	public void testRegisterValueConverter() throws DuplicateValueConverterKeyException {
 		
 		final Object conv1 = new Object();
 		final ValueConverterRepository repo = new ValueConverterRepositoryImpl();
@@ -92,15 +95,31 @@ public class ValueConverterRepositoryImplTest {
 	
 	/**
 	 * Test duplicate keys.
+	 * 
+	 * @throws DuplicateValueConverterKeyException duplicate exception 
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testRegisterValueConverterFailForDuplicateKey() {
+	@Test(expected = DuplicateValueConverterKeyException.class)
+	public void testRegisterValueConverterFailForDuplicateKey() throws DuplicateValueConverterKeyException {
 		
 		final Object conv1 = new Object();
 		final ValueConverterRepository repo = new ValueConverterRepositoryImpl();
 		
 		repo.registerValueConverter("key1", conv1);
 		repo.registerValueConverter("key1", conv1);
+		
+	}
+	
+	/**
+	 * Test duplicate keys.
+	 */
+	@Test
+	public void testRegisterValueConverterForcedDoesNotFailForDuplicateKey() {
+		
+		final Object conv1 = new Object();
+		final ValueConverterRepository repo = new ValueConverterRepositoryImpl();
+		
+		repo.registerValueConverterForced("key1", conv1);
+		repo.registerValueConverterForced("key1", conv1);
 		
 	}
 	

@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import dp.lib.dto.geda.adapter.ValueConverter;
 import dp.lib.dto.geda.assembler.TestDto3Class.Decision;
+import dp.lib.dto.geda.exception.GeDAException;
 
 /**
  * DTOAssembler test.
@@ -31,9 +32,11 @@ public class DTOAssemblerConvertersTest {
 
 	/**
 	 * Test assembler that uses converter.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testWithConversion() {
+	public void testWithConversion() throws GeDAException {
 		final TestDto3Class dto = new TestDto3Class();
 		final TestEntity3Class entity = new TestEntity3Class();
 		entity.setDecision(true);

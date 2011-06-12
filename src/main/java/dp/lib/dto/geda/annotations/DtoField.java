@@ -46,7 +46,7 @@ public @interface DtoField {
 	 * This annotation is mandatory for {@link DtoField} with
      * deeply nested entity object i.e. when a '.' syntax is used.
      * Failure to supply this parameter will result in
-	 * {@link IllegalArgumentException}.
+	 * {@link dp.lib.dto.geda.exception.GeDAException}.
 	 *
 	 * Specifies entity bean key that will be used by injected to {@link dp.lib.dto.geda.assembler.DTOAssembler}
 	 * bean factory

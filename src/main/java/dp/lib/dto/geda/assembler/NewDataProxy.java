@@ -11,10 +11,10 @@
 
 package dp.lib.dto.geda.assembler;
 
-import java.lang.reflect.InvocationTargetException;
-
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.meta.PipeMetadata;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
 
 /**
  * Proxy object for creating new beans that will create bean only id the data for it exists.
@@ -39,13 +39,12 @@ class NewDataProxy {
 	 * @param dto true if this is proxy for dto and false if this is proxy for entity
 	 * @param parentEntity the parent of this bean (can be {@link NewDataProxy} to allow deep nesting)
 	 * @param entityWrite the method that allows to set new bean to parrent object.
-	 * @throws IllegalArgumentException if bean factory is not specified.
 	 */
 	public NewDataProxy(final BeanFactory beanFactory,
 			final PipeMetadata meta,
 			final boolean dto,
 			final Object parentEntity,
-			final DataWriter entityWrite) throws IllegalArgumentException {
+			final DataWriter entityWrite) {
 
 		this.beanFactory = beanFactory;
 		this.meta = meta;
@@ -57,20 +56,17 @@ class NewDataProxy {
 	/**
 	 * @return newly created entity bean for working with deeply nested objects (sets itself 
 	 *         to parent object automatically).
-	 * @throws IllegalArgumentException {@link java.lang.reflect.Method}
-	 * @throws IllegalAccessException {@link java.lang.reflect.Method}
-	 * @throws InvocationTargetException {@link java.lang.reflect.Method}
+	 * @throws BeanFactoryNotFoundException if bean factory annotation is missing
+	 * @throws BeanFactoryUnableToCreateInstanceException if bean factory is unable to create dot/entity instance
 	 */
 	public Object create() 
-		throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException {
 		
 		if (beanFactory == null) {
 			if (dto) {
-				throw new IllegalArgumentException("BeanFactory must be specified in order to create bean with key: "
-						+ meta.getDtoBeanKey() + " for DTO field: " + meta.getDtoFieldName());
+				throw new BeanFactoryNotFoundException(meta.getDtoFieldName(), meta.getDtoBeanKey(), true);
 			} else {
-				throw new IllegalArgumentException("BeanFactory must be specified in order to create bean with key: "
-						+ meta.getEntityBeanKey() + " for Entity field: " + meta.getEntityFieldName());
+				throw new BeanFactoryNotFoundException(meta.getEntityFieldName(), meta.getEntityBeanKey(), false);
 			}
 		}
 		

@@ -20,6 +20,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import dp.lib.dto.geda.exception.GeDAException;
+
 /**
  * Test for synthesizing classes.
  * 
@@ -29,9 +31,10 @@ public class JavassitMethodSynthesizerTest {
 	
 	/**
 	 * Test reader creation using class as base for class.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testSynthesizeReaderOnClass() {
+	public void testSynthesizeReaderOnClass() throws GeDAException {
 		
 		final TestDto1Class dto = new TestDto1Class();
 		dto.setMyString("Hello");
@@ -50,9 +53,10 @@ public class JavassitMethodSynthesizerTest {
 
 	/**
 	 * Test reader creation using class as base for class when value is primitive.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testSynthesizeReaderOnClassOnPrimitive() {
+	public void testSynthesizeReaderOnClassOnPrimitive() throws GeDAException {
 		
 		final TestEntity3Class dto = new TestEntity3Class();
 		dto.setDecision(true);
@@ -71,9 +75,10 @@ public class JavassitMethodSynthesizerTest {
 
 	/**
 	 * Test reader creation using interface as base for class.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testSynthesizeReaderOnInterface() {
+	public void testSynthesizeReaderOnInterface() throws GeDAException {
 		
 		final TestDto1Interface dto = new TestDto1Class();
 		dto.setMyString("Hello");
@@ -92,9 +97,10 @@ public class JavassitMethodSynthesizerTest {
 	
 	/**
 	 * Test reader creation with collection properties.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testSynthesizeReaderOnCollectionReturnType() {
+	public void testSynthesizeReaderOnCollectionReturnType() throws GeDAException {
 		
 		final TestDto12CollectionClass dto = new TestDto12CollectionClass();
 		
@@ -112,9 +118,10 @@ public class JavassitMethodSynthesizerTest {
 	
 	/**
 	 * Test reader creation with map properties.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testSynthesizeReaderOnMapReturnType() {
+	public void testSynthesizeReaderOnMapReturnType() throws GeDAException {
 		
 		final TestDto12MapToMapClass dto = new TestDto12MapToMapClass();
 		
@@ -132,9 +139,10 @@ public class JavassitMethodSynthesizerTest {
 	
 	/**
 	 * Test writer creation using class as base for class.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testSynthesizeWriterOnClass() {
+	public void testSynthesizeWriterOnClass() throws GeDAException {
 		
 		final TestDto1Class dto = new TestDto1Class();
 		dto.setMyString("Hello");
@@ -154,9 +162,10 @@ public class JavassitMethodSynthesizerTest {
 
 	/**
 	 * Test writer creation using interface as base for class.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testSynthesizeWriterOnInterface() {
+	public void testSynthesizeWriterOnInterface() throws GeDAException {
 		
 		final TestDto1Interface dto = new TestDto1Class();
 		dto.setMyString("Hello");

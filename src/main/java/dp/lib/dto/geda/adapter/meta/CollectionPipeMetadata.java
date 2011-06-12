@@ -13,6 +13,7 @@ package dp.lib.dto.geda.adapter.meta;
 import java.util.Collection;
 
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * Metadata specific to collection pipes.
@@ -29,8 +30,10 @@ public interface CollectionPipeMetadata extends PipeMetadata {
 
 	/**
 	 * @return new collection instance.
+	 * 
+	 * @throws UnableToCreateInstanceException  if unable to create collection instance
 	 */
-	Collection newDtoCollection();
+	Collection newDtoCollection() throws UnableToCreateInstanceException;
 
 	/**
 	 * @return entity collection impl class
@@ -39,8 +42,10 @@ public interface CollectionPipeMetadata extends PipeMetadata {
 
 	/**
 	 * @return new collection instance.
+	 * 
+	 * @throws UnableToCreateInstanceException if unable to create collection instance 
 	 */
-	Collection newEntityCollection();
+	Collection newEntityCollection() throws UnableToCreateInstanceException;
 
 	/**
 	 * @return the entity's collection generic type to identity the type of items in entity collection.

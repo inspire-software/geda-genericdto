@@ -11,9 +11,15 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.meta.MapPipeMetadata;
-
 import java.beans.PropertyDescriptor;
+
+import dp.lib.dto.geda.adapter.meta.MapPipeMetadata;
+import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
+import dp.lib.dto.geda.exception.GeDARuntimeException;
+import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
+import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
+import dp.lib.dto.geda.exception.InspectionScanningException;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * Assembles CollectionPipe.
@@ -39,14 +45,20 @@ final class MapPipeBuilder {
 	 * @param entityPropertyDescriptors all entity descriptors
 	 * @param meta meta for this pipe
 	 * @return data pipe.
-	 * @throws IllegalArgumentException when fails to find descriptors for fields
+	 * @throws InspectionBindingNotFoundException when fails to find descriptors for fields
+	 * @throws UnableToCreateInstanceException when data reader/writer cannot be created
+	 * @throws InspectionPropertyNotFoundException when data reader/writer cannot be created
+	 * @throws InspectionScanningException when map key reader/writer cannot be created
+	 * @throws AnnotationValidatingBindingException when map property binding is invalid
+	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
     public static Pipe build(
     		final MethodSynthesizer synthesizer,
     		final Class dtoClass, final Class entityClass,
     		final PropertyDescriptor[] dtoPropertyDescriptors, 
     		final PropertyDescriptor[] entityPropertyDescriptors, 
-    		final MapPipeMetadata meta) throws IllegalArgumentException {
+    		final MapPipeMetadata meta) 
+    	throws InspectionBindingNotFoundException, InspectionPropertyNotFoundException, UnableToCreateInstanceException, InspectionScanningException, AnnotationValidatingBindingException, GeDARuntimeException  {
     	
         final PropertyDescriptor entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
         		dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);

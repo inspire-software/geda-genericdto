@@ -21,6 +21,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import dp.lib.dto.geda.exception.GeDAException;
+
 /**
  * Helper methods tests.
  * 
@@ -35,9 +37,10 @@ public class DTOHelperTest {
 
 	/**
 	 * Test that loading map works.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testLoadMap() {
+	public void testLoadMap() throws GeDAException {
 		
 		final TestDto2Class dto = new TestDto2Class();
 		final Map<String, Object> values = new HashMap<String, Object>();
@@ -71,9 +74,10 @@ public class DTOHelperTest {
 	
 	/**
 	 * Test that loading array works.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testLoadArray() {
+	public void testLoadArray() throws GeDAException {
 		
 		final TestDto2Class dto = new TestDto2Class();
 		
@@ -100,9 +104,10 @@ public class DTOHelperTest {
 	
 	/**
 	 * Test that unloading map works.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testUnloadMap() {
+	public void testUnloadMap() throws GeDAException {
 		
 		final TestDto2Class dto = new TestDto2Class();
 		dto.setMyBoolean(true);
@@ -140,9 +145,10 @@ public class DTOHelperTest {
 	
 	/**
 	 * Test that unloading array works.
+	 * @throws GeDAException should not be thrown
 	 */
 	@Test
-	public void testUnloadArray() {
+	public void testUnloadArray() throws GeDAException {
 		
 		final TestDto2Class dto = new TestDto2Class();
 		dto.setMyBoolean(true);

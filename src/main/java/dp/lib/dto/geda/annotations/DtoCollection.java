@@ -11,11 +11,11 @@
 
 package dp.lib.dto.geda.annotations;
 
-import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+
+import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
 
 /**
  * Defines a collection in DTO.

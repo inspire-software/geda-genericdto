@@ -12,8 +12,8 @@ package dp.lib.dto.geda.assembler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -24,6 +24,12 @@ import java.util.Map;
 import org.junit.Test;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.exception.AnnotationMissingAutobindingException;
+import dp.lib.dto.geda.exception.AutobindingClassNotFoundException;
+import dp.lib.dto.geda.exception.GeDAException;
+import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
+import dp.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
+import dp.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
 
 /**
  * DTOAssembler test.
@@ -36,9 +42,11 @@ public class DTOAssemblerMappingTest {
 
 	/**
 	 * Test that correctly mapped classes for Entity and Dto get assembled as expected.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void test1stClassesMapping() {
+	public void test1stClassesMapping() throws GeDAException {
 		
 		final TestDto1Class dto = new TestDto1Class();
 		final TestEntity1Interface entity = createTestEntity1();
@@ -61,7 +69,7 @@ public class DTOAssemblerMappingTest {
 		
 	}
 
-	private TestEntity1Interface createTestEntity1() {
+	private TestEntity1Interface createTestEntity1() throws GeDAException {
 		final TestEntity1Interface entity = new TestEntity1Class();
 		entity.setEntityId(1L);
 		entity.setName("John Doe");
@@ -71,9 +79,11 @@ public class DTOAssemblerMappingTest {
 
 	/**
 	 * Test that inherited classes correctly mapped for Entity and Dto get assembled as expected.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void test2ndClassesMapping() {
+	public void test2ndClassesMapping() throws GeDAException {
 		
 		final TestDto2Class dto = new TestDto2Class();
 		final TestEntity2Class entity = createTestEntity2();
@@ -95,7 +105,7 @@ public class DTOAssemblerMappingTest {
 		
 	}
 
-	private TestEntity2Class createTestEntity2() {
+	private TestEntity2Class createTestEntity2() throws GeDAException {
 		final TestEntity2Class entity = new TestEntity2Class();
 		entity.setEntityId(1L);
 		entity.setName("John Doe");
@@ -106,9 +116,11 @@ public class DTOAssemblerMappingTest {
 	
 	/**
 	 * Test that Dto that has less fields that entity corretly maps them.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testDtoLessThanEntity() {
+	public void testDtoLessThanEntity() throws GeDAException {
 		
 		final TestDto1Class dto = new TestDto1Class();
 		final TestEntity2Class entity = createTestEntity2();
@@ -129,10 +141,12 @@ public class DTOAssemblerMappingTest {
 	}
 
 	/**
-	 * Test that Dto that has more fields that entity fails to create assembler.
+	 * Test that Dto that has more fields than entity fails to create assembler.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testDtoMoreThanEntity() {
+	@Test(expected = InspectionBindingNotFoundException.class)
+	public void testDtoMoreThanEntity() throws GeDAException {
 		
 		DTOAssembler.newAssembler(TestDto2Class.class, TestEntity1Class.class);
 		
@@ -141,9 +155,11 @@ public class DTOAssemblerMappingTest {
 
 	/**
 	 * Test wrong classes in use with assembler give an exception.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testWrongObjectsInAssembleMethods1() {
+	@Test(expected = InspectionInvalidEntityInstanceException.class)
+	public void testWrongObjectsInAssembleMethods1() throws GeDAException {
 		
 		final TestDto1Interface dto1 = new TestDto1Class();
 		final TestEntity1Interface entity1 = createTestEntity1();
@@ -157,9 +173,11 @@ public class DTOAssemblerMappingTest {
 
 	/**
 	 * Test wrong classes in use with assembler give an exception.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testWrongObjectsInAssembleMethods2() {
+	@Test(expected = InspectionInvalidDtoInstanceException.class)
+	public void testWrongObjectsInAssembleMethods2() throws GeDAException {
 		
 		final TestDto2Class dto2 = new TestDto2Class();
 		final TestEntity2Class entity2 = createTestEntity2();
@@ -173,9 +191,11 @@ public class DTOAssemblerMappingTest {
 	
 	/**
 	 * Test wrong classes in use with assembler give an exception.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testWrongObjectsInAssembleMethods3() {
+	@Test(expected = InspectionInvalidDtoInstanceException.class)
+	public void testWrongObjectsInAssembleMethods3() throws GeDAException {
 		
 		final TestDto2Class dto2 = new TestDto2Class();
 		final TestEntity1Interface entity1 = createTestEntity1();
@@ -189,9 +209,11 @@ public class DTOAssemblerMappingTest {
 	
 	/**
 	 * Test that read only field get copied to Dto but not back to entity.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testReadOnlyClassesMapping() {
+	public void testReadOnlyClassesMapping() throws GeDAException {
 		
 		final TestDto6Class dto = new TestDto6Class();
 		final TestEntity1Interface entity = createTestEntity1();
@@ -215,9 +237,11 @@ public class DTOAssemblerMappingTest {
 	
 	/**
 	 * Test that DTO as interface picks up the mapping correctly.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testDtoAsInterfaceMapping() {
+	public void testDtoAsInterfaceMapping() throws GeDAException {
 		
 		final TestDto1Interface dto = new TestDto1Class();
 		final TestEntity1Interface entity = createTestEntity1();
@@ -241,9 +265,11 @@ public class DTOAssemblerMappingTest {
 
 	/**
 	 * Test that DTO and Entity as interface picks up the mapping correctly.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testBothAsInterfaceMapping() {
+	public void testBothAsInterfaceMapping() throws GeDAException {
 		
 		final TestDto1Interface dto = new TestDto1Class();
 		final TestEntity1Interface entity = createTestEntity1();
@@ -267,9 +293,11 @@ public class DTOAssemblerMappingTest {
 	
 	/**
 	 * Test that wrapper (nested) dto property mapping get resolved correctly.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testWrappedProperty() {
+	public void testWrappedProperty() throws GeDAException {
 		final TestDto4Class dto = new TestDto4Class();
 		final TestEntity4Class entity = new TestEntity4Class();
 		entity.setWrapper(new TestEntity4SubClass());
@@ -292,9 +320,11 @@ public class DTOAssemblerMappingTest {
 
     /**
 	 * Test that wrapper (nested) dto property mapping get resolved correctly.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testWrappedNullDtoProperty() {
+	public void testWrappedNullDtoProperty() throws GeDAException {
 		final TestDto4ComplexClass dto = new TestDto4ComplexClass();
 		final TestEntity4Class entity = new TestEntity4Class();
 		entity.setWrapper(new TestEntity4SubClass());
@@ -326,9 +356,11 @@ public class DTOAssemblerMappingTest {
 
     /**
 	 * Test that wrapper (nested) dto property mapping get resolved correctly.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testWrappedNullEntityProperty() {
+	public void testWrappedNullEntityProperty() throws GeDAException {
 		final TestDto4ComplexClass dto = new TestDto4ComplexClass();
 		final TestEntity4Class entity = new TestEntity4Class();
 
@@ -361,9 +393,11 @@ public class DTOAssemblerMappingTest {
 
 	/**
 	 * Test that wrapper (nested) dto property mapping get resolved correctly.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testDeepWrappedProperty() {
+	public void testDeepWrappedProperty() throws GeDAException {
 		final TestDto5Class dto = new TestDto5Class();
 		final TestEntity5Class entity = new TestEntity5Class();
 		entity.setWrapper(new TestEntity4Class());
@@ -388,9 +422,11 @@ public class DTOAssemblerMappingTest {
 	/**
 	 * Test that wrapper (nested) dto property mapping get resolved correctly.
 	 * Test shows that second level entity is created on the fly.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testDeepWrappedNullProperty() {
+	public void testDeepWrappedNullProperty() throws GeDAException {
 		final TestDto5Class dto = new TestDto5Class();
 		final TestEntity5Class entity = new TestEntity5Class();
 		entity.setWrapper(new TestEntity4Class());
@@ -416,9 +452,11 @@ public class DTOAssemblerMappingTest {
 	 * Test that wrapper (nested) dto property mapping get resolved correctly.
 	 * At the moment there is no way to create null domain nested bean. This issue in the
 	 * process of design decision.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testDeepWrappedDoubleNullProperty() {
+	public void testDeepWrappedDoubleNullProperty() throws GeDAException {
 		final TestDto5Class dto = new TestDto5Class();
 		final TestEntity5Class entity = new TestEntity5Class();
 		entity.setWrapper(null);
@@ -442,9 +480,11 @@ public class DTOAssemblerMappingTest {
 	
 	/**
 	 * Test that null in entity property does not cause NPE.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testNullPropertyInEntity() {
+	public void testNullPropertyInEntity() throws GeDAException {
 		
 		final TestDto1Class dto = new TestDto1Class();
 		final TestEntity1Class entity = new TestEntity1Class();
@@ -471,9 +511,11 @@ public class DTOAssemblerMappingTest {
 	
 	/**
 	 * Test to ensure null property of DTO correctly maps on Entity.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testNestedNullPropertyOnEntity() {
+	public void testNestedNullPropertyOnEntity() throws GeDAException {
 		
 		final TestDto4ComplexClass dto = new TestDto4ComplexClass();
 		final TestEntity4Class entity = new TestEntity4Class();
@@ -493,10 +535,12 @@ public class DTOAssemblerMappingTest {
 	
 	/**
 	 * Test that if @Dto does not specify class name for entity constructor fails with 
-	 * {@link IllegalArgumentException}.
+	 * {@link Exception}.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testDtoEntityClassAutoBindingWhenNotSpecified() {
+	@Test(expected = AnnotationMissingAutobindingException.class)
+	public void testDtoEntityClassAutoBindingWhenNotSpecified() throws GeDAException {
 		
 		DTOAssembler.newAssembler(TestDto10Class.class);
 		
@@ -504,10 +548,12 @@ public class DTOAssemblerMappingTest {
 	
 	/**
 	 * Test that if @Dto specifies class name for entity that cannot be loaded the 
-	 * constructor fails with {@link IllegalArgumentException}.
+	 * constructor fails with {@link Exception}.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testDtoEntityClassAutoBindingWhenBadClassName() {
+	@Test(expected = AutobindingClassNotFoundException.class)
+	public void testDtoEntityClassAutoBindingWhenBadClassName() throws GeDAException {
 		
 		DTOAssembler.newAssembler(TestDto13Class.class);
 		
@@ -516,9 +562,11 @@ public class DTOAssemblerMappingTest {
 	/**
 	 * Test that if @Dto specifies class name for entity the assembler is auto created
 	 * for that class or interface.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testDtoEntityClassAutoBinding() {
+	public void testDtoEntityClassAutoBinding() throws GeDAException {
 		
 		final TestDto1Interface dto = new TestDto1Class();
 		final TestEntity1Interface entity = new TestEntity1Class();
@@ -551,9 +599,11 @@ public class DTOAssemblerMappingTest {
 	
 	/**
 	 * Test that assembler copes with generic DTO and Entity types.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testDtoEntityClassGenericMapping() {
+	public void testDtoEntityClassGenericMapping() throws GeDAException {
 		
 		final TestDto18Class dto = new TestDto18Class();
 		final TestEntity18Class entity = new TestEntity18Class();

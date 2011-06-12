@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
+import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
+import dp.lib.dto.geda.exception.InspectionScanningException;
+
 /**
  * Assembles Pipe.
  *
@@ -39,10 +43,10 @@ final class PropertyInspector {
 	 * @param descriptor the descriptor whose get method's return type will be inspected to retrieve
 	 *        all descriptors for it.
 	 * @return all descriptors for specified class with deep inheritance on interfaces.
-	 * @throws IllegalArgumentException if fails to get bean info from a class
+	 * @throws InspectionScanningException if fails to get bean info from a class 
 	 */
 	public static PropertyDescriptor[] getPropertyDescriptorsForClassReturnedByGet(final PropertyDescriptor descriptor) 
-		throws IllegalArgumentException {
+		throws InspectionScanningException {
 		
 		final Method entityFieldRead = descriptor.getReadMethod();
 		final Class returnType = (Class) entityFieldRead.getGenericReturnType();
@@ -53,9 +57,9 @@ final class PropertyInspector {
 	/**
 	 * @param clazz class to inspect.
 	 * @return all descriptors for specified class with deep inheritance on interfaces.
-	 * @throws IllegalArgumentException if fails to get bean info from a class
+	 * @throws InspectionScanningException if fails to get bean info from a class
 	 */
-	public static PropertyDescriptor[] getPropertyDescriptorsForClass(final Class clazz) throws IllegalArgumentException {
+	public static PropertyDescriptor[] getPropertyDescriptorsForClass(final Class clazz) throws InspectionScanningException {
 		try {
 			PropertyDescriptor[] basic = Introspector.getBeanInfo(clazz, Introspector.USE_ALL_BEANINFO).getPropertyDescriptors();
 		
@@ -81,7 +85,7 @@ final class PropertyInspector {
 			}
 			return basic;
 		} catch (IntrospectionException itex) {
-			throw new IllegalArgumentException(itex);
+			throw new InspectionScanningException(clazz.getCanonicalName(), itex);
 		}
 		
 	}
@@ -100,12 +104,12 @@ final class PropertyInspector {
 	 * @param binding the Entity field binding
 	 * @param entityPropertyDescriptors all Entity property descriptors
 	 * @return property descriptor for Entity field.
-	 * @throws IllegalArgumentException thrown when unable to find descriptor for field.
+	 * @throws InspectionBindingNotFoundException thrown when unable to find descriptor for field.
 	 */
 	public static PropertyDescriptor getEntityPropertyDescriptorForField(
 			final Class dtoClass, final Class entityClass,
 			final String dtoFieldName, final String binding,
-			final PropertyDescriptor[] entityPropertyDescriptors) throws IllegalArgumentException {
+			final PropertyDescriptor[] entityPropertyDescriptors) throws InspectionBindingNotFoundException {
 		
 		for (PropertyDescriptor current : entityPropertyDescriptors) {
 			if (current.getName().equals(binding)) {
@@ -113,10 +117,8 @@ final class PropertyInspector {
 			}
 		}
 
-		throw new IllegalArgumentException(
-				"Unable to bind Dto field '" + dtoClass.getCanonicalName() + "#" 
-				+ dtoFieldName + "' to '" 
-				+ entityClass.getCanonicalName() + "#" + binding + "'");
+		throw new InspectionBindingNotFoundException(
+				dtoClass.getCanonicalName(), dtoFieldName, entityClass.getCanonicalName(), binding);
 	}
 	
 	/**
@@ -124,12 +126,12 @@ final class PropertyInspector {
 	 * @param dtoFieldName the DTO field
 	 * @param dtoPropertyDescriptors all DTO property descriptors
 	 * @return property descriptor for DTO field.
-	 * @throws IllegalArgumentException thrown when unable to find descriptor for field.
+	 * @throws InspectionPropertyNotFoundException thrown when unable to find descriptor for field.
 	 */
 	public static PropertyDescriptor getDtoPropertyDescriptorForField(
 			final Class dtoClass,
 			final String dtoFieldName,
-			final PropertyDescriptor[] dtoPropertyDescriptors) throws IllegalArgumentException {
+			final PropertyDescriptor[] dtoPropertyDescriptors) throws InspectionPropertyNotFoundException {
 
 		for (PropertyDescriptor current : dtoPropertyDescriptors) {
 			if (current.getName().equals(dtoFieldName)) {
@@ -137,9 +139,7 @@ final class PropertyInspector {
 			}
 		}
 		
-		throw new IllegalArgumentException(
-				"Unable to locale Dto field '" + dtoClass.getCanonicalName() + "#" 
-				+ dtoFieldName + "'");
+		throw new InspectionPropertyNotFoundException(dtoClass.getCanonicalName(), dtoFieldName);
 	}
 	
 

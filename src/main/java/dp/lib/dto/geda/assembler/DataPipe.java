@@ -11,13 +11,32 @@
 
 package dp.lib.dto.geda.assembler;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.EntityRetriever;
 import dp.lib.dto.geda.adapter.ValueConverter;
 import dp.lib.dto.geda.adapter.meta.FieldPipeMetadata;
+import dp.lib.dto.geda.exception.AnnotationDuplicateBindingException;
+import dp.lib.dto.geda.exception.AnnotationMissingBeanKeyException;
+import dp.lib.dto.geda.exception.AnnotationMissingBindingException;
+import dp.lib.dto.geda.exception.AnnotationMissingException;
+import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
+import dp.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
+import dp.lib.dto.geda.exception.EntityRetrieverNotFoundException;
+import dp.lib.dto.geda.exception.GeDARuntimeException;
+import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
+import dp.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
+import dp.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
+import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
+import dp.lib.dto.geda.exception.InspectionScanningException;
+import dp.lib.dto.geda.exception.NotEntityRetrieverException;
+import dp.lib.dto.geda.exception.NotValueConverterException;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
+import dp.lib.dto.geda.exception.ValueConverterNotFoundException;
+import dp.lib.dto.geda.exception.AnnotationMissingBindingException.MissingBindingType;
 
 
 /**
@@ -48,51 +67,53 @@ class DataPipe implements Pipe {
 	 * @param entityRead method for reading data from Entity field
 	 * @param entityWrite method for writting data to Entity field
 	 * @param meta meta data for this pipe.
+	 * @throws AnnotationMissingBindingException if some of the parameter missing from the annotation
+	 * @throws AnnotationValidatingBindingException if binding pipes are invalid
 	 */
 	public DataPipe(final DataReader dtoRead,
 					final DataWriter dtoWrite,
 					final DataReader dtoParentKeyRead,
 					final DataReader entityRead,
 					final DataWriter entityWrite,
-					final FieldPipeMetadata meta) {
+					final FieldPipeMetadata meta) throws AnnotationMissingBindingException, AnnotationValidatingBindingException {
 		
-		try {
-			this.meta = meta;
-	
-			this.dtoWrite = dtoWrite;
-			this.entityRead = entityRead;
-			if (meta.isReadOnly()) {
-				
-				PipeValidator.validateReadPipeNonNull(this.dtoWrite, this.entityRead);
-				
-				this.dtoRead = null;
-				this.entityWrite = null;
-	            if (!usesConverter()) {
-	                PipeValidator.validateReadPipeTypes(this.dtoWrite, this.entityRead);
-	            }
-			} else {
-				
-				this.dtoRead = dtoRead;
-				this.entityWrite = entityWrite;
-	
-				PipeValidator.validatePipeNonNull(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
-				
-				if (!usesConverter()) {
-	                PipeValidator.validatePipeTypes(this.dtoRead, this.dtoWrite, this.entityRead, this.entityWrite);
-	            }
-			}
-			if (this.meta.isChild()) {
-				
-				this.dtoParentKeyRead = dtoParentKeyRead;
-				PipeValidator.validatePipeNonNull(this.dtoParentKeyRead, "parentKey pipe is null");
-				
-			} else {
-				
-				this.dtoParentKeyRead = null;
-				
-			}
-		} catch (IllegalArgumentException iae) {
-			throw new IllegalArgumentException("Dto Field: " + this.meta.getDtoFieldName(), iae);
+		this.meta = meta;
+
+		this.dtoWrite = dtoWrite;
+		this.entityRead = entityRead;
+		if (meta.isReadOnly()) {
+			
+			PipeValidator.validateReadPipeNonNull(this.dtoWrite, this.meta.getDtoFieldName(), 
+					this.entityRead, this.meta.getEntityFieldName());
+			
+			this.dtoRead = null;
+			this.entityWrite = null;
+            if (!usesConverter()) {
+                PipeValidator.validateReadPipeTypes(this.dtoWrite, this.meta.getDtoFieldName(), 
+                		this.entityRead, this.meta.getEntityFieldName());
+            }
+		} else {
+			
+			this.dtoRead = dtoRead;
+			this.entityWrite = entityWrite;
+
+			PipeValidator.validatePipeNonNull(this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(), 
+					this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
+			
+			if (!usesConverter()) {
+                PipeValidator.validatePipeTypes(this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(), 
+                		this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
+            }
+		}
+		if (this.meta.isChild()) {
+			
+			this.dtoParentKeyRead = dtoParentKeyRead;
+			PipeValidator.validatePipeNonNull(this.dtoParentKeyRead, MissingBindingType.PARENT_READ, this.meta.getDtoFieldName());
+			
+		} else {
+			
+			this.dtoParentKeyRead = null;
+			
 		}
 		
 	}
@@ -106,8 +127,13 @@ class DataPipe implements Pipe {
 	public void writeFromEntityToDto(final Object entity,
                                      final Object dto,
                                      final Map<String, Object> converters,
-                                     final BeanFactory dtoBeanFactory)
-		throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+                                     final BeanFactory dtoBeanFactory) 
+		throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, 
+			   AnnotationMissingException, NotValueConverterException, ValueConverterNotFoundException, 
+			   InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, InspectionScanningException, 
+			   UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
+			   AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
+			   AnnotationDuplicateBindingException, CollectionEntityGenericReturnTypeException {
 		
 		if (entity == null) {
 			return;
@@ -139,8 +165,13 @@ class DataPipe implements Pipe {
     private void createDtoAndWriteFromEntityToDto(final Object dto,
                                                   final Map<String, Object> converters,
                                                   final BeanFactory dtoBeanFactory,
-                                                  final Object entityData)
-            throws IllegalAccessException, InvocationTargetException {
+                                                  final Object entityData) 
+    		throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, AnnotationMissingException, 
+    		       InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, InspectionScanningException, 
+    		       UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
+    		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
+    		       AnnotationDuplicateBindingException, NotValueConverterException, ValueConverterNotFoundException, 
+    		       CollectionEntityGenericReturnTypeException {
         final Object dtoDataDelegate = new NewDataProxy(
                 dtoBeanFactory,
                 this.meta,
@@ -149,6 +180,7 @@ class DataPipe implements Pipe {
                 this.dtoWrite
         ).create();
         final DTOAssembler assembler = DTOAssembler.newAssembler(dtoDataDelegate.getClass(), entityData.getClass());
+        
         assembler.assembleDto(dtoDataDelegate, entityData,  converters, dtoBeanFactory);
     }
 
@@ -156,8 +188,14 @@ class DataPipe implements Pipe {
 	public void writeFromDtoToEntity(final Object entity,
                                      final Object dto,
 			                         final Map<String, Object> converters,
-                                     final BeanFactory entityBeanFactory)
-		throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+                                     final BeanFactory entityBeanFactory) 
+		throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, 
+			   NotEntityRetrieverException, EntityRetrieverNotFoundException, NotValueConverterException, 
+			   ValueConverterNotFoundException, AnnotationMissingBeanKeyException, AnnotationMissingException, 
+			   InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, InspectionScanningException, 
+			   UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
+			   AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
+			   AnnotationDuplicateBindingException, CollectionEntityGenericReturnTypeException {
 
 		if (meta.isReadOnly()) {
 			return;
@@ -195,7 +233,7 @@ class DataPipe implements Pipe {
 	}
 
 	private Object getDtoValue(final Object dtoData, final Object entity, final Map<String, Object> converters,
-			final BeanFactory entityBeanFactory) {
+			final BeanFactory entityBeanFactory) throws NotValueConverterException, ValueConverterNotFoundException {
         if (usesConverter()) {
             if (entity instanceof NewDataProxy) {
                 return getConverter(converters).convertToEntity(dtoData, null, entityBeanFactory);
@@ -207,12 +245,21 @@ class DataPipe implements Pipe {
 
 	private void assembleSubEntity(final Object dtoValue, final Object parentEntity,
 			final Map<String, Object> converters, final BeanFactory entityBeanFactory) 
-		throws IllegalAccessException, InvocationTargetException {
+		throws BeanFactoryNotFoundException, AnnotationMissingBeanKeyException, BeanFactoryUnableToCreateInstanceException, 
+		       AnnotationMissingException, InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, 
+		       InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
+		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
+		       GeDARuntimeException, AnnotationDuplicateBindingException, NotEntityRetrieverException, 
+		       EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, 
+		       CollectionEntityGenericReturnTypeException {
 		
 		Object dataEntity = this.entityRead.read(parentEntity);
 		if (dataEntity == null) {
-		    if (entityBeanFactory == null || this.meta.getEntityBeanKey() == null) {
-		        throw new IllegalArgumentException("Need to specify bean factory and bean key for DTO's entity " + dtoValue.getClass());
+		    if (entityBeanFactory == null) {
+		    	throw new BeanFactoryNotFoundException(
+		    			this.meta.getDtoFieldName() + ":" + dtoValue.getClass(), this.meta.getEntityBeanKey(), false);
+		    } else if (this.meta.getEntityBeanKey() == null) {
+		        throw new AnnotationMissingBeanKeyException(this.meta.getDtoFieldName() + ":" + dtoValue.getClass(), false);
 		    }
 		    dataEntity = this.meta.newEntityBean(entityBeanFactory);
 		    this.entityWrite.write(parentEntity, dataEntity);
@@ -222,7 +269,8 @@ class DataPipe implements Pipe {
 		assembler.assembleEntity(dtoValue, dataEntity, converters, entityBeanFactory);
 	}
 
-	private Object getOrCreateParentEntityForDtoValue(final Object entity) throws IllegalAccessException, InvocationTargetException {
+	private Object getOrCreateParentEntityForDtoValue(final Object entity) 
+			throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException  {
 		if (entity instanceof NewDataProxy) {
 		    return ((NewDataProxy) entity).create();
 		} 
@@ -231,8 +279,9 @@ class DataPipe implements Pipe {
 
 	@SuppressWarnings("unchecked")
 	private void writeParentObject(final Object dtoData, final Object entity,
-			final Map<String, Object> converters, final BeanFactory entityBeanFactory) throws IllegalAccessException,
-			InvocationTargetException {
+		final Map<String, Object> converters, final BeanFactory entityBeanFactory) 
+			throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, 
+				   NotEntityRetrieverException, EntityRetrieverNotFoundException {
 		if (dtoData == null) {
 			if (entity != null) {
 		        // if the dtoValue is null the setting only makes sense if the entity bean existed.
@@ -243,7 +292,8 @@ class DataPipe implements Pipe {
 			final Object primaryKey = this.dtoParentKeyRead.read(dtoData);
 			final Class returnType = this.entityRead.getReturnType();
 			if (entityBeanFactory == null || this.meta.getEntityBeanKey() == null) {
-		        throw new IllegalArgumentException("Need to specify bean factory and bean key for DTO's entity " + dtoData.getClass());
+				throw new BeanFactoryNotFoundException(
+						dtoData.getClass() + ":" + this.meta.getParentEntityPrimaryKeyField(), this.meta.getEntityBeanKey(), false);
 		    }
 			final Class beanClass = this.meta.newEntityBean(entityBeanFactory).getClass(); // overhead but need to be stateless!!!
 			final Object entityForPk = getRetriever(converters).retrieveByPrimaryKey(returnType, beanClass, primaryKey);
@@ -261,35 +311,33 @@ class DataPipe implements Pipe {
     }
 	
     private ValueConverter getConverter(final Map<String, Object> converters) 
-    	throws IllegalArgumentException {
+    		throws NotValueConverterException, ValueConverterNotFoundException {
     	
     	if (converters != null && !converters.isEmpty() && converters.containsKey(this.meta.getConverterKey())) {
     		final Object conv = converters.get(this.meta.getConverterKey());
     		if (conv instanceof ValueConverter) {
     			return (ValueConverter) conv;
     		}
-    		throw new IllegalArgumentException("Required converter: " + this.meta.getConverterKey() 
-    				+ " is invalid for converting: " + this.meta.getDtoFieldName() + " to " + this.meta.getEntityFieldName()
-    				+ " because it must implement dp.lib.dto.geda.adapter.ValueConverter interface");
+    		throw new NotValueConverterException(
+        			this.meta.getDtoFieldName(), this.meta.getEntityFieldName(), this.meta.getConverterKey());
     	}
-    	throw new IllegalArgumentException("Required converter: " + this.meta.getConverterKey() 
-    			+ " cannot be located to convert: " + this.meta.getDtoFieldName() + " to " + this.meta.getEntityFieldName());
+    	throw new ValueConverterNotFoundException(
+    			this.meta.getDtoFieldName(), this.meta.getEntityFieldName(), this.meta.getConverterKey());
     }
     
 	private EntityRetriever getRetriever(final Map<String, Object> converters) 
-		throws IllegalArgumentException {
+			throws NotEntityRetrieverException, EntityRetrieverNotFoundException {
 		
 		if (converters != null && !converters.isEmpty() && converters.containsKey(this.meta.getEntityRetrieverKey())) {
 			final Object conv = converters.get(this.meta.getEntityRetrieverKey());
 			if (conv instanceof EntityRetriever) {
 				return (EntityRetriever) conv;
 			}
-			throw new IllegalArgumentException("Required retriever: " + this.meta.getConverterKey() 
-					+ " is invalid for  retrieving: " + this.meta.getEntityFieldName() + " for " + this.meta.getDtoFieldName()
-					+ " because it must implement dp.lib.dto.geda.adapter.EntityRetriever interface");
+			throw new NotEntityRetrieverException(
+					this.meta.getEntityFieldName(), this.meta.getDtoFieldName(), this.meta.getConverterKey());
 		}
-		throw new IllegalArgumentException("Required retriever: " + this.meta.getConverterKey() 
-				+ " cannot be located to retrieve: " + this.meta.getEntityFieldName() + " for " + this.meta.getDtoFieldName());
+		throw new EntityRetrieverNotFoundException(
+				this.meta.getEntityFieldName(), this.meta.getDtoFieldName(), this.meta.getConverterKey());
 	}
 	
 }

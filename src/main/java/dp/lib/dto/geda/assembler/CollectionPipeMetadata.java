@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * Collection pipe meta contains information on the metadata of the pipe.
@@ -43,6 +44,8 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
      * @param entityCollectionClass the entity collection class for creating new collection instance
      * @param returnType the generic return time for entity collection
      * @param dtoToEntityMatcherClass matcher for synchronising collections
+     * 
+	 * @throws UnableToCreateInstanceException if unable to create item matcher
 	 */
 	public CollectionPipeMetadata(final String dtoFieldName, 
 							 final String entityFieldName, 
@@ -52,7 +55,7 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 							 final Class< ? extends Collection> dtoCollectionClass,
 							 final Class< ? extends Collection> entityCollectionClass, 
 							 final Class< ? > returnType,
-							 final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcherClass) {
+							 final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcherClass) throws UnableToCreateInstanceException {
 		
 		super(dtoFieldName, entityFieldName, dtoBeanKey, entityBeanKey, readOnly);
 		this.dtoCollectionClass = dtoCollectionClass;
@@ -76,7 +79,7 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 	}
 	
 	/** {@inheritDoc} */
-	public Collection newDtoCollection() {
+	public Collection newDtoCollection() throws UnableToCreateInstanceException {
 		return newCollection(getDtoCollectionClass(), " Dto field: " + this.getDtoFieldName());
 	}
 
@@ -86,7 +89,7 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 	}
 	
 	/** {@inheritDoc} */
-	public Collection newEntityCollection() {
+	public Collection newEntityCollection() throws UnableToCreateInstanceException {
 		return newCollection(getEntityCollectionClass(), " Entity field: " + this.getEntityFieldName());
 	}
 
@@ -100,17 +103,15 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 		return dtoToEntityMatcher;
 	}
 
-    private Collection newCollection(final Class< ? extends Collection> clazz, final String type) {
+    private Collection newCollection(final Class< ? extends Collection> clazz, final String type) throws UnableToCreateInstanceException {
         return newBeanForClass(clazz, "Unable to create collection: " + clazz.getCanonicalName() + " for " + type);
     }
 
-    private <T> T newBeanForClass(final Class<T> clazz, final String errMsg) {
+    private <T> T newBeanForClass(final Class<T> clazz, final String errMsg) throws UnableToCreateInstanceException {
         try {
             return clazz.newInstance();
-        } catch (InstantiationException iex) {
-            throw new IllegalArgumentException(errMsg, iex);
-        } catch (IllegalAccessException iaex) {
-            throw new IllegalArgumentException(errMsg, iaex);
+        } catch (Exception iex) {
+            throw new UnableToCreateInstanceException(clazz.getCanonicalName(), errMsg, iex);
         }
     }
 	
