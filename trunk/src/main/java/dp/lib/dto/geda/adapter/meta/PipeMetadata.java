@@ -11,6 +11,8 @@
 package dp.lib.dto.geda.adapter.meta;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
 
 /**
  * Basic Meta data for pipes.
@@ -47,15 +49,19 @@ public interface PipeMetadata {
 	/**
 	 * @param factory dto bean factory
 	 * @return new instance of DTO bean
-	 * @throws IllegalArgumentException if bean cannot be create using factory provided
+	 * @throws BeanFactoryNotFoundException if no factory is specified for creating bean instance
+	 * @throws BeanFactoryUnableToCreateInstanceException if bean cannot be create using factory provided
 	 */
-	Object newDtoBean(BeanFactory factory) throws IllegalArgumentException;
+	Object newDtoBean(BeanFactory factory) 
+		throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException;
 
 	/**
 	 * @param factory entity bean factory
 	 * @return new instance of Entity bean
-	 * @throws IllegalArgumentException if bean cannot be create using factory provided
+	 * @throws BeanFactoryNotFoundException if no factory is specified for creating bean instance
+	 * @throws BeanFactoryUnableToCreateInstanceException if bean cannot be create using factory provided
 	 */
-	Object newEntityBean(BeanFactory factory) throws IllegalArgumentException;
+	Object newEntityBean(BeanFactory factory) 
+		throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException;
 	
 }

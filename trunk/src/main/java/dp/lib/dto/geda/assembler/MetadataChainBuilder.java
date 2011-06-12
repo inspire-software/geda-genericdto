@@ -19,6 +19,7 @@ import dp.lib.dto.geda.annotations.DtoCollection;
 import dp.lib.dto.geda.annotations.DtoField;
 import dp.lib.dto.geda.annotations.DtoMap;
 import dp.lib.dto.geda.annotations.DtoParent;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * Builder for creating chains of metadata for annotations.
@@ -35,8 +36,9 @@ final class MetadataChainBuilder {
 	 * Build metadata chain for this field.
 	 * @param dtoField fiel to build pipe for
 	 * @return metadata chain.
+	 * @throws UnableToCreateInstanceException when collections/map pipe cannot create data readers/writers
 	 */
-	public static List<PipeMetadata> build(final Field dtoField) {
+	public static List<PipeMetadata> build(final Field dtoField) throws UnableToCreateInstanceException {
 		
 		final DtoField dtoFieldAnn =
 			(DtoField) dtoField.getAnnotation(DtoField.class);
@@ -86,7 +88,7 @@ final class MetadataChainBuilder {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static List<PipeMetadata> buildCollectionChain(final Field dtoField, final DtoCollection dtoCollAnn) {
+	private static List<PipeMetadata> buildCollectionChain(final Field dtoField, final DtoCollection dtoCollAnn) throws UnableToCreateInstanceException {
 
 		final String[] bindings = createFieldBindingChain(getBindingFromAnnotationOrFieldName(dtoCollAnn.value(), dtoField.getName()));
 		
@@ -108,7 +110,7 @@ final class MetadataChainBuilder {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static List<PipeMetadata> buildCollectionChain(final Field dtoField, final DtoMap dtoMapAnn) {
+	private static List<PipeMetadata> buildCollectionChain(final Field dtoField, final DtoMap dtoMapAnn) throws UnableToCreateInstanceException {
 		
 		final String[] bindings = createFieldBindingChain(getBindingFromAnnotationOrFieldName(dtoMapAnn.value(), dtoField.getName()));
 		

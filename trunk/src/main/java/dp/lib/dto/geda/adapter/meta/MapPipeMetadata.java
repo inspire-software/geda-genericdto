@@ -13,6 +13,7 @@ package dp.lib.dto.geda.adapter.meta;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * Metadata specific to collection pipes.
@@ -29,8 +30,10 @@ public interface MapPipeMetadata extends PipeMetadata {
 
 	/**
 	 * @return new map instance.
+	 * 
+	 * @throws UnableToCreateInstanceException  if unable to create collection instance
 	 */
-	Map newDtoMap();
+	Map newDtoMap() throws UnableToCreateInstanceException;
 
 	/**
 	 * @return entity collection/map impl class
@@ -39,8 +42,10 @@ public interface MapPipeMetadata extends PipeMetadata {
 
 	/**
 	 * @return new collection instance.
+	 * 
+	 * @throws UnableToCreateInstanceException if unable to create collection instance 
 	 */
-	Object newEntityMapOrCollection();
+	Object newEntityMapOrCollection() throws UnableToCreateInstanceException;
 
 	/**
 	 * @return the entity's collection/ map item generic type to identity the type of items in entity collection.

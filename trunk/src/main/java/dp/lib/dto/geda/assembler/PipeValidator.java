@@ -11,6 +11,9 @@
 package dp.lib.dto.geda.assembler;
 
 import dp.lib.dto.geda.annotations.Dto;
+import dp.lib.dto.geda.exception.AnnotationMissingBindingException;
+import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
+import dp.lib.dto.geda.exception.AnnotationMissingBindingException.MissingBindingType;
 
 /**
  * Small utility class that validates pipes.
@@ -30,54 +33,63 @@ final class PipeValidator {
      *
 	 * @param dtoRead method for reading data from DTO field
      * @param dtoWrite method for writting data to DTO field
+     * @param dtoField dto field
      * @param entityRead method for reading data from Entity field
      * @param entityWrite method for writting data to Entity field
-     *
-     * @throws IllegalArgumentException if any of pipe is null (exception is thrown with
+     * @param entityField entity field
+     * @throws AnnotationMissingBindingException if any of pipe is null (exception is thrown with
      *         a bit more clarification then the generic one).
      */
     static void validatePipeNonNull(final DataReader dtoRead,
                                     final DataWriter dtoWrite,
+                                    final String dtoField,
                                     final DataReader entityRead,
-                                    final DataWriter entityWrite)
-            throws IllegalArgumentException {
+                                    final DataWriter entityWrite,
+                                    final String entityField) 
+    		throws AnnotationMissingBindingException {
 
-    	validateReadPipeNonNull(dtoWrite, entityRead);
-    	validateWritePipeNonNull(dtoRead, entityWrite);
+    	validateReadPipeNonNull(dtoWrite, dtoField, entityRead, entityField);
+    	validateWritePipeNonNull(dtoRead, dtoField, entityWrite, entityField);
     }
     
     /**
      * Validates that read and write pipes for dto to entity are non null.
      *
      * @param dtoWrite method for writting data to DTO field
+     * @param dtoWriteField dto field
      * @param entityRead method for reading data from Entity field
-     * 
-     * @throws IllegalArgumentException if any of pipe is null (exception is thrown with
+     * @param entityReadField entity field
+     * @throws AnnotationMissingBindingException if any of pipe is null (exception is thrown with
      *         a bit more clarification then the generic one).
      */
     static void validateReadPipeNonNull(final DataWriter dtoWrite,
-    									final DataReader entityRead)
-    	throws IllegalArgumentException {
+    									final String dtoWriteField,
+    									final DataReader entityRead,
+    									final String entityReadField) 
+    		throws AnnotationMissingBindingException {
     	
-    	validatePipeNonNull(entityRead, "Entity read i.e. Entity.get()");
-    	validatePipeNonNull(dtoWrite, "DTO write i.e. DTO.set()");
+    	validatePipeNonNull(entityRead, MissingBindingType.ENTITY_READ, entityReadField);
+    	validatePipeNonNull(dtoWrite, MissingBindingType.DTO_WRITE, dtoWriteField);
     }
 
     /**
      * Validates that read and write pipes for dto to entity match types.
      *
      * @param dtoRead method for reading data from DTO field
+     * @param dtoReadField dto field
      * @param entityWrite method for writting data to Entity field
-     *
-     * @throws IllegalArgumentException if any of pipe is null (exception is thrown with
+     * @param entityWriteField entity field
+     * @throws AnnotationMissingBindingException if any of pipe is null (exception is thrown with
      *         a bit more clarification then the generic one).
      */
     static void validateWritePipeNonNull(final DataReader dtoRead,
-            						     final DataWriter entityWrite)
-    	throws IllegalArgumentException {
+    									 final String dtoReadField, 
+            						     final DataWriter entityWrite,
+            						     final String entityWriteField) 
+    		throws AnnotationMissingBindingException {
     	
-    	validatePipeNonNull(dtoRead, "DTO read i.e. DTO.get()");
-    	validatePipeNonNull(entityWrite, "Entity write i.e. Entity.set()");
+    	validatePipeNonNull(dtoRead, MissingBindingType.DTO_READ, dtoReadField);
+    	validatePipeNonNull(entityWrite, MissingBindingType.ENTITY_WRITE, entityWriteField);
 
     }
     
@@ -85,14 +97,14 @@ final class PipeValidator {
      * Validate that method is not null.
      * 
      * @param meth method to check
-     * @param desc description of failure
-     * 
-     * @throws IllegalArgumentException if method is null with some sensible message
+     * @param type type of reder/writer
+     * @param fieldName field name
+     * @throws AnnotationMissingBindingException if reader/writer is missing
      */
-    static void validatePipeNonNull(final Object meth, final String desc) throws IllegalArgumentException {
+    static void validatePipeNonNull(final Object meth, final MissingBindingType type, final String fieldName) 
+    		throws AnnotationMissingBindingException  {
     	if (meth == null) {
-    		throw new IllegalArgumentException("Data pipe method for [" + desc 
-    				+ "] is not initialized. Please check parameter and return types of your getters/setters");
+    		throw new AnnotationMissingBindingException(type, fieldName);
     	}
     }
 
@@ -101,20 +113,23 @@ final class PipeValidator {
      *
 	 * @param dtoRead method for reading data from DTO field
      * @param dtoWrite method for writting data to DTO field
+     * @param dtoField dto field
      * @param entityRead method for reading data from Entity field
      * @param entityWrite method for writting data to Entity field
-     *
-     * @throws IllegalArgumentException if arguments do not match (exception is thrown with
+     * @param entityField entity field
+     * @throws AnnotationValidatingBindingException if arguments do not match (exception is thrown with
      *         a bit more clarification then the generic one).
      */
     static void validatePipeTypes(final DataReader dtoRead,
                                   final DataWriter dtoWrite,
+                                  final String dtoField,
                                   final DataReader entityRead,
-                                  final DataWriter entityWrite)
-            throws IllegalArgumentException {
+                                  final DataWriter entityWrite,
+                                  final String entityField) 
+    		throws AnnotationValidatingBindingException {
 
-        validateReadPipeTypes(dtoWrite, entityRead);
-        validateWritePipeTypes(dtoRead, entityWrite);
+        validateReadPipeTypes(dtoWrite, dtoField, entityRead, entityField);
+        validateWritePipeTypes(dtoRead, dtoField, entityWrite, entityField);
     }
 
     private static boolean sameDataType(final Class< ? > data1, final Class< ? > data2) {
@@ -136,14 +151,17 @@ final class PipeValidator {
      * Validates that read and write pipes for dto to entity match types.
      *
      * @param dtoWrite method for writting data to DTO field
+     * @param dtoField dto field
      * @param entityRead method for reading data from Entity field
-     *
-     * @throws IllegalArgumentException if arguments do not match (exception is thrown with
+     * @param entityField entity field
+     * @throws AnnotationValidatingBindingException if arguments do not match (exception is thrown with
      *         a bit more clarification then the generic one).
      */
     static void validateReadPipeTypes(final DataWriter dtoWrite,
-                                       final DataReader entityRead)
-            throws IllegalArgumentException {
+    								  final String dtoField,
+                                      final DataReader entityRead,
+                                      final String entityField) 
+    		throws AnnotationValidatingBindingException {
 
         final Class< ? > dtoWriteClass = dtoWrite.getParameterType();
         final Class< ? > entityReadClass = entityRead.getReturnType();
@@ -162,8 +180,9 @@ final class PipeValidator {
         		// check the same types
         		&& !sameDataType(dtoWriteClass, entityReadClass)
         	) {
-            throw new IllegalArgumentException("Type mismatch is detected for: DTO write {" + dtoWrite
-                    + "}{" + dtoWriteClass + "} and Entity read {" + entityRead + "}{" + entityReadClass + "}. Consider using a converter.");
+            throw new AnnotationValidatingBindingException(
+            		dtoField, dtoWrite.getClass().getCanonicalName(), dtoWriteClass.getSimpleName(), 
+            		entityField, entityRead.getClass().getCanonicalName(), entityReadClass.getSimpleName(), false);
         }
     }
 
@@ -171,14 +190,18 @@ final class PipeValidator {
      * Validates that read and write pipes for dto to entity match types.
      *
 	 * @param dtoRead method for reading data from DTO field
+	 * @param dtoField dto field
      * @param entityWrite method for writting data to Entity field
+     * @param entityField entity field
      *
-     * @throws IllegalArgumentException if arguments do not match (exception is thrown with
+     * @throws AnnotationValidatingBindingException if arguments do not match (exception is thrown with
      *         a bit more clarification then the generic one).
      */
     static void validateWritePipeTypes(final DataReader dtoRead,
-                                      final DataWriter entityWrite)
-            throws IllegalArgumentException {
+    								   final String dtoField,
+                                       final DataWriter entityWrite,
+                                       final String entityField)
+    		throws AnnotationValidatingBindingException {
 
         final Class< ? > dtoReadClass = dtoRead.getReturnType();
         final Class< ? > entityWriteClass = entityWrite.getParameterType();
@@ -198,8 +221,9 @@ final class PipeValidator {
         		&& !sameDataType(dtoReadClass, entityWriteClass)
         		
         	) {
-            throw new IllegalArgumentException("Type mismatch is detected for: DTO read {" + dtoRead
-                    + "} and Entity write {" + entityWrite + "}. Consider using a converter.");
+            throw new AnnotationValidatingBindingException(
+            		dtoField, dtoRead.getClass().getCanonicalName(), dtoReadClass.getSimpleName(), 
+            		entityField, entityWrite.getClass().getCanonicalName(), entityWriteClass.getSimpleName(), true);
         }
 
     }

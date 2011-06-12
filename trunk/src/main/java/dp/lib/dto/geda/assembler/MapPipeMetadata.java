@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * Collection/Map pipe meta contains information on the metadata of the pipe.
@@ -48,6 +49,8 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
      * @param entityMapKey true if map key is entity object, false if map value is entity object.
      * @param returnType the generic return time for entity collection
      * @param dtoToEntityMatcherClass matcher for synchronising collections
+     * 
+	 * @throws UnableToCreateInstanceException if unable to create item matcher
 	 */
 	public MapPipeMetadata(final String dtoFieldName, 
 							 final String entityFieldName, 
@@ -59,7 +62,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
 							 final Class< ? > returnType,
 							 final String mapKeyForCollection,
 							 final boolean entityMapKey,
-							 final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcherClass) {
+							 final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcherClass) throws UnableToCreateInstanceException {
 		
 		super(dtoFieldName, entityFieldName, dtoBeanKey, entityBeanKey, readOnly);
 		this.dtoMapClass = dtoMapClass;
@@ -85,7 +88,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
 	}
 	
 	/** {@inheritDoc} */
-	public Map newDtoMap() {
+	public Map newDtoMap() throws UnableToCreateInstanceException {
 		return newCollection(getDtoMapClass(), " Dto field: " + this.getDtoFieldName());
 	}
 
@@ -95,7 +98,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
 	}
 	
 	/** {@inheritDoc} */
-	public Object newEntityMapOrCollection() {
+	public Object newEntityMapOrCollection() throws UnableToCreateInstanceException {
 		return newCollection(getEntityMapOrCollectionClass(), " Entity field: " + this.getEntityFieldName());
 	}
 
@@ -120,17 +123,15 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
 		return dtoToEntityMatcher;
 	}
 
-	private  <T> T newCollection(final Class< ? > clazz, final String type) {
+	private  <T> T newCollection(final Class< ? > clazz, final String type) throws UnableToCreateInstanceException {
         return (T) newBeanForClass(clazz, "Unable to create collection: " + clazz.getCanonicalName() + " for " + type);
     }
 
-    private <T> T newBeanForClass(final Class<T> clazz, final String errMsg) {
+    private <T> T newBeanForClass(final Class<T> clazz, final String errMsg) throws UnableToCreateInstanceException {
         try {
             return clazz.newInstance();
-        } catch (InstantiationException iex) {
-            throw new IllegalArgumentException(errMsg, iex);
-        } catch (IllegalAccessException iaex) {
-            throw new IllegalArgumentException(errMsg, iaex);
+        } catch (Exception iex) {
+            throw new UnableToCreateInstanceException(clazz.getCanonicalName(), errMsg, iex);
         }
     }
 	

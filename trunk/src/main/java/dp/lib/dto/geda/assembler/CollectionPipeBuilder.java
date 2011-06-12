@@ -11,9 +11,14 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
-
 import java.beans.PropertyDescriptor;
+
+import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
+import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
+import dp.lib.dto.geda.exception.GeDARuntimeException;
+import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
+import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * Assembles CollectionPipe.
@@ -39,14 +44,21 @@ final class CollectionPipeBuilder {
 	 * @param entityPropertyDescriptors all entity descriptors
 	 * @param meta meta for this pipe
 	 * @return data pipe.
-	 * @throws IllegalArgumentException when fails to find descriptors for fields
+	 * 
+	 * @throws InspectionBindingNotFoundException when inspecting entity
+	 * @throws UnableToCreateInstanceException if unable to create instance of data reader/writer
+	 * @throws InspectionPropertyNotFoundException when unable to locate required property for data reader/writer
+	 * @throws AnnotationValidatingBindingException when data reader/writer have mismatching parameters/return types
+	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
     public static Pipe build(
     		final MethodSynthesizer synthesizer,
     		final Class dtoClass, final Class entityClass,
     		final PropertyDescriptor[] dtoPropertyDescriptors, 
     		final PropertyDescriptor[] entityPropertyDescriptors, 
-    		final CollectionPipeMetadata meta) throws IllegalArgumentException {
+    		final CollectionPipeMetadata meta) 
+    throws InspectionBindingNotFoundException, InspectionPropertyNotFoundException, UnableToCreateInstanceException, 
+           AnnotationValidatingBindingException, GeDARuntimeException  {
     	
         final PropertyDescriptor entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
         		dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);

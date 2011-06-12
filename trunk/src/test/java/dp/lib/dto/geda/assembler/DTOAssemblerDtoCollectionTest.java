@@ -10,11 +10,22 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+
 import org.junit.Test;
 
-import java.util.*;
+import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.exception.GeDAException;
 
 /**
  * DTOAssembler test.
@@ -29,9 +40,11 @@ public class DTOAssemblerDtoCollectionTest {
 
     /**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testCollectionProperty() {
+	public void testCollectionProperty() throws GeDAException {
 		final TestDto7CollectionClass dto = new TestDto7CollectionClass();
 		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
         entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
@@ -87,9 +100,11 @@ public class DTOAssemblerDtoCollectionTest {
 
     /**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testCollectionEntityToNullProperty() {
+	public void testCollectionEntityToNullProperty() throws GeDAException {
 		final TestDto7CollectionClass dto = new TestDto7CollectionClass();
 		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
         entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
@@ -135,9 +150,11 @@ public class DTOAssemblerDtoCollectionTest {
 
     /**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testCollectionNullToNullProperty() {
+	public void testCollectionNullToNullProperty() throws GeDAException {
 		final TestDto7CollectionClass dto = new TestDto7CollectionClass();
 		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
         entity.setCollection(null);
@@ -168,9 +185,11 @@ public class DTOAssemblerDtoCollectionTest {
 
     /**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testCollectionPropertyWithInterfaces() {
+	public void testCollectionPropertyWithInterfaces() throws GeDAException {
 		final TestDto7CollectionInterface dto = new TestDto7iCollectionClass();
 		final TestEntity7CollectionInterface entity = new TestEntity7iCollectionClass();
         entity.setCollection(new HashSet<TestEntity7CollectionSubInterface>());
@@ -226,9 +245,11 @@ public class DTOAssemblerDtoCollectionTest {
 
     /**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testCollectionEntityToNullPropertyWithInterfaces() {
+	public void testCollectionEntityToNullPropertyWithInterfaces() throws GeDAException {
 		final TestDto7CollectionInterface dto = new TestDto7iCollectionClass();
 		final TestEntity7CollectionInterface entity = new TestEntity7iCollectionClass();
         entity.setCollection(new HashSet<TestEntity7CollectionSubInterface>());
@@ -273,9 +294,11 @@ public class DTOAssemblerDtoCollectionTest {
 
     /**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testCollectionNullToNullPropertyWithInterfaces() {
+	public void testCollectionNullToNullPropertyWithInterfaces() throws GeDAException {
 		final TestDto7CollectionInterface dto = new TestDto7iCollectionClass();
 		final TestEntity7CollectionInterface entity = new TestEntity7iCollectionClass();
         entity.setCollection(null);
@@ -306,9 +329,11 @@ public class DTOAssemblerDtoCollectionTest {
 	
 	/**
 	 * Test to check nested collections mapping works.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testNestedCollectionMapping() {
+	public void testNestedCollectionMapping() throws GeDAException {
 		
 		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
 		eItem1.setName("itm1");
@@ -383,9 +408,11 @@ public class DTOAssemblerDtoCollectionTest {
 	
     /**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testCollectionToNestedNullWrite() {
+	public void testCollectionToNestedNullWrite() throws GeDAException {
 		final TestDto7CollectionInterface dto = new TestDto7NestedCollectionClass();
 		final TestEntity7CollectionWrapperInterface entity = new TestEntity7CollectionWrapperClass();
 
@@ -443,9 +470,12 @@ public class DTOAssemblerDtoCollectionTest {
 
     /**
      * Test that collection pipe coes with no setter immutable entity beans.
+	 * 
+	 * @throws GeDAException exception
      */
-    @Test
-    public void testCollectionMappingWithImmutableEntityForReadOnly() {
+    @SuppressWarnings("unchecked")
+	@Test
+    public void testCollectionMappingWithImmutableEntityForReadOnly() throws GeDAException {
 
         final TestEntity16Class entities = new TestEntity16Class(
             (Collection) Arrays.asList(
@@ -470,7 +500,8 @@ public class DTOAssemblerDtoCollectionTest {
         });
 
         assertNotNull(dtos.getItems());
-        assertEquals(3, dtos.getItems().size());
+        final int noOfItems = 3;
+        assertEquals(noOfItems, dtos.getItems().size());
         final Iterator<TestDto15Class> iterDto = dtos.getItems().iterator();
         assertEquals("1", iterDto.next().getName());
         assertEquals("2", iterDto.next().getName());
@@ -482,7 +513,7 @@ public class DTOAssemblerDtoCollectionTest {
 
         assembler.assembleEntity(dtos, entities, null, null);
         assertNotNull(entities.getItems());
-        assertEquals(3, entities.getItems().size());
+        assertEquals(noOfItems, entities.getItems().size());
         final Iterator<TestEntity15Class> iterEntity = entities.getItems().iterator();
         assertEquals("1", iterEntity.next().getName());
         assertEquals("2", iterEntity.next().getName());

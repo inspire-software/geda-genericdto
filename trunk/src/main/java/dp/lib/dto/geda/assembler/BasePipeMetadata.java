@@ -13,6 +13,8 @@ package dp.lib.dto.geda.assembler;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.meta.PipeMetadata;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
 
 
 /**
@@ -68,8 +70,9 @@ class BasePipeMetadata implements PipeMetadata {
 	}
 	
 	/** {@inheritDoc} */
-	public Object newDtoBean(final BeanFactory factory) throws IllegalArgumentException {
-		return newBean(this.getDtoBeanKey(), factory);
+	public Object newDtoBean(final BeanFactory factory) 
+			throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException {
+		return newBean(this.getDtoBeanKey(), factory, true);
 	}
 
 	/** {@inheritDoc} */
@@ -78,22 +81,31 @@ class BasePipeMetadata implements PipeMetadata {
 	}
 	
 	/** {@inheritDoc} */
-	public Object newEntityBean(final BeanFactory factory) throws IllegalArgumentException {
-		return newBean(this.getEntityBeanKey(), factory);
+	public Object newEntityBean(final BeanFactory factory) 
+			throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException {
+		return newBean(this.getEntityBeanKey(), factory, false);
 	}
 	
-	private Object newBean(final String beanKey, final BeanFactory factory) throws IllegalArgumentException {
+	private Object newBean(final String beanKey, final BeanFactory factory, final boolean isDto) 
+			throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException {
 		if (factory == null) {
-			throw new IllegalArgumentException("No factory provided for: " 
-					+ dtoFieldName + "@" + dtoBeanKey + " - " 
-					+ entityFieldName + "@" + entityBeanKey);
+			if (isDto) {
+				throw new BeanFactoryNotFoundException(
+						dtoFieldName, dtoBeanKey, true);
+			} else {
+				throw new BeanFactoryNotFoundException(
+					entityFieldName, entityBeanKey, false);
+			}
 		}
 		final Object newObject = factory.get(beanKey);
 		if (newObject == null) {
-			throw new IllegalArgumentException("Unable to construct bean with key: " 
-					+ beanKey + " using beanFactory: " + factory + "for: " 
-					+ dtoFieldName + "@" + dtoBeanKey + " - " 
-					+ entityFieldName + "@" + entityBeanKey);
+			if (isDto) {
+				throw new BeanFactoryUnableToCreateInstanceException(factory.toString(), 
+						dtoFieldName, dtoBeanKey, true);
+			} else {
+				throw new BeanFactoryUnableToCreateInstanceException(factory.toString(), 
+						entityFieldName, entityBeanKey, false);
+			}
 		}
 		return newObject;
 	}

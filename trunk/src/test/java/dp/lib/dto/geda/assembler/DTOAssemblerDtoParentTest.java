@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.EntityRetriever;
+import dp.lib.dto.geda.exception.GeDAException;
 
 /**
  * DTOAssembler test.
@@ -39,9 +40,11 @@ public class DTOAssemblerDtoParentTest {
 	 * Test that when dto field is additionally annotated with dto parent when writing
 	 * back data from dto to entity the assembler does not copy the values but uses
 	 * {@link dp.lib.dto.geda.adapter.EntityRetriever} to delegate the setting of value.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testDtoParentAnnotation() {
+	public void testDtoParentAnnotation() throws GeDAException {
 		
 		final TestEntity11ParentInterface parentEntity = new TestEntity11ParentClass();
 		final String parentName = "parent with id 3";
@@ -130,9 +133,11 @@ public class DTOAssemblerDtoParentTest {
 
 	/**
 	 * Test to make sure that if dto parent field is null it is set to null in entity.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testDtoParentIsSetToNullIfDtoDataIsNull() {
+	public void testDtoParentIsSetToNullIfDtoDataIsNull() throws GeDAException {
 		
 		final TestEntity11ParentInterface parentEntity = new TestEntity11ParentClass();
 		final String parentName = "parent with id 3";

@@ -10,11 +10,23 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+
 import org.junit.Test;
 
-import java.util.*;
+import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.exception.GeDAException;
 
 /**
  * DTOAssembler test.
@@ -29,9 +41,11 @@ public class DTOAssemblerDtoMapTest {
 
 	/**
 	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testMapToCollectionMapping() {
+	public void testMapToCollectionMapping() throws GeDAException {
 		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
 		eItem1.setName("itm1");
 		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
@@ -105,9 +119,11 @@ public class DTOAssemblerDtoMapTest {
 	
 	/**
 	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testMapToMapValueMapping() {
+	public void testMapToMapValueMapping() throws GeDAException {
 		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
 		eItem1.setName("itm1");
 		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
@@ -181,9 +197,11 @@ public class DTOAssemblerDtoMapTest {
 	
 	/**
 	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testMapToMapKeyMapping() {
+	public void testMapToMapKeyMapping() throws GeDAException {
 		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
 		eItem1.setName("itm1");
 		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
@@ -263,9 +281,11 @@ public class DTOAssemblerDtoMapTest {
 	
 	/**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testCollectionEntityToNullProperty() {
+	public void testCollectionEntityToNullProperty() throws GeDAException {
 		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
 		eItem1.setName("itm1");
 		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
@@ -307,9 +327,11 @@ public class DTOAssemblerDtoMapTest {
 	
 	/**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testMapEntityToNullProperty() {
+	public void testMapEntityToNullProperty() throws GeDAException {
 		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
 		eItem1.setName("itm1");
 		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
@@ -348,9 +370,11 @@ public class DTOAssemblerDtoMapTest {
 	
 	/**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testCollectionNullToNullProperty() {
+	public void testCollectionNullToNullProperty() throws GeDAException {
 		
 		final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
 		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
@@ -372,9 +396,11 @@ public class DTOAssemblerDtoMapTest {
 	
     /**
 	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testMapNullToNullProperty() {
+	public void testMapNullToNullProperty() throws GeDAException {
 		
 		final TestEntity12MapInterface eMap = new TestEntity12MapClass();
 		
@@ -394,9 +420,11 @@ public class DTOAssemblerDtoMapTest {
 	
 	/**
 	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testMapToCollectionMappingNestedCreate() {
+	public void testMapToCollectionMappingNestedCreate() throws GeDAException {
 
 		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
 		
@@ -451,9 +479,12 @@ public class DTOAssemblerDtoMapTest {
 
     /**
      * Test that map pipe is able to handle immutable objects.
+	 * 
+	 * @throws GeDAException exception
      */
-    @Test
-    public void testMapBindingOnImmutableObjects() {
+    @SuppressWarnings("unchecked")
+	@Test
+    public void testMapBindingOnImmutableObjects() throws GeDAException {
         final TestEntity16Class entities = new TestEntity16Class(
             (Collection) Arrays.asList(
                 new TestEntity15Class("1", "one"),
@@ -476,8 +507,10 @@ public class DTOAssemblerDtoMapTest {
             }
         });
 
+        final int noOfItems = 3;
+        
         assertNotNull(dtos.getItems());
-        assertEquals(3, dtos.getItems().size());
+        assertEquals(noOfItems, dtos.getItems().size());
         assertEquals("1", dtos.getItems().get("1").getName());
         assertEquals("2", dtos.getItems().get("2").getName());
         assertEquals("3", dtos.getItems().get("3").getName());
@@ -490,7 +523,7 @@ public class DTOAssemblerDtoMapTest {
 
         assembler.assembleEntity(dtos, entities, null, null);
         assertNotNull(entities.getItems());
-        assertEquals(3, entities.getItems().size());
+        assertEquals(noOfItems, entities.getItems().size());
         final Iterator<TestEntity15Class> iterEntity = entities.getItems().iterator();
         assertEquals("1", iterEntity.next().getName());
         assertEquals("2", iterEntity.next().getName());

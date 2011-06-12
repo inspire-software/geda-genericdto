@@ -10,12 +10,16 @@
 
 package dp.lib.dto.geda.assembler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+
+import dp.lib.dto.geda.exception.GeDAException;
+import dp.lib.dto.geda.exception.InvalidDtoCollectionException;
+import dp.lib.dto.geda.exception.InvalidEntityCollectionException;
 
 /**
  * DTOAssembler test.
@@ -27,10 +31,12 @@ import org.junit.Test;
 public class DTOAssemblerBatchTest {
 
 	/**
-	 * Test that AssembleDtos throws {@link IllegalArgumentException} if dtos is null.
+	 * Test that AssembleDtos throws {@link Exception} if dtos is null.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAssembleDtosThrowsExceptionForNullDtoCollection() {
+	@Test(expected = InvalidDtoCollectionException.class)
+	public void testAssembleDtosThrowsExceptionForNullDtoCollection() throws GeDAException {
 		
 		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
 		assembler.assembleDtos(null, new ArrayList<TestEntity1Class>(), null, null);
@@ -38,10 +44,12 @@ public class DTOAssemblerBatchTest {
 	}
 	
 	/**
-	 * Test that AssembleDtos throws {@link IllegalArgumentException} if dtos is not empty.
+	 * Test that AssembleDtos throws {@link Exception} if dtos is not empty.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAssembleDtosThrowsExceptionForNonEmptyDtoCollection() {
+	@Test(expected = InvalidDtoCollectionException.class)
+	public void testAssembleDtosThrowsExceptionForNonEmptyDtoCollection() throws GeDAException {
 		
 		final List<TestDto1Class> dtos = new ArrayList<TestDto1Class>();
 		dtos.add(createTestDto1(0));
@@ -52,10 +60,12 @@ public class DTOAssemblerBatchTest {
 	}
 	
 	/**
-	 * Test that AssembleDtos throws {@link IllegalArgumentException} if entities is null.
+	 * Test that AssembleDtos throws {@link Exception} if entities is null.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAssembleDtosThrowsExceptionForNullEntitiesCollection() {
+	@Test(expected = InvalidDtoCollectionException.class)
+	public void testAssembleDtosThrowsExceptionForNullEntitiesCollection() throws GeDAException {
 		
 		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
 		assembler.assembleDtos(new ArrayList<TestDto1Class>(), null, null, null);
@@ -64,9 +74,11 @@ public class DTOAssemblerBatchTest {
 	
 	/**
 	 * Test that AssembleDtos assembles dtos.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testAssembleDtos() {
+	public void testAssembleDtos() throws GeDAException {
 		
 		final int totalEntities = 100000;
 		final List<TestDto1Class> dtos = new ArrayList<TestDto1Class>(); 
@@ -95,10 +107,12 @@ public class DTOAssemblerBatchTest {
 	}
 	
 	/**
-	 * Test that AssembleEntities throws {@link IllegalArgumentException} if dto is null.
+	 * Test that AssembleEntities throws {@link Exception} if dto is null.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAssembleEntitiesThrowsExceptionForNullDtoCollection() {
+	@Test(expected = InvalidEntityCollectionException.class)
+	public void testAssembleEntitiesThrowsExceptionForNullDtoCollection() throws GeDAException {
 		
 		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
 		assembler.assembleEntities(null, new ArrayList<TestEntity1Class>(), null, null);
@@ -106,10 +120,12 @@ public class DTOAssemblerBatchTest {
 	}
 	
 	/**
-	 * Test that AssembleEntitie throws {@link IllegalArgumentException} if entities is null.
+	 * Test that AssembleEntitie throws {@link Exception} if entities is null.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAssembleEntitieThrowsExceptionForNullEntitiesCollection() {
+	@Test(expected = InvalidEntityCollectionException.class)
+	public void testAssembleEntitieThrowsExceptionForNullEntitiesCollection() throws GeDAException {
 		
 		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
 		assembler.assembleEntities(new ArrayList<TestDto1Class>(), null, null, null);
@@ -117,10 +133,12 @@ public class DTOAssemblerBatchTest {
 	}
 	
 	/**
-	 * Test that AssembleEntities throws {@link IllegalArgumentException} if entities is not empty.
+	 * Test that AssembleEntities throws {@link Exception} if entities is not empty.
+	 * 
+	 * @throws GeDAException exception
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAssembleEntitiesThrowsExceptionForNonEmptyEntityCollection() {
+	@Test(expected = InvalidEntityCollectionException.class)
+	public void testAssembleEntitiesThrowsExceptionForNonEmptyEntityCollection() throws GeDAException {
 		
 		final List<TestEntity1Class> entities = new ArrayList<TestEntity1Class>();
 		entities.add(createTestEntity1(0));
@@ -132,9 +150,11 @@ public class DTOAssemblerBatchTest {
 	
 	/**
 	 * Test that AssembleEntities assembles entities.
+	 * 
+	 * @throws GeDAException exception
 	 */
 	@Test
-	public void testAssembleEntities() {
+	public void testAssembleEntities() throws GeDAException {
 		
 		final int totalDtos = 100000;
 		final List<TestDto1Class> dtos = new ArrayList<TestDto1Class>(); 

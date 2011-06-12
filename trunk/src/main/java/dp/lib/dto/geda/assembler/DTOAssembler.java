@@ -13,7 +13,6 @@ package dp.lib.dto.geda.assembler;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,6 +25,29 @@ import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
 import dp.lib.dto.geda.adapter.meta.FieldPipeMetadata;
 import dp.lib.dto.geda.adapter.meta.PipeMetadata;
 import dp.lib.dto.geda.annotations.Dto;
+import dp.lib.dto.geda.exception.AnnotationDuplicateBindingException;
+import dp.lib.dto.geda.exception.AnnotationMissingAutobindingException;
+import dp.lib.dto.geda.exception.AnnotationMissingBeanKeyException;
+import dp.lib.dto.geda.exception.AnnotationMissingBindingException;
+import dp.lib.dto.geda.exception.AnnotationMissingException;
+import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
+import dp.lib.dto.geda.exception.AutobindingClassNotFoundException;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
+import dp.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
+import dp.lib.dto.geda.exception.EntityRetrieverNotFoundException;
+import dp.lib.dto.geda.exception.GeDARuntimeException;
+import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
+import dp.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
+import dp.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
+import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
+import dp.lib.dto.geda.exception.InspectionScanningException;
+import dp.lib.dto.geda.exception.InvalidDtoCollectionException;
+import dp.lib.dto.geda.exception.InvalidEntityCollectionException;
+import dp.lib.dto.geda.exception.NotEntityRetrieverException;
+import dp.lib.dto.geda.exception.NotValueConverterException;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
+import dp.lib.dto.geda.exception.ValueConverterNotFoundException;
 
 /**
  * Assemble DTO and Entities depending on the annotations of Dto.
@@ -95,7 +117,9 @@ public final class DTOAssembler {
 	private static final MethodSynthesizer SYNTHESIZER = new JavassitMethodSynthesizer(); 
 	
 	private DTOAssembler(final Class dto, final Class entity) 
-		throws IllegalArgumentException {
+		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
+		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
+		       GeDARuntimeException, AnnotationDuplicateBindingException {
 		dtoClass = dto;
 		entityClass = entity;
 		
@@ -114,7 +138,10 @@ public final class DTOAssembler {
 		
 	}
 
-	private void mapRelationMapping(final Class dto, final Class entity) {		
+	private void mapRelationMapping(final Class dto, final Class entity) 
+		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
+		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
+		       GeDARuntimeException, AnnotationDuplicateBindingException {		
 
 		final PropertyDescriptor[] dtoPropertyDescriptors = 
 			PropertyInspector.getPropertyDescriptorsForClass(dto);
@@ -139,7 +166,9 @@ public final class DTOAssembler {
 	private Pipe createPipeChain(
 			final Class dto, final PropertyDescriptor[] dtoPropertyDescriptors, 
 			final Class entity, final PropertyDescriptor[] entityPropertyDescriptors,
-			final Field dtoField, final List<PipeMetadata> metas, final int index) {
+			final Field dtoField, final List<PipeMetadata> metas, final int index) 
+		throws InspectionPropertyNotFoundException, InspectionBindingNotFoundException, InspectionScanningException, 
+			   UnableToCreateInstanceException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException {
 		
 		final PipeMetadata meta = metas.get(index);
 		
@@ -157,7 +186,7 @@ public final class DTOAssembler {
 				return MapPipeBuilder.build(SYNTHESIZER, 
 						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (MapPipeMetadata) meta);
 			} else {
-				throw new IllegalArgumentException("Unknown pipe meta: " + meta.getClass());
+				throw new GeDARuntimeException("Unknown pipe meta: " + meta.getClass());
 			}
 		}
 		
@@ -172,11 +201,9 @@ public final class DTOAssembler {
 		
 	}
 
-    private void validateNewBinding(final String binding) {
+    private void validateNewBinding(final String binding) throws AnnotationDuplicateBindingException {
         if (relationMapping.containsKey(binding)) {
-            throw new IllegalArgumentException(
-                    "Binding for '" + binding + "' already exists in Dto: "
-                    + dtoClass.getCanonicalName());
+            throw new AnnotationDuplicateBindingException(dtoClass.getCanonicalName(), binding);
         }
     }
     
@@ -184,21 +211,37 @@ public final class DTOAssembler {
      * @param dto Dto concrete class that is annotated.
      * @param entity the entity class or interface that has appropriate getters and setters
      * @return assembler instance for this conversion.
-     * @throws IllegalArgumentException if dto class is not annotated 
-     *         with {@link dp.lib.dto.geda.annotations.Dto}, or if Dto annotation mapping is not correct
-     *         in respect to entity object
+     * 
+     * @throws AnnotationMissingException if dto class is missing the {@link dp.lib.dto.geda.annotations.Dto} annotation.
+     * @throws InspectionInvalidDtoInstanceException if dto instance used for read/write operation is not valid
+     * @throws InspectionInvalidEntityInstanceException if entity instance used for read/write operation is not valid
+     * @throws AnnotationDuplicateBindingException if during mapping scan same dto field is mapped more than once
+     * @throws GeDARuntimeException unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
+     * @throws AnnotationValidatingBindingException in case binding create has a mismatching return type/parameters
+     * @throws AnnotationMissingBindingException in case when no valid property on entity is specified to bind to 
+     * @throws InspectionBindingNotFoundException in case when no valid property on entity is found to bind to
+     * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
+     * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
+     * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
      */
     public static DTOAssembler newAssembler(
-    		final Class< ? > dto, final Class< ? > entity) throws IllegalArgumentException {
+    		final Class< ? > dto, final Class< ? > entity) 
+    	throws AnnotationMissingException, InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, 
+    	       InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
+    	       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
+    	       GeDARuntimeException, AnnotationDuplicateBindingException {
     	
     	if (dto.getAnnotation(Dto.class) == null) {
-    		throw new IllegalArgumentException("Dto " + dto.getName() + " must be annotated with @Dto");
+    		throw new AnnotationMissingException(dto.getName());
     	}
     	
     	return createNewAssembler(dto, entity);
     }
 
-	private static DTOAssembler createNewAssembler(final Class< ? > dto, final Class< ? > entity) {
+	private static DTOAssembler createNewAssembler(final Class< ? > dto, final Class< ? > entity) 
+			throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
+			       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
+			       GeDARuntimeException, AnnotationDuplicateBindingException {
 		final String key = createAssemberKey(dto, entity);
     	
 		DTOAssembler assembler = CACHE.get(key);
@@ -212,16 +255,28 @@ public final class DTOAssembler {
 	/**
 	 * @param dto Dto concrete class that is annotated and value attribute of Dto is supplied.
 	 * @return assembler instance for this conversion.
-	 * @throws IllegalArgumentException if dto class is not annotated 
-	 *         with {@link dp.lib.dto.geda.annotations.Dto}, or if Dto annotation mapping is not correct
-	 *         in respect to entity object
+	 * 
+	 * @throws AnnotationMissingAutobindingException if autobinding parameter is missing
+	 * @throws AutobindingClassNotFoundException if class specified for auto binding cannot be found
+	 * @throws AnnotationDuplicateBindingException if same field name is mapped more than once
+	 * @throws GeDARuntimeException unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
+     * @throws AnnotationValidatingBindingException in case binding create has a mismatching return type/parameters
+     * @throws AnnotationMissingBindingException in case when no valid property on entity is specified to bind to 
+     * @throws InspectionBindingNotFoundException in case when no valid property on entity is found to bind to
+     * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
+     * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
+     * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
 	 */
 	public static DTOAssembler newAssembler(
-			final Class< ? > dto) throws IllegalArgumentException {
+			final Class< ? > dto) 
+		throws AnnotationMissingAutobindingException, AutobindingClassNotFoundException, InspectionScanningException, 
+		       UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
+		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
+		       AnnotationDuplicateBindingException  {
 		
 		final Dto ann = dto.getAnnotation(Dto.class);
 		if (ann == null || ann.value() == null || ann.value().length() == 0) {
-			throw new IllegalArgumentException("Dto " + dto.getName() + " must be annotated with @Dto and value paramter is specified");
+			throw new AnnotationMissingAutobindingException(dto.getCanonicalName());
 		}
 		
 		Class entity = null;
@@ -229,7 +284,7 @@ public final class DTOAssembler {
 		try {
 			entity = Class.forName(ann.value());
 		} catch (ClassNotFoundException cnfe) {
-			throw new IllegalArgumentException("Specified entity class " + ann.value() + " for Dto " + dto.getName() + " cannot be loaded...");
+			throw new AutobindingClassNotFoundException(dto.getCanonicalName(), ann.value());
 		}
 		
 		return createNewAssembler(dto, entity);
@@ -248,24 +303,38 @@ public final class DTOAssembler {
 	 *        during conversion is to enforce them being stateless and unattached to assembler.
 	 * @param dtoBeanFactory bean factory for creating new instances of nested DTO objects mapped by
 	 *        {@link dp.lib.dto.geda.annotations.DtoField#dtoBeanKeys()} key.
-	 * @throws IllegalArgumentException if dto or entity are not of correct class or
-	 *         reflection pipe fails
+	 *        
+	 * @throws InspectionInvalidEntityInstanceException if sub entity assembler encounters a mismatch 
+	 * @throws InspectionInvalidDtoInstanceException if sub entity assembler encounters a mismatch
+	 * @throws CollectionEntityGenericReturnTypeException thrown by a collection pipe if a mismatch in item types is detected
+	 * @throws UnableToCreateInstanceException if unable to create instances of collections
+	 * @throws ValueConverterNotFoundException if converter under given key is not a valid converter
+	 * @throws NotValueConverterException if converter under given key is not a valid converter
+	 * @throws AnnotationMissingException if value converter is not found in #converters map
+	 * @throws BeanFactoryUnableToCreateInstanceException if bean factory is unable to create instance for sub DTO's
+	 * @throws BeanFactoryNotFoundException if bean factory is required and not specified
+	 * @throws AnnotationDuplicateBindingException if during mapping scan same dto field is mapped more than once
+	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
+	 * @throws AnnotationValidatingBindingException in case binding create has a mismatching return type/parameters
+	 * @throws AnnotationMissingBindingException in case when no valid property on entity is specified to bind to
+	 * @throws InspectionBindingNotFoundException in case when no valid property on entity is specified to bind to
+	 * @throws InspectionPropertyNotFoundException in case when no valid property on entity is found to bind to
+	 * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
 	 */
 	public void assembleDto(final Object dto, final Object entity,
 			final Map<String, Object> converters,
-			final BeanFactory dtoBeanFactory)
-	throws IllegalArgumentException {
+			final BeanFactory dtoBeanFactory) 
+		throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, 
+		       BeanFactoryUnableToCreateInstanceException, AnnotationMissingException, NotValueConverterException, 
+		       ValueConverterNotFoundException, UnableToCreateInstanceException, CollectionEntityGenericReturnTypeException, 
+		       InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
+		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
+		       AnnotationDuplicateBindingException {
 		
 		validateDtoAndEntity(dto, entity);
 		
 		for (Pipe pipe : relationMapping.values()) {
-			try {
-				pipe.writeFromEntityToDto(entity, dto, converters, dtoBeanFactory);
-			} catch (IllegalAccessException iae) {
-				throw new IllegalArgumentException(iae);
-			} catch (InvocationTargetException ite) {
-				throw new IllegalArgumentException(ite);
-			} 
+			pipe.writeFromEntityToDto(entity, dto, converters, dtoBeanFactory); 
 		}
 		
 	}
@@ -278,14 +347,34 @@ public final class DTOAssembler {
 	 *        during conversion is to enforce them being stateless and unattached to assembler.
 	 * @param dtoBeanFactory bean factory for creating new instances of nested DTO objects mapped by
 	 *        {@link dp.lib.dto.geda.annotations.DtoField#dtoBeanKeys()} key.
-	 * @throws IllegalArgumentException if dto or entity are not of correct class or
-	 *         reflection pipe fails; or dto's collection is null or not empty; or entity collection
-	 *         is null; or a new instance of dtoClass cannot be created.
+	 *        
+	 * @throws InvalidDtoCollectionException dto collection is null of not empty
+	 * @throws UnableToCreateInstanceException if unable to create dto class instance
+	 * @throws InspectionInvalidEntityInstanceException if sub entity assembler encounters a mismatch 
+	 * @throws InspectionInvalidDtoInstanceException if sub entity assembler encounters a mismatch
+	 * @throws CollectionEntityGenericReturnTypeException thrown by a collection pipe if a mismatch in item types is detected
+	 * @throws ValueConverterNotFoundException if converter under given key is not a valid converter
+	 * @throws NotValueConverterException if converter under given key is not a valid converter
+	 * @throws AnnotationMissingException if value converter is not found in #converters map
+	 * @throws BeanFactoryUnableToCreateInstanceException if bean factory is unable to create instance for sub DTO's
+	 * @throws BeanFactoryNotFoundException if bean factory is required and not specified
+	 * @throws AnnotationDuplicateBindingException if during mapping scan same dto field is mapped more than once
+	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
+	 * @throws AnnotationValidatingBindingException in case binding create has a mismatching return type/parameters
+	 * @throws AnnotationMissingBindingException in case when no valid property on entity is specified to bind to
+	 * @throws InspectionBindingNotFoundException in case when no valid property on entity is specified to bind to
+	 * @throws InspectionPropertyNotFoundException in case when no valid property on entity is found to bind to
+	 * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors 
 	 */
 	public void assembleDtos(final Collection dtos, final Collection entities,
                             final Map<String, Object> converters,
-                            final BeanFactory dtoBeanFactory)
-		throws IllegalArgumentException {
+                            final BeanFactory dtoBeanFactory) 
+		throws InvalidDtoCollectionException, UnableToCreateInstanceException, InspectionInvalidDtoInstanceException, 
+		       InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, 
+		       AnnotationMissingException, NotValueConverterException, ValueConverterNotFoundException, 
+		       CollectionEntityGenericReturnTypeException, InspectionScanningException, InspectionPropertyNotFoundException, 
+		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
+		       GeDARuntimeException, AnnotationDuplicateBindingException {
 		
 		if (dtos instanceof Collection && dtos.isEmpty() && entities instanceof Collection) {
 		
@@ -294,15 +383,17 @@ public final class DTOAssembler {
 					final Object dto = this.dtoClass.newInstance();
 					assembleDto(dto, entity, converters, dtoBeanFactory);
 					dtos.add(dto);
-				} catch (Exception exp) {
-					throw new IllegalArgumentException(
+				} catch (InstantiationException exp) {
+					throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(), 
+							"Unable to create dto instance for: " + this.dtoClass.getName(), exp);
+				} catch (IllegalAccessException exp) {
+					throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(), 
 							"Unable to create dto instance for: " + this.dtoClass.getName(), exp);
 				}
 			}
 			
 		} else {
-			throw new IllegalArgumentException(
-					"Collections must not be null and dtos collection should be empty");
+			throw new InvalidDtoCollectionException();
 		}
 		
 	}
@@ -317,23 +408,41 @@ public final class DTOAssembler {
 	 *        during conversion is to enforce them being stateless and unattached to assembler.
 	 * @param entityBeanFactory bean factory for creating new instances of nested domain objects mapped to DTO by
 	 *        {@link dp.lib.dto.geda.annotations.DtoField#entityBeanKeys()} key.
-	 * @throws IllegalArgumentException if dto or entity are not of correct class or
-	 *         reflection pipe fails
+	 *        
+	 * @throws InspectionInvalidEntityInstanceException thrown by sub entities and collections on the fly assemblers
+	 * @throws InspectionInvalidDtoInstanceException thrown by sub entities and collections on the fly assemblers
+	 * @throws CollectionEntityGenericReturnTypeException collections generic type mismatch 
+	 * @throws UnableToCreateInstanceException auto created entities exception (instantiated by GeDA directly)
+	 * @throws AnnotationMissingException thrown by sub entities and collections on the fly assemblers
+	 * @throws AnnotationMissingBeanKeyException bean key missing on annotation when entity on the fly creation is required
+	 * @throws ValueConverterNotFoundException value converter not found
+	 * @throws NotValueConverterException invalid value converter
+	 * @throws EntityRetrieverNotFoundException  entity retriever not found
+	 * @throws NotEntityRetrieverException invalid entity retriever
+	 * @throws BeanFactoryUnableToCreateInstanceException exception for bean factory instantiation (usually when it returns null)
+	 * @throws BeanFactoryNotFoundException no bean factory supplied
+	 * @throws AnnotationDuplicateBindingException if during mapping scan same dto field is mapped more than once
+	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
+	 * @throws AnnotationValidatingBindingException in case binding create has a mismatching return type/parameters
+	 * @throws AnnotationMissingBindingException in case when no valid property on entity is specified to bind to
+	 * @throws InspectionBindingNotFoundException in case when no valid property on entity is specified to bind to
+	 * @throws InspectionPropertyNotFoundException in case when no valid property on entity is found to bind to
+	 * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors 
 	 */
 	public void assembleEntity(final Object dto, final Object entity,
-			final Map<String, Object> converters, final BeanFactory entityBeanFactory)
-		throws IllegalArgumentException {
+			final Map<String, Object> converters, final BeanFactory entityBeanFactory) 
+		throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, 
+		       BeanFactoryUnableToCreateInstanceException, NotEntityRetrieverException, EntityRetrieverNotFoundException, 
+		       NotValueConverterException, ValueConverterNotFoundException, AnnotationMissingBeanKeyException, 
+		       AnnotationMissingException, UnableToCreateInstanceException, CollectionEntityGenericReturnTypeException, 
+		       InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
+		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
+		       AnnotationDuplicateBindingException {
 		
 		validateDtoAndEntity(dto, entity);
 		
 		for (Pipe pipe : relationMapping.values()) {
-			try {
-				pipe.writeFromDtoToEntity(entity, dto, converters, entityBeanFactory);
-			} catch (IllegalAccessException iae) {
-				throw new IllegalArgumentException(iae);
-			} catch (InvocationTargetException ite) {
-				throw new IllegalArgumentException(ite);
-			}
+			pipe.writeFromDtoToEntity(entity, dto, converters, entityBeanFactory);
 		}
 		
 	}
@@ -348,45 +457,69 @@ public final class DTOAssembler {
 	 *        during conversion is to enforce them being stateless and unattached to assembler.
 	 * @param entityBeanFactory bean factory for creating new instances of nested domain objects mapped to DTO by
 	 *        {@link dp.lib.dto.geda.annotations.DtoField#entityBeanKeys()} key.
-	 * @throws IllegalArgumentException if dto or entity are not of correct class or
-	 *         reflection pipe fails; or dto's collection is null; or entity collection
-	 *         is null or not empty; or a new instance of entityClass cannot be created.
+	 *        
+	 * @throws InspectionInvalidEntityInstanceException thrown by sub entities and collections on the fly assemblers
+	 * @throws InspectionInvalidDtoInstanceException thrown by sub entities and collections on the fly assemblers
+	 * @throws CollectionEntityGenericReturnTypeException collections generic type mismatch 
+	 * @throws UnableToCreateInstanceException auto created entities exception (instantiated by GeDA directly)
+	 * @throws AnnotationMissingException thrown by sub entities and collections on the fly assemblers
+	 * @throws AnnotationMissingBeanKeyException bean key missing on annotation when entity on the fly creation is required
+	 * @throws ValueConverterNotFoundException value converter not found
+	 * @throws NotValueConverterException invalid value converter
+	 * @throws EntityRetrieverNotFoundException  entity retriever not found
+	 * @throws NotEntityRetrieverException invalid entity retriever
+	 * @throws BeanFactoryUnableToCreateInstanceException exception for bean factory instantiation (usually when it returns null)
+	 * @throws BeanFactoryNotFoundException no bean factory supplied
+	 * @throws InvalidEntityCollectionException if entity collection is null or not empty
+	 * @throws AnnotationDuplicateBindingException if during mapping scan same dto field is mapped more than once
+	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
+	 * @throws AnnotationValidatingBindingException in case binding create has a mismatching return type/parameters
+	 * @throws AnnotationMissingBindingException in case when no valid property on entity is specified to bind to
+	 * @throws InspectionBindingNotFoundException in case when no valid property on entity is specified to bind to
+	 * @throws InspectionPropertyNotFoundException in case when no valid property on entity is found to bind to
+	 * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
 	 */
 	public void assembleEntities(final Collection dtos, final Collection entities,
-			final Map<String, Object> converters, final BeanFactory entityBeanFactory)
-		throws IllegalArgumentException {
+			final Map<String, Object> converters, final BeanFactory entityBeanFactory) 
+		throws UnableToCreateInstanceException, InvalidEntityCollectionException, InspectionInvalidDtoInstanceException, 
+		       InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, 
+		       NotEntityRetrieverException, EntityRetrieverNotFoundException, NotValueConverterException, 
+		       ValueConverterNotFoundException, AnnotationMissingBeanKeyException, AnnotationMissingException, 
+		       CollectionEntityGenericReturnTypeException, InspectionScanningException, InspectionPropertyNotFoundException, 
+		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
+		       GeDARuntimeException, AnnotationDuplicateBindingException {
 		
 		if (dtos instanceof Collection && entities instanceof Collection && entities.isEmpty()) {
 			
 			for (Object dto : dtos) {
 				try {
+					// TODO: revisit this!!
 					final Object entity = this.entityClass.newInstance();
 					assembleEntity(dto, entity, converters, entityBeanFactory);
 					entities.add(entity);
-				} catch (Exception exp) {
-					throw new IllegalArgumentException(
-							"Unable to create entity instance for: " + this.dtoClass.getName());
+				} catch (InstantiationException exp) {
+					throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
+							"Unable to create entity instance for: " + this.dtoClass.getName(), exp);
+				} catch (IllegalAccessException exp) {
+					throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
+							"Unable to create entity instance for: " + this.dtoClass.getName(), exp);
 				}
 			}
 			
 		} else {
-			throw new IllegalArgumentException(
-				"Collections must not be null and entities collection should be empty");
+			throw new InvalidEntityCollectionException();
 		}	
 		
 	}
 	
 	
-	private void validateDtoAndEntity(final Object dto, final Object entity) {
+	private void validateDtoAndEntity(final Object dto, final Object entity) 
+			throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException {
 		if (!this.dtoClass.isInstance(dto)) {
-			throw new IllegalArgumentException(
-					"This assembler is only applicable for dto: "
-					+ this.dtoClass.getCanonicalName() + (dto != null ? ", found: " + dto.getClass() : ""));
+			throw new InspectionInvalidDtoInstanceException(this.dtoClass.getCanonicalName(), dto);
 		}
 		if (!this.entityClass.isInstance(entity)) {
-			throw new IllegalArgumentException(
-					"This assembler is only applicable for entity: "
-					+ this.entityClass.getCanonicalName() + (entity != null ? ", found: " + entity.getClass() : ""));
+			throw new InspectionInvalidEntityInstanceException(this.entityClass.getCanonicalName(), entity);
 		}
 	}
 	

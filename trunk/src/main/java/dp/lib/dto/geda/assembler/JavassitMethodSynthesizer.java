@@ -1,9 +1,5 @@
 package dp.lib.dto.geda.assembler;
 
-import javassist.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -13,6 +9,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.LoaderClassPath;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import dp.lib.dto.geda.exception.GeDARuntimeException;
+import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * Javassist implementation.
@@ -78,11 +87,12 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	}
 	
 	/** {@inheritDoc} */
-	public DataReader synthesizeReader(final PropertyDescriptor descriptor) {
+	public DataReader synthesizeReader(final PropertyDescriptor descriptor) 
+		throws InspectionPropertyNotFoundException, UnableToCreateInstanceException, GeDARuntimeException {
 				
 		final Method readMethod = descriptor.getReadMethod();
         if (readMethod == null) {
-            throw new IllegalArgumentException("No read method for: " + descriptor.getName());
+            throw new InspectionPropertyNotFoundException("No read method for: ", descriptor.getName());
         }
 		
 		final String sourceClassNameFull = readMethod.getDeclaringClass().getCanonicalName();
@@ -114,7 +124,8 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	@SuppressWarnings("unchecked")
 	private <T> T getFromCacheOrCreateFromClassLoader(final String readerClassName, 
 													  final Cache<String, Object> cache, 
-													  final ClassLoader classLoader) {
+													  final ClassLoader classLoader) 
+			throws UnableToCreateInstanceException {
 		Object instance;
 
 		instance = cache.get(readerClassName);
@@ -134,7 +145,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			final String readerClassName, 
 			final String sourceClassNameFull,
 			final String sourceClassGetterMethodName, 
-			final Type sourceClassGetterMethodReturnType) {
+			final Type sourceClassGetterMethodReturnType) throws UnableToCreateInstanceException, GeDARuntimeException {
 		
 		final String methodReturnType;
 		final String methodReturnTypePrimitiveName;
@@ -154,7 +165,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			methodReturnType = Object.class.getCanonicalName(); // generics
 			methodReturnTypePrimitiveName = null;
 		} else {
-			throw new IllegalArgumentException("Uanble to determine correct return type from getter method in class: " + readerClassName);
+			throw new GeDARuntimeException("Unable to determine correct return type from getter method in class: " + readerClassName);
 		}
 		
 		final CtClass ctClass = pool.makeClass(readerClassName);
@@ -200,23 +211,20 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			
 			return reader;
 			
-		} catch (NotFoundException nfe) {
-			throw new IllegalArgumentException("Unable to create class: " + readerClassName, nfe);
 		} catch (CannotCompileException cce) {
 			LOG.warn("Unable to create method in class: " + readerClassName + "... posibly class already loaded");
 			return null;
-		} catch (InstantiationException ite) {
-			throw new IllegalArgumentException("Unable to instantiate class: " + readerClassName, ite);
-		} catch (IllegalAccessException iae) {
-			throw new IllegalArgumentException("Unable to instantiate class: " + readerClassName, iae);
+		} catch (Exception ite) {
+			throw new UnableToCreateInstanceException(readerClassName, "Unable to instantiate class: " + readerClassName, ite);
 		}
 	}
 
 	/** {@inheritDoc} */
-	public DataWriter synthesizeWriter(final PropertyDescriptor descriptor) {
+	public DataWriter synthesizeWriter(final PropertyDescriptor descriptor) 
+			throws InspectionPropertyNotFoundException, UnableToCreateInstanceException {
 		final Method writeMethod = descriptor.getWriteMethod();
         if (writeMethod == null) {
-            throw new IllegalArgumentException("No write method for: " + descriptor.getName());
+            throw new InspectionPropertyNotFoundException("No write method for: ", descriptor.getName());
         }
 
 		final String classNameFull = writeMethod.getDeclaringClass().getCanonicalName();
@@ -250,7 +258,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			final String writerClassName, 
 			final String sourceClassNameFull,
 			final String sourceClassSetterMethodName, 
-			final Class< ? > sourceClassSetterMethodArgumentClass) {
+			final Class< ? > sourceClassSetterMethodArgumentClass) throws UnableToCreateInstanceException {
 				
 		final String methodArgType;
 		final String methodArgPrimitiveName;
@@ -302,15 +310,11 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			
 			return writer;
 			
-		} catch (NotFoundException nfe) {
-			throw new IllegalArgumentException("Unable to create class: " + writerClassName, nfe);
 		} catch (CannotCompileException cce) {
 			LOG.warn("Unable to create method in class: " + writerClassName + "... possibly class had been loaded");
 			return null;
-		} catch (InstantiationException ite) {
-			throw new IllegalArgumentException("Unable to instantiate class: " + writerClassName, ite);
-		} catch (IllegalAccessException iae) {
-			throw new IllegalArgumentException("Unable to instantiate class: " + writerClassName, iae);
+		} catch (Exception ite) {
+			throw new UnableToCreateInstanceException(writerClassName, "Unable to instantiate class: " + writerClassName, ite);
 		}
 	}
 	
@@ -319,17 +323,16 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private <T> T createInstanceFromClassLoader(final ClassLoader cl, final String clazzName) {
+	private <T> T createInstanceFromClassLoader(final ClassLoader cl, final String clazzName) 
+			throws UnableToCreateInstanceException {
 		try {
 			final Class< ? > clazz = Class.forName(clazzName, true, cl);
 			return (T) clazz.newInstance();
 		} catch (ClassNotFoundException cnfe) {
 			// That's OK we don't have it
 			return null;
-		} catch (InstantiationException e) {
-			throw new IllegalArgumentException("Uanble to create instance of: " + clazzName, e);
-		} catch (IllegalAccessException e) {
-			throw new IllegalArgumentException("Uanble to create instance of: " + clazzName, e);
+		} catch (Exception exp) {
+			throw new UnableToCreateInstanceException(clazzName, "Uanble to create instance of: " + clazzName, exp);
 		}
 	}
 	

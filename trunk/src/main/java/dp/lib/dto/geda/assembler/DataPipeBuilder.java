@@ -15,6 +15,13 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
 import dp.lib.dto.geda.adapter.meta.FieldPipeMetadata;
+import dp.lib.dto.geda.exception.AnnotationMissingBindingException;
+import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
+import dp.lib.dto.geda.exception.GeDARuntimeException;
+import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
+import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
+import dp.lib.dto.geda.exception.InspectionScanningException;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * Assembles DataPipe.
@@ -45,14 +52,23 @@ final class DataPipeBuilder {
 	 * @param entityPropertyDescriptors all entity descriptors
 	 * @param meta meta data for this pipe
 	 * @return data pipe.
-	 * @throws IllegalArgumentException when fails to find descriptors for fields
+	 * 
+	 * @throws InspectionPropertyNotFoundException when fails to find descriptors for fields
+	 * @throws InspectionBindingNotFoundException when fails to find property on entity
+	 * @throws InspectionScanningException when fails to find parent entity properties
+	 * @throws UnableToCreateInstanceException when fails to create data reader for parent class
+	 * @throws AnnotationValidatingBindingException when fails to bind the parent field
+	 * @throws AnnotationMissingBindingException when fails to bind the parent field
+	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
 	public static Pipe build(
 			final MethodSynthesizer synthesizer,
 			final Class dtoClass, final Class entityClass,
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
-			final FieldPipeMetadata meta) throws IllegalArgumentException {
+			final FieldPipeMetadata meta) 
+		throws InspectionPropertyNotFoundException, InspectionBindingNotFoundException, InspectionScanningException, 
+		       UnableToCreateInstanceException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException {
 		
 		final PropertyDescriptor dtoFieldDesc = PropertyInspector.getDtoPropertyDescriptorForField(
 				dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);

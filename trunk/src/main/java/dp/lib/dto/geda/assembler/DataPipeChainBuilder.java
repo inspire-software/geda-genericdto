@@ -11,9 +11,13 @@
 
 package dp.lib.dto.geda.assembler;
 
-import dp.lib.dto.geda.adapter.meta.PipeMetadata;
-
 import java.beans.PropertyDescriptor;
+
+import dp.lib.dto.geda.adapter.meta.PipeMetadata;
+import dp.lib.dto.geda.exception.GeDARuntimeException;
+import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
+import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * Assembles DataPipe.
@@ -40,14 +44,18 @@ final class DataPipeChainBuilder {
 	 * @param meta pipe meta
 	 * @param pipe the pipe to wrap in chain
 	 * @return data pipe.
-	 * @throws IllegalArgumentException when fails to find descriptors for fields
+	 * @throws InspectionBindingNotFoundException when fails to find descriptors for fields
+	 * @throws UnableToCreateInstanceException when fails to create a data reader/writer
+	 * @throws InspectionPropertyNotFoundException when fails to create a data reader/writer
+	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
 	public static Pipe build(
 			final MethodSynthesizer synthesizer,
 			final Class dtoClass, final Class entityClass,
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
-			final PipeMetadata meta, final Pipe pipe) throws IllegalArgumentException {
+			final PipeMetadata meta, final Pipe pipe) 
+		throws InspectionBindingNotFoundException, InspectionPropertyNotFoundException, UnableToCreateInstanceException, GeDARuntimeException {
 		
 		final PropertyDescriptor entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
 				dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
