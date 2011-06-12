@@ -16,7 +16,7 @@ package dp.lib.dto.geda.assembler;
  * 
  * @author DPavlov
  */
-public class FieldPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda.adapter.meta.FieldPipeMetadata {
+public class FieldPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda.assembler.meta.FieldPipeMetadata {
 
 	private final String converterKey;
 	private final boolean child;

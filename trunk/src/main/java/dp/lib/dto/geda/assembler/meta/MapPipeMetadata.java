@@ -8,9 +8,9 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.adapter.meta;
+package dp.lib.dto.geda.assembler.meta;
 
-import java.util.Collection;
+import java.util.Map;
 
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
@@ -21,39 +21,49 @@ import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
  * @author DPavlov
  */
 @SuppressWarnings("unchecked")
-public interface CollectionPipeMetadata extends PipeMetadata {
+public interface MapPipeMetadata extends PipeMetadata {
 
 	/**
-	 * @return DTO collection impl class
+	 * @return DTO map impl class
 	 */
-	Class< ? extends Collection> getDtoCollectionClass();
+	Class getDtoMapClass();
 
 	/**
-	 * @return new collection instance.
+	 * @return new map instance.
 	 * 
 	 * @throws UnableToCreateInstanceException  if unable to create collection instance
 	 */
-	Collection newDtoCollection() throws UnableToCreateInstanceException;
+	Map newDtoMap() throws UnableToCreateInstanceException;
 
 	/**
-	 * @return entity collection impl class
+	 * @return entity collection/map impl class
 	 */
-	Class< ? extends Collection> getEntityCollectionClass();
+	Class getEntityMapOrCollectionClass();
 
 	/**
 	 * @return new collection instance.
 	 * 
 	 * @throws UnableToCreateInstanceException if unable to create collection instance 
 	 */
-	Collection newEntityCollection() throws UnableToCreateInstanceException;
+	Object newEntityMapOrCollection() throws UnableToCreateInstanceException;
 
 	/**
-	 * @return the entity's collection generic type to identity the type of items in entity collection.
+	 * @return the entity's collection/ map item generic type to identity the type of items in entity collection.
 	 */
 	Class< ? > getReturnType();
+	
+	/**
+	 * @return property whose value will be used as key for dto map.
+	 */
+	String getMapKeyForCollection();
+	
+	/**
+	 * @return true if map key is entity object, false if map value is entity object.
+	 */
+	boolean isEntityMapKey();
 
 	/**
-	 * @return matcher instance that will help synchronize collections.
+	 * @return matcher instance that will help synchronize collections/maps.
 	 */
 	DtoToEntityMatcher getDtoToEntityMatcher();
 

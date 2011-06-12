@@ -24,7 +24,7 @@ import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
  * @author DPavlov
  */
 @SuppressWarnings("unchecked")
-public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata {
+public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda.assembler.meta.CollectionPipeMetadata {
 
 	private static final Map<Class, DtoToEntityMatcher> CACHE = new HashMap<Class, DtoToEntityMatcher>();
 	
