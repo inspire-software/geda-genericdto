@@ -18,7 +18,7 @@ package dp.lib.dto.geda.exception;
  * @since 1.1.2
  */
 public class GeDAException extends
-		Exception {
+		IllegalArgumentException {
 
 	private static final long serialVersionUID = 20110609L;
 
