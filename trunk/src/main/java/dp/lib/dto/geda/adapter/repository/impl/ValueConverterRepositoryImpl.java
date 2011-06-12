@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.repository.ValueConverterRepository;
+import dp.lib.dto.geda.exception.DuplicateValueConverterKeyException;
 
 /**
  * Repository for all converters and entity retrievers.
@@ -75,13 +76,19 @@ public class ValueConverterRepositoryImpl implements ValueConverterRepository {
 
         return repo;
     }
+    
+    /** {@inheritDoc} */
+    public void registerValueConverterForced(final String key, final Object converter) {
+    	repository.put(key, converter);
+    }
 
     /** {@inheritDoc} */
-	public void registerValueConverter(final String key, final Object converter) throws IllegalArgumentException {
+	public void registerValueConverter(final String key, final Object converter) 
+			throws DuplicateValueConverterKeyException  {
 		if (repository.containsKey(key)) {
-			throw new IllegalArgumentException("Key [" + key + "] is already assined a converter.");
+			throw new DuplicateValueConverterKeyException(key);
 		}
-		repository.put(key, converter);
+		registerValueConverterForced(key, converter);
 	}
 
 	/** {@inheritDoc} */
