@@ -14,6 +14,8 @@ package dp.lib.dto.geda.adapter.repository;
 import java.io.Serializable;
 import java.util.Map;
 
+import dp.lib.dto.geda.exception.DuplicateValueConverterKeyException;
+
 /**
  * A convenience repository that can be mapped into IoC container.
  * <p/>
@@ -29,13 +31,21 @@ public interface ValueConverterRepository extends Serializable {
     Map<String, Object> getAll();
     
     /**
+     * Register a new converter in this repository or override old one.
+     * 
+     * @param key converter key
+     * @param converter converter to register
+     */
+    void registerValueConverterForced(String key, Object converter);
+    
+    /**
      * Register a new converter in this repository.
      * 
      * @param key converter key
      * @param converter converter to register
-     * @throws IllegalArgumentException in case if key is already used in this repository.
+     * @throws DuplicateValueConverterKeyException in case if key is already used in this repository.
      */
-    void registerValueConverter(String key, Object converter) throws IllegalArgumentException;
+    void registerValueConverter(String key, Object converter) throws DuplicateValueConverterKeyException;
 
     /**
      * Removes converter under specified key. If no converter uses this key in this repository
