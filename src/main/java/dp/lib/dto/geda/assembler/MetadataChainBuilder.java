@@ -14,11 +14,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import dp.lib.dto.geda.adapter.meta.PipeMetadata;
 import dp.lib.dto.geda.annotations.DtoCollection;
 import dp.lib.dto.geda.annotations.DtoField;
 import dp.lib.dto.geda.annotations.DtoMap;
 import dp.lib.dto.geda.annotations.DtoParent;
+import dp.lib.dto.geda.assembler.meta.PipeMetadata;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**

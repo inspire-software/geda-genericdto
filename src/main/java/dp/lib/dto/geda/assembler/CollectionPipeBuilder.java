@@ -13,7 +13,7 @@ package dp.lib.dto.geda.assembler;
 
 import java.beans.PropertyDescriptor;
 
-import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
+import dp.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
 import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
 import dp.lib.dto.geda.exception.GeDARuntimeException;
 import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;

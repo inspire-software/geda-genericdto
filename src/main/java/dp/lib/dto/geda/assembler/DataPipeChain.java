@@ -13,7 +13,7 @@ package dp.lib.dto.geda.assembler;
 import java.util.Map;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.meta.PipeMetadata;
+import dp.lib.dto.geda.assembler.meta.PipeMetadata;
 import dp.lib.dto.geda.exception.AnnotationDuplicateBindingException;
 import dp.lib.dto.geda.exception.AnnotationMissingBeanKeyException;
 import dp.lib.dto.geda.exception.AnnotationMissingBindingException;

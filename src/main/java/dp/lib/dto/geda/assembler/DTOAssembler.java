@@ -21,10 +21,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.meta.CollectionPipeMetadata;
-import dp.lib.dto.geda.adapter.meta.FieldPipeMetadata;
-import dp.lib.dto.geda.adapter.meta.PipeMetadata;
 import dp.lib.dto.geda.annotations.Dto;
+import dp.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
+import dp.lib.dto.geda.assembler.meta.FieldPipeMetadata;
+import dp.lib.dto.geda.assembler.meta.PipeMetadata;
 import dp.lib.dto.geda.exception.AnnotationDuplicateBindingException;
 import dp.lib.dto.geda.exception.AnnotationMissingAutobindingException;
 import dp.lib.dto.geda.exception.AnnotationMissingBeanKeyException;

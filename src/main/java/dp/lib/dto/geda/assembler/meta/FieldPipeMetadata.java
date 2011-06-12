@@ -8,7 +8,7 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.adapter.meta;
+package dp.lib.dto.geda.assembler.meta;
 
 /**
  * Metadata specific to field pipes.

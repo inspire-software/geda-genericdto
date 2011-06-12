@@ -14,7 +14,7 @@ package dp.lib.dto.geda.assembler;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
-import dp.lib.dto.geda.adapter.meta.FieldPipeMetadata;
+import dp.lib.dto.geda.assembler.meta.FieldPipeMetadata;
 import dp.lib.dto.geda.exception.AnnotationMissingBindingException;
 import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
 import dp.lib.dto.geda.exception.GeDARuntimeException;

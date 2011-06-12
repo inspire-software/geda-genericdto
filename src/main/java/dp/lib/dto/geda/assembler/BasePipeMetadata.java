@@ -12,7 +12,7 @@
 package dp.lib.dto.geda.assembler;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.adapter.meta.PipeMetadata;
+import dp.lib.dto.geda.assembler.meta.PipeMetadata;
 import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
 import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
 
