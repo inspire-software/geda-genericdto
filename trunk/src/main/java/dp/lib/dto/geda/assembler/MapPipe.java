@@ -28,6 +28,7 @@ import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
 import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
 import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
 import dp.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
+import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
 import dp.lib.dto.geda.exception.EntityRetrieverNotFoundException;
 import dp.lib.dto.geda.exception.GeDARuntimeException;
 import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
@@ -35,6 +36,7 @@ import dp.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
 import dp.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
 import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import dp.lib.dto.geda.exception.InspectionScanningException;
+import dp.lib.dto.geda.exception.NotDtoToEntityMatcherException;
 import dp.lib.dto.geda.exception.NotEntityRetrieverException;
 import dp.lib.dto.geda.exception.NotValueConverterException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
@@ -118,7 +120,7 @@ class MapPipe implements Pipe {
         if (entityCollection instanceof Collection) {
             final Collection entities = (Collection) entityCollection;
 
-            final Map dtos = this.meta.newDtoMap();
+            final Map dtos = this.meta.newDtoMap(dtoBeanFactory);
 
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
 
@@ -150,7 +152,7 @@ class MapPipe implements Pipe {
         	
             final Map entities = (Map) entityCollection;
 
-            final Map dtos = this.meta.newDtoMap();
+            final Map dtos = this.meta.newDtoMap(dtoBeanFactory);
 
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
             
@@ -200,7 +202,7 @@ class MapPipe implements Pipe {
     	       AnnotationValidatingBindingException, GeDARuntimeException, AnnotationDuplicateBindingException, 
     	       InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, NotEntityRetrieverException, 
     	       EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, 
-    	       AnnotationMissingBeanKeyException {
+    	       AnnotationMissingBeanKeyException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 
        if (this.meta.isReadOnly()) {
            return;
@@ -225,17 +227,17 @@ class MapPipe implements Pipe {
            if (originalEntityColl instanceof Collection || originalEntityColl instanceof Map) {
                original = originalEntityColl;
            } else {
-               original = this.meta.newEntityMapOrCollection();
+               original = this.meta.newEntityMapOrCollection(entityBeanFactory);
                this.entityWrite.write(entity,  original);
            }
 
            final Map dtos = (Map) dtoColl;
 
            if (original instanceof Collection) {
-	           removeDeletedItems((Collection) original, dtos);
+	           removeDeletedItems(converters, entityBeanFactory, (Collection) original, dtos);
 	           addOrUpdateItems(dto, converters, entityBeanFactory, (Collection) original, dtos);
            } else if (original instanceof Map) {
-	           removeDeletedItems((Map) original, dtos);
+	           removeDeletedItems(converters, entityBeanFactory, (Map) original, dtos);
 	           addOrUpdateItems(dto, converters, entityBeanFactory, (Map) original, dtos);
            }    
 
@@ -286,10 +288,10 @@ class MapPipe implements Pipe {
 			   AnnotationValidatingBindingException, GeDARuntimeException, AnnotationDuplicateBindingException, 
 			   InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, NotEntityRetrieverException, 
 			   EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, 
-			   AnnotationMissingBeanKeyException {
+			   AnnotationMissingBeanKeyException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 		
 		DTOAssembler assembler = null;
-		final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
+		final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
 		for (Object dtoKey : dtos.keySet()) {
 			
 			final Object dtoItem = dtos.get(dtoKey);
@@ -324,10 +326,10 @@ class MapPipe implements Pipe {
     	       AnnotationValidatingBindingException, GeDARuntimeException, AnnotationDuplicateBindingException, 
     	       InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, NotEntityRetrieverException, 
     	       EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, 
-    	       AnnotationMissingBeanKeyException {
+    	       AnnotationMissingBeanKeyException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 
         DTOAssembler assembler = null;
-        final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
+        final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
         final boolean useKey = this.meta.isEntityMapKey();
         for (Object dtoKey : dtos.keySet()) {
 
@@ -368,8 +370,9 @@ class MapPipe implements Pipe {
         }
     }
 
-    private void removeDeletedItems(final Collection original, final Map dtos) {
-    	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
+    private void removeDeletedItems(final Map<String, Object> converters, final BeanFactory entityBeanFactory, final Collection original, 
+			final Map dtos)  throws DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
+    	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
     	Iterator orIt = original.iterator();
     	while (orIt.hasNext()) { // must be iterator to avoid concurrent modification exception while #remove()
     		
@@ -391,8 +394,9 @@ class MapPipe implements Pipe {
     	}
     }
     
-    private void removeDeletedItems(final Map original, final Map dtos) {
-    	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
+    private void removeDeletedItems(final Map<String, Object> converters, final BeanFactory entityBeanFactory, final Map original, 
+			final Map dtos)  throws DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
+    	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
     	final List keysToRemove = new ArrayList(); // must save to avoid concurrent modification exception while #remove(key)
     	for (Object orKey : original.keySet()) { 
         	

@@ -19,13 +19,19 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.junit.Test;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
 import dp.lib.dto.geda.exception.GeDAException;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * DTOAssembler test.
@@ -520,5 +526,498 @@ public class DTOAssemblerDtoCollectionTest {
         assertEquals("3", iterEntity.next().getName());
 
     }
+    
+    /**
+     * Test collection of nested objects.
+     * 
+     * @throws GeDAException exception
+     */
+    @Test(expected = DtoToEntityMatcherNotFoundException.class)
+    public void testCollectionPropertyWithMatcherKeyAndNullConverters() throws GeDAException {
+    	final TestDto7aCollectionClass dto = new TestDto7aCollectionClass();
+    	final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+    	entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+    	
+    	final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+    	item1.setName("1");
+    	final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+    	item2.setName("2");
+    	final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+    	item3.setName("3");
+    	entity.getCollection().add(item1);
+    	entity.getCollection().add(item2);
+    	entity.getCollection().add(item3);
+    	
+    	final BeanFactory factory = new BeanFactory() {
+    		public Object get(final String entityBeanKey) {
+    			if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+    				return new TestDto7CollectionSubClass();
+    			} else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+    				return new TestEntity7CollectionSubClass();
+    			}
+    			return null;
+    		}
+    	};
+    	
+    	final DTOAssembler assembler =
+    		DTOAssembler.newAssembler(TestDto7aCollectionClass.class, TestEntity7CollectionClass.class);
+    	
+    	assembler.assembleDto(dto, entity, null, factory);
+    	
+    	assertNotNull(dto.getNestedString());
+    	assertEquals(I_3, dto.getNestedString().size());
+    	
+    	Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
+    	for (int index = 0; it.hasNext(); index++) {
+    		it.next().setName("sameName" + index);
+    	}
+    	
+    	assembler.assembleEntity(dto, entity, null, factory);
+    	
+    }
+    
+    /**
+     * Test collection of nested objects.
+     * 
+     * @throws GeDAException exception
+     */
+    @SuppressWarnings("unchecked")
+	@Test(expected = DtoToEntityMatcherNotFoundException.class)
+    public void testCollectionPropertyWithMatcherKeyNotSupplied() throws GeDAException {
+    	final TestDto7aCollectionClass dto = new TestDto7aCollectionClass();
+    	final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+    	entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+    	
+    	final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+    	item1.setName("1");
+    	final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+    	item2.setName("2");
+    	final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+    	item3.setName("3");
+    	entity.getCollection().add(item1);
+    	entity.getCollection().add(item2);
+    	entity.getCollection().add(item3);
+    	
+    	final BeanFactory factory = new BeanFactory() {
+    		public Object get(final String entityBeanKey) {
+    			if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+    				return new TestDto7CollectionSubClass();
+    			} else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+    				return new TestEntity7CollectionSubClass();
+    			}
+    			return null;
+    		}
+    	};
+    	
+    	final DTOAssembler assembler =
+    		DTOAssembler.newAssembler(TestDto7aCollectionClass.class, TestEntity7CollectionClass.class);
+    	
+    	assembler.assembleDto(dto, entity, null, factory);
+    	
+    	assertNotNull(dto.getNestedString());
+    	assertEquals(I_3, dto.getNestedString().size());
+    	
+    	Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
+    	for (int index = 0; it.hasNext(); index++) {
+    		it.next().setName("sameName" + index);
+    	}
+    	
+    	assembler.assembleEntity(dto, entity, Collections.EMPTY_MAP, factory);
+    	
+    }
+    
+    /**
+	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test
+	public void testCollectionPropertyWithMatcherKey() throws GeDAException {
+		final TestDto7aCollectionClass dto = new TestDto7aCollectionClass();
+		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+        entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+
+        final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+        item1.setName("1");
+        final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+        item2.setName("2");
+        final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+        item3.setName("3");
+        entity.getCollection().add(item1);
+        entity.getCollection().add(item2);
+        entity.getCollection().add(item3);
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestDto7CollectionSubClass();
+                } else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7CollectionSubClass();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto7aCollectionClass.class, TestEntity7CollectionClass.class);
+
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test7Matcher", new Test7Matcher());
+		
+		assembler.assembleDto(dto, entity, null, factory);
+
+		assertNotNull(dto.getNestedString());
+        assertEquals(I_3, dto.getNestedString().size());
+
+        Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
+        for (int index = 0; it.hasNext(); index++) {
+            it.next().setName("sameName" + index);
+        }
+
+		assembler.assembleEntity(dto, entity, converters, factory);
+
+		assertNotNull(entity.getCollection());
+		assertEquals(I_3, entity.getCollection().size());
+
+        Iterator<TestEntity7CollectionSubClass> itr = entity.getCollection().iterator();
+        while (itr.hasNext()) {
+            final TestEntity7CollectionSubClass next = itr.next();
+
+            assertNotNull(next.getName());
+            assertTrue(next.getName().startsWith("sameName"));
+        }
+
+	}
+	
+	/**
+	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = BeanFactoryNotFoundException.class)
+	public void testCollectionPropertyWithDtoCollectionKeyNoBeanFactory() throws GeDAException {
+		final TestDto7bCollectionClass dto = new TestDto7bCollectionClass();
+		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+		entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+		
+		final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+		item1.setName("1");
+		final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+		item2.setName("2");
+		final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+		item3.setName("3");
+		entity.getCollection().add(item1);
+		entity.getCollection().add(item2);
+		entity.getCollection().add(item3);
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class);
+
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test7Matcher", new Test7Matcher());
+		
+		assembler.assembleDto(dto, entity, null, null);
+
+	}
+	
+	/**
+	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = UnableToCreateInstanceException.class)
+	public void testCollectionPropertyWithDtoCollectionKeyBeanFactoryUnableCreateInstance() throws GeDAException {
+		final TestDto7bCollectionClass dto = new TestDto7bCollectionClass();
+		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+		entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+		
+		final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+		item1.setName("1");
+		final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+		item2.setName("2");
+		final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+		item3.setName("3");
+		entity.getCollection().add(item1);
+		entity.getCollection().add(item2);
+		entity.getCollection().add(item3);
+		
+		final BeanFactory factory = new BeanFactory() {
+			public Object get(final String entityBeanKey) {
+				if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+					return new TestDto7CollectionSubClass();
+				} else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+					return new TestEntity7CollectionSubClass();
+				}
+				return null;
+			}
+		};
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class);
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test7Matcher", new Test7Matcher());
+		
+		assembler.assembleDto(dto, entity, null, factory);
+		
+	}
+	
+	/**
+	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test
+	public void testCollectionPropertyWithDtoCollectionKey() throws GeDAException {
+		final TestDto7bCollectionClass dto = new TestDto7bCollectionClass();
+		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+		entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+		
+		final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+		item1.setName("1");
+		final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+		item2.setName("2");
+		final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+		item3.setName("3");
+		entity.getCollection().add(item1);
+		entity.getCollection().add(item2);
+		entity.getCollection().add(item3);
+		
+		final BeanFactory factory = new BeanFactory() {
+			public Object get(final String entityBeanKey) {
+				if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+					return new TestDto7CollectionSubClass();
+				} else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+					return new TestEntity7CollectionSubClass();
+				} else if ("dtoColl".equals(entityBeanKey)) {
+					return new ArrayList<Object>();
+				}
+				return null;
+			}
+		};
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class);
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test7Matcher", new Test7Matcher());
+		
+		assembler.assembleDto(dto, entity, null, factory);
+		
+		assertNotNull(dto.getNestedString());
+		assertEquals(I_3, dto.getNestedString().size());
+		
+		Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
+		for (int index = 0; it.hasNext(); index++) {
+			it.next().setName("sameName" + index);
+		}
+		
+		assembler.assembleEntity(dto, entity, converters, factory);
+		
+		assertNotNull(entity.getCollection());
+		assertEquals(I_3, entity.getCollection().size());
+		
+		Iterator<TestEntity7CollectionSubClass> itr = entity.getCollection().iterator();
+		while (itr.hasNext()) {
+			final TestEntity7CollectionSubClass next = itr.next();
+			
+			assertNotNull(next.getName());
+			assertTrue(next.getName().startsWith("sameName"));
+		}
+		
+	}
+	
+	/**
+	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = BeanFactoryNotFoundException.class)
+	public void testCollectionPropertyWithEntityCollectionKeyNoBeanFactory() throws GeDAException {
+		final TestDto7bCollectionClass dto = new TestDto7bCollectionClass();
+		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+		entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+		
+		final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+		item1.setName("1");
+		final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+		item2.setName("2");
+		final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+		item3.setName("3");
+		entity.getCollection().add(item1);
+		entity.getCollection().add(item2);
+		entity.getCollection().add(item3);
+		
+		final BeanFactory factory = new BeanFactory() {
+			public Object get(final String entityBeanKey) {
+				if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+					return new TestDto7CollectionSubClass();
+				} else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+					return new TestEntity7CollectionSubClass();
+				} else if ("dtoColl".equals(entityBeanKey)) {
+					return new ArrayList<Object>();
+				}
+				return null;
+			}
+		};
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class);
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test7Matcher", new Test7Matcher());
+		
+		assembler.assembleDto(dto, entity, null, factory);
+		
+		assertNotNull(dto.getNestedString());
+		assertEquals(I_3, dto.getNestedString().size());
+		
+		Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
+		for (int index = 0; it.hasNext(); index++) {
+			it.next().setName("sameName" + index);
+		}
+		
+		entity.setCollection(null);
+		
+		assembler.assembleEntity(dto, entity, converters, null);
+				
+	}
+	
+	/**
+	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = UnableToCreateInstanceException.class)
+	public void testCollectionPropertyWithEntityCollectionKeyBeanFactoryUnableToCreateInstance() throws GeDAException {
+		final TestDto7bCollectionClass dto = new TestDto7bCollectionClass();
+		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+		entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+		
+		final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+		item1.setName("1");
+		final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+		item2.setName("2");
+		final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+		item3.setName("3");
+		entity.getCollection().add(item1);
+		entity.getCollection().add(item2);
+		entity.getCollection().add(item3);
+		
+		final BeanFactory factory = new BeanFactory() {
+			public Object get(final String entityBeanKey) {
+				if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+					return new TestDto7CollectionSubClass();
+				} else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+					return new TestEntity7CollectionSubClass();
+				} else if ("dtoColl".equals(entityBeanKey)) {
+					return new ArrayList<Object>();
+				}
+				return null;
+			}
+		};
+		
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class);
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test7Matcher", new Test7Matcher());
+		
+		assembler.assembleDto(dto, entity, null, factory);
+		
+		assertNotNull(dto.getNestedString());
+		assertEquals(I_3, dto.getNestedString().size());
+		
+		Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
+		for (int index = 0; it.hasNext(); index++) {
+			it.next().setName("sameName" + index);
+		}
+		
+		entity.setCollection(null);
+		
+		assembler.assembleEntity(dto, entity, converters, factory);
+		
+		assertNotNull(entity.getCollection());
+		assertEquals(I_3, entity.getCollection().size());
+		
+		Iterator<TestEntity7CollectionSubClass> itr = entity.getCollection().iterator();
+		while (itr.hasNext()) {
+			final TestEntity7CollectionSubClass next = itr.next();
+			
+			assertNotNull(next.getName());
+			assertTrue(next.getName().startsWith("sameName"));
+		}
+		
+	}
+
+    /**
+	 * Test collection of nested objects.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test
+	public void testCollectionPropertyWithEntityCollectionKey() throws GeDAException {
+		final TestDto7bCollectionClass dto = new TestDto7bCollectionClass();
+		final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+        entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+
+        final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+        item1.setName("1");
+        final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+        item2.setName("2");
+        final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+        item3.setName("3");
+        entity.getCollection().add(item1);
+        entity.getCollection().add(item2);
+        entity.getCollection().add(item3);
+
+        final BeanFactory factory = new BeanFactory() {
+            public Object get(final String entityBeanKey) {
+                if ("dp.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestDto7CollectionSubClass();
+                } else if ("dp.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7CollectionSubClass();
+                } else if ("dtoColl".equals(entityBeanKey)) {
+                	return new ArrayList<Object>();
+                } else if ("entityColl".equals(entityBeanKey)) {
+                	return new ArrayList<Object>();
+                }
+                return null;
+            }
+        };
+
+		final DTOAssembler assembler =
+			DTOAssembler.newAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class);
+
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test7Matcher", new Test7Matcher());
+		
+		assembler.assembleDto(dto, entity, null, factory);
+
+		assertNotNull(dto.getNestedString());
+        assertEquals(I_3, dto.getNestedString().size());
+
+        Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
+        for (int index = 0; it.hasNext(); index++) {
+            it.next().setName("sameName" + index);
+        }
+        
+		entity.setCollection(null);
+
+		assembler.assembleEntity(dto, entity, converters, factory);
+
+		assertNotNull(entity.getCollection());
+		assertEquals(I_3, entity.getCollection().size());
+
+        Iterator<TestEntity7CollectionSubClass> itr = entity.getCollection().iterator();
+        while (itr.hasNext()) {
+            final TestEntity7CollectionSubClass next = itr.next();
+
+            assertNotNull(next.getName());
+            assertTrue(next.getName().startsWith("sameName"));
+        }
+
+	}
+
 	
 }

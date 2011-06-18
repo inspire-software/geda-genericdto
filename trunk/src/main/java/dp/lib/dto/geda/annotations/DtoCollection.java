@@ -39,16 +39,28 @@ public @interface DtoCollection {
 	 */
 	boolean readOnly() default false;
 
+	/**
+	 * Class that defines the type of class for creating new Domain object collection.
+	 * Default is {@link java.util.ArrayList}
+	 */
+	Class entityCollectionClass() default ArrayList.class;
     /**
-     * Class that defines the type of class for creating new Domain object collection.
-     * Default is {@link java.util.ArrayList}
+     * Key that defines the type of instance to be retrieved from beanFactory 
+     * for creating new Domain object collection.
+     * This setting has priority over the {@link #entityCollectionClass()} setting.
      */
-    Class entityCollectionClass() default ArrayList.class;
+    String entityCollectionClassKey() default "";
     /**
      * Class that defines the type of class for creating new DTO object collection.
      * Default is {@link java.util.ArrayList}
      */
     Class dtoCollectionClass() default ArrayList.class;
+    /**
+     * Key that defines the type of instance to be retrieved from beanFactory 
+     * for creating new DTO object collection.
+     * This setting has priority over the {@link #dtoCollectionClass()} setting.
+     */
+    String dtoCollectionClassKey() default "";
 
     /**
      * Domain object bean factory key for creating new domain object instance
@@ -74,5 +86,12 @@ public @interface DtoCollection {
      * Matcher used to synchronize collection of DTO's and Entities.
      */
 	Class< ? extends DtoToEntityMatcher> dtoToEntityMatcher() default DtoToEntityMatcher.class;
+	
+	/**
+	 * Key used on the converters map to retrieve matcher used to synchronize collection 
+	 * of DTO's and Entities.
+	 * This setting has priority over the {@link #dtoToEntityMatcher()} setting.
+	 */
+	String dtoToEntityMatcherKey() default "";
 
 }

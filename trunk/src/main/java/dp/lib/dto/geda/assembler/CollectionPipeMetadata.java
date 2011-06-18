@@ -15,7 +15,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
+import dp.lib.dto.geda.exception.NotDtoToEntityMatcherException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
@@ -28,11 +32,14 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 
 	private static final Map<Class, DtoToEntityMatcher> CACHE = new HashMap<Class, DtoToEntityMatcher>();
 	
-    private final Class< ? extends Collection> dtoCollectionClass;
+	private final Class< ? extends Collection> dtoCollectionClass;
+    private final String dtoCollectionClassKey;
     private final Class< ? extends Collection> entityCollectionClass;
+    private final String entityCollectionClassKey;
 
     private final Class< ? > returnType;
     private final DtoToEntityMatcher dtoToEntityMatcher;
+    private final String dtoToEntityMatcherKey;
 
 	/**
      * @param dtoFieldName key for accessing field on DTO object
@@ -41,9 +48,12 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
      * @param entityBeanKey key for constructing Entity bean
      * @param readOnly read only marker (true then write to entity is omitted)
      * @param dtoCollectionClass the dto collection class for creating new collection instance
+     * @param dtoCollectionClassKey key for dto collection class fetched from beanFactory
      * @param entityCollectionClass the entity collection class for creating new collection instance
+     * @param entityCollectionClassKey key for entity collection class fetched from beanFactory
      * @param returnType the generic return time for entity collection
      * @param dtoToEntityMatcherClass matcher for synchronising collections
+     * @param dtoToEntityMatcherKey key of matcher in the converters map
      * 
 	 * @throws UnableToCreateInstanceException if unable to create item matcher
 	 */
@@ -53,44 +63,51 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 							 final String entityBeanKey,
 							 final boolean readOnly,
 							 final Class< ? extends Collection> dtoCollectionClass,
+							 final String dtoCollectionClassKey,
 							 final Class< ? extends Collection> entityCollectionClass, 
+							 final String entityCollectionClassKey, 
 							 final Class< ? > returnType,
-							 final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcherClass) throws UnableToCreateInstanceException {
+							 final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcherClass,
+							 final String dtoToEntityMatcherKey) throws UnableToCreateInstanceException {
 		
 		super(dtoFieldName, entityFieldName, dtoBeanKey, entityBeanKey, readOnly);
 		this.dtoCollectionClass = dtoCollectionClass;
+		this.dtoCollectionClassKey = dtoCollectionClassKey != null && dtoCollectionClassKey.length() > 0 ? dtoCollectionClassKey : null;
 		this.entityCollectionClass = entityCollectionClass;
+		this.entityCollectionClassKey = entityCollectionClassKey != null && entityCollectionClassKey.length() > 0 ? entityCollectionClassKey : null;
 		this.returnType = returnType;
 		
-		if (CACHE.containsKey(dtoToEntityMatcherClass)) {
-			this.dtoToEntityMatcher = CACHE.get(dtoToEntityMatcherClass);
+		if (dtoToEntityMatcherKey == null || dtoToEntityMatcherKey.length() == 0) {
+			if (CACHE.containsKey(dtoToEntityMatcherClass)) {
+				this.dtoToEntityMatcher = CACHE.get(dtoToEntityMatcherClass);
+			} else {
+				this.dtoToEntityMatcher = newBeanForClass(
+						dtoToEntityMatcherClass, "Unable to create matcher: " + dtoToEntityMatcherClass.getCanonicalName()
+		                + " for: " + this.getDtoBeanKey() + " - " + this.getEntityBeanKey());
+				CACHE.put(dtoToEntityMatcherClass, this.dtoToEntityMatcher);
+			}
+			this.dtoToEntityMatcherKey = null;
 		} else {
-			this.dtoToEntityMatcher = newBeanForClass(
-					dtoToEntityMatcherClass, "Unable to create matcher: " + dtoToEntityMatcherClass.getCanonicalName()
-	                + " for: " + this.getDtoBeanKey() + " - " + this.getEntityBeanKey());
-			CACHE.put(dtoToEntityMatcherClass, this.dtoToEntityMatcher);
+			this.dtoToEntityMatcher = null;
+			this.dtoToEntityMatcherKey = dtoToEntityMatcherKey;
 		}
 
 	}
-
-	/** {@inheritDoc} */
-	public Class< ? extends Collection> getDtoCollectionClass() {
-		return dtoCollectionClass;
-	}
 	
 	/** {@inheritDoc} */
-	public Collection newDtoCollection() throws UnableToCreateInstanceException {
-		return newCollection(getDtoCollectionClass(), " Dto field: " + this.getDtoFieldName());
+	public Collection newDtoCollection(final BeanFactory beanFactory) throws UnableToCreateInstanceException, BeanFactoryNotFoundException {
+		if (this.dtoCollectionClassKey != null) {
+			return newCollection(this.dtoCollectionClassKey, beanFactory, true);
+		}
+		return newCollection(dtoCollectionClass, " Dto field: " + this.getDtoFieldName());
 	}
 
 	/** {@inheritDoc} */
-	public Class< ? extends Collection> getEntityCollectionClass() {
-		return entityCollectionClass;
-	}
-	
-	/** {@inheritDoc} */
-	public Collection newEntityCollection() throws UnableToCreateInstanceException {
-		return newCollection(getEntityCollectionClass(), " Entity field: " + this.getEntityFieldName());
+	public Collection newEntityCollection(final BeanFactory beanFactory) throws UnableToCreateInstanceException, BeanFactoryNotFoundException {
+		if (this.entityCollectionClassKey != null) {
+			return newCollection(this.entityCollectionClassKey, beanFactory, false);
+		}
+		return newCollection(entityCollectionClass, " Entity field: " + this.getEntityFieldName());
 	}
 
 	/** {@inheritDoc} */
@@ -99,8 +116,38 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements dp.lib.d
 	}
 
 	/** {@inheritDoc} */
-	public DtoToEntityMatcher getDtoToEntityMatcher() {
-		return dtoToEntityMatcher;
+	public DtoToEntityMatcher getDtoToEntityMatcher(final Map<String, Object> converters)
+			throws DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
+		if (this.dtoToEntityMatcherKey == null) {
+			return dtoToEntityMatcher;
+		}
+		if (converters == null) {
+			throw new DtoToEntityMatcherNotFoundException(this.getDtoFieldName(), this.getEntityFieldName(), this.dtoToEntityMatcherKey);
+		}
+		final Object matcher = converters.get(this.dtoToEntityMatcherKey);
+		if (matcher == null) {
+			throw new DtoToEntityMatcherNotFoundException(this.getDtoFieldName(), this.getEntityFieldName(), this.dtoToEntityMatcherKey);
+		}
+		if (matcher instanceof DtoToEntityMatcher) {
+			return (DtoToEntityMatcher) matcher;
+		}
+		throw new NotDtoToEntityMatcherException(this.getDtoFieldName(), this.getEntityFieldName(), this.dtoToEntityMatcherKey);
+	}
+	
+	private Collection newCollection(final String clazzKey, final BeanFactory beanFactory, final boolean isDto) 
+			throws UnableToCreateInstanceException, BeanFactoryNotFoundException {
+		if (beanFactory == null) {
+			throw new BeanFactoryNotFoundException(this.getDtoFieldName(), clazzKey, isDto);
+		}
+		final Object coll = beanFactory.get(clazzKey);
+		if (coll instanceof Collection) {
+			return (Collection) coll;
+		}
+		throw new UnableToCreateInstanceException(clazzKey, 
+				" Collection" + (isDto ? " Dto" : " Entity") + " field: " + this.getDtoFieldName()
+				+ "@key:" + clazzKey
+				+ " (Check if beanFactory [" + beanFactory + "] returns a correct instance)", null);
+
 	}
 
     private Collection newCollection(final Class< ? extends Collection> clazz, final String type) throws UnableToCreateInstanceException {

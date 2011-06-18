@@ -21,6 +21,7 @@ import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
 import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
 import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
 import dp.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
+import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
 import dp.lib.dto.geda.exception.EntityRetrieverNotFoundException;
 import dp.lib.dto.geda.exception.GeDARuntimeException;
 import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
@@ -28,6 +29,7 @@ import dp.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
 import dp.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
 import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import dp.lib.dto.geda.exception.InspectionScanningException;
+import dp.lib.dto.geda.exception.NotDtoToEntityMatcherException;
 import dp.lib.dto.geda.exception.NotEntityRetrieverException;
 import dp.lib.dto.geda.exception.NotValueConverterException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
@@ -118,6 +120,9 @@ interface Pipe {
 	 * @throws InspectionBindingNotFoundException in case when no valid property on entity is specified to bind to
 	 * @throws InspectionPropertyNotFoundException in case when no valid property on entity is found to bind to
 	 * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
+	 * @throws NotDtoToEntityMatcherException when converter retrieved by matcher key is not valid
+	 * @throws DtoToEntityMatcherNotFoundException exception when entity matcher key configuration is used rather than a class but 
+	 *         is not found in the converters
 
 	 */
 	void writeFromDtoToEntity(final Object entity, final Object dto,
@@ -141,6 +146,6 @@ interface Pipe {
 			   AnnotationMissingBindingException, 
 			   AnnotationValidatingBindingException, 
 			   GeDARuntimeException, 
-			   AnnotationDuplicateBindingException;
+			   AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException;
 
 }

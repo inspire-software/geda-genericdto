@@ -25,6 +25,7 @@ import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
 import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
 import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
 import dp.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
+import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
 import dp.lib.dto.geda.exception.EntityRetrieverNotFoundException;
 import dp.lib.dto.geda.exception.GeDARuntimeException;
 import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
@@ -32,6 +33,7 @@ import dp.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
 import dp.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
 import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import dp.lib.dto.geda.exception.InspectionScanningException;
+import dp.lib.dto.geda.exception.NotDtoToEntityMatcherException;
 import dp.lib.dto.geda.exception.NotEntityRetrieverException;
 import dp.lib.dto.geda.exception.NotValueConverterException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
@@ -195,7 +197,8 @@ class DataPipe implements Pipe {
 			   InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, InspectionScanningException, 
 			   UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
 			   AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
-			   AnnotationDuplicateBindingException, CollectionEntityGenericReturnTypeException {
+			   AnnotationDuplicateBindingException, CollectionEntityGenericReturnTypeException, DtoToEntityMatcherNotFoundException, 
+			   NotDtoToEntityMatcherException {
 
 		if (meta.isReadOnly()) {
 			return;
@@ -251,7 +254,7 @@ class DataPipe implements Pipe {
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
 		       GeDARuntimeException, AnnotationDuplicateBindingException, NotEntityRetrieverException, 
 		       EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, 
-		       CollectionEntityGenericReturnTypeException {
+		       CollectionEntityGenericReturnTypeException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 		
 		Object dataEntity = this.entityRead.read(parentEntity);
 		if (dataEntity == null) {

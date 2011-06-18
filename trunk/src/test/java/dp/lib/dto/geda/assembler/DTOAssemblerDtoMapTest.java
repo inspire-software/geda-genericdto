@@ -21,12 +21,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
 import dp.lib.dto.geda.exception.GeDAException;
+import dp.lib.dto.geda.exception.NotDtoToEntityMatcherException;
+import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
  * DTOAssembler test.
@@ -530,5 +535,604 @@ public class DTOAssemblerDtoMapTest {
         assertEquals("3", iterEntity.next().getName());
 
     }
+    
+	/**
+	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = DtoToEntityMatcherNotFoundException.class)
+	public void testMapToCollectionMappingWithNoMatcherInConverters() throws GeDAException {
+		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+		eItem1.setName("itm1");
+		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+		eItem2.setName("itm2");
+		
+		final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+		eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+		eColl.getItems().add(eItem1);
+		eColl.getItems().add(eItem2);
+		
+		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+		eWrap.setCollectionWrapper(eColl);
+		
+		final TestDto12MapIterface dMap = new TestDto12aMapToCollectionClass();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		
+		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("dtoItem".equals(entityBeanKey)) {
+					return new TestDto12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(dMap.getItems());
+		assertEquals(2, dMap.getItems().size());
+		final Set<String> keys = dMap.getItems().keySet();
+		for (String key : keys) {
+			if ("itm1".equals(key)) {
+				assertEquals("itm1", dMap.getItems().get(key).getName());
+			} else if ("itm2".equals(key)) {
+				assertEquals("itm2", dMap.getItems().get(key).getName());
+			} else {
+				fail("Unknown key");
+			}
+		}
+		
+		final TestDto12CollectionItemClass dto3 = new TestDto12CollectionItemClass();
+		dto3.setName("itm3");
+		dMap.getItems().put("itm3", dto3);
+		
+		dMap.getItems().remove("itm1"); // first
+		
+		assembler.assembleEntity(dMap, eWrap, null, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("nestedEntity".equals(entityBeanKey)) {
+					return new TestDto12CollectionClass();
+				} else if ("entityItem".equals(entityBeanKey)) {
+					return new TestEntity12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+		
+	}
+
+	/**
+	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = NotDtoToEntityMatcherException.class)
+	public void testMapToCollectionMappingWithInvalidMatcherInConverters() throws GeDAException {
+		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+		eItem1.setName("itm1");
+		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+		eItem2.setName("itm2");
+		
+		final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+		eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+		eColl.getItems().add(eItem1);
+		eColl.getItems().add(eItem2);
+		
+		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+		eWrap.setCollectionWrapper(eColl);
+		
+		final TestDto12MapIterface dMap = new TestDto12aMapToCollectionClass();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		
+		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("dtoItem".equals(entityBeanKey)) {
+					return new TestDto12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(dMap.getItems());
+		assertEquals(2, dMap.getItems().size());
+		final Set<String> keys = dMap.getItems().keySet();
+		for (String key : keys) {
+			if ("itm1".equals(key)) {
+				assertEquals("itm1", dMap.getItems().get(key).getName());
+			} else if ("itm2".equals(key)) {
+				assertEquals("itm2", dMap.getItems().get(key).getName());
+			} else {
+				fail("Unknown key");
+			}
+		}
+		
+		final TestDto12CollectionItemClass dto3 = new TestDto12CollectionItemClass();
+		dto3.setName("itm3");
+		dMap.getItems().put("itm3", dto3);
+		
+		dMap.getItems().remove("itm1"); // first
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test12KeyMapToEntityMatcher.class", new Object());
+		
+		assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("nestedEntity".equals(entityBeanKey)) {
+					return new TestDto12CollectionClass();
+				} else if ("entityItem".equals(entityBeanKey)) {
+					return new TestEntity12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+		
+	}
+	
+	/**
+	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test
+	public void testMapToCollectionMappingWithMatcherInConverters() throws GeDAException {
+		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+		eItem1.setName("itm1");
+		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+		eItem2.setName("itm2");
+		
+		final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+		eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+		eColl.getItems().add(eItem1);
+		eColl.getItems().add(eItem2);
+		
+		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+		eWrap.setCollectionWrapper(eColl);
+		
+		final TestDto12MapIterface dMap = new TestDto12aMapToCollectionClass();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		
+		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("dtoItem".equals(entityBeanKey)) {
+					return new TestDto12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(dMap.getItems());
+		assertEquals(2, dMap.getItems().size());
+		final Set<String> keys = dMap.getItems().keySet();
+		for (String key : keys) {
+			if ("itm1".equals(key)) {
+				assertEquals("itm1", dMap.getItems().get(key).getName());
+			} else if ("itm2".equals(key)) {
+				assertEquals("itm2", dMap.getItems().get(key).getName());
+			} else {
+				fail("Unknown key");
+			}
+		}
+		
+		final TestDto12CollectionItemClass dto3 = new TestDto12CollectionItemClass();
+		dto3.setName("itm3");
+		dMap.getItems().put("itm3", dto3);
+		
+		dMap.getItems().remove("itm1"); // first
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test12KeyMapToEntityMatcher.class", new Test12KeyMapToEntityMatcher());
+		
+		assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("nestedEntity".equals(entityBeanKey)) {
+					return new TestDto12CollectionClass();
+				} else if ("entityItem".equals(entityBeanKey)) {
+					return new TestEntity12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(eWrap.getCollectionWrapper().getItems());
+		assertEquals(2, eWrap.getCollectionWrapper().getItems().size());
+		Iterator<TestEntity12CollectionItemInterface> eiter;
+		
+		eiter = eWrap.getCollectionWrapper().getItems().iterator();
+		final TestEntity12CollectionItemInterface itm1 = eiter.next();
+		final TestEntity12CollectionItemInterface itm2 = eiter.next();
+		assertEquals("itm2", itm1.getName());
+		assertEquals("itm3", itm2.getName());
+	}
+	
+	/**
+	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = BeanFactoryNotFoundException.class)
+	public void testMapToCollectionMappingWithDtoMapKeyNoBeanFactory() throws GeDAException {
+		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+		eItem1.setName("itm1");
+		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+		eItem2.setName("itm2");
+		
+		final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+		eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+		eColl.getItems().add(eItem1);
+		eColl.getItems().add(eItem2);
+		
+		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+		eWrap.setCollectionWrapper(eColl);
+		
+		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		
+		assembler.assembleDto(dMap, eWrap, null, null);
+		
+	}
+
+	/**
+	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = UnableToCreateInstanceException.class)
+	public void testMapToCollectionMappingWithDtoMapKeyBeanFactoryUnableToInstantiate() throws GeDAException {
+		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+		eItem1.setName("itm1");
+		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+		eItem2.setName("itm2");
+		
+		final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+		eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+		eColl.getItems().add(eItem1);
+		eColl.getItems().add(eItem2);
+		
+		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+		eWrap.setCollectionWrapper(eColl);
+		
+		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		
+		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("dtoItem".equals(entityBeanKey)) {
+					return new TestDto12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+	}
+	
+	/**
+	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test
+	public void testMapToCollectionMappingWithDtoMapKey() throws GeDAException {
+		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+		eItem1.setName("itm1");
+		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+		eItem2.setName("itm2");
+		
+		final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+		eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+		eColl.getItems().add(eItem1);
+		eColl.getItems().add(eItem2);
+		
+		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+		eWrap.setCollectionWrapper(eColl);
+		
+		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		
+		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("dtoItem".equals(entityBeanKey)) {
+					return new TestDto12CollectionItemClass();
+				} else if ("dtoMap".equals(entityBeanKey)) {
+					return new HashMap<Object, Object>();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(dMap.getItems());
+		assertEquals(2, dMap.getItems().size());
+		final Set<String> keys = dMap.getItems().keySet();
+		for (String key : keys) {
+			if ("itm1".equals(key)) {
+				assertEquals("itm1", dMap.getItems().get(key).getName());
+			} else if ("itm2".equals(key)) {
+				assertEquals("itm2", dMap.getItems().get(key).getName());
+			} else {
+				fail("Unknown key");
+			}
+		}
+		
+		final TestDto12CollectionItemClass dto3 = new TestDto12CollectionItemClass();
+		dto3.setName("itm3");
+		dMap.getItems().put("itm3", dto3);
+		
+		dMap.getItems().remove("itm1"); // first
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test12KeyMapToEntityMatcher.class", new Test12KeyMapToEntityMatcher());
+		
+		assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("nestedEntity".equals(entityBeanKey)) {
+					return new TestDto12CollectionClass();
+				} else if ("entityItem".equals(entityBeanKey)) {
+					return new TestEntity12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(eWrap.getCollectionWrapper().getItems());
+		assertEquals(2, eWrap.getCollectionWrapper().getItems().size());
+		Iterator<TestEntity12CollectionItemInterface> eiter;
+		
+		eiter = eWrap.getCollectionWrapper().getItems().iterator();
+		final TestEntity12CollectionItemInterface itm1 = eiter.next();
+		final TestEntity12CollectionItemInterface itm2 = eiter.next();
+		assertEquals("itm2", itm1.getName());
+		assertEquals("itm3", itm2.getName());
+	}
+	
+	/**
+	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = BeanFactoryNotFoundException.class)
+	public void testMapToCollectionMappingWithEntityMapKeyNoBeanFactory() throws GeDAException {
+		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+		eItem1.setName("itm1");
+		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+		eItem2.setName("itm2");
+		
+		final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+		eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+		eColl.getItems().add(eItem1);
+		eColl.getItems().add(eItem2);
+		
+		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+		eWrap.setCollectionWrapper(eColl);
+		
+		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		
+		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("dtoItem".equals(entityBeanKey)) {
+					return new TestDto12CollectionItemClass();
+				} else if ("dtoMap".equals(entityBeanKey)) {
+					return new HashMap<Object, Object>();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(dMap.getItems());
+		assertEquals(2, dMap.getItems().size());
+		final Set<String> keys = dMap.getItems().keySet();
+		for (String key : keys) {
+			if ("itm1".equals(key)) {
+				assertEquals("itm1", dMap.getItems().get(key).getName());
+			} else if ("itm2".equals(key)) {
+				assertEquals("itm2", dMap.getItems().get(key).getName());
+			} else {
+				fail("Unknown key");
+			}
+		}
+		
+		final TestDto12CollectionItemClass dto3 = new TestDto12CollectionItemClass();
+		dto3.setName("itm3");
+		dMap.getItems().put("itm3", dto3);
+		
+		dMap.getItems().remove("itm1"); // first
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test12KeyMapToEntityMatcher.class", new Test12KeyMapToEntityMatcher());
+		
+		eWrap.getCollectionWrapper().setItems(null);
+		
+		assembler.assembleEntity(dMap, eWrap, converters, null);
+
+	}
+	
+	/**
+	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = UnableToCreateInstanceException.class)
+	public void testMapToCollectionMappingWithEntityMapKeyBeanFactoryUnableToCreateInstance() throws GeDAException {
+		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+		eItem1.setName("itm1");
+		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+		eItem2.setName("itm2");
+		
+		final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+		eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+		eColl.getItems().add(eItem1);
+		eColl.getItems().add(eItem2);
+		
+		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+		eWrap.setCollectionWrapper(eColl);
+		
+		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		
+		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("dtoItem".equals(entityBeanKey)) {
+					return new TestDto12CollectionItemClass();
+				} else if ("dtoMap".equals(entityBeanKey)) {
+					return new HashMap<Object, Object>();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(dMap.getItems());
+		assertEquals(2, dMap.getItems().size());
+		final Set<String> keys = dMap.getItems().keySet();
+		for (String key : keys) {
+			if ("itm1".equals(key)) {
+				assertEquals("itm1", dMap.getItems().get(key).getName());
+			} else if ("itm2".equals(key)) {
+				assertEquals("itm2", dMap.getItems().get(key).getName());
+			} else {
+				fail("Unknown key");
+			}
+		}
+		
+		final TestDto12CollectionItemClass dto3 = new TestDto12CollectionItemClass();
+		dto3.setName("itm3");
+		dMap.getItems().put("itm3", dto3);
+		
+		dMap.getItems().remove("itm1"); // first
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test12KeyMapToEntityMatcher.class", new Test12KeyMapToEntityMatcher());
+		
+		eWrap.getCollectionWrapper().setItems(null);
+		
+		assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("nestedEntity".equals(entityBeanKey)) {
+					return new TestDto12CollectionClass();
+				} else if ("entityItem".equals(entityBeanKey)) {
+					return new TestEntity12CollectionItemClass();
+				}
+				return null;
+			}
+			
+		});
+	}
+	
+	/**
+	 * Test that DTO map correctly maps to entity collection.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test
+	public void testMapToCollectionMappingWithEntityMapKey() throws GeDAException {
+		final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+		eItem1.setName("itm1");
+		final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+		eItem2.setName("itm2");
+		
+		final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+		eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+		eColl.getItems().add(eItem1);
+		eColl.getItems().add(eItem2);
+		
+		final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+		eWrap.setCollectionWrapper(eColl);
+		
+		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
+		
+		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		
+		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("dtoItem".equals(entityBeanKey)) {
+					return new TestDto12CollectionItemClass();
+				} else if ("dtoMap".equals(entityBeanKey)) {
+					return new HashMap<Object, Object>();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(dMap.getItems());
+		assertEquals(2, dMap.getItems().size());
+		final Set<String> keys = dMap.getItems().keySet();
+		for (String key : keys) {
+			if ("itm1".equals(key)) {
+				assertEquals("itm1", dMap.getItems().get(key).getName());
+			} else if ("itm2".equals(key)) {
+				assertEquals("itm2", dMap.getItems().get(key).getName());
+			} else {
+				fail("Unknown key");
+			}
+		}
+		
+		final TestDto12CollectionItemClass dto3 = new TestDto12CollectionItemClass();
+		dto3.setName("itm3");
+		dMap.getItems().put("itm3", dto3);
+		
+		dMap.getItems().remove("itm1"); // first
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("Test12KeyMapToEntityMatcher.class", new Test12KeyMapToEntityMatcher());
+		
+		eWrap.getCollectionWrapper().setItems(null);
+		
+		assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
+			
+			public Object get(final String entityBeanKey) {
+				if ("nestedEntity".equals(entityBeanKey)) {
+					return new TestDto12CollectionClass();
+				} else if ("entityItem".equals(entityBeanKey)) {
+					return new TestEntity12CollectionItemClass();
+				} else if ("entityMapOrCollection".equals(entityBeanKey)) {
+					return new ArrayList<Object>();
+				}
+				return null;
+			}
+			
+		});
+		
+		assertNotNull(eWrap.getCollectionWrapper().getItems());
+		assertEquals(2, eWrap.getCollectionWrapper().getItems().size());
+		Iterator<TestEntity12CollectionItemInterface> eiter;
+		
+		eiter = eWrap.getCollectionWrapper().getItems().iterator();
+		while (eiter.hasNext()) {
+			TestEntity12CollectionItemInterface itm = (TestEntity12CollectionItemInterface) eiter.next();
+			if (!"itm2".equals(itm.getName()) && !"itm3".equals(itm.getName())) {
+				fail("Invalid element: " + itm.getName());
+			}
+		}
+	}
+
 	
 }
