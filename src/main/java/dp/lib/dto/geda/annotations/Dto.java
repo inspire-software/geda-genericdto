@@ -26,7 +26,7 @@ public @interface Dto {
 	
 	/**
 	 * textual reference to class that will be binded to dto.
-	 * E.g. dp.lib.dto.geda.expample.MyEntityClass or dp.lib.dto.geda.expample.MyEntityInterface
+	 * E.g. dp.lib.dto.geda.example.MyEntityClass or dp.lib.dto.geda.example.MyEntityInterface
 	 */
 	String value() default "";
 	

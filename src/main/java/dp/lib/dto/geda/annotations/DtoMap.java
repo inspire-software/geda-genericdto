@@ -39,16 +39,28 @@ public @interface DtoMap {
 	 */
 	boolean readOnly() default false;
 
+	/**
+	 * Class that defines the type of class for creating new Domain object collection.
+	 * Default is {@link java.util.HashMap} but this can also be instance of {@link java.util.Collection}
+	 */
+	Class entityMapOrCollectionClass() default HashMap.class;
     /**
-     * Class that defines the type of class for creating new Domain object collection.
-     * Default is {@link java.util.HashMap} but this can also be instance of {@link java.util.Collection}
+     * Key that defines the type of instance to be retrieved from beanFactory 
+     * for creating new Domain object collection.
+     * This setting has priority over the {@link #entityMapOrCollectionClass()} setting.
      */
-    Class entityMapOrCollectionClass() default HashMap.class;
+    String entityMapOrCollectionClassKey() default "";
     /**
      * Class that defines the type of class for creating new DTO object collection.
-     * Default is {@link java.util.ArrayList}
+     * Default is {@link java.util.HashMap}
      */
     Class dtoMapClass() default HashMap.class;
+    /**
+     * Key that defines the type of instance to be retrieved from beanFactory 
+     * for creating new DTO object collection.
+     * This setting has priority over the {@link #dtoMapClass()} setting.
+     */
+    String dtoMapClassKey() default "";
 
     /**
      * Domain object bean factory key for creating new domain object instance
@@ -84,9 +96,20 @@ public @interface DtoMap {
     /**
      * Matcher used to synchronize collection of DTO's and Entities.
      * This is different to {@link DtoCollection#dtoToEntityMatcher()} since this
-     * matches matches a key from Dto Map to either key of Entity Map or item of entity
+     * matcher matches a key from Dto Map to either key of Entity Map or item of entity
      * collection depending on whether entity's property is a collection or a map.
      */
 	Class< ? extends DtoToEntityMatcher> dtoToEntityMatcher() default DtoToEntityMatcher.class;
+	
+	
+	/**
+	 * Key used on the converters map to retrieve matcher used to synchronize collection 
+	 * of DTO's and Entities.
+	 * This is different to {@link DtoCollection#dtoToEntityMatcher()} since this
+     * matcher matches a key from Dto Map to either key of Entity Map or item of entity
+     * collection depending on whether entity's property is a collection or a map.
+     * This setting has priority over the {@link #dtoToEntityMatcher()} setting.
+	 */
+	String dtoToEntityMatcherKey() default "";
 
 }

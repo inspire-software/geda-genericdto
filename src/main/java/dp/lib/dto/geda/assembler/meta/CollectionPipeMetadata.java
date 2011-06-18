@@ -11,8 +11,13 @@
 package dp.lib.dto.geda.assembler.meta;
 
 import java.util.Collection;
+import java.util.Map;
 
+import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
+import dp.lib.dto.geda.exception.NotDtoToEntityMatcherException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
@@ -24,28 +29,22 @@ import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 public interface CollectionPipeMetadata extends PipeMetadata {
 
 	/**
-	 * @return DTO collection impl class
-	 */
-	Class< ? extends Collection> getDtoCollectionClass();
-
-	/**
+	 * @param beanFactory bean factory used during assembly runtime
 	 * @return new collection instance.
 	 * 
 	 * @throws UnableToCreateInstanceException  if unable to create collection instance
+	 * @throws BeanFactoryNotFoundException if no bean factory provided
 	 */
-	Collection newDtoCollection() throws UnableToCreateInstanceException;
+	Collection newDtoCollection(BeanFactory beanFactory) throws UnableToCreateInstanceException, BeanFactoryNotFoundException;
 
 	/**
-	 * @return entity collection impl class
-	 */
-	Class< ? extends Collection> getEntityCollectionClass();
-
-	/**
+	 * @param beanFactory bean factory used during assembly runtime
 	 * @return new collection instance.
 	 * 
 	 * @throws UnableToCreateInstanceException if unable to create collection instance 
+	 * @throws BeanFactoryNotFoundException if no bean factory provided
 	 */
-	Collection newEntityCollection() throws UnableToCreateInstanceException;
+	Collection newEntityCollection(BeanFactory beanFactory) throws UnableToCreateInstanceException, BeanFactoryNotFoundException;
 
 	/**
 	 * @return the entity's collection generic type to identity the type of items in entity collection.
@@ -53,8 +52,13 @@ public interface CollectionPipeMetadata extends PipeMetadata {
 	Class< ? > getReturnType();
 
 	/**
+	 * @param converters converters passed during runtime
 	 * @return matcher instance that will help synchronize collections.
+	 * 
+	 * @throws DtoToEntityMatcherNotFoundException when matcher cannot be found in converters map
+	 * @throws NotDtoToEntityMatcherException when found converter is not a matcher
 	 */
-	DtoToEntityMatcher getDtoToEntityMatcher();
+	DtoToEntityMatcher getDtoToEntityMatcher(Map<String, Object> converters)
+		throws DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException;
 
 }

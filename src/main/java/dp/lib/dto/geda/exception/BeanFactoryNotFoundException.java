@@ -35,7 +35,7 @@ public class BeanFactoryNotFoundException extends GeDAException {
 			final String beanKey,
 			final boolean dto) {
 		super("No factory provided for: " + (dto ? "dto " : "entity ")
-				+ fieldName + "@" + beanKey);
+				+ fieldName + "@key:" + beanKey);
 		this.fieldName = fieldName;
 		this.beanKey = beanKey;
 		this.dto = dto;

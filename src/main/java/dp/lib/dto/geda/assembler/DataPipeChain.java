@@ -22,6 +22,7 @@ import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
 import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
 import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
 import dp.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
+import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
 import dp.lib.dto.geda.exception.EntityRetrieverNotFoundException;
 import dp.lib.dto.geda.exception.GeDARuntimeException;
 import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
@@ -29,6 +30,7 @@ import dp.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
 import dp.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
 import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import dp.lib.dto.geda.exception.InspectionScanningException;
+import dp.lib.dto.geda.exception.NotDtoToEntityMatcherException;
 import dp.lib.dto.geda.exception.NotEntityRetrieverException;
 import dp.lib.dto.geda.exception.NotValueConverterException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
@@ -81,7 +83,7 @@ class DataPipeChain implements Pipe {
 		       CollectionEntityGenericReturnTypeException, InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, 
 		       InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
 		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
-		       AnnotationDuplicateBindingException {
+		       AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 
 		Object entityDataDelegate = null;
 		if (!(entity instanceof NewDataProxy)) {

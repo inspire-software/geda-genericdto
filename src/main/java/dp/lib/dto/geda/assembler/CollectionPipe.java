@@ -26,6 +26,7 @@ import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
 import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
 import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
 import dp.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
+import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
 import dp.lib.dto.geda.exception.EntityRetrieverNotFoundException;
 import dp.lib.dto.geda.exception.GeDARuntimeException;
 import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
@@ -33,6 +34,7 @@ import dp.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
 import dp.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
 import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import dp.lib.dto.geda.exception.InspectionScanningException;
+import dp.lib.dto.geda.exception.NotDtoToEntityMatcherException;
 import dp.lib.dto.geda.exception.NotEntityRetrieverException;
 import dp.lib.dto.geda.exception.NotValueConverterException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
@@ -109,7 +111,7 @@ class CollectionPipe implements Pipe {
         if (entityCollection instanceof Collection) {
             final Collection entities = (Collection) entityCollection;
 
-            final Collection dtos = this.meta.newDtoCollection();
+            final Collection dtos = this.meta.newDtoCollection(dtoBeanFactory);
 
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
 
@@ -151,7 +153,7 @@ class CollectionPipe implements Pipe {
     		   NotValueConverterException, ValueConverterNotFoundException, AnnotationMissingBeanKeyException, 
     		   InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
     		   AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
-    		   AnnotationDuplicateBindingException {
+    		   AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 
        if (this.meta.isReadOnly()) {
            return;
@@ -175,13 +177,13 @@ class CollectionPipe implements Pipe {
            if (originalEntityColl instanceof Collection) {
                original = (Collection) originalEntityColl;
            } else {
-               original = this.meta.newEntityCollection();
+               original = this.meta.newEntityCollection(entityBeanFactory);
                this.entityWrite.write(entity,  original);
            }
 
            final Collection dtos = (Collection) dtoColl;
 
-           removeDeletedItems(original, dtos);
+           removeDeletedItems(original, dtos, converters, entityBeanFactory);
 
            addOrUpdateItems(dto, converters, entityBeanFactory, original, dtos);
 
@@ -230,10 +232,10 @@ class CollectionPipe implements Pipe {
     	       ValueConverterNotFoundException, AnnotationMissingBeanKeyException, UnableToCreateInstanceException, 
     	       InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
     	       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
-    	       AnnotationDuplicateBindingException {
+    	       AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 
         DTOAssembler assembler = null;
-        final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
+        final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
         for (Object dtoItem : dtos) {
 
             boolean toAdd = true;
@@ -258,8 +260,9 @@ class CollectionPipe implements Pipe {
         }
     }
 
-    private void removeDeletedItems(final Collection original, final Collection dtos) {
-    	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher();
+    private void removeDeletedItems(final Collection original, final Collection dtos, final Map<String, Object> converters, 
+    			final BeanFactory entityBeanFactory) throws DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
+    	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
         Iterator orIt = original.iterator();
         while (orIt.hasNext()) {
 

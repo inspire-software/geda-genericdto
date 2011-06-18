@@ -88,7 +88,8 @@ final class MetadataChainBuilder {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static List<PipeMetadata> buildCollectionChain(final Field dtoField, final DtoCollection dtoCollAnn) throws UnableToCreateInstanceException {
+	private static List<PipeMetadata> buildCollectionChain(final Field dtoField, final DtoCollection dtoCollAnn) 
+		throws UnableToCreateInstanceException {
 
 		final String[] bindings = createFieldBindingChain(getBindingFromAnnotationOrFieldName(dtoCollAnn.value(), dtoField.getName()));
 		
@@ -101,9 +102,12 @@ final class MetadataChainBuilder {
 				getStringFromArray(dtoCollAnn.entityBeanKeys(), index),
 				dtoCollAnn.readOnly(),
 				dtoCollAnn.dtoCollectionClass(),
+				dtoCollAnn.dtoCollectionClassKey(),
 				dtoCollAnn.entityCollectionClass(),
+				dtoCollAnn.entityCollectionClassKey(),
 				dtoCollAnn.entityGenericType(),
-				dtoCollAnn.dtoToEntityMatcher()
+				dtoCollAnn.dtoToEntityMatcher(),
+				dtoCollAnn.dtoToEntityMatcherKey()
 			));
 		}
 		return metas;
@@ -123,11 +127,14 @@ final class MetadataChainBuilder {
 				getStringFromArray(dtoMapAnn.entityBeanKeys(), index),
 				dtoMapAnn.readOnly(),
 				dtoMapAnn.dtoMapClass(),
+				dtoMapAnn.dtoMapClassKey(),
 				dtoMapAnn.entityMapOrCollectionClass(),
+				dtoMapAnn.entityMapOrCollectionClassKey(),
 				dtoMapAnn.entityGenericType(),
 				dtoMapAnn.entityCollectionMapKey(),
 				dtoMapAnn.useEntityMapKey(),
-				dtoMapAnn.dtoToEntityMatcher()
+				dtoMapAnn.dtoToEntityMatcher(),
+				dtoMapAnn.dtoToEntityMatcherKey()
 			));
 		}
 		return metas;

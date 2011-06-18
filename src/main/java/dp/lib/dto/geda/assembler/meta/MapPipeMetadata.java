@@ -12,7 +12,11 @@ package dp.lib.dto.geda.assembler.meta;
 
 import java.util.Map;
 
+import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
+import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
+import dp.lib.dto.geda.exception.NotDtoToEntityMatcherException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
@@ -24,28 +28,22 @@ import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 public interface MapPipeMetadata extends PipeMetadata {
 
 	/**
-	 * @return DTO map impl class
-	 */
-	Class getDtoMapClass();
-
-	/**
+	 * @param beanFactory bean factory used during assembly runtime
 	 * @return new map instance.
 	 * 
 	 * @throws UnableToCreateInstanceException  if unable to create collection instance
+	 * @throws BeanFactoryNotFoundException if no bean factory provided
 	 */
-	Map newDtoMap() throws UnableToCreateInstanceException;
+	Map newDtoMap(BeanFactory beanFactory) throws UnableToCreateInstanceException, BeanFactoryNotFoundException;
 
 	/**
-	 * @return entity collection/map impl class
-	 */
-	Class getEntityMapOrCollectionClass();
-
-	/**
+	 * @param beanFactory bean factory used during assembly runtime
 	 * @return new collection instance.
 	 * 
 	 * @throws UnableToCreateInstanceException if unable to create collection instance 
+	 * @throws BeanFactoryNotFoundException if no bean factory provided
 	 */
-	Object newEntityMapOrCollection() throws UnableToCreateInstanceException;
+	Object newEntityMapOrCollection(BeanFactory beanFactory) throws UnableToCreateInstanceException, BeanFactoryNotFoundException;
 
 	/**
 	 * @return the entity's collection/ map item generic type to identity the type of items in entity collection.
@@ -63,8 +61,13 @@ public interface MapPipeMetadata extends PipeMetadata {
 	boolean isEntityMapKey();
 
 	/**
+	 * @param converters converters passed during runtime
 	 * @return matcher instance that will help synchronize collections/maps.
+	 * 
+	 * @throws DtoToEntityMatcherNotFoundException when matcher cannot be found in converters map
+	 * @throws NotDtoToEntityMatcherException when found converter is not a matcher
 	 */
-	DtoToEntityMatcher getDtoToEntityMatcher();
+	DtoToEntityMatcher getDtoToEntityMatcher(Map<String, Object> converters)
+		throws DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException;
 
 }
