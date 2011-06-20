@@ -35,6 +35,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	
 	private final Lock readLock = new ReentrantLock();
 	private final Lock writeLock = new ReentrantLock();
+	private static final int MAX_COMPILE_TRIES = 3; 
 	
 	private static final Cache<String, Object> READER_CACHE = new SoftReferenceCache<String, Object>(100);
 	private static final Cache<String, Object> WRITER_CACHE = new SoftReferenceCache<String, Object>(100);
@@ -106,10 +107,11 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		
 		if (reader == null) {
 			readLock.lock();
+			final MakeContext ctx = new MakeContext(DataReader.class.getCanonicalName());
 			try {
 				do {
 					reader = makeReaderClass(pool, getClassLoader(), 
-							readerClassName, sourceClassNameFull, sourceClassGetterMethodName, readMethod.getGenericReturnType());
+							readerClassName, sourceClassNameFull, sourceClassGetterMethodName, readMethod.getGenericReturnType(), ctx);
 					if (reader == null) {
 						reader = getFromCacheOrCreateFromClassLoader(readerClassName, READER_CACHE, getClassLoader());
 					}
@@ -145,7 +147,8 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			final String readerClassName, 
 			final String sourceClassNameFull,
 			final String sourceClassGetterMethodName, 
-			final Type sourceClassGetterMethodReturnType) throws UnableToCreateInstanceException, GeDARuntimeException {
+			final Type sourceClassGetterMethodReturnType,
+			final MakeContext ctx) throws UnableToCreateInstanceException, GeDARuntimeException {
 		
 		final String methodReturnType;
 		final String methodReturnTypePrimitiveName;
@@ -169,10 +172,12 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		}
 		
 		final CtClass ctClass = pool.makeClass(readerClassName);
+		final StringBuilder readMethodCode = new StringBuilder();
+		final StringBuilder getReturnTypeMethodCode = new StringBuilder();
 		try {
 			ctClass.setInterfaces(new CtClass[] { pool.get(DataReader.class.getCanonicalName()) });
 			
-			final StringBuilder readMethodCode = new StringBuilder()
+			readMethodCode
 				.append("public Object read(Object source) {\n")
 				.append("final ").append(sourceClassNameFull).append(" clazz = (").append(sourceClassNameFull).append(") source;\n");
 			if (methodReturnTypePrimitiveName == null) {
@@ -187,7 +192,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 				.append(";\n}");
 			}
 				
-			final StringBuilder getReturnTypeMethodCode = new StringBuilder()
+			getReturnTypeMethodCode
 				.append("public Class getReturnType() {\n")
 				.append("return ").append(methodReturnType).append(".class;\n")
 				.append("}");
@@ -212,6 +217,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			return reader;
 			
 		} catch (CannotCompileException cce) {
+			ctx.next(cce, readMethodCode.toString() + "\n\n" + getReturnTypeMethodCode.toString());
 			LOG.warn("Unable to create method in class: " + readerClassName + "... posibly class already loaded");
 			return null;
 		} catch (Exception ite) {
@@ -238,10 +244,11 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		writer = getFromCacheOrCreateFromClassLoader(writerClassName, WRITER_CACHE, getClassLoader());
 		if (writer == null) {
 			writeLock.lock();
+			final MakeContext ctx = new MakeContext(DataWriter.class.getCanonicalName());
 			try {
 				do {
 					writer = makeWriterClass(pool, getClassLoader(), 
-							writerClassName, classNameFull, methodName, writeMethod.getParameterTypes()[0]);
+							writerClassName, classNameFull, methodName, writeMethod.getParameterTypes()[0], ctx);
 					if (writer == null) {
 						writer = getFromCacheOrCreateFromClassLoader(writerClassName, WRITER_CACHE, getClassLoader());
 					}
@@ -258,7 +265,8 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			final String writerClassName, 
 			final String sourceClassNameFull,
 			final String sourceClassSetterMethodName, 
-			final Class< ? > sourceClassSetterMethodArgumentClass) throws UnableToCreateInstanceException {
+			final Class< ? > sourceClassSetterMethodArgumentClass,
+			final MakeContext ctx) throws UnableToCreateInstanceException {
 				
 		final String methodArgType;
 		final String methodArgPrimitiveName;
@@ -271,10 +279,12 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		}
 		
 		final CtClass ctClass = pool.makeClass(writerClassName);
+		final StringBuilder writeMethodCode = new StringBuilder();
+		final StringBuilder getParameterTypeMethodCode = new StringBuilder();
 		try {
 			ctClass.setInterfaces(new CtClass[] { pool.get(DataWriter.class.getCanonicalName()) });
 			
-			final StringBuilder writeMethodCode = new StringBuilder()
+			writeMethodCode
 				.append("public void write(Object source, Object value) {\n")
 				.append("final ").append(sourceClassNameFull).append(" clazz = (").append(sourceClassNameFull).append(") source;\n")
 				.append("clazz.").append(sourceClassSetterMethodName).append("(");
@@ -286,7 +296,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			}
 			writeMethodCode.append(");\n}");
 
-			final StringBuilder getParameterTypeMethodCode = new StringBuilder()
+			getParameterTypeMethodCode
 				.append("public Class getParameterType() {\n")
 				.append("return ").append(methodArgType).append(".class;\n")
 				.append("}");
@@ -311,6 +321,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			return writer;
 			
 		} catch (CannotCompileException cce) {
+			ctx.next(cce, writeMethodCode.toString() + "\n\n" + getParameterTypeMethodCode.toString());
 			LOG.warn("Unable to create method in class: " + writerClassName + "... possibly class had been loaded");
 			return null;
 		} catch (Exception ite) {
@@ -351,6 +362,34 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		toAppendTo.append("((").append(PRIMITIVE_TO_WRAPPER.get(primitiveTypeName)).append(") ").append(valueOf).append(")")
 			.append(WRAPPER_TO_PRIMITIVE.get(primitiveTypeName));
 		
+	}
+	
+	/**
+	 * Inner class to keep track of recursive attempts to compile a class.
+	 * 
+	 * @author denispavlov
+	 *
+	 */
+	private static final class MakeContext {
+		private int tryNo;
+		private final String classType;
+		
+		/**
+		 * @param classType class type (reader/writer)
+		 */
+		public MakeContext(final String classType) {
+			this.classType = classType;
+			this.tryNo = 0;
+		}
+		
+		public void next(final Exception exp, final String source) throws UnableToCreateInstanceException {
+			this.tryNo++;
+			if (this.tryNo > MAX_COMPILE_TRIES) {
+				throw new UnableToCreateInstanceException(classType, 
+						"Unable to create class type [" + classType + "]\n" 
+						+ "with source:\n============>" + source + "\n<=============", exp);
+			}
+		}
 	}
 
 }
