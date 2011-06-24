@@ -13,6 +13,9 @@ package dp.lib.dto.geda.assembler;
 
 import java.beans.PropertyDescriptor;
 
+import dp.lib.dto.geda.assembler.extension.DataReader;
+import dp.lib.dto.geda.assembler.extension.DataWriter;
+import dp.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import dp.lib.dto.geda.assembler.meta.MapPipeMetadata;
 import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
 import dp.lib.dto.geda.exception.GeDARuntimeException;

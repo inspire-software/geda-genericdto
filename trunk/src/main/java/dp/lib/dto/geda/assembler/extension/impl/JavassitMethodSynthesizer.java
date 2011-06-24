@@ -1,14 +1,20 @@
-package dp.lib.dto.geda.assembler;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
+/*
+ * This code is distributed under The GNU Lesser General Public License (LGPLv3)
+ * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright Denis Pavlov 2009
+ * Web: http://www.inspire-software.com
+ * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+ */
+
+package dp.lib.dto.geda.assembler.extension.impl;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -19,8 +25,11 @@ import javassist.LoaderClassPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dp.lib.dto.geda.assembler.DTOAssembler;
+import dp.lib.dto.geda.assembler.extension.DataReader;
+import dp.lib.dto.geda.assembler.extension.DataWriter;
+import dp.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import dp.lib.dto.geda.exception.GeDARuntimeException;
-import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
@@ -29,17 +38,10 @@ import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
  * @author DPavlov
  * @since 1.1.0
  */
-public class JavassitMethodSynthesizer implements MethodSynthesizer {
+public class JavassitMethodSynthesizer extends AbstractMethodSynthesizer implements MethodSynthesizer {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(JavassitMethodSynthesizer.class);
-	
-	private final Lock readLock = new ReentrantLock();
-	private final Lock writeLock = new ReentrantLock();
-	private static final int MAX_COMPILE_TRIES = 3; 
-	
-	private static final Cache<String, Object> READER_CACHE = new SoftReferenceCache<String, Object>(100);
-	private static final Cache<String, Object> WRITER_CACHE = new SoftReferenceCache<String, Object>(100);
-	
+		
 	private static final Map<String, String> PRIMITIVE_TO_WRAPPER = new HashMap<String, String>();
 	static {
 		PRIMITIVE_TO_WRAPPER.put("byte", 	Byte.class.getCanonicalName());
@@ -72,77 +74,9 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	public JavassitMethodSynthesizer() {
 		pool.appendClassPath(new LoaderClassPath(DTOAssembler.class.getClassLoader()));
 	}
-	
-	/**
-	 * @param cleanUpReaderCycle reader cache clean up cycle
-	 */
-	public void setCleanUpReaderCycle(final int cleanUpReaderCycle) {
-		((SoftReferenceCache<String, Object>) READER_CACHE).setCleanUpCycle(cleanUpReaderCycle);
-	}
 
-	/**
-	 * @param cleanUpWriterCycle writer cache clean up cycle
-	 */
-	public void setCleanUpWriterCycle(final int cleanUpWriterCycle) {
-		((SoftReferenceCache<String, Object>) WRITER_CACHE).setCleanUpCycle(cleanUpWriterCycle);
-	}
-	
 	/** {@inheritDoc} */
-	public DataReader synthesizeReader(final PropertyDescriptor descriptor) 
-		throws InspectionPropertyNotFoundException, UnableToCreateInstanceException, GeDARuntimeException {
-				
-		final Method readMethod = descriptor.getReadMethod();
-        if (readMethod == null) {
-            throw new InspectionPropertyNotFoundException("No read method for: ", descriptor.getName());
-        }
-		
-		final String sourceClassNameFull = readMethod.getDeclaringClass().getCanonicalName();
-		final String sourceClassGetterMethodName = readMethod.getName();
-		
-		final String readerClassName = generateClassName("DataReader", sourceClassNameFull, sourceClassGetterMethodName);
-		
-		DataReader reader;
-		
-		reader = getFromCacheOrCreateFromClassLoader(readerClassName, READER_CACHE, getClassLoader());
-		
-		if (reader == null) {
-			readLock.lock();
-			final MakeContext ctx = new MakeContext(DataReader.class.getCanonicalName());
-			try {
-				do {
-					reader = makeReaderClass(pool, getClassLoader(), 
-							readerClassName, sourceClassNameFull, sourceClassGetterMethodName, readMethod.getGenericReturnType(), ctx);
-					if (reader == null) {
-						reader = getFromCacheOrCreateFromClassLoader(readerClassName, READER_CACHE, getClassLoader());
-					}
-				} while (reader == null);
-			} finally {
-				readLock.unlock();
-			}
-		}
-		return reader;
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T> T getFromCacheOrCreateFromClassLoader(final String readerClassName, 
-													  final Cache<String, Object> cache, 
-													  final ClassLoader classLoader) 
-			throws UnableToCreateInstanceException {
-		Object instance;
-
-		instance = cache.get(readerClassName);
-		if (instance != null) {
-			return (T) instance;
-		}
-		
-		instance = createInstanceFromClassLoader(classLoader, readerClassName);
-		if (instance != null) {
-			return (T) instance;
-		}
-		return null;
-	}
-
-	private DataReader makeReaderClass(final ClassPool pool, 
+	protected DataReader makeReaderClass(
 			final ClassLoader loader,
 			final String readerClassName, 
 			final String sourceClassNameFull,
@@ -212,7 +146,6 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			
 			final DataReader reader = (DataReader) ctClass.toClass(
 					loader, DataReader.class.getProtectionDomain()).newInstance();
-			READER_CACHE.put(readerClassName, reader);
 			
 			return reader;
 			
@@ -226,41 +159,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 	}
 
 	/** {@inheritDoc} */
-	public DataWriter synthesizeWriter(final PropertyDescriptor descriptor) 
-			throws InspectionPropertyNotFoundException, UnableToCreateInstanceException {
-		final Method writeMethod = descriptor.getWriteMethod();
-        if (writeMethod == null) {
-            throw new InspectionPropertyNotFoundException("No write method for: ", descriptor.getName());
-        }
-
-		final String classNameFull = writeMethod.getDeclaringClass().getCanonicalName();
-		final String methodName = writeMethod.getName();
-		
-		final String writerClassName = generateClassName("DataWriter", classNameFull, methodName);
-		
-		
-		DataWriter writer;
-
-		writer = getFromCacheOrCreateFromClassLoader(writerClassName, WRITER_CACHE, getClassLoader());
-		if (writer == null) {
-			writeLock.lock();
-			final MakeContext ctx = new MakeContext(DataWriter.class.getCanonicalName());
-			try {
-				do {
-					writer = makeWriterClass(pool, getClassLoader(), 
-							writerClassName, classNameFull, methodName, writeMethod.getParameterTypes()[0], ctx);
-					if (writer == null) {
-						writer = getFromCacheOrCreateFromClassLoader(writerClassName, WRITER_CACHE, getClassLoader());
-					}
-				} while (writer == null);
-			} finally {
-				writeLock.unlock();
-			}
-		}
-		return writer;
-	}
-
-	private DataWriter makeWriterClass(final ClassPool pool,
+	protected DataWriter makeWriterClass(
 			final ClassLoader loader,
 			final String writerClassName, 
 			final String sourceClassNameFull,
@@ -316,7 +215,6 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			
 			final DataWriter writer = (DataWriter) ctClass.toClass(
 					loader, DataWriter.class.getProtectionDomain()).newInstance();
-			WRITER_CACHE.put(writerClassName, writer);
 			
 			return writer;
 			
@@ -328,29 +226,7 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 			throw new UnableToCreateInstanceException(writerClassName, "Unable to instantiate class: " + writerClassName, ite);
 		}
 	}
-	
-	private ClassLoader getClassLoader() {
-		return DTOAssembler.class.getClassLoader();
-	}
-	
-	@SuppressWarnings("unchecked")
-	private <T> T createInstanceFromClassLoader(final ClassLoader cl, final String clazzName) 
-			throws UnableToCreateInstanceException {
-		try {
-			final Class< ? > clazz = Class.forName(clazzName, true, cl);
-			return (T) clazz.newInstance();
-		} catch (ClassNotFoundException cnfe) {
-			// That's OK we don't have it
-			return null;
-		} catch (Exception exp) {
-			throw new UnableToCreateInstanceException(clazzName, "Uanble to create instance of: " + clazzName, exp);
-		}
-	}
-	
-	private String generateClassName(final String prefix, final String declaringClass, final String methodName) {
-		return declaringClass + prefix + "M" + methodName;
-	}
-	
+		
 	private void appendValueOf(final String primitiveTypeName, final StringBuilder toAppendTo, final String valueOf) {
 		
 		toAppendTo.append(PRIMITIVE_TO_WRAPPER.get(primitiveTypeName)).append(".valueOf(").append(valueOf).append(")");
@@ -364,32 +240,4 @@ public class JavassitMethodSynthesizer implements MethodSynthesizer {
 		
 	}
 	
-	/**
-	 * Inner class to keep track of recursive attempts to compile a class.
-	 * 
-	 * @author denispavlov
-	 *
-	 */
-	private static final class MakeContext {
-		private int tryNo;
-		private final String classType;
-		
-		/**
-		 * @param classType class type (reader/writer)
-		 */
-		public MakeContext(final String classType) {
-			this.classType = classType;
-			this.tryNo = 0;
-		}
-		
-		public void next(final Exception exp, final String source) throws UnableToCreateInstanceException {
-			this.tryNo++;
-			if (this.tryNo > MAX_COMPILE_TRIES) {
-				throw new UnableToCreateInstanceException(classType, 
-						"Unable to create class type [" + classType + "]\n" 
-						+ "with source:\n============>" + source + "\n<=============", exp);
-			}
-		}
-	}
-
 }

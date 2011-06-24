@@ -22,6 +22,9 @@ import java.util.Properties;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.annotations.Dto;
+import dp.lib.dto.geda.assembler.extension.Cache;
+import dp.lib.dto.geda.assembler.extension.MethodSynthesizer;
+import dp.lib.dto.geda.assembler.extension.impl.SoftReferenceCache;
 import dp.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
 import dp.lib.dto.geda.assembler.meta.FieldPipeMetadata;
 import dp.lib.dto.geda.assembler.meta.PipeMetadata;
@@ -73,13 +76,19 @@ public final class DTOAssembler {
 	 */
 	public static final String SETTING_DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE = 
 		"dp.lib.dto.geda.assembler.DTOAssembler.DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE";
-
+	
 	/**
 	 * int number that allows to define the number of JavassitMethodSynthesizer.WRITER_CACHE.put() calls after which cache cleanup is launched.
 	 * Default setting for this is 100 (i.e. after 100 put's the clean up is launched).
 	 */
 	public static final String SETTING_DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE = 
 		"dp.lib.dto.geda.assembler.DTOAssembler.DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE";
+
+	/**
+	 * String that defines key for synthesizer implementation to use.
+	 */
+	public static final String SETTING_SYNTHESIZER_IMPL = 
+		"dp.lib.dto.geda.assembler.DTOAssembler.SETTING_SYNTHESIZER_IMPL";
 	
 	
 	private static final Cache<String, DTOAssembler> CACHE = new SoftReferenceCache<String, DTOAssembler>(50);	
@@ -89,7 +98,8 @@ public final class DTOAssembler {
 	 * There are two caches used in GeDA:
 	 * <ul>
 	 * <li>DTOAssembler cache - that caches the assemblers instances</li>
-	 * <li>Dynamic classes cache - that caches the instances of {@link DataReader}s and {@link DataWriter}s</li>
+	 * <li>Dynamic classes cache - that caches the instances of {@link dp.lib.dto.geda.assembler.extension.DataReader}s 
+	 * and {@link dp.lib.dto.geda.assembler.extension.DataWriter}s</li>
 	 * </ul>
 	 * 
 	 * @param props properties with key specified by DTOAssembler.SETTINGS_* keys
@@ -100,14 +110,18 @@ public final class DTOAssembler {
 		final String assemblerCache = props.getProperty(SETTING_ASSEMBLER_CACHE_CLEANUP_CYCLE);
 		final String javassistReaderCache = props.getProperty(SETTING_DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE);
 		final String javassistWriterCache = props.getProperty(SETTING_DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE);
+		final String synthesizerImpl = props.getProperty(SETTING_SYNTHESIZER_IMPL);
 		if (assemblerCache != null) {
-			((SoftReferenceCache<String, DTOAssembler>) CACHE).setCleanUpCycle(Integer.valueOf(assemblerCache));
+			CACHE.configure("cleanUpCycle", Integer.valueOf(assemblerCache));
 		}
 		if (javassistReaderCache != null) {
-			((JavassitMethodSynthesizer) SYNTHESIZER).setCleanUpReaderCycle(Integer.valueOf(javassistReaderCache));
+			SYNTHESIZER.configure("readerCleanUpCycle", Integer.valueOf(javassistReaderCache));
 		}
 		if (javassistWriterCache != null) {
-			((JavassitMethodSynthesizer) SYNTHESIZER).setCleanUpWriterCycle(Integer.valueOf(javassistWriterCache));
+			SYNTHESIZER.configure("writerCleanUpCycle", Integer.valueOf(javassistWriterCache));
+		}
+		if (synthesizerImpl != null) {
+			SYNTHESIZER.configure("synthesizerImpl", synthesizerImpl);
 		}
 	}
 	
@@ -116,7 +130,7 @@ public final class DTOAssembler {
 	
 	private final Map<String, Pipe> relationMapping = new HashMap<String, Pipe>();
 	
-	private static final MethodSynthesizer SYNTHESIZER = new JavassitMethodSynthesizer(); 
+	private static final MethodSynthesizer SYNTHESIZER = new MethodSynthesizerProxy();
 	
 	private DTOAssembler(final Class dto, final Class entity) 
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 

@@ -9,7 +9,8 @@
  */
 
 
-package dp.lib.dto.geda.assembler;
+package dp.lib.dto.geda.assembler.extension;
+
 
 /**
  * Cache interface that allows to handle basic caching in GeDA.
@@ -21,7 +22,7 @@ package dp.lib.dto.geda.assembler;
  * @param <V> value
  * 
  */
-public interface Cache<K, V> {
+public interface Cache<K, V> extends Configurable {
 
 	/**
 	 * @param key cache key

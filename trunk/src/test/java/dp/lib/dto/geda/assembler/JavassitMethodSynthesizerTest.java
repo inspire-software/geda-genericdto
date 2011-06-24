@@ -20,6 +20,9 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import dp.lib.dto.geda.assembler.extension.DataReader;
+import dp.lib.dto.geda.assembler.extension.DataWriter;
+import dp.lib.dto.geda.assembler.extension.impl.JavassitMethodSynthesizer;
 import dp.lib.dto.geda.exception.GeDAException;
 
 /**

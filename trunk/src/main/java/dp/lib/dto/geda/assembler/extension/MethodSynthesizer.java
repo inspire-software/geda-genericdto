@@ -8,7 +8,7 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.assembler;
+package dp.lib.dto.geda.assembler.extension;
 
 import java.beans.PropertyDescriptor;
 
@@ -24,7 +24,7 @@ import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
  * @since 1.1.0
  *
  */
-public interface MethodSynthesizer {
+public interface MethodSynthesizer extends Configurable {
 
 	/**
 	 * Create dynamic class.
@@ -47,8 +47,9 @@ public interface MethodSynthesizer {
 	 * @return data writer instance.
 	 * @throws InspectionPropertyNotFoundException if property cannot be located on the entity
 	 * @throws UnableToCreateInstanceException if unable to create writer instance
+	 * @throws GeDARuntimeException unhandled situation with inability to determine return type
 	 */
 	DataWriter synthesizeWriter(PropertyDescriptor descriptor) 
-		throws InspectionPropertyNotFoundException, UnableToCreateInstanceException;
+		throws InspectionPropertyNotFoundException, UnableToCreateInstanceException, GeDARuntimeException;
 	
 }
