@@ -61,7 +61,8 @@ final class MapPipeBuilder {
     		final PropertyDescriptor[] dtoPropertyDescriptors, 
     		final PropertyDescriptor[] entityPropertyDescriptors, 
     		final MapPipeMetadata meta) 
-    	throws InspectionBindingNotFoundException, InspectionPropertyNotFoundException, UnableToCreateInstanceException, InspectionScanningException, AnnotationValidatingBindingException, GeDARuntimeException  {
+    	throws InspectionBindingNotFoundException, InspectionPropertyNotFoundException, UnableToCreateInstanceException, InspectionScanningException, 
+    		   AnnotationValidatingBindingException, GeDARuntimeException  {
     	
         final PropertyDescriptor entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
         		dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
