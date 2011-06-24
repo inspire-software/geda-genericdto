@@ -17,6 +17,8 @@ import java.util.Map;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
+import dp.lib.dto.geda.assembler.extension.DataReader;
+import dp.lib.dto.geda.assembler.extension.DataWriter;
 import dp.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
 import dp.lib.dto.geda.exception.AnnotationDuplicateBindingException;
 import dp.lib.dto.geda.exception.AnnotationMissingBeanKeyException;

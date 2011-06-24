@@ -8,7 +8,7 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.assembler;
+package dp.lib.dto.geda.assembler.extension;
 
 /**
  * Data reader is an interface to allow dynamic classes to be built

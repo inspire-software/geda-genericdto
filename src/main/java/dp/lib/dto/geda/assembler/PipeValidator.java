@@ -11,6 +11,8 @@
 package dp.lib.dto.geda.assembler;
 
 import dp.lib.dto.geda.annotations.Dto;
+import dp.lib.dto.geda.assembler.extension.DataReader;
+import dp.lib.dto.geda.assembler.extension.DataWriter;
 import dp.lib.dto.geda.exception.AnnotationMissingBindingException;
 import dp.lib.dto.geda.exception.AnnotationValidatingBindingException;
 import dp.lib.dto.geda.exception.AnnotationMissingBindingException.MissingBindingType;

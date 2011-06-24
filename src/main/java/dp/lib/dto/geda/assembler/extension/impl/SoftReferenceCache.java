@@ -8,13 +8,15 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.assembler;
+package dp.lib.dto.geda.assembler.extension.impl;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import dp.lib.dto.geda.assembler.extension.Cache;
 
 /**
  * GC friendly implementation of cache using SoftReferences.
@@ -69,13 +71,13 @@ public class SoftReferenceCache<K, V> implements Cache<K, V> {
 		}
 	}
 	
-	/**
+	/*
 	 * Number of calls to {@link #put(Object, Object)} method before the cache is examined in order
 	 * to clean up obsolete entities.
 	 * 
 	 * @param cleanUpCycle clean up cycle
 	 */
-	public void setCleanUpCycle(final int cleanUpCycle) {
+	private void setCleanUpCycle(final int cleanUpCycle) {
 		this.cleanUpCycle = cleanUpCycle;
 	}
 
@@ -90,6 +92,13 @@ public class SoftReferenceCache<K, V> implements Cache<K, V> {
 		}
 	}
 
-	
+	/** {@inheritDoc} */
+	public boolean configure(final String configuration, final Object value) {
+		if ("cleanUpCycle".equals(configuration) && value instanceof Number) {
+			this.setCleanUpCycle(((Number) value).intValue());
+			return true;
+		}
+		return false;
+	}
 	
 }
