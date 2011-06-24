@@ -13,6 +13,8 @@ package dp.lib.dto.geda.assembler;
 import java.beans.PropertyDescriptor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import dp.lib.dto.geda.assembler.extension.DataReader;
 import dp.lib.dto.geda.assembler.extension.DataWriter;
@@ -38,6 +40,8 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 				"dp.lib.dto.geda.assembler.extension.impl.SunJavaToolsMethodSynthesizer");
 	}
 	
+	private final Lock lock = new ReentrantLock();
+	
 	private String synthesizerImpl = FACTORY.get("javassist");
 	private MethodSynthesizer synthesizer;
 	
@@ -45,12 +49,17 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 	private MethodSynthesizer lazyGet() {
 		if (this.synthesizer == null) {
 			try {
-				final Class clazz = Class.forName(this.synthesizerImpl);
-				this.synthesizer = (MethodSynthesizer) clazz.newInstance();
+				lock.lock();
+				if (this.synthesizer == null) {
+					final Class clazz = Class.forName(this.synthesizerImpl);
+					this.synthesizer = (MethodSynthesizer) clazz.newInstance();
+				}
 			} catch (Exception exp) {
 				throw new UnableToCreateInstanceException("MethodSynthesizer", 
 						"Unable to create [" + this.synthesizerImpl + "] implementation: "
 						+ exp.getMessage(), exp);
+			} finally {
+				lock.unlock();
 			}
 		}
 		return this.synthesizer;
@@ -60,14 +69,16 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 	public DataReader synthesizeReader(final PropertyDescriptor descriptor)
 			throws InspectionPropertyNotFoundException,
 			UnableToCreateInstanceException, GeDARuntimeException {
-		return lazyGet().synthesizeReader(descriptor);
+		final MethodSynthesizer syn = lazyGet();
+		return syn.synthesizeReader(descriptor);
 	}
 
 	/** {@inheritDoc} */
 	public DataWriter synthesizeWriter(final PropertyDescriptor descriptor)
 			throws InspectionPropertyNotFoundException,
 			UnableToCreateInstanceException {
-		return lazyGet().synthesizeWriter(descriptor);
+		final MethodSynthesizer syn = lazyGet();
+		return syn.synthesizeWriter(descriptor);
 	}
 
 	/** {@inheritDoc} */
@@ -79,7 +90,8 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 				return true;
 			}
 		}
-		return lazyGet().configure(configuration, value);
+		final MethodSynthesizer syn = lazyGet();
+		return syn.configure(configuration, value);
 	}
 
 

@@ -81,7 +81,8 @@ public class MapPipeMetadata extends BasePipeMetadata implements dp.lib.dto.geda
 		this.dtoMapClass = dtoMapClass;
 		this.dtoMapClassKey = dtoMapClassKey != null && dtoMapClassKey.length() > 0 ? dtoMapClassKey : null;
 		this.entityMapOrCollectionClass = entityMapOrCollectionClass;
-		this.entityMapOrCollectionClassKey = entityMapOrCollectionClassKey != null && entityMapOrCollectionClassKey.length() > 0 ? entityMapOrCollectionClassKey : null;
+		this.entityMapOrCollectionClassKey = 
+			entityMapOrCollectionClassKey != null && entityMapOrCollectionClassKey.length() > 0 ? entityMapOrCollectionClassKey : null;
 		this.returnType = returnType;
 		this.mapKeyForCollection = mapKeyForCollection;
 		this.entityMapKey = entityMapKey;
