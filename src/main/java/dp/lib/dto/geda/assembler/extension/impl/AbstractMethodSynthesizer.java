@@ -16,6 +16,9 @@ import java.lang.reflect.Type;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dp.lib.dto.geda.assembler.DTOAssembler;
 import dp.lib.dto.geda.assembler.extension.Cache;
 import dp.lib.dto.geda.assembler.extension.DataReader;
@@ -32,6 +35,8 @@ import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
  * @since 1.1.2
  */
 public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractMethodSynthesizer.class);
 	
 	private final Lock readLock = new ReentrantLock();
 	private final Lock writeLock = new ReentrantLock();
@@ -51,11 +56,19 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 	}
 	
 	
-	/** {@inheritDoc} */
+	/**
+	 * @param configuration configuration name
+	 *            readerCleanUpCycle - allows to set clean up cycle for soft cache of readers
+	 *            writerCleanUpCycle - allows to set clean up cycle for soft cache of writers
+	 * @param value value to set
+	 * @return true if configuration was set, false if not set or invalid
+	 */
 	public boolean configure(final String configuration, final Object value) {
 		if ("readerCleanUpCycle".equals(configuration)) {
+			LOG.info("Setting reader cleanup cycle to " + value);
 			return this.setCleanUpReaderCycle(value);
 		} else if ("writerCleanUpCycle".equals(configuration)) {
+			LOG.info("Setting writer cleanup cycle to " + value);
 			return this.setCleanUpWriterCycle(value);
 		}
 		return false;
@@ -215,12 +228,14 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 			final Class< ? > sourceClassSetterMethodArgumentClass,
 			final MakeContext ctx) throws UnableToCreateInstanceException;
 	
-	/*
+	/**
 	 * Default class loader. This is very tricky since this is the class loader which will
 	 * load the auto generated classes. Hopefully the one that loaded GeDA is the less likely 
 	 * one to cause problems.
+	 * 
+	 * @return dp.lib.dto.geda.assembler.DTOAssembler.class.getClassLoader();
 	 */
-	private ClassLoader getClassLoader() {
+	protected ClassLoader getClassLoader() {
 		return DTOAssembler.class.getClassLoader();
 	}
 	
