@@ -24,6 +24,6 @@ import org.junit.Ignore;
  *
  */
 @Ignore
-class TestEntity18Class extends TestEntity18bClass<String, Collection<TestEntity18aClass<String>>, Collection<TestEntity18aClass<String>>> {
+public class TestEntity18Class extends TestEntity18bClass<String, Collection<TestEntity18aClass<String>>, Collection<TestEntity18aClass<String>>> {
 	
 }

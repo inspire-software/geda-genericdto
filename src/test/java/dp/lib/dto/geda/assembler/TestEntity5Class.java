@@ -20,7 +20,7 @@ import org.junit.Ignore;
  *
  */
 @Ignore
-class TestEntity5Class {
+public class TestEntity5Class {
 	
 	private TestEntity4Class wrapper;
 

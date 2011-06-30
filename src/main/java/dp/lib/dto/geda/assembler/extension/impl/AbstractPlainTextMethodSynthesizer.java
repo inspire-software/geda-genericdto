@@ -13,8 +13,6 @@ package dp.lib.dto.geda.assembler.extension.impl;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,30 +29,6 @@ import dp.lib.dto.geda.exception.GeDARuntimeException;
 public abstract class AbstractPlainTextMethodSynthesizer extends AbstractMethodSynthesizer implements MethodSynthesizer {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractPlainTextMethodSynthesizer.class);
-		
-	private static final Map<String, String> PRIMITIVE_TO_WRAPPER = new HashMap<String, String>();
-	static {
-		PRIMITIVE_TO_WRAPPER.put("byte", 	Byte.class.getCanonicalName());
-		PRIMITIVE_TO_WRAPPER.put("short", 	Short.class.getCanonicalName());
-		PRIMITIVE_TO_WRAPPER.put("int", 	Integer.class.getCanonicalName());
-		PRIMITIVE_TO_WRAPPER.put("long", 	Long.class.getCanonicalName());
-		PRIMITIVE_TO_WRAPPER.put("float", 	Float.class.getCanonicalName());
-		PRIMITIVE_TO_WRAPPER.put("double", 	Double.class.getCanonicalName());
-		PRIMITIVE_TO_WRAPPER.put("boolean", Boolean.class.getCanonicalName());
-		PRIMITIVE_TO_WRAPPER.put("char", 	Character.class.getCanonicalName());
-	}
-
-	private static final Map<String, String> WRAPPER_TO_PRIMITIVE = new HashMap<String, String>();
-	static {
-		WRAPPER_TO_PRIMITIVE.put("byte", 	".byteValue()");
-		WRAPPER_TO_PRIMITIVE.put("short", 	".shortValue()");
-		WRAPPER_TO_PRIMITIVE.put("int", 	".intValue()");
-		WRAPPER_TO_PRIMITIVE.put("long", 	".longValue()");
-		WRAPPER_TO_PRIMITIVE.put("float", 	".floatValue()");
-		WRAPPER_TO_PRIMITIVE.put("double", 	".doubleValue()");
-		WRAPPER_TO_PRIMITIVE.put("boolean", ".booleanValue()");
-		WRAPPER_TO_PRIMITIVE.put("char", 	".charValue()");
-	}
 	
 	/**
 	 * Simple object to hold plain text representation of return type of reader.
@@ -135,6 +109,7 @@ public abstract class AbstractPlainTextMethodSynthesizer extends AbstractMethodS
 	 * @param sourceClassNameFull name of the class of source object (i.e. whose getter will be invoked)
 	 * @param sourceClassGetterMethodName name of the getter method to be invoked on the source object
 	 * @param sourceClassGetterMethodReturnType class name of the return type to be returned
+	 * @throws GeDARuntimeException any exceptions during compilation
 	 */
 	protected final void generateReaderMethods(
 			final StringBuilder readMethodCode, 
@@ -142,7 +117,7 @@ public abstract class AbstractPlainTextMethodSynthesizer extends AbstractMethodS
 			final String readerClassName, 
 			final String sourceClassNameFull,
 			final String sourceClassGetterMethodName, 
-			final Type sourceClassGetterMethodReturnType) {
+			final Type sourceClassGetterMethodReturnType) throws GeDARuntimeException {
 		
 		final ReturnTypeContext returnType = getReturnTypeContext(readerClassName, sourceClassGetterMethodReturnType);
 		

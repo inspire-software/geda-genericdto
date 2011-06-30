@@ -20,7 +20,7 @@ import org.junit.Ignore;
  *
  */
 @Ignore
-class TestEntity1Class implements TestEntity1Interface {
+public class TestEntity1Class implements TestEntity1Interface {
 	
 	private Long entityId;
 	private String name;

@@ -23,7 +23,7 @@ import org.junit.Ignore;
  */
 @Dto("dp.lib.dto.geda.assembler.TestEntity1Class")
 @Ignore
-class TestDto1Class implements TestDto1Interface {
+public class TestDto1Class implements TestDto1Interface {
 
 	@DtoField("entityId")
 	private Long myLong;

@@ -34,7 +34,7 @@ import dp.lib.dto.geda.annotations.DtoMap;
  */
 @Dto
 @Ignore
-class TestDto18bClass<V, C, M> {
+public class TestDto18bClass<V, C, M> {
 
 	/** Basic matcher. */
     public static class TestDto18Matcher implements DtoToEntityMatcher<TestDto18aClass<String>, TestEntity18aClass<String>> {

@@ -21,7 +21,7 @@ import org.junit.Ignore;
  *
  */
 @Ignore
-class TestEntity2Class extends TestEntity1Class {
+public class TestEntity2Class extends TestEntity1Class {
 	
 	private boolean decision;
 

@@ -40,6 +40,7 @@ import dp.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
 import dp.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
 import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
 import dp.lib.dto.geda.exception.EntityRetrieverNotFoundException;
+import dp.lib.dto.geda.exception.GeDAException;
 import dp.lib.dto.geda.exception.GeDARuntimeException;
 import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
 import dp.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
@@ -105,8 +106,9 @@ public final class DTOAssembler {
 	 * @param props properties with key specified by DTOAssembler.SETTINGS_* keys
 	 * 
 	 * @throws NumberFormatException if the number of cycles specified in properties cannot be converted to int.
+	 * @throws GeDAException if any of the configurations cause exception
 	 */
-	public static void setup(final Properties props) throws NumberFormatException {
+	public static void setup(final Properties props) throws NumberFormatException, GeDAException {
 		final String assemblerCache = props.getProperty(SETTING_ASSEMBLER_CACHE_CLEANUP_CYCLE);
 		final String javassistReaderCache = props.getProperty(SETTING_DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE);
 		final String javassistWriterCache = props.getProperty(SETTING_DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE);
@@ -127,17 +129,23 @@ public final class DTOAssembler {
 	
 	private final Class dtoClass;
 	private final Class entityClass;
+	private final MethodSynthesizer synthesizer;
 	
 	private final Map<String, Pipe> relationMapping = new HashMap<String, Pipe>();
 	
 	private static final MethodSynthesizer SYNTHESIZER = new MethodSynthesizerProxy();
 	
-	private DTOAssembler(final Class dto, final Class entity) 
+	private DTOAssembler(final Class dto, final Class entity, final Object synthesizer) 
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
 		       GeDARuntimeException, AnnotationDuplicateBindingException {
 		dtoClass = dto;
 		entityClass = entity;
+		if (synthesizer == null) {
+			this.synthesizer = SYNTHESIZER;
+		} else {
+			this.synthesizer = new MethodSynthesizerProxy(synthesizer);
+		}
 		
 		Class dtoMap = dto;
 		while (dtoMap != null) { // when we reach Object.class this should be null
@@ -191,15 +199,15 @@ public final class DTOAssembler {
 		if (index + 1 == metas.size()) {
 			if (meta instanceof FieldPipeMetadata) {
 				// create field pipe
-				return DataPipeBuilder.build(SYNTHESIZER, 
+				return DataPipeBuilder.build(this.synthesizer, 
 						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
 			} else if (meta instanceof CollectionPipeMetadata) {
 				// create collection
-				return CollectionPipeBuilder.build(SYNTHESIZER, 
+				return CollectionPipeBuilder.build(this.synthesizer, 
 						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (CollectionPipeMetadata) meta);
 			} else if (meta instanceof MapPipeMetadata) {
 				// create map
-				return MapPipeBuilder.build(SYNTHESIZER, 
+				return MapPipeBuilder.build(this.synthesizer, 
 						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (MapPipeMetadata) meta);
 			} else {
 				throw new GeDARuntimeException("Unknown pipe meta: " + meta.getClass());
@@ -211,7 +219,7 @@ public final class DTOAssembler {
 		final PropertyDescriptor[] nestedEntityPropertyDescriptors = PropertyInspector.getPropertyDescriptorsForClassReturnedByGet(nested);
 		
 		// build a chain pipe
-		return DataPipeChainBuilder.build(SYNTHESIZER, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, meta, 
+		return DataPipeChainBuilder.build(this.synthesizer, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, meta, 
 				createPipeChain(dto, dtoPropertyDescriptors, entity, nestedEntityPropertyDescriptors, dtoField, metas, index + 1)	
 			);
 		
@@ -223,6 +231,76 @@ public final class DTOAssembler {
         }
     }
     
+	private static DTOAssembler createNewAssembler(final Class< ? > dto, final Class< ? > entity, final Object synthesizer) 
+			throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
+			       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
+			       GeDARuntimeException, AnnotationDuplicateBindingException {
+		final String key = createAssemberKey(dto, entity);
+    	
+		DTOAssembler assembler = CACHE.get(key);
+		if (assembler == null) {
+			assembler = new DTOAssembler(dto, entity, synthesizer);
+	    	CACHE.put(key, assembler);
+		}
+    	return assembler;
+	}
+
+	private static Dto getDtoAnnotation(final Class< ? > dto)
+			throws AnnotationMissingAutobindingException {
+		final Dto ann = dto.getAnnotation(Dto.class);
+		if (ann == null || ann.value() == null || ann.value().length() == 0) {
+			throw new AnnotationMissingAutobindingException(dto.getCanonicalName());
+		}
+		return ann;
+	}
+
+	private static Class detectAutobinding(final Class< ? > dto, final Dto ann)
+			throws AutobindingClassNotFoundException {
+		try {
+			return Class.forName(ann.value());
+		} catch (ClassNotFoundException cnfe) {
+			throw new AutobindingClassNotFoundException(dto.getCanonicalName(), ann.value());
+		}
+	}
+
+	private static <DTO, Entity> String createAssemberKey(final Class<DTO> dto,
+			final Class<Entity> entity) {
+		return dto.getCanonicalName() + "-" + entity.getCanonicalName();
+	}
+
+	
+	/**
+	 * @param dto Dto concrete class that is annotated.
+	 * @param entity the entity class or interface that has appropriate getters and setters
+     * @param synthesizer custom method synthesizer to use (see {@link dp.lib.dto.geda.assembler.MethodSynthesizerProxy} )
+	 * @return assembler instance for this conversion.
+	 * 
+	 * @throws AnnotationMissingException if dto class is missing the {@link dp.lib.dto.geda.annotations.Dto} annotation.
+	 * @throws InspectionInvalidDtoInstanceException if dto instance used for read/write operation is not valid
+	 * @throws InspectionInvalidEntityInstanceException if entity instance used for read/write operation is not valid
+	 * @throws AnnotationDuplicateBindingException if during mapping scan same dto field is mapped more than once
+	 * @throws GeDARuntimeException unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
+	 * @throws AnnotationValidatingBindingException in case binding create has a mismatching return type/parameters
+	 * @throws AnnotationMissingBindingException in case when no valid property on entity is specified to bind to 
+	 * @throws InspectionBindingNotFoundException in case when no valid property on entity is found to bind to
+	 * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
+	 * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
+	 * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
+	 */
+	public static DTOAssembler newCustomAssembler(
+			final Class< ? > dto, final Class< ? > entity, final Object synthesizer) 
+		throws AnnotationMissingException, InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, 
+			   InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
+			   InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
+			   GeDARuntimeException, AnnotationDuplicateBindingException {
+		
+		if (dto.getAnnotation(Dto.class) == null) {
+			throw new AnnotationMissingException(dto.getName());
+		}
+		
+		return createNewAssembler(dto, entity, synthesizer);
+	}
+	
     /**
      * @param dto Dto concrete class that is annotated.
      * @param entity the entity class or interface that has appropriate getters and setters
@@ -251,22 +329,35 @@ public final class DTOAssembler {
     		throw new AnnotationMissingException(dto.getName());
     	}
     	
-    	return createNewAssembler(dto, entity);
+    	return createNewAssembler(dto, entity, null);
     }
-
-	private static DTOAssembler createNewAssembler(final Class< ? > dto, final Class< ? > entity) 
-			throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
-			       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
-			       GeDARuntimeException, AnnotationDuplicateBindingException {
-		final String key = createAssemberKey(dto, entity);
+    
+    /**
+     * @param dto Dto concrete class that is annotated and value attribute of Dto is supplied.
+     * @param synthesizer custom method synthesizer to use (see {@link dp.lib.dto.geda.assembler.MethodSynthesizerProxy} )
+     * @return assembler instance for this conversion.
+     * 
+     * @throws AnnotationMissingAutobindingException if autobinding parameter is missing
+     * @throws AutobindingClassNotFoundException if class specified for auto binding cannot be found
+     * @throws AnnotationDuplicateBindingException if same field name is mapped more than once
+     * @throws GeDARuntimeException unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
+     * @throws AnnotationValidatingBindingException in case binding create has a mismatching return type/parameters
+     * @throws AnnotationMissingBindingException in case when no valid property on entity is specified to bind to 
+     * @throws InspectionBindingNotFoundException in case when no valid property on entity is found to bind to
+     * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
+     * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
+     * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
+     */
+    public static DTOAssembler newCustomAssembler(
+    		final Class< ? > dto, final Object synthesizer) 
+	    throws AnnotationMissingAutobindingException, AutobindingClassNotFoundException, InspectionScanningException, 
+			   UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
+			   AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
+			   AnnotationDuplicateBindingException  {
     	
-		DTOAssembler assembler = CACHE.get(key);
-		if (assembler == null) {
-			assembler = new DTOAssembler(dto, entity);
-	    	CACHE.put(key, assembler);
-		}
-    	return assembler;
-	}
+		return createNewAssembler(dto, detectAutobinding(dto, getDtoAnnotation(dto)), synthesizer);
+
+    }
     	
 	/**
 	 * @param dto Dto concrete class that is annotated and value attribute of Dto is supplied.
@@ -290,25 +381,7 @@ public final class DTOAssembler {
 		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
 		       AnnotationDuplicateBindingException  {
 		
-		final Dto ann = dto.getAnnotation(Dto.class);
-		if (ann == null || ann.value() == null || ann.value().length() == 0) {
-			throw new AnnotationMissingAutobindingException(dto.getCanonicalName());
-		}
-		
-		Class entity = null;
-		
-		try {
-			entity = Class.forName(ann.value());
-		} catch (ClassNotFoundException cnfe) {
-			throw new AutobindingClassNotFoundException(dto.getCanonicalName(), ann.value());
-		}
-		
-		return createNewAssembler(dto, entity);
-	}
-
-	private static <DTO, Entity> String createAssemberKey(final Class<DTO> dto,
-			final Class<Entity> entity) {
-		return dto.getCanonicalName() + "-" + entity.getCanonicalName();
+		return createNewAssembler(dto, detectAutobinding(dto, getDtoAnnotation(dto)), null);
 	}
 	
 	/**

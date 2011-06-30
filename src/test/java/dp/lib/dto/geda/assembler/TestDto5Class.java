@@ -23,7 +23,7 @@ import org.junit.Ignore;
  */
 @Dto
 @Ignore
-class TestDto5Class {
+public class TestDto5Class {
 		
 	@DtoField(
             value = "wrapper.wrapper.name",

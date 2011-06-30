@@ -20,7 +20,7 @@ import org.junit.Ignore;
  *
  */
 @Ignore
-class TestEntity3Class {
+public class TestEntity3Class {
 	
 	private boolean decision;
 

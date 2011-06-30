@@ -27,7 +27,7 @@ import dp.lib.dto.geda.annotations.DtoField;
  */
 @Dto
 @Ignore
-class TestDto18aClass<V> {
+public class TestDto18aClass<V> {
 
 	@DtoField("myProp")
 	private V myProp;

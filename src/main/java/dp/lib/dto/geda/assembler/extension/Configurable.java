@@ -10,6 +10,8 @@
 
 package dp.lib.dto.geda.assembler.extension;
 
+import dp.lib.dto.geda.exception.GeDAException;
+
 /**
  * Define configurable objects.
  * 
@@ -22,7 +24,8 @@ public interface Configurable {
 	 * @param configuration configuration name
 	 * @param value value to set
 	 * @return true if configuration was set, false if not set or invalid
+	 * @throws GeDAException in case there are errors
 	 */
-	boolean configure(final String configuration, final Object value);
+	boolean configure(final String configuration, final Object value) throws GeDAException;
 	
 }

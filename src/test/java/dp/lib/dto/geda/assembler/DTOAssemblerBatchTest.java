@@ -13,9 +13,15 @@ package dp.lib.dto.geda.assembler;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dp.lib.dto.geda.exception.GeDAException;
 import dp.lib.dto.geda.exception.InvalidDtoCollectionException;
@@ -28,7 +34,36 @@ import dp.lib.dto.geda.exception.InvalidEntityCollectionException;
  * @since 1.0.0
  *
  */
+@RunWith(value = Parameterized.class)
 public class DTOAssemblerBatchTest {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(DTOAssemblerBatchTest.class);
+	
+	private String synthsizer;
+	
+	/**
+	 * @param synthsizer parameter
+	 */
+	public DTOAssemblerBatchTest(final String synthsizer) {
+		super();
+		this.synthsizer = synthsizer;
+	}
+
+	/**
+	 * @return synthesizers keys
+	 */
+	@Parameters
+	public static Collection<String[]> data() {
+		final List<String[]> params = new ArrayList<String[]>();
+		final StringBuilder out = new StringBuilder(DTOAssemblerBatchTest.class.getName()).append(": ");
+		int i = 0;
+		for (final String param : MethodSynthesizerProxy.getAvailableSynthesizers()) {
+			params.add(new String[] { param });
+			out.append("[").append(i++).append("] ").append(param).append("; ");
+		}
+		LOG.info(out.toString());
+		return params;
+	}
 
 	/**
 	 * Test that AssembleDtos throws {@link Exception} if dtos is null.
@@ -38,7 +73,7 @@ public class DTOAssemblerBatchTest {
 	@Test(expected = InvalidDtoCollectionException.class)
 	public void testAssembleDtosThrowsExceptionForNullDtoCollection() throws GeDAException {
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthsizer);
 		assembler.assembleDtos(null, new ArrayList<TestEntity1Class>(), null, null);
 		
 	}
@@ -54,7 +89,7 @@ public class DTOAssemblerBatchTest {
 		final List<TestDto1Class> dtos = new ArrayList<TestDto1Class>();
 		dtos.add(createTestDto1(0));
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthsizer);
 		assembler.assembleDtos(dtos, new ArrayList<TestEntity1Class>(), null, null);
 		
 	}
@@ -67,7 +102,7 @@ public class DTOAssemblerBatchTest {
 	@Test(expected = InvalidDtoCollectionException.class)
 	public void testAssembleDtosThrowsExceptionForNullEntitiesCollection() throws GeDAException {
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthsizer);
 		assembler.assembleDtos(new ArrayList<TestDto1Class>(), null, null, null);
 		
 	}
@@ -90,7 +125,7 @@ public class DTOAssemblerBatchTest {
 		
 		final long timeStart = System.currentTimeMillis();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthsizer);
 		assembler.assembleDtos(dtos, entities, null, null);
 		
 		final long deltaTime = System.currentTimeMillis() - timeStart;
@@ -114,7 +149,7 @@ public class DTOAssemblerBatchTest {
 	@Test(expected = InvalidEntityCollectionException.class)
 	public void testAssembleEntitiesThrowsExceptionForNullDtoCollection() throws GeDAException {
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthsizer);
 		assembler.assembleEntities(null, new ArrayList<TestEntity1Class>(), null, null);
 		
 	}
@@ -127,7 +162,7 @@ public class DTOAssemblerBatchTest {
 	@Test(expected = InvalidEntityCollectionException.class)
 	public void testAssembleEntitieThrowsExceptionForNullEntitiesCollection() throws GeDAException {
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthsizer);
 		assembler.assembleEntities(new ArrayList<TestDto1Class>(), null, null, null);
 		
 	}
@@ -143,7 +178,7 @@ public class DTOAssemblerBatchTest {
 		final List<TestEntity1Class> entities = new ArrayList<TestEntity1Class>();
 		entities.add(createTestEntity1(0));
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthsizer);
 		assembler.assembleEntities(new ArrayList<TestDto1Class>(), entities, null, null);
 		
 	}
@@ -166,7 +201,7 @@ public class DTOAssemblerBatchTest {
 		
 		final long timeStart = System.currentTimeMillis();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(TestDto1Class.class, TestEntity1Class.class);
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthsizer);
 		assembler.assembleEntities(dtos, entities, null, null);
 		
 		final long deltaTime = System.currentTimeMillis() - timeStart;

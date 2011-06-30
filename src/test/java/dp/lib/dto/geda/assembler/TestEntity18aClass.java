@@ -23,7 +23,7 @@ import org.junit.Ignore;
  *
  */
 @Ignore
-class TestEntity18aClass<V> {
+public class TestEntity18aClass<V> {
 
 	private V myProp;
 	

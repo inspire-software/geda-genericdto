@@ -10,11 +10,13 @@
 
 package dp.lib.dto.geda.assembler.extension.impl;
 
+import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import org.slf4j.Logger;
@@ -25,6 +27,9 @@ import com.sun.tools.javac.Main;
 import dp.lib.dto.geda.assembler.extension.DataReader;
 import dp.lib.dto.geda.assembler.extension.DataWriter;
 import dp.lib.dto.geda.assembler.extension.MethodSynthesizer;
+import dp.lib.dto.geda.exception.GeDAException;
+import dp.lib.dto.geda.exception.GeDARuntimeException;
+import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
@@ -47,8 +52,9 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 	 * Manual constructor with baseDir specified.
 	 * 
 	 * @param baseDir base dir for creating files
+	 * @throws GeDAException any exceptions during configuration
 	 */
-	public SunJavaToolsMethodSynthesizer(final String baseDir) {
+	public SunJavaToolsMethodSynthesizer(final String baseDir) throws GeDAException {
 		this();
 		this.configure("baseDir", baseDir);
 	}
@@ -105,9 +111,10 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 	 *            writerCleanUpCycle - allows to set clean up cycle for soft cache of writers
 	 * @param value value to set
 	 * @return true if configuration was set, false if not set or invalid
+	 * @throws GeDAException any exceptions during configuration
 	 */
 	@Override
-	public boolean configure(final String configuration, final Object value) {
+	public boolean configure(final String configuration, final Object value) throws GeDAException {
 		if ("baseDir".equals(configuration) && value instanceof String) {
 			final String dir = (String) value;
 			if (dir.endsWith("/")) {
@@ -121,13 +128,22 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 		return super.configure(configuration, value);
 	}
 
-
+	/** {@inheritDoc} */
+	@Override
+	protected void preMakeWriterValidation(final PropertyDescriptor descriptor)
+			throws InspectionPropertyNotFoundException, GeDARuntimeException {
+		super.preMakeWriterValidation(descriptor);
+	}
 
 	/** {@inheritDoc} */
-	protected DataReader makeReaderClass(final ClassLoader loader,
-			final String readerClassName, final String sourceClassNameFull,
+	protected DataReader makeReaderClass(
+			final ClassLoader loader,
+			final Method readMethod,
+			final String readerClassName, 
+			final String sourceClassNameFull,
 			final String sourceClassGetterMethodName,
-			final Type sourceClassGetterMethodReturnType, final MakeContext ctx)
+			final Type sourceClassGetterMethodReturnType, 
+			final MakeContext ctx)
 			throws UnableToCreateInstanceException {
 		
 		try {
@@ -169,10 +185,14 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 	}
 	
 	/** {@inheritDoc} */
-	protected DataWriter makeWriterClass(final ClassLoader loader,
-			final String writerClassName, final String sourceClassNameFull,
+	protected DataWriter makeWriterClass(
+			final ClassLoader loader, 
+			final Method writeMethod,
+			final String writerClassName, 
+			final String sourceClassNameFull,
 			final String sourceClassSetterMethodName,
-			final Class< ? > sourceClassSetterMethodArgumentClass, final MakeContext ctx)
+			final Class< ? > sourceClassSetterMethodArgumentClass, 
+			final MakeContext ctx)
 			throws UnableToCreateInstanceException {		
 		try {
 			final StringBuilder writeMethodCode = new StringBuilder();
