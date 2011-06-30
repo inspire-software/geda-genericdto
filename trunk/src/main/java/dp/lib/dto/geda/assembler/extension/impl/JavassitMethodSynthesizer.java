@@ -10,6 +10,7 @@
 
 package dp.lib.dto.geda.assembler.extension.impl;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import javassist.CannotCompileException;
@@ -49,6 +50,7 @@ public class JavassitMethodSynthesizer extends AbstractPlainTextMethodSynthesize
 	/** {@inheritDoc} */
 	protected DataReader makeReaderClass(
 			final ClassLoader loader,
+			final Method readMethod,
 			final String readerClassName, 
 			final String sourceClassNameFull,
 			final String sourceClassGetterMethodName, 
@@ -90,6 +92,7 @@ public class JavassitMethodSynthesizer extends AbstractPlainTextMethodSynthesize
 	/** {@inheritDoc} */
 	protected DataWriter makeWriterClass(
 			final ClassLoader loader,
+			final Method writeMethod,
 			final String writerClassName, 
 			final String sourceClassNameFull,
 			final String sourceClassSetterMethodName, 

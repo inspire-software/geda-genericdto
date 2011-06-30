@@ -23,7 +23,7 @@ import org.junit.Ignore;
  */
 @Dto
 @Ignore
-class TestDto6Class {
+public class TestDto6Class {
 
 	@DtoField("entityId")
 	private Long myLong;

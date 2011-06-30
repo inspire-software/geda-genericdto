@@ -23,7 +23,7 @@ import org.junit.Ignore;
  */
 @Dto
 @Ignore
-class TestDto3Class {
+public class TestDto3Class {
 	
 	/**
 	 * Test enum for conversion testing.

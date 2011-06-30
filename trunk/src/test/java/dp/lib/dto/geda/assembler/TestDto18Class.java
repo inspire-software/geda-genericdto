@@ -27,6 +27,6 @@ import dp.lib.dto.geda.annotations.Dto;
  */
 @Dto
 @Ignore
-class TestDto18Class extends TestDto18bClass<String, Collection<TestDto18aClass<String>>, Map<String, TestDto18aClass<String>>> {
+public class TestDto18Class extends TestDto18bClass<String, Collection<TestDto18aClass<String>>, Map<String, TestDto18aClass<String>>> {
 	
 }

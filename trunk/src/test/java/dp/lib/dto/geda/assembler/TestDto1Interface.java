@@ -17,7 +17,7 @@ package dp.lib.dto.geda.assembler;
  * @since 1.0.0
  *
  */
-interface TestDto1Interface {
+public interface TestDto1Interface {
 
 	/**
 	 * @return long value.

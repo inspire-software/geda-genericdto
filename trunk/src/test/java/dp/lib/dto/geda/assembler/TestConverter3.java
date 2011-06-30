@@ -23,7 +23,7 @@ import org.junit.Ignore;
  *
  */
 @Ignore
-class TestConverter3 implements ValueConverter {
+public class TestConverter3 implements ValueConverter {
 
 	/** {@inheritDoc} */
 	public Object convertToDto(final Object object, final BeanFactory beanFactory) {

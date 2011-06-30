@@ -23,7 +23,7 @@ import org.junit.Ignore;
  */
 @Dto("dp.lib.dto.geda.assembler.BadClassName")
 @Ignore
-class TestDto13Class {
+public class TestDto13Class {
 		
 	@DtoField
 	private String nestedString;

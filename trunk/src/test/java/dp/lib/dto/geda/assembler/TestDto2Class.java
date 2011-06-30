@@ -24,7 +24,7 @@ import org.junit.Ignore;
  */
 @Dto
 @Ignore
-class TestDto2Class {
+public class TestDto2Class {
 
 	@DtoField("entityId")
 	private Long myLong;
