@@ -25,7 +25,7 @@ import dp.lib.dto.geda.exception.GeDARuntimeException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
- * Reflection implementation of method synthsizer. Least efficient implementation,
+ * Reflection implementation of method synthesizer. Least efficient implementation,
  * yet the most stable one since it does not require auto generation of classes
  * during runtime.
  * 
@@ -37,7 +37,13 @@ public class ReflectionMethodSynthesizer extends AbstractMethodSynthesizer
 		implements MethodSynthesizer {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ReflectionMethodSynthesizer.class); 
-
+	
+	/** {@inheritDoc} */
+	@Override
+	protected String getSynthesizerId() {
+		return "reflection";
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	protected DataReader makeReaderClass(

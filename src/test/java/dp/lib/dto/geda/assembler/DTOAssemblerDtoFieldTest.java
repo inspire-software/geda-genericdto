@@ -14,11 +14,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
 import dp.lib.dto.geda.exception.GeDAException;
+import dp.lib.dto.geda.utils.ParameterizedSynthesizer;
+import dp.lib.dto.geda.utils.ParameterizedSynthesizer.Parameters;
 
 /**
  * DTOAssembler test.
@@ -27,7 +34,30 @@ import dp.lib.dto.geda.exception.GeDAException;
  * @since 1.0.0
  *
  */
+@RunWith(value = ParameterizedSynthesizer.class)
 public class DTOAssemblerDtoFieldTest {
+	
+	private String synthesizer;
+	
+	/**
+	 * @param synthesizer parameter
+	 */
+	public DTOAssemblerDtoFieldTest(final String synthesizer) {
+		super();
+		this.synthesizer = synthesizer;
+	}
+
+	/**
+	 * @return synthesizers keys
+	 */
+	@Parameters
+	public static Collection<String[]> data() {
+		final List<String[]> params = new ArrayList<String[]>();
+		for (final String param : MethodSynthesizerProxy.getAvailableSynthesizers()) {
+			params.add(new String[] { param });
+		}
+		return params;
+	}
 
 	/**
 	 * Test that names are extracted from field name if binding is not specified.
@@ -45,7 +75,7 @@ public class DTOAssemblerDtoFieldTest {
 		entity.setName(name);
 		
 		final DTOAssembler assembler =
-			DTOAssembler.newAssembler(TestDto8AutowireNameClass.class, TestEntity8AutowireNameClass.class);
+			DTOAssembler.newCustomAssembler(TestDto8AutowireNameClass.class, TestEntity8AutowireNameClass.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, null);
 
@@ -81,7 +111,7 @@ public class DTOAssemblerDtoFieldTest {
 		entity.setNameChild(nameChild);
 		
 		final DTOAssembler assembler =
-			DTOAssembler.newAssembler(TestDto9InheritanceChildClass.class, TestEntity9InheritanceClass.class);
+			DTOAssembler.newCustomAssembler(TestDto9InheritanceChildClass.class, TestEntity9InheritanceClass.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, null);
 
@@ -116,7 +146,7 @@ public class DTOAssemblerDtoFieldTest {
 		final TestEntity4Class entity = new TestEntity4Class(); // entity with nested string null.
 		
 		final DTOAssembler assembler =
-			DTOAssembler.newAssembler(TestDto4DelegatingReadOnlyClass.class, TestEntity4Class.class);
+			DTOAssembler.newCustomAssembler(TestDto4DelegatingReadOnlyClass.class, TestEntity4Class.class, synthesizer);
 		
 		assertNotNull(dto.getNestedString());
 		assertNull(entity.getWrapper());
@@ -142,7 +172,7 @@ public class DTOAssemblerDtoFieldTest {
 		final TestEntity4Class entity = new TestEntity4Class(); // entity with nested string null.
 		
 		final DTOAssembler assembler =
-			DTOAssembler.newAssembler(TestDto4DelegatingWritableClass.class, TestEntity4Class.class);
+			DTOAssembler.newCustomAssembler(TestDto4DelegatingWritableClass.class, TestEntity4Class.class, synthesizer);
 
 		assertNotNull(dto.getNestedString());
 		assertNull(entity.getWrapper());
@@ -171,7 +201,7 @@ public class DTOAssemblerDtoFieldTest {
 		entity.setNested(subEntity);
 		
 		final DTOAssembler assembler =
-			DTOAssembler.newAssembler(TestDto10Class.class, TestEntity10Class.class);
+			DTOAssembler.newCustomAssembler(TestDto10Class.class, TestEntity10Class.class, synthesizer);
 		
 		assembler.assembleDto(dto, entity, null, null);
 		
@@ -225,7 +255,7 @@ public class DTOAssemblerDtoFieldTest {
 		entity.setDesc("desc");
 	
 		final DTOAssembler assembler =
-			DTOAssembler.newAssembler(dto.getClass(), TestEntity14IfaceDescriptable.class);
+			DTOAssembler.newCustomAssembler(dto.getClass(), TestEntity14IfaceDescriptable.class, synthesizer);
 		
 		assembler.assembleDto(dto, entity, null, null);
 		
@@ -255,7 +285,7 @@ public class DTOAssemblerDtoFieldTest {
         final TestEntity15Class entity = new TestEntity15Class("name", "desc");
 
         final DTOAssembler assembler =
-            DTOAssembler.newAssembler(TestDto15Class.class, TestEntity15Class.class);
+            DTOAssembler.newCustomAssembler(TestDto15Class.class, TestEntity15Class.class, synthesizer);
 
         assembler.assembleDto(dto, entity, null, null);
 

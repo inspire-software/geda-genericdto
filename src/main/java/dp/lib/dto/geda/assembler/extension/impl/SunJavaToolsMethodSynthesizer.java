@@ -10,10 +10,7 @@
 
 package dp.lib.dto.geda.assembler.extension.impl;
 
-import java.beans.PropertyDescriptor;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -27,9 +24,8 @@ import com.sun.tools.javac.Main;
 import dp.lib.dto.geda.assembler.extension.DataReader;
 import dp.lib.dto.geda.assembler.extension.DataWriter;
 import dp.lib.dto.geda.assembler.extension.MethodSynthesizer;
+import dp.lib.dto.geda.assembler.extension.impl.FileClassLoader.BaseDirectoryProvider;
 import dp.lib.dto.geda.exception.GeDAException;
-import dp.lib.dto.geda.exception.GeDARuntimeException;
-import dp.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 /**
@@ -39,7 +35,8 @@ import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
  * @since 1.1.2
  * 
  */
-public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthesizer implements MethodSynthesizer {
+public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthesizer 
+		implements MethodSynthesizer, BaseDirectoryProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SunJavaToolsMethodSynthesizer.class);
 	
@@ -59,6 +56,12 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 		this.configure("baseDir", baseDir);
 	}
 	
+	/** {@inheritDoc} */
+	@Override
+	protected String getSynthesizerId() {
+		return "suntools";
+	}
+	
 	/**
 	 * Sun Java Tools method synthesizer constructor.
 	 * Initializes a class loader able to define classes from auto generated
@@ -67,42 +70,14 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 	public SunJavaToolsMethodSynthesizer() {
 		super();
 		
-		loader = new ClassLoader(super.getClassLoader()) {
-
-			/** {@inheritDoc} */
-			@Override
-			public Class< ? > loadClass(final String name) throws ClassNotFoundException {
-				
-				try {
-					return super.loadClass(name);
-				} catch (ClassNotFoundException exp) {
-					// it's ok - need to load this one
-				}
-				
-				final String readerSimpleName = name.substring(name.lastIndexOf('.') + 1);
-				final String filename = baseDir + readerSimpleName + ".class";
-				try {
-					final File file = new File(filename);
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Trying to read class file: " + file.getAbsolutePath());
-					}
-					final FileInputStream fis = new FileInputStream(file);
-					byte[] clazz = new byte[(int) file.length()];
-					fis.read(clazz);
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Sucessfully loaded class file: " + file.getAbsolutePath());
-					}
-					return defineClass(name, clazz, 0, clazz.length);
-				} catch (FileNotFoundException e) {
-					throw new ClassNotFoundException("No class: " + name + " located at " + filename);
-				} catch (IOException ioe) {
-					throw new ClassNotFoundException("Unable to read: " + name + " located at " + filename);
-				}
-			}
-			
-		};
+		loader = new FileClassLoader(super.getClassLoader(), this);
 	}
 	
+	/** {@inheritDoc} */
+	public String getBaseDir() {
+		return baseDir;
+	}
+
 	/**
 	 * @param configuration configuration name
 	 * 			  baseDir - allows to set the directory where newly generated temp files for classes
@@ -126,13 +101,6 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 			return true;
 		}
 		return super.configure(configuration, value);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected void preMakeWriterValidation(final PropertyDescriptor descriptor)
-			throws InspectionPropertyNotFoundException, GeDARuntimeException {
-		super.preMakeWriterValidation(descriptor);
 	}
 
 	/** {@inheritDoc} */

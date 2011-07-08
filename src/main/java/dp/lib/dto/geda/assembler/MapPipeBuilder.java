@@ -87,7 +87,7 @@ final class MapPipeBuilder {
 			entityItemKeyRead = null;
 		}
 
-        return new MapPipe(
+        return new MapPipe(synthesizer,
                 dtoFieldRead, dtoFieldWrite,
                 entityFieldRead, entityFieldWrite,
                 entityItemKeyRead,

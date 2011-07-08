@@ -48,6 +48,8 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 				"dp.lib.dto.geda.assembler.extension.impl.SunJavaToolsMethodSynthesizer");
 		FACTORY.put("reflection", 
 				"dp.lib.dto.geda.assembler.extension.impl.ReflectionMethodSynthesizer");
+		FACTORY.put("bcel", 
+				"dp.lib.dto.geda.assembler.extension.impl.BCELMethodSynthesizer");
 	}
 	
 	private final Lock lock = new ReentrantLock();
@@ -69,7 +71,24 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 	 */
 	public MethodSynthesizerProxy(final Object value) throws UnableToCreateInstanceException {
 		this();
-		lazyGet(value);
+		if (value instanceof String) {
+			final String[] configs = ((String) value).split(";");
+			final String syn = configs[0];
+			final MethodSynthesizer synth = lazyGet(syn);
+			for (int i = 1; i < configs.length; i++) {
+				final String config = configs[i];
+				final String name = config.substring(0, config.indexOf('='));
+				final String val = config.substring(name.length() + 1);
+				try {
+					synth.configure(name, val);
+				} catch (GeDAException geda) {
+					throw new UnableToCreateInstanceException(synth.getClass().getCanonicalName(), 
+							"Unable to configure with: " + value, geda);
+				}
+			}
+		} else {
+			lazyGet(value);
+		}
 	}
 	
 	/**
@@ -165,5 +184,12 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 		return syn.configure(configuration, value);
 	}
 
+	/**
+	 * @return {@link MethodSynthesizerProxy#synthesizerImpl} - full class name.
+	 */
+	@Override
+	public String toString() {
+		return synthesizerImpl;
+	}
 
 }

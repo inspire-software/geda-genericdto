@@ -21,10 +21,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.exception.BeanFactoryNotFoundException;
@@ -32,6 +34,8 @@ import dp.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
 import dp.lib.dto.geda.exception.GeDAException;
 import dp.lib.dto.geda.exception.NotDtoToEntityMatcherException;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
+import dp.lib.dto.geda.utils.ParameterizedSynthesizer;
+import dp.lib.dto.geda.utils.ParameterizedSynthesizer.Parameters;
 
 /**
  * DTOAssembler test.
@@ -40,9 +44,32 @@ import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
  * @since 1.0.0
  *
  */
+@RunWith(value = ParameterizedSynthesizer.class)
 public class DTOAssemblerDtoMapTest {
 
 	private static final int I_3 = 3;
+	
+	private String synthesizer;
+	
+	/**
+	 * @param synthesizer parameter
+	 */
+	public DTOAssemblerDtoMapTest(final String synthesizer) {
+		super();
+		this.synthesizer = synthesizer;
+	}
+
+	/**
+	 * @return synthesizers keys
+	 */
+	@Parameters
+	public static Collection<String[]> data() {
+		final List<String[]> params = new ArrayList<String[]>();
+		for (final String param : MethodSynthesizerProxy.getAvailableSynthesizers()) {
+			params.add(new String[] { param });
+		}
+		return params;
+	}
 
 	/**
 	 * Test that DTO map correctly maps to entity collection.
@@ -66,7 +93,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12MapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
 			
@@ -141,7 +168,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12MapToMapClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eMap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eMap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eMap, null, new BeanFactory() {
 			
@@ -219,7 +246,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapByKeyIterface dMap = new TestDto12MapToMapByKeyClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eMap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eMap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eMap, null, new BeanFactory() {
 
@@ -306,7 +333,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12MapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
 			
@@ -349,7 +376,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12MapToMapClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eMap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eMap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eMap, null, new BeanFactory() {
 
@@ -387,7 +414,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12MapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, null);
 		
@@ -411,7 +438,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12MapToMapClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eMap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eMap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eMap, null, null);
 
@@ -436,7 +463,7 @@ public class DTOAssemblerDtoMapTest {
 		final TestDto12MapIterface dMap = new TestDto12MapToCollectionClass();
 		dMap.setItems(new HashMap<String, TestDto12CollectionItemIterface>());
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 				
 		final TestDto12CollectionItemClass dto1 = new TestDto12CollectionItemClass();
 		dto1.setName("itm1");
@@ -500,8 +527,8 @@ public class DTOAssemblerDtoMapTest {
 
         final TestDto17Class dtos = new TestDto17Class();
 
-        final DTOAssembler assembler = DTOAssembler.newAssembler(
-                TestDto17Class.class, TestEntity16Class.class);
+        final DTOAssembler assembler = DTOAssembler.newCustomAssembler(
+                TestDto17Class.class, TestEntity16Class.class, synthesizer);
 
         assembler.assembleDto(dtos, entities, null, new BeanFactory() {
             public Object get(final String entityBeanKey) {
@@ -558,7 +585,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12aMapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
 			
@@ -627,7 +654,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12aMapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
 			
@@ -699,7 +726,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12aMapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
 			
@@ -780,7 +807,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, null);
 		
@@ -808,7 +835,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
 			
@@ -844,7 +871,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
 			
@@ -927,7 +954,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
 			
@@ -992,7 +1019,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
 			
@@ -1067,7 +1094,7 @@ public class DTOAssemblerDtoMapTest {
 		
 		final TestDto12MapIterface dMap = new TestDto12bMapToCollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dMap.getClass(), eWrap.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
 			

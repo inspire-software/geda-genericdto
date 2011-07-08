@@ -95,7 +95,7 @@ final class DataPipeBuilder {
 			
 		}
 		
-		return new DataPipe(
+		return new DataPipe(synthesizer,
 				synthesizer.synthesizeReader(dtoFieldDesc),
 				synthesizer.synthesizeWriter(dtoFieldDesc),
 				dtoParentReadMethod,

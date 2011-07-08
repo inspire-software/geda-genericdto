@@ -18,6 +18,7 @@ import dp.lib.dto.geda.adapter.EntityRetriever;
 import dp.lib.dto.geda.adapter.ValueConverter;
 import dp.lib.dto.geda.assembler.extension.DataReader;
 import dp.lib.dto.geda.assembler.extension.DataWriter;
+import dp.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import dp.lib.dto.geda.assembler.meta.FieldPipeMetadata;
 import dp.lib.dto.geda.exception.AnnotationDuplicateBindingException;
 import dp.lib.dto.geda.exception.AnnotationMissingBeanKeyException;
@@ -55,6 +56,8 @@ class DataPipe implements Pipe {
     private final FieldPipeMetadata meta;
     
     private final DataReader dtoParentKeyRead;
+    
+    private final MethodSynthesizer synthesizer;
 
     private final DataReader dtoRead;
 	private final DataWriter dtoWrite;
@@ -65,6 +68,7 @@ class DataPipe implements Pipe {
 	private static final Object NULL = null;
 	
 	/**
+	 * @param synthesizer synthesizer
 	 * @param dtoRead method for reading data from DTO field
 	 * @param dtoWrite method for writting data to DTO field
 	 * @param dtoParentKeyRead method for reading Parent key data from DTO field
@@ -74,7 +78,8 @@ class DataPipe implements Pipe {
 	 * @throws AnnotationMissingBindingException if some of the parameter missing from the annotation
 	 * @throws AnnotationValidatingBindingException if binding pipes are invalid
 	 */
-	public DataPipe(final DataReader dtoRead,
+	public DataPipe(final MethodSynthesizer synthesizer,
+					final DataReader dtoRead,
 					final DataWriter dtoWrite,
 					final DataReader dtoParentKeyRead,
 					final DataReader entityRead,
@@ -83,6 +88,8 @@ class DataPipe implements Pipe {
 		
 		this.meta = meta;
 
+		this.synthesizer = synthesizer;
+		
 		this.dtoWrite = dtoWrite;
 		this.entityRead = entityRead;
 		if (meta.isReadOnly()) {
@@ -183,7 +190,7 @@ class DataPipe implements Pipe {
                 dto,
                 this.dtoWrite
         ).create();
-        final DTOAssembler assembler = DTOAssembler.newAssembler(dtoDataDelegate.getClass(), entityData.getClass());
+        final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dtoDataDelegate.getClass(), entityData.getClass(), synthesizer);
         
         assembler.assembleDto(dtoDataDelegate, entityData,  converters, dtoBeanFactory);
     }
@@ -270,7 +277,7 @@ class DataPipe implements Pipe {
 		    this.entityWrite.write(parentEntity, dataEntity);
 		}
 
-		final DTOAssembler assembler = DTOAssembler.newAssembler(dtoValue.getClass(), dataEntity.getClass());
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dtoValue.getClass(), dataEntity.getClass(), synthesizer);
 		assembler.assembleEntity(dtoValue, dataEntity, converters, entityBeanFactory);
 	}
 

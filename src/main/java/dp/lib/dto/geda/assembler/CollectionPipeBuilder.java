@@ -75,7 +75,7 @@ final class CollectionPipeBuilder {
         final DataReader dtoFieldRead = synthesizer.synthesizeReader(dtoFieldDesc);
 		final DataWriter dtoFieldWrite = synthesizer.synthesizeWriter(dtoFieldDesc);
 
-        return new CollectionPipe(
+        return new CollectionPipe(synthesizer,
                 dtoFieldRead, dtoFieldWrite,
                 entityFieldRead, entityFieldWrite,
                 meta);
