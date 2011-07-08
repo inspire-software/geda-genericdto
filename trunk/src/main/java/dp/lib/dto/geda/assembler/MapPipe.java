@@ -21,6 +21,7 @@ import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
 import dp.lib.dto.geda.assembler.extension.DataReader;
 import dp.lib.dto.geda.assembler.extension.DataWriter;
+import dp.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import dp.lib.dto.geda.assembler.meta.MapPipeMetadata;
 import dp.lib.dto.geda.exception.AnnotationDuplicateBindingException;
 import dp.lib.dto.geda.exception.AnnotationMissingBeanKeyException;
@@ -55,6 +56,8 @@ import dp.lib.dto.geda.exception.ValueConverterNotFoundException;
 class MapPipe implements Pipe {
 
     private final MapPipeMetadata meta;
+    
+    private final MethodSynthesizer synthesizer;
 
 	private final DataReader dtoRead;
 	private final DataWriter dtoWrite;
@@ -65,6 +68,7 @@ class MapPipe implements Pipe {
 	private final DataReader entityCollectionKeyRead;
 
     /**
+     * @param synthesizer synthesizer
 	 * @param dtoRead method for reading data from DTO field
      * @param dtoWrite method for writting data to DTO field
      * @param entityRead method for reading data from Entity field
@@ -74,7 +78,9 @@ class MapPipe implements Pipe {
      * 
      * @throws AnnotationValidatingBindingException when missmaped binding
      */
-    MapPipe(final DataReader dtoRead,
+    MapPipe(
+    			   final MethodSynthesizer synthesizer,
+    			   final DataReader dtoRead,
                    final DataWriter dtoWrite,
                    final DataReader entityRead,
                    final DataWriter entityWrite,
@@ -83,6 +89,8 @@ class MapPipe implements Pipe {
 
     	this.meta = meta;
 
+    	this.synthesizer = synthesizer;
+    	
         this.dtoWrite = dtoWrite;
         this.entityRead = entityRead;
         this.entityCollectionKeyRead = entityCollectionKeyRead;
@@ -127,7 +135,7 @@ class MapPipe implements Pipe {
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
 
             try {
-                final DTOAssembler assembler = DTOAssembler.newAssembler(newDto.getClass(), this.meta.getReturnType());
+                final DTOAssembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
 
                 for (Object object : entities) {
 
@@ -161,7 +169,7 @@ class MapPipe implements Pipe {
             final boolean useKey = this.meta.isEntityMapKey();
 
             try {
-                final DTOAssembler assembler = DTOAssembler.newAssembler(newDto.getClass(), this.meta.getReturnType());
+                final DTOAssembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
 
                 for (Object key : entities.keySet()) {
 
@@ -268,7 +276,7 @@ class MapPipe implements Pipe {
 							dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
 							this.meta.getReturnType().getCanonicalName());
 		    	}
-		        return DTOAssembler.newAssembler(dtoItem.getClass(), this.meta.getReturnType());
+		        return DTOAssembler.newCustomAssembler(dtoItem.getClass(), this.meta.getReturnType(), synthesizer);
             } catch (InspectionInvalidDtoInstanceException invDto) {
 				throw new CollectionEntityGenericReturnTypeException(
 						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 

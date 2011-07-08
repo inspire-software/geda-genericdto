@@ -46,6 +46,12 @@ public class JavassitMethodSynthesizer extends AbstractPlainTextMethodSynthesize
 	public JavassitMethodSynthesizer() {
 		pool.appendClassPath(new LoaderClassPath(super.getClassLoader()));
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	protected String getSynthesizerId() {
+		return "javassist";
+	}
 
 	/** {@inheritDoc} */
 	protected DataReader makeReaderClass(

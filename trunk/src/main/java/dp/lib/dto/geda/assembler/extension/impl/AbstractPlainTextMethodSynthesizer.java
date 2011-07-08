@@ -10,9 +10,7 @@
 
 package dp.lib.dto.geda.assembler.extension.impl;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,76 +27,6 @@ import dp.lib.dto.geda.exception.GeDARuntimeException;
 public abstract class AbstractPlainTextMethodSynthesizer extends AbstractMethodSynthesizer implements MethodSynthesizer {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractPlainTextMethodSynthesizer.class);
-	
-	/**
-	 * Simple object to hold plain text representation of return type of reader.
-	 * 
-	 * @author denispavlov
-	 *
-	 */
-	protected static class ReturnTypeContext {
-		
-		private final String methodReturnType;
-		private final String methodReturnTypePrimitiveName;
-
-		/**
-		 * @param methodReturnType class of object that represent return type
-		 * @param methodReturnTypePrimitiveName primitive name (or null if this is not primitive)
-		 */
-		public ReturnTypeContext(final String methodReturnType,
-				final String methodReturnTypePrimitiveName) {
-			this.methodReturnType = methodReturnType;
-			this.methodReturnTypePrimitiveName = methodReturnTypePrimitiveName;
-		}
-
-		/**
-		 * @return class of object that represent return type
-		 */
-		public String getMethodReturnType() {
-			return methodReturnType;
-		}
-
-		/**
-		 * @return primitive name (or null if this is not primitive)
-		 */
-		public String getMethodReturnTypePrimitiveName() {
-			return methodReturnTypePrimitiveName;
-		}
-		
-		/**
-		 * @return true if this is a primitive type
-		 */
-		public boolean isPrimitive() {
-			return methodReturnTypePrimitiveName != null;
-		}
-		
-	}
-	
-	/*
-	 * @param readerClassName class name
-	 * @param sourceClassGetterMethodReturnType return type
-	 * @return context
-	 * @throws GeDARuntimeException if unable to determine correct return type
-	 */
-	private ReturnTypeContext getReturnTypeContext(final String readerClassName, final Type sourceClassGetterMethodReturnType)
-			throws GeDARuntimeException {
-
-		if (sourceClassGetterMethodReturnType instanceof Class) {
-			final Class< ? > rcl = ((Class< ? >) sourceClassGetterMethodReturnType);
-			if (rcl.isPrimitive()) {
-				return new ReturnTypeContext(
-						PRIMITIVE_TO_WRAPPER.get(rcl.getCanonicalName()), rcl.getCanonicalName());
-			} 
-			return new ReturnTypeContext(rcl.getCanonicalName(), null);
-		} else if (sourceClassGetterMethodReturnType instanceof ParameterizedType) {
-			return new ReturnTypeContext(
-					((Class< ? >) ((ParameterizedType) sourceClassGetterMethodReturnType).getRawType()).getCanonicalName(),
-					null);
-		} else if (sourceClassGetterMethodReturnType instanceof TypeVariable) {
-			return new ReturnTypeContext(Object.class.getCanonicalName(), null); // generics
-		}
-		throw new GeDARuntimeException("Unable to determine correct return type from getter method in class: " + readerClassName);
-	}
 	
 	/**
 	 * Generates plain text source code for data reader methods.
@@ -146,66 +74,6 @@ public abstract class AbstractPlainTextMethodSynthesizer extends AbstractMethodS
 					+ readMethodCode.toString() + "\n"
 					+ getReturnTypeMethodCode.toString());
 		}	
-	}
-	
-	/**
-	 * Simple object to hold plain text representation of argument type of reader.
-	 * 
-	 * @author denispavlov
-	 *
-	 */
-	private class ArgumentTypeContext {
-
-		private final String methodArgType;
-		private final String methodArgPrimitiveName;
-		
-		/**
-		 * @param methodArgType object class name
-		 * @param methodArgPrimitiveName primitive name (or null if this type is not primitive)
-		 */
-		public ArgumentTypeContext(final String methodArgType,
-				final String methodArgPrimitiveName) {
-			super();
-			this.methodArgType = methodArgType;
-			this.methodArgPrimitiveName = methodArgPrimitiveName;
-		}
-		
-		/**
-		 * @return object class name
-		 */
-		public String getMethodArgType() {
-			return methodArgType;
-		}
-		
-		/**
-		 * @return primitive name (or null if this type is not primitive)
-		 */
-		public String getMethodArgPrimitiveName() {
-			return methodArgPrimitiveName;
-		}
-		
-		/**
-		 * @return true if this is a primitive type
-		 */
-		public boolean isPrimitive() {
-			return methodArgPrimitiveName != null;
-		}
-		
-	}
-	
-	/*
-	 * @param sourceClassSetterMethodArgumentClass class name of the argument type passed to setter
-	 * @return context
-	 */
-	private ArgumentTypeContext getArgumentTypeContext(final Class< ? > sourceClassSetterMethodArgumentClass) {
-
-		if (sourceClassSetterMethodArgumentClass.isPrimitive()) {
-			return new ArgumentTypeContext(
-					PRIMITIVE_TO_WRAPPER.get(sourceClassSetterMethodArgumentClass.getCanonicalName()), 
-					sourceClassSetterMethodArgumentClass.getCanonicalName());
-		} 
-		return new ArgumentTypeContext(sourceClassSetterMethodArgumentClass.getCanonicalName(), null);
-
 	}
 	
 	/**

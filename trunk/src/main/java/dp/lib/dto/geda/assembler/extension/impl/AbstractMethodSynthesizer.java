@@ -12,7 +12,9 @@ package dp.lib.dto.geda.assembler.extension.impl;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -164,6 +166,88 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 		}
 	}
 	
+	/**
+	 * Simple object to hold plain text representation of return type of reader.
+	 * 
+	 * @author denispavlov
+	 *
+	 */
+	protected static class ReturnTypeContext {
+		
+		private final Class< ? > clazz;
+		private final String methodReturnType;
+		private final String methodReturnTypePrimitiveName;
+
+		/**
+		 * @param clazz class
+		 * @param methodReturnType class of object that represent return type
+		 * @param methodReturnTypePrimitiveName primitive name (or null if this is not primitive)
+		 */
+		public ReturnTypeContext(
+				final Class< ? > clazz,
+				final String methodReturnType,
+				final String methodReturnTypePrimitiveName) {
+			this.clazz = clazz;
+			this.methodReturnType = methodReturnType;
+			this.methodReturnTypePrimitiveName = methodReturnTypePrimitiveName;
+		}
+		
+		/**
+		 * @return raw class
+		 */
+		public Class< ? > getClazz() {
+			return clazz;
+		}
+
+		/**
+		 * @return class of object that represent return type
+		 */
+		public String getMethodReturnType() {
+			return methodReturnType;
+		}
+
+		/**
+		 * @return primitive name (or null if this is not primitive)
+		 */
+		public String getMethodReturnTypePrimitiveName() {
+			return methodReturnTypePrimitiveName;
+		}
+		
+		/**
+		 * @return true if this is a primitive type
+		 */
+		public boolean isPrimitive() {
+			return methodReturnTypePrimitiveName != null;
+		}
+		
+	}
+	
+	/**
+	 * @param readerClassName class name
+	 * @param sourceClassGetterMethodReturnType return type
+	 * @return context
+	 * @throws GeDARuntimeException if unable to determine correct return type
+	 */
+	protected final ReturnTypeContext getReturnTypeContext(final String readerClassName, final Type sourceClassGetterMethodReturnType)
+			throws GeDARuntimeException {
+
+		if (sourceClassGetterMethodReturnType instanceof Class) {
+			final Class< ? > rcl = ((Class< ? >) sourceClassGetterMethodReturnType);
+			if (rcl.isPrimitive()) {
+				return new ReturnTypeContext(rcl,
+						PRIMITIVE_TO_WRAPPER.get(rcl.getCanonicalName()), rcl.getCanonicalName());
+			} 
+			return new ReturnTypeContext(rcl, rcl.getCanonicalName(), null);
+		} else if (sourceClassGetterMethodReturnType instanceof ParameterizedType) {
+			return new ReturnTypeContext((Class< ? >) ((ParameterizedType) sourceClassGetterMethodReturnType).getRawType(),
+					((Class< ? >) ((ParameterizedType) sourceClassGetterMethodReturnType).getRawType()).getCanonicalName(),
+					null);
+		} else if (sourceClassGetterMethodReturnType instanceof TypeVariable) {
+			return new ReturnTypeContext(Object.class, Object.class.getCanonicalName(), null); // generics
+		}
+		throw new GeDARuntimeException("Unable to determine correct return type from getter method in class: " + readerClassName);
+	}
+	
 	/** {@inheritDoc} */
 	public final DataReader synthesizeReader(final PropertyDescriptor descriptor) 
 		throws InspectionPropertyNotFoundException, UnableToCreateInstanceException, GeDARuntimeException {
@@ -267,6 +351,78 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 
 	}
 	
+	
+	/**
+	 * Simple object to hold plain text representation of argument type of reader.
+	 * 
+	 * @author denispavlov
+	 *
+	 */
+	protected class ArgumentTypeContext {
+
+		private final Class< ? > clazz;
+		private final String methodArgType;
+		private final String methodArgPrimitiveName;
+		
+		/**
+		 * @param clazz class
+		 * @param methodArgType object class name
+		 * @param methodArgPrimitiveName primitive name (or null if this type is not primitive)
+		 */
+		public ArgumentTypeContext(
+				final Class< ? > clazz,
+				final String methodArgType,
+				final String methodArgPrimitiveName) {
+			this.clazz = clazz;
+			this.methodArgType = methodArgType;
+			this.methodArgPrimitiveName = methodArgPrimitiveName;
+		}
+		
+		/**
+		 * @return raw class
+		 */
+		public Class< ? > getClazz() {
+			return clazz;
+		}
+		
+		/**
+		 * @return object class name
+		 */
+		public String getMethodArgType() {
+			return methodArgType;
+		}
+		
+		/**
+		 * @return primitive name (or null if this type is not primitive)
+		 */
+		public String getMethodArgPrimitiveName() {
+			return methodArgPrimitiveName;
+		}
+		
+		/**
+		 * @return true if this is a primitive type
+		 */
+		public boolean isPrimitive() {
+			return methodArgPrimitiveName != null;
+		}
+		
+	}
+	
+	/**
+	 * @param sourceClassSetterMethodArgumentClass class name of the argument type passed to setter
+	 * @return context
+	 */
+	protected final ArgumentTypeContext getArgumentTypeContext(final Class< ? > sourceClassSetterMethodArgumentClass) {
+
+		if (sourceClassSetterMethodArgumentClass.isPrimitive()) {
+			return new ArgumentTypeContext(sourceClassSetterMethodArgumentClass,
+					PRIMITIVE_TO_WRAPPER.get(sourceClassSetterMethodArgumentClass.getCanonicalName()), 
+					sourceClassSetterMethodArgumentClass.getCanonicalName());
+		} 
+		return new ArgumentTypeContext(sourceClassSetterMethodArgumentClass, sourceClassSetterMethodArgumentClass.getCanonicalName(), null);
+
+	}
+	
 	/** {@inheritDoc} */
 	public final DataWriter synthesizeWriter(final PropertyDescriptor descriptor) 
 			throws InspectionPropertyNotFoundException, UnableToCreateInstanceException, GeDARuntimeException {
@@ -354,8 +510,13 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 	}
 	
 	private String generateClassName(final String prefix, final String declaringClass, final String methodName) {
-		return declaringClass + prefix + "M" + methodName;
+		return declaringClass + prefix + "M" + methodName + "ID" + getSynthesizerId();
 	}
+	
+	/**
+	 * @return synthesizer id that will be used in class name
+	 */
+	protected abstract String getSynthesizerId();
 			
 	/**
 	 * Inner class to keep track of recursive attempts to compile a class.

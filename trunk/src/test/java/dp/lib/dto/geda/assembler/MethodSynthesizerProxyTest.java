@@ -11,7 +11,8 @@
 
 package dp.lib.dto.geda.assembler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.beans.PropertyDescriptor;
 
@@ -20,6 +21,7 @@ import org.junit.Test;
 import dp.lib.dto.geda.assembler.extension.DataReader;
 import dp.lib.dto.geda.assembler.extension.DataWriter;
 import dp.lib.dto.geda.assembler.extension.MethodSynthesizer;
+import dp.lib.dto.geda.assembler.extension.impl.BCELMethodSynthesizer;
 import dp.lib.dto.geda.assembler.extension.impl.JavassitMethodSynthesizer;
 import dp.lib.dto.geda.assembler.extension.impl.ReflectionMethodSynthesizer;
 import dp.lib.dto.geda.assembler.extension.impl.SunJavaToolsMethodSynthesizer;
@@ -115,6 +117,29 @@ public class MethodSynthesizerProxyTest {
 		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy("reflection");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof ReflectionMethodSynthesizer);
+	}
+	
+	/**
+	 * Test CGLib setup.
+	 * @throws GeDAException exception
+	 */
+	@Test
+	public void testCGLibConfig() throws GeDAException {
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
+		proxy.configure("synthesizerImpl", "bcel");
+		final MethodSynthesizer syn = proxy.getSynthesizer();
+		assertTrue(syn instanceof BCELMethodSynthesizer);
+	}
+	
+	/**
+	 * Test CGLib setup.
+	 * @throws GeDAException exception
+	 */
+	@Test
+	public void testCGLibConfigConstructor() throws GeDAException {
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy("bcel");
+		final MethodSynthesizer syn = proxy.getSynthesizer();
+		assertTrue(syn instanceof BCELMethodSynthesizer);
 	}
 	
 	/**

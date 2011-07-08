@@ -19,6 +19,7 @@ import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
 import dp.lib.dto.geda.assembler.extension.DataReader;
 import dp.lib.dto.geda.assembler.extension.DataWriter;
+import dp.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import dp.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
 import dp.lib.dto.geda.exception.AnnotationDuplicateBindingException;
 import dp.lib.dto.geda.exception.AnnotationMissingBeanKeyException;
@@ -53,6 +54,8 @@ import dp.lib.dto.geda.exception.ValueConverterNotFoundException;
 class CollectionPipe implements Pipe {
 
     private final CollectionPipeMetadata meta;
+    
+    private final MethodSynthesizer synthesizer;
 
 	private final DataReader dtoRead;
 	private final DataWriter dtoWrite;
@@ -61,6 +64,7 @@ class CollectionPipe implements Pipe {
 	private final DataWriter entityWrite;
 
     /**
+     * @param synthesizer synthesizer
 	 * @param dtoRead method for reading data from DTO field
      * @param dtoWrite method for writting data to DTO field
      * @param entityRead method for reading data from Entity field
@@ -68,13 +72,16 @@ class CollectionPipe implements Pipe {
      * @param meta collection pipe meta
      * @throws AnnotationValidatingBindingException when pipe binding is invalid
      */
-    CollectionPipe(final DataReader dtoRead,
+    CollectionPipe(final MethodSynthesizer synthesizer,
+    			   final DataReader dtoRead,
                    final DataWriter dtoWrite,
                    final DataReader entityRead,
                    final DataWriter entityWrite,
                    final CollectionPipeMetadata meta) throws AnnotationValidatingBindingException {
     	
     	this.meta = meta;
+    	
+    	this.synthesizer = synthesizer;
 
         this.dtoWrite = dtoWrite;
         this.entityRead = entityRead;
@@ -118,7 +125,7 @@ class CollectionPipe implements Pipe {
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
 
             try {
-                final DTOAssembler assembler = DTOAssembler.newAssembler(newDto.getClass(), this.meta.getReturnType());
+                final DTOAssembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
 
                 for (Object object : entities) {
 
@@ -212,7 +219,7 @@ class CollectionPipe implements Pipe {
 							this.meta.getReturnType().getCanonicalName());
 		    	}
 		        return 
-		        DTOAssembler.newAssembler(dtoItem.getClass(), this.meta.getReturnType());
+		        DTOAssembler.newCustomAssembler(dtoItem.getClass(), this.meta.getReturnType(), synthesizer);
 		    } catch (InspectionInvalidEntityInstanceException invEntity) {
 				throw new CollectionEntityGenericReturnTypeException(
 						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 

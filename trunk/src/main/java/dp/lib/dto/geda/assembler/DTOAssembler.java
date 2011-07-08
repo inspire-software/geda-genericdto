@@ -135,17 +135,13 @@ public final class DTOAssembler {
 	
 	private static final MethodSynthesizer SYNTHESIZER = new MethodSynthesizerProxy();
 	
-	private DTOAssembler(final Class dto, final Class entity, final Object synthesizer) 
+	private DTOAssembler(final Class dto, final Class entity, final MethodSynthesizer synthesizer) 
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
 		       GeDARuntimeException, AnnotationDuplicateBindingException {
 		dtoClass = dto;
 		entityClass = entity;
-		if (synthesizer == null) {
-			this.synthesizer = SYNTHESIZER;
-		} else {
-			this.synthesizer = new MethodSynthesizerProxy(synthesizer);
-		}
+		this.synthesizer = synthesizer;
 		
 		Class dtoMap = dto;
 		while (dtoMap != null) { // when we reach Object.class this should be null
@@ -235,11 +231,13 @@ public final class DTOAssembler {
 			throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
 			       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
 			       GeDARuntimeException, AnnotationDuplicateBindingException {
-		final String key = createAssemberKey(dto, entity);
+		
+		final MethodSynthesizer syn = synthesizer == null ? SYNTHESIZER : new MethodSynthesizerProxy(synthesizer);
+		final String key = createAssemberKey(dto, entity, syn);
     	
 		DTOAssembler assembler = CACHE.get(key);
 		if (assembler == null) {
-			assembler = new DTOAssembler(dto, entity, synthesizer);
+			assembler = new DTOAssembler(dto, entity, syn);
 	    	CACHE.put(key, assembler);
 		}
     	return assembler;
@@ -264,8 +262,21 @@ public final class DTOAssembler {
 	}
 
 	private static <DTO, Entity> String createAssemberKey(final Class<DTO> dto,
-			final Class<Entity> entity) {
-		return dto.getCanonicalName() + "-" + entity.getCanonicalName();
+			final Class<Entity> entity, final MethodSynthesizer synthesizer) {
+		return dto.getCanonicalName() + "-" + entity.getCanonicalName() + "-" + synthesizer.toString();
+	}
+	
+
+	/**
+	 * Configure synthesizer.
+	 * 
+	 * @param configuration configuration name
+	 * @param value value to set
+	 * @return true if configuration was set, false if not set or invalid
+	 * @throws GeDAException in case there are errors
+	 */
+	public boolean configureSynthesizer(final String configuration, final Object value) throws GeDAException {
+		return this.synthesizer.configure(configuration, value);
 	}
 
 	

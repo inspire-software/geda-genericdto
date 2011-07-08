@@ -12,14 +12,20 @@ package dp.lib.dto.geda.assembler;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import dp.lib.dto.geda.adapter.ValueConverter;
 import dp.lib.dto.geda.assembler.TestDto3Class.Decision;
 import dp.lib.dto.geda.exception.GeDAException;
+import dp.lib.dto.geda.utils.ParameterizedSynthesizer;
+import dp.lib.dto.geda.utils.ParameterizedSynthesizer.Parameters;
 
 /**
  * DTOAssembler test.
@@ -28,8 +34,30 @@ import dp.lib.dto.geda.exception.GeDAException;
  * @since 1.0.0
  *
  */
+@RunWith(value = ParameterizedSynthesizer.class)
 public class DTOAssemblerConvertersTest {
+	
+	private String synthesizer;
+	
+	/**
+	 * @param synthesizer parameter
+	 */
+	public DTOAssemblerConvertersTest(final String synthesizer) {
+		super();
+		this.synthesizer = synthesizer;
+	}
 
+	/**
+	 * @return synthesizers keys
+	 */
+	@Parameters
+	public static Collection<String[]> data() {
+		final List<String[]> params = new ArrayList<String[]>();
+		for (final String param : MethodSynthesizerProxy.getAvailableSynthesizers()) {
+			params.add(new String[] { param });
+		}
+		return params;
+	}
 	/**
 	 * Test assembler that uses converter.
 	 * 
@@ -45,7 +73,7 @@ public class DTOAssemblerConvertersTest {
 		converters.put("boolToEnum", conv3toDto);
 		
 		final DTOAssembler assembler =
-			DTOAssembler.newAssembler(TestDto3Class.class, TestEntity3Class.class);
+			DTOAssembler.newCustomAssembler(TestDto3Class.class, TestEntity3Class.class, synthesizer);
 		
 		assembler.assembleDto(dto, entity, converters, null);
 		
