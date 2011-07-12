@@ -9,12 +9,15 @@
 
 package dp.lib.dto.geda.assembler;
 
+import org.junit.Ignore;
+
 /**
  * Basic synthesizer test interface.
  * 
  * @author denispavlov
  *
  */
+@Ignore
 public interface TestSynthesizerByInterface {
 	
 	/** enum val. */

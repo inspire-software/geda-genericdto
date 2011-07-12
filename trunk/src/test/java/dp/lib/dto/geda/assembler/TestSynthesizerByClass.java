@@ -9,6 +9,8 @@
 
 package dp.lib.dto.geda.assembler;
 
+import org.junit.Ignore;
+
 
 /**
  * Basic class test.
@@ -16,6 +18,7 @@ package dp.lib.dto.geda.assembler;
  * @author denispavlov
  *
  */
+@Ignore
 public class TestSynthesizerByClass implements TestSynthesizerByInterface {
 
 	// primitives
