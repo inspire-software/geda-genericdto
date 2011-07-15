@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import dp.lib.dto.geda.assembler.examples.simple.TestDto2Class;
 import dp.lib.dto.geda.exception.GeDAException;
 
 /**

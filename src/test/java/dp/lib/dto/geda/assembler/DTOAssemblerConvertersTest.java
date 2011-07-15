@@ -22,7 +22,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import dp.lib.dto.geda.adapter.ValueConverter;
-import dp.lib.dto.geda.assembler.TestDto3Class.Decision;
+import dp.lib.dto.geda.assembler.examples.converter.TestConverter3;
+import dp.lib.dto.geda.assembler.examples.converter.TestDto3Class;
+import dp.lib.dto.geda.assembler.examples.converter.TestEntity3Class;
+import dp.lib.dto.geda.assembler.examples.converter.TestDto3Class.Decision;
 import dp.lib.dto.geda.exception.GeDAException;
 import dp.lib.dto.geda.utils.ParameterizedSynthesizer;
 import dp.lib.dto.geda.utils.ParameterizedSynthesizer.Parameters;

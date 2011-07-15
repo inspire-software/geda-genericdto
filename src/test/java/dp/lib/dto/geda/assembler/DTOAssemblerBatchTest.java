@@ -19,6 +19,8 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import dp.lib.dto.geda.assembler.examples.autowire.TestDto1Class;
+import dp.lib.dto.geda.assembler.examples.autowire.TestEntity1Class;
 import dp.lib.dto.geda.exception.GeDAException;
 import dp.lib.dto.geda.exception.InvalidDtoCollectionException;
 import dp.lib.dto.geda.exception.InvalidEntityCollectionException;

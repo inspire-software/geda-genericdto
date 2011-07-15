@@ -20,7 +20,10 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import dp.lib.dto.geda.assembler.TestSynthesizerByInterface.EnumVal;
+import dp.lib.dto.geda.assembler.examples.autowire.TestDto1Interface;
+import dp.lib.dto.geda.assembler.examples.synth.TestSynthesizerByClass;
+import dp.lib.dto.geda.assembler.examples.synth.TestSynthesizerByInterface;
+import dp.lib.dto.geda.assembler.examples.synth.TestSynthesizerByInterface.EnumVal;
 import dp.lib.dto.geda.assembler.extension.DataReader;
 import dp.lib.dto.geda.assembler.extension.DataWriter;
 import dp.lib.dto.geda.exception.GeDAException;

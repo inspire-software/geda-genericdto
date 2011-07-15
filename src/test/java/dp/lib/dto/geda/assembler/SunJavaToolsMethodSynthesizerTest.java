@@ -20,6 +20,11 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import dp.lib.dto.geda.assembler.examples.autowire.TestDto1Class;
+import dp.lib.dto.geda.assembler.examples.autowire.TestDto1Interface;
+import dp.lib.dto.geda.assembler.examples.collections.TestDto12CollectionClass;
+import dp.lib.dto.geda.assembler.examples.converter.TestEntity3Class;
+import dp.lib.dto.geda.assembler.examples.maps.TestDto12MapToMapClass;
 import dp.lib.dto.geda.assembler.extension.DataReader;
 import dp.lib.dto.geda.assembler.extension.DataWriter;
 import dp.lib.dto.geda.assembler.extension.impl.SunJavaToolsMethodSynthesizer;

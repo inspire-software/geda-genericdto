@@ -11,6 +11,9 @@
 package dp.lib.dto.geda.assembler;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
+import dp.lib.dto.geda.assembler.examples.nested.TestEntity4Class;
+import dp.lib.dto.geda.assembler.examples.nested.TestEntity4SubClass;
+
 import org.junit.Ignore;
 
 /**
