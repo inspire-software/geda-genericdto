@@ -60,15 +60,45 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 	 * invisible to other generated classes such as DataReaders and DataWriters. The basic "catch" is 
 	 * to track $ sign in the class name that is put by both of those generators.
 	 * 
+	 * Typically this problem arrises with lazy initialized fields via proxies in sub entities.
+	 * 
 	 * @param method class method
 	 * @return class that declares the method
 	 */
 	public static Class< ? > getValidDeclaringClass(final java.lang.reflect.Method method) {
 		final Class< ? > decl = method.getDeclaringClass();
-		if (decl.getName().indexOf('$') == -1) {
+		if (decl.isAnonymousClass() || decl.getName().indexOf('$') == -1) {
 			return decl;
 		}
-		return decl.getSuperclass();
+		final Class< ? > declS = decl.getSuperclass();
+		if (declS.equals(Object.class)) {
+			final Class< ? >[] declIs = decl.getInterfaces();
+			for (int i = 0; i < declIs.length; i++) {
+				if (declaringClassIsValid(declIs[i], method)) {
+					return declIs[i];
+				}
+			}
+			throw new GeDARuntimeException("Unable to identify interface for proxy object");
+		}
+		if (declaringClassIsValid(declS, method)) {
+			return declS;
+		}
+		final Class< ? >[] declIs = decl.getInterfaces();
+		for (int i = 0; i < declIs.length; i++) {
+			if (declaringClassIsValid(declIs[i], method)) {
+				return declIs[i];
+			}
+		}
+		throw new GeDARuntimeException("Unable to identify interface for proxy object");
+	}
+	
+	private static boolean declaringClassIsValid(final Class< ? > clazz, final java.lang.reflect.Method method) {
+		try {
+			clazz.getMethod(method.getName(), method.getParameterTypes());
+			return true;
+		} catch (Exception all) {
+			return false;
+		}
 	}
 
 	
