@@ -1758,5 +1758,181 @@ public class MethodSynthesizerTest {
 		assertEquals(EnumVal.Three, dto.getEnum());
 		
 	}
+	
+	/**
+	 * Test reader synthesizer.
+	 * @throws GeDAException should not be thrown
+	 */
+	@Test
+	public void testReaderOnClassCstrProxy() throws GeDAException {
+		
+		final TestSynthesizerByClass dto = new TestSynthesizerByClass() {
+			
+		};
+		dto.setStr(STR);
+		
+		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+				PropertyInspector.getDtoPropertyDescriptorForField(
+						dto.getClass(), "str", 
+						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
+				)		
+		);
+		
+		assertEquals(String.class, reader.getReturnType());
+		assertEquals(STR, reader.read(dto));
+		
+	}
+	
+	/**
+	 * Test reader synthesizer.
+	 * @throws GeDAException should not be thrown
+	 */
+	@Test
+	public void testWriterOnClassCstrProxy() throws GeDAException {
+		
+		final TestSynthesizerByClass dto = new TestSynthesizerByClass() {
+			
+		};
+		
+		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+				PropertyInspector.getDtoPropertyDescriptorForField(
+						dto.getClass(), "str", 
+						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
+				)		
+		);
+		
+		assertEquals(String.class, writer.getParameterType());
+		writer.write(dto, STR);
+		assertEquals(STR, dto.getStr());
+		
+	}
+	
+	/**
+	 * Test reader synthesizer.
+	 * @throws GeDAException should not be thrown
+	 */
+	@Test
+	public void testReaderOnIfaceCstrProxy() throws GeDAException {
+		
+		final TestSynthesizerByInterface dto = new TestSynthesizerByInterface() {
 
+			private final TestSynthesizerByClass dto = new TestSynthesizerByClass();
+
+			public Boolean getBoolo() { return dto.getBoolo(); }
+			public byte getBy() { return dto.getBy(); }
+			public Byte getByo() { return dto.getByo(); }
+			public char getCh() { return dto.getCh(); }
+			public Character getCho() { return dto.getCho(); }
+			public double getDb() { return dto.getDb(); }
+			public Double getDbo() { return dto.getDbo(); }
+			public EnumVal getEnum() { return dto.getEnum(); }
+			public float getFl() { return dto.getFl(); }
+			public Float getFlo() { return dto.getFlo(); }
+			public int getIn() { return dto.getIn(); }
+			public Integer getIno() { return dto.getIno(); }
+			public long getLo() { return dto.getLo(); }
+			public Long getLoo() { return dto.getLoo(); }
+			public Object getOb() { return dto.getOb(); }
+			public short getSh() { return dto.getSh(); }
+			public Short getSho() { return dto.getSho(); }
+			public String getStr() { return dto.getStr(); }
+			public boolean isBool() { return dto.isBool(); }
+			public void setBool(final boolean bool) { dto.setBool(bool); }
+			public void setBoolo(final Boolean boolo) { dto.setBoolo(boolo); }
+			public void setBy(final byte by) { dto.setBy(by); }
+			public void setByo(final Byte byo) { dto.setByo(byo); }
+			public void setCh(final char ch) { dto.setCh(ch); }
+			public void setCho(final Character cho) { dto.setCho(cho); }
+			public void setDb(final double db) { dto.setDb(db); }
+			public void setDbo(final Double dbo) { dto.setDbo(dbo); }
+			public void setEnum(final EnumVal enumVal) { dto.setEnum(enumVal); }
+			public void setFl(final float fl) { dto.setFl(fl); }
+			public void setFlo(final Float flo) { dto.setFlo(flo); }
+			public void setIn(final int in) { dto.setIn(in); }
+			public void setIno(final Integer ino) { dto.setIno(ino); }
+			public void setLo(final long lo) { dto.setLo(lo); }
+			public void setLoo(final Long loo) { dto.setLoo(loo); }
+			public void setOb(final Object ob) { dto.setOb(ob); }
+			public void setSh(final short sh) { dto.setSh(sh); }
+			public void setSho(final Short sho) { dto.setSho(sho); }
+			public void setStr(final String str) { dto.setStr(str); }
+		};
+		dto.setStr(STR);
+		
+		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+				PropertyInspector.getDtoPropertyDescriptorForField(
+						dto.getClass(), "str", 
+						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
+				)		
+		);
+		
+		assertEquals(String.class, reader.getReturnType());
+		assertEquals(STR, reader.read(dto));
+		
+	}
+	
+	/**
+	 * Test reader synthesizer.
+	 * @throws GeDAException should not be thrown
+	 */
+	@Test
+	public void testWriterOnIfaceCstrProxy() throws GeDAException {
+		
+		final TestSynthesizerByInterface dto = new TestSynthesizerByInterface() {
+
+			private final TestSynthesizerByClass dto = new TestSynthesizerByClass();
+
+			public Boolean getBoolo() { return dto.getBoolo(); }
+			public byte getBy() { return dto.getBy(); }
+			public Byte getByo() { return dto.getByo(); }
+			public char getCh() { return dto.getCh(); }
+			public Character getCho() { return dto.getCho(); }
+			public double getDb() { return dto.getDb(); }
+			public Double getDbo() { return dto.getDbo(); }
+			public EnumVal getEnum() { return dto.getEnum(); }
+			public float getFl() { return dto.getFl(); }
+			public Float getFlo() { return dto.getFlo(); }
+			public int getIn() { return dto.getIn(); }
+			public Integer getIno() { return dto.getIno(); }
+			public long getLo() { return dto.getLo(); }
+			public Long getLoo() { return dto.getLoo(); }
+			public Object getOb() { return dto.getOb(); }
+			public short getSh() { return dto.getSh(); }
+			public Short getSho() { return dto.getSho(); }
+			public String getStr() { return dto.getStr(); }
+			public boolean isBool() { return dto.isBool(); }
+			public void setBool(final boolean bool) { dto.setBool(bool); }
+			public void setBoolo(final Boolean boolo) { dto.setBoolo(boolo); }
+			public void setBy(final byte by) { dto.setBy(by); }
+			public void setByo(final Byte byo) { dto.setByo(byo); }
+			public void setCh(final char ch) { dto.setCh(ch); }
+			public void setCho(final Character cho) { dto.setCho(cho); }
+			public void setDb(final double db) { dto.setDb(db); }
+			public void setDbo(final Double dbo) { dto.setDbo(dbo); }
+			public void setEnum(final EnumVal enumVal) { dto.setEnum(enumVal); }
+			public void setFl(final float fl) { dto.setFl(fl); }
+			public void setFlo(final Float flo) { dto.setFlo(flo); }
+			public void setIn(final int in) { dto.setIn(in); }
+			public void setIno(final Integer ino) { dto.setIno(ino); }
+			public void setLo(final long lo) { dto.setLo(lo); }
+			public void setLoo(final Long loo) { dto.setLoo(loo); }
+			public void setOb(final Object ob) { dto.setOb(ob); }
+			public void setSh(final short sh) { dto.setSh(sh); }
+			public void setSho(final Short sho) { dto.setSho(sho); }
+			public void setStr(final String str) { dto.setStr(str); }
+		};
+		
+		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+				PropertyInspector.getDtoPropertyDescriptorForField(
+						dto.getClass(), "str", 
+						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
+				)		
+		);
+		
+		assertEquals(String.class, writer.getParameterType());
+		writer.write(dto, STR);
+		assertEquals(STR, dto.getStr());
+		
+	}
+	
 }
