@@ -27,6 +27,13 @@ import org.junit.runner.RunWith;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.adapter.EntityRetriever;
+import dp.lib.dto.geda.assembler.examples.parent.TestDto11ChildClass;
+import dp.lib.dto.geda.assembler.examples.parent.TestDto11ChildInterface;
+import dp.lib.dto.geda.assembler.examples.parent.TestDto11ParentClass;
+import dp.lib.dto.geda.assembler.examples.parent.TestEntity11ChildClass;
+import dp.lib.dto.geda.assembler.examples.parent.TestEntity11ChildInterface;
+import dp.lib.dto.geda.assembler.examples.parent.TestEntity11ParentClass;
+import dp.lib.dto.geda.assembler.examples.parent.TestEntity11ParentInterface;
 import dp.lib.dto.geda.exception.GeDAException;
 import dp.lib.dto.geda.utils.ParameterizedSynthesizer;
 import dp.lib.dto.geda.utils.ParameterizedSynthesizer.Parameters;
