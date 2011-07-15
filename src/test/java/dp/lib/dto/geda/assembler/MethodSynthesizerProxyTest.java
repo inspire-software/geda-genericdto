@@ -13,6 +13,7 @@ package dp.lib.dto.geda.assembler;
 
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.beans.PropertyDescriptor;
 
@@ -47,7 +48,7 @@ public class MethodSynthesizerProxyTest {
 		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
 		proxy.configure(null, null);
 		final MethodSynthesizer syn = proxy.getSynthesizer();
-		assertTrue(syn instanceof JavassitMethodSynthesizer);
+		assertEquals(syn.getClass().getCanonicalName(), MethodSynthesizerProxy.getDefaultImpl());
 	}
 	
 	/**

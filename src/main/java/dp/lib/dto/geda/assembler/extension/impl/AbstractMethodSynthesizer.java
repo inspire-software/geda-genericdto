@@ -54,6 +54,24 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
      */    
     private static final int PUBLIC           = 0x00000001;
 	
+	/**
+	 * This method allows to "catch" generated classes by class generators such as Javassist or CGLib.
+	 * The problem with those classes is that some of them are loaded by private ClassLoaders and are 
+	 * invisible to other generated classes such as DataReaders and DataWriters. The basic "catch" is 
+	 * to track $ sign in the class name that is put by both of those generators.
+	 * 
+	 * @param method class method
+	 * @return class that declares the method
+	 */
+	public static Class< ? > getValidDeclaringClass(final java.lang.reflect.Method method) {
+		final Class< ? > decl = method.getDeclaringClass();
+		if (decl.getName().indexOf('$') == -1) {
+			return decl;
+		}
+		return decl.getSuperclass();
+	}
+
+	
 	/** DataReaders instances cache. */
 	private static final Cache<String, Object> READER_CACHE = new SoftReferenceCache<String, Object>(100);
 	/** DataWriters instances cache. */
@@ -159,7 +177,7 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
         if (readMethod == null) {
             throw new InspectionPropertyNotFoundException("No read method for: ", descriptor.getName());
         }
-		final Class< ? > target = descriptor.getReadMethod().getDeclaringClass();
+		final Class< ? > target = getValidDeclaringClass(readMethod);
 		if ((target.getModifiers() & PUBLIC) == 0) {
 			throw new GeDARuntimeException(target.getCanonicalName() 
 					+ " does not have [public] modifier. This will cause IllegalAccessError during runtime.");
@@ -255,7 +273,7 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 		preMakeReaderValidation(descriptor);
 		
 		final Method readMethod = descriptor.getReadMethod();
-		final String sourceClassNameFull = readMethod.getDeclaringClass().getCanonicalName();
+		final String sourceClassNameFull = getValidDeclaringClass(readMethod).getCanonicalName();
 		final String sourceClassGetterMethodName = readMethod.getName();
 		
 		final String readerClassName = generateClassName("DataReader", sourceClassNameFull, sourceClassGetterMethodName);
@@ -343,7 +361,7 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
         if (writeMethod == null) {
             throw new InspectionPropertyNotFoundException("No write method for: ", descriptor.getName());
         }
-		final Class< ? > target = writeMethod.getDeclaringClass();
+		final Class< ? > target = getValidDeclaringClass(writeMethod);
 		if ((target.getModifiers() & PUBLIC) == 0) {
 			throw new GeDARuntimeException(target.getCanonicalName() 
 					+ " does not have [public] modifier. This will cause IllegalAccessError during runtime.");
@@ -430,7 +448,7 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 		preMakeWriterValidation(descriptor);
 		
 		final Method writeMethod = descriptor.getWriteMethod();
-		final String classNameFull = writeMethod.getDeclaringClass().getCanonicalName();
+		final String classNameFull = getValidDeclaringClass(writeMethod).getCanonicalName();
 		final String methodName = writeMethod.getName();
 		
 		final String writerClassName = generateClassName("DataWriter", classNameFull, methodName);

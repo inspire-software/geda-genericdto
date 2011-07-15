@@ -141,8 +141,6 @@ final class PropertyInspector {
 		
 		throw new InspectionPropertyNotFoundException(dtoClass.getCanonicalName(), dtoFieldName);
 	}
-	
-
 
 	
 }

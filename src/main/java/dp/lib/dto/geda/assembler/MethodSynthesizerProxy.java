@@ -38,6 +38,8 @@ import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
  */
 class MethodSynthesizerProxy implements MethodSynthesizer {
 	
+	private static final String DEFAULT = "javassist";
+
 	private static final Logger LOG = LoggerFactory.getLogger(MethodSynthesizerProxy.class);
 	
 	private static final Map<String, String> FACTORY = new HashMap<String, String>();
@@ -54,7 +56,7 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 	
 	private final Lock lock = new ReentrantLock();
 	
-	private String synthesizerImpl = FACTORY.get("javassist");
+	private String synthesizerImpl = FACTORY.get(DEFAULT);
 	private MethodSynthesizer synthesizer;
 	
 	/**
@@ -96,6 +98,13 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 	 */
 	static Collection<String> getAvailableSynthesizers() {
 		return FACTORY.keySet();
+	}
+	
+	/**
+	 * @return default key for testing.
+	 */
+	static String getDefaultImpl() {
+		return FACTORY.get(DEFAULT);
 	}
 	
 	/**
