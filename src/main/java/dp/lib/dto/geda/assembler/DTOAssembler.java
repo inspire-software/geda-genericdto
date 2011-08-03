@@ -194,9 +194,15 @@ public final class DTOAssembler {
 		
 		if (index + 1 == metas.size()) {
 			if (meta instanceof FieldPipeMetadata) {
-				// create field pipe
-				return DataPipeBuilder.build(this.synthesizer, 
-						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
+				if ("#this#".equals(meta.getEntityFieldName())) {
+					// create virtual field pipe
+					return DataVirtualPipeBuilder.build(this.synthesizer, 
+							dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
+				} else {
+					// create field pipe
+					return DataPipeBuilder.build(this.synthesizer, 
+							dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
+				}
 			} else if (meta instanceof CollectionPipeMetadata) {
 				// create collection
 				return CollectionPipeBuilder.build(this.synthesizer, 
