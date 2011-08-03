@@ -11,6 +11,7 @@
 package dp.lib.dto.geda.assembler;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -46,7 +47,12 @@ import dp.lib.dto.geda.assembler.examples.simple.TestDto5Class;
 import dp.lib.dto.geda.assembler.examples.simple.TestDto6Class;
 import dp.lib.dto.geda.assembler.examples.simple.TestEntity2Class;
 import dp.lib.dto.geda.assembler.examples.simple.TestEntity5Class;
+import dp.lib.dto.geda.assembler.examples.virtual.TestDto20Class;
+import dp.lib.dto.geda.assembler.examples.virtual.TestDto20ncClass;
+import dp.lib.dto.geda.assembler.examples.virtual.TestEntity20Class;
+import dp.lib.dto.geda.assembler.examples.virtual.VirtualMyBooleanConverter;
 import dp.lib.dto.geda.exception.AnnotationMissingAutobindingException;
+import dp.lib.dto.geda.exception.AnnotationMissingBindingException;
 import dp.lib.dto.geda.exception.AutobindingClassNotFoundException;
 import dp.lib.dto.geda.exception.GeDAException;
 import dp.lib.dto.geda.exception.InspectionBindingNotFoundException;
@@ -712,6 +718,49 @@ public class DTOAssemblerMappingTest {
 		assertTrue(dto.getMyMap().containsKey("mi1"));
 		assertEquals("mi1", dto.getMyMap().get("mi1").getMyProp());
 		
+		
+	}
+	
+	/**
+	 * Test that assembler copes with virtual field mapping.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test
+	public void testVirtualFieldMapping() throws GeDAException {
+		
+		final TestDto20Class dto = new TestDto20Class();
+		final TestEntity20Class entity = new TestEntity20Class();
+		
+		final Map<String, Object> converters = new HashMap<String, Object>();
+		converters.put("VirtualMyBoolean", new VirtualMyBooleanConverter());
+		
+		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dto.getClass(), entity.getClass(), synthesizer);
+		
+		assembler.assembleDto(dto, entity, converters, null);
+		
+		assertTrue(dto.getMyBoolean());
+		dto.setMyBoolean(true);
+		assertFalse(entity.isDecided());
+		
+		assembler.assembleEntity(dto, entity, converters, null);
+		
+		assertTrue(entity.isDecided());
+		
+	}
+	
+	/**
+	 * Test that assembler copes with virtual field mapping.
+	 * 
+	 * @throws GeDAException exception
+	 */
+	@Test(expected = AnnotationMissingBindingException.class)
+	public void testVirtualFieldMappingNoConverter() throws GeDAException {
+		
+		final TestDto20ncClass dto = new TestDto20ncClass();
+		final TestEntity20Class entity = new TestEntity20Class();
+		
+		DTOAssembler.newCustomAssembler(dto.getClass(), entity.getClass(), synthesizer);
 		
 	}
 	

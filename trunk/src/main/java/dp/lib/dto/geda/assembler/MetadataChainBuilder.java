@@ -18,6 +18,7 @@ import dp.lib.dto.geda.annotations.DtoCollection;
 import dp.lib.dto.geda.annotations.DtoField;
 import dp.lib.dto.geda.annotations.DtoMap;
 import dp.lib.dto.geda.annotations.DtoParent;
+import dp.lib.dto.geda.annotations.DtoVirtualField;
 import dp.lib.dto.geda.assembler.meta.PipeMetadata;
 import dp.lib.dto.geda.exception.UnableToCreateInstanceException;
 
@@ -47,6 +48,12 @@ final class MetadataChainBuilder {
 			final DtoParent parentAnn = (DtoParent) dtoField.getAnnotation(DtoParent.class);
 			return buildFieldChain(dtoField, dtoFieldAnn, parentAnn);
 		}
+		
+		final DtoVirtualField dtoVirtualFieldAnn =
+			(DtoVirtualField) dtoField.getAnnotation(DtoVirtualField.class);
+		if (dtoVirtualFieldAnn != null) {
+			return buildVirtualFieldChain(dtoField, dtoVirtualFieldAnn); 
+		}
 
 		final DtoCollection dtoCollAnn =
 			(DtoCollection) dtoField.getAnnotation(DtoCollection.class);
@@ -64,6 +71,27 @@ final class MetadataChainBuilder {
 	    
 	    return null;
 		
+	}
+	
+	private static List<PipeMetadata> buildVirtualFieldChain(final Field dtoField, final DtoVirtualField dtoFieldAnn) {
+		
+		final String[] bindings = { "#this#" };
+		
+		final List<PipeMetadata> metas = new ArrayList<PipeMetadata>(bindings.length);
+		for (int index = 0; index < bindings.length; index++) {
+			metas.add(new dp.lib.dto.geda.assembler.FieldPipeMetadata(
+					dtoField.getName(),
+					bindings[index],
+					dtoFieldAnn.dtoBeanKey(),
+					getStringFromArray(dtoFieldAnn.entityBeanKeys(), index),
+					dtoFieldAnn.readOnly(),
+					dtoFieldAnn.converter(),
+					false,
+					null,
+					null
+			));
+		}
+		return metas;
 	}
 	
 	private static List<PipeMetadata> buildFieldChain(final Field dtoField, final DtoField dtoFieldAnn, final DtoParent dtoParentAnn) {

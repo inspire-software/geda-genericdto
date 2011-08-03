@@ -552,7 +552,7 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 		} catch (ClassNotFoundException cnfe) {
 			// That's OK we don't have it
 			return null;
-		} catch (Exception exp) {
+		} catch (Throwable exp) {
 			throw new UnableToCreateInstanceException(clazzName, "Uanble to create instance of: " + clazzName, exp);
 		}
 	}

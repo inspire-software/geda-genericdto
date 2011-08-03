@@ -22,7 +22,7 @@ public class AnnotationMissingBindingException extends GeDAException {
 	/**
 	 * Type of missing binding.
 	 */
-	public static enum MissingBindingType { DTO_READ, DTO_WRITE, ENTITY_READ, ENTITY_WRITE, PARENT_READ };
+	public static enum MissingBindingType { DTO_READ, DTO_WRITE, ENTITY_READ, ENTITY_WRITE, PARENT_READ, VIRTUAL_CONVERTER };
 
 	private static final long serialVersionUID = 20110609L;
 
