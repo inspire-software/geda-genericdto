@@ -51,6 +51,7 @@ import dp.lib.dto.geda.assembler.examples.virtual.TestDto20Class;
 import dp.lib.dto.geda.assembler.examples.virtual.TestDto20ncClass;
 import dp.lib.dto.geda.assembler.examples.virtual.TestEntity20Class;
 import dp.lib.dto.geda.assembler.examples.virtual.VirtualMyBooleanConverter;
+import dp.lib.dto.geda.assembler.examples.virtual.VirtualMyLongConverter;
 import dp.lib.dto.geda.exception.AnnotationMissingAutobindingException;
 import dp.lib.dto.geda.exception.AnnotationMissingBindingException;
 import dp.lib.dto.geda.exception.AutobindingClassNotFoundException;
@@ -734,18 +735,22 @@ public class DTOAssemblerMappingTest {
 		
 		final Map<String, Object> converters = new HashMap<String, Object>();
 		converters.put("VirtualMyBoolean", new VirtualMyBooleanConverter());
+		converters.put("VirtualMyLong", new VirtualMyLongConverter());
 		
 		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dto.getClass(), entity.getClass(), synthesizer);
 		
 		assembler.assembleDto(dto, entity, converters, null);
 		
 		assertTrue(dto.getMyBoolean());
+		assertEquals(Long.valueOf(0L), dto.getMyLong());
 		dto.setMyBoolean(true);
+		dto.setMyLong(2L);
 		assertFalse(entity.isDecided());
 		
 		assembler.assembleEntity(dto, entity, converters, null);
 		
 		assertTrue(entity.isDecided());
+		assertEquals(2L, entity.getPk());
 		
 	}
 	

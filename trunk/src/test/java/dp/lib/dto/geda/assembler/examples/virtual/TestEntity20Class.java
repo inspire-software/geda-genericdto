@@ -24,6 +24,8 @@ import org.junit.Ignore;
 public class TestEntity20Class {
 	
 	private boolean decided;
+
+	private long pk;
 	
 	/**
 	 * @return result of a complex decision.
@@ -45,5 +47,21 @@ public class TestEntity20Class {
 	public boolean isDecided() {
 		return decided;
 	}
+
+	/**
+	 * @return some PK
+	 */
+	public long getPk() {
+		return pk;
+	}
+
+	/**
+	 * @param pk some PK
+	 */
+	public void setPk(final long pk) {
+		this.pk = pk;
+	}
+	
+	
 	
 }

@@ -75,7 +75,7 @@ final class MetadataChainBuilder {
 	
 	private static List<PipeMetadata> buildVirtualFieldChain(final Field dtoField, final DtoVirtualField dtoFieldAnn) {
 		
-		final String[] bindings = { "#this#" };
+		final String[] bindings = { "#this#" + dtoField.getName() };
 		
 		final List<PipeMetadata> metas = new ArrayList<PipeMetadata>(bindings.length);
 		for (int index = 0; index < bindings.length; index++) {

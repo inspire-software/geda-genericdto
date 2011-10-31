@@ -349,7 +349,7 @@ class DataPipe implements Pipe {
 					this.meta.getEntityFieldName(), this.meta.getDtoFieldName(), this.meta.getConverterKey());
 		}
 		throw new EntityRetrieverNotFoundException(
-				this.meta.getEntityFieldName(), this.meta.getDtoFieldName(), this.meta.getConverterKey());
+				this.meta.getEntityFieldName(), this.meta.getDtoFieldName(), this.meta.getEntityRetrieverKey());
 	}
 	
 }
