@@ -30,6 +30,9 @@ public class TestDto20Class {
 	@DtoVirtualField(converter = "VirtualMyBoolean")
 	private Boolean myBoolean;
 
+	@DtoVirtualField(converter = "VirtualMyLong")
+	private Long myLong;
+
 	/**
 	 * @return boolean value.
 	 */
@@ -42,5 +45,21 @@ public class TestDto20Class {
 	public void setMyBoolean(final Boolean myBoolean) {
 		this.myBoolean = myBoolean;
 	}
+	
+	/**
+	 * @return long value
+	 */
+	public Long getMyLong() {
+		return myLong;
+	}
+	
+	/**
+	 * @param myLong long value.
+	 */
+	public void setMyLong(final Long myLong) {
+		this.myLong = myLong;
+	}
 
+	
+	
 }

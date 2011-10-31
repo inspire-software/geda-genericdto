@@ -194,7 +194,7 @@ public final class DTOAssembler {
 		
 		if (index + 1 == metas.size()) {
 			if (meta instanceof FieldPipeMetadata) {
-				if ("#this#".equals(meta.getEntityFieldName())) {
+				if (meta.getEntityFieldName().startsWith("#this#")) {
 					// create virtual field pipe
 					return DataVirtualPipeBuilder.build(this.synthesizer, 
 							dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
