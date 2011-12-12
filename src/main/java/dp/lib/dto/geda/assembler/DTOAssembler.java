@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import dp.lib.dto.geda.adapter.BeanFactory;
 import dp.lib.dto.geda.annotations.Dto;
@@ -90,6 +92,17 @@ public final class DTOAssembler {
 	 */
 	public static final String SETTING_SYNTHESIZER_IMPL = 
 		"dp.lib.dto.geda.assembler.DTOAssembler.SETTING_SYNTHESIZER_IMPL";
+
+	/**
+	 * String that defines key for pattern for blacklisting entity class names.
+	 * E.g. Javasist implementation enhances classes by subclassing and adding _$$_javasist
+	 * prefix. This pattern will allow to detect these classes and look up parent class names
+	 * to overcome class cast exceptions.
+	 */
+	public static final String SETTING_ENTITY_CLASS_NAME_BLACKLIST_PATTERN = 
+		"dp.lib.dto.geda.assembler.DTOAssembler.SETTING_ENTITY_CLASS_NAME_BLACKLIST_PATTERN";
+	private static final String SETTING_ENTITY_CLASS_NAME_BLACKLIST_PATTERN_DEFAULT = "_\\$\\$_";
+	private static Pattern entityClassNameBlacklistPatternValue = Pattern.compile(SETTING_ENTITY_CLASS_NAME_BLACKLIST_PATTERN_DEFAULT);
 	
 	
 	private static final Cache<String, DTOAssembler> CACHE = new SoftReferenceCache<String, DTOAssembler>(50);	
@@ -113,6 +126,7 @@ public final class DTOAssembler {
 		final String javassistReaderCache = props.getProperty(SETTING_DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE);
 		final String javassistWriterCache = props.getProperty(SETTING_DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE);
 		final String synthesizerImpl = props.getProperty(SETTING_SYNTHESIZER_IMPL);
+		final String classNameBlacklistPattern = props.getProperty(SETTING_ENTITY_CLASS_NAME_BLACKLIST_PATTERN);
 		if (assemblerCache != null) {
 			CACHE.configure("cleanUpCycle", Integer.valueOf(assemblerCache));
 		}
@@ -124,6 +138,9 @@ public final class DTOAssembler {
 		}
 		if (synthesizerImpl != null) {
 			SYNTHESIZER.configure("synthesizerImpl", synthesizerImpl);
+		}
+		if (classNameBlacklistPattern != null) {
+			entityClassNameBlacklistPatternValue = Pattern.compile(classNameBlacklistPattern);
 		}
 	}
 	
@@ -140,7 +157,7 @@ public final class DTOAssembler {
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
 		       GeDARuntimeException, AnnotationDuplicateBindingException {
 		dtoClass = dto;
-		entityClass = entity;
+		entityClass = filterBlacklisted(entity);
 		this.synthesizer = synthesizer;
 		
 		Class dtoMap = dto;
@@ -156,6 +173,24 @@ public final class DTOAssembler {
 			
 		}
 		
+	}
+	
+	private static Class filterBlacklisted(final Class className) {
+		if (matches(className.getSimpleName())) {
+			return filterBlacklisted(className.getSuperclass());
+		}
+		return className;
+	}
+	
+	/**
+	 * Exposed for testing. 
+	 * 
+	 * @param className entity class name
+	 * @return true if class name matches pattern, which will result in going one class level up.
+	 */
+	static boolean matches(final String className) {
+		final Matcher match = entityClassNameBlacklistPatternValue.matcher(className);
+		return match.find();
 	}
 
 	private void mapRelationMapping(final Class dto, final Class entity) 
