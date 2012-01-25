@@ -8,7 +8,7 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.performance;
+package com.inspiresoftware.lib.dto.geda.performance;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,12 +16,12 @@ import java.util.List;
 
 import org.junit.Ignore;
 
-import dp.lib.dto.geda.adapter.BeanFactory;
-import dp.lib.dto.geda.assembler.DTOAssembler;
-import dp.lib.dto.geda.performance.dto.Level1Dto;
-import dp.lib.dto.geda.performance.dto.Level2Dto;
-import dp.lib.dto.geda.performance.dto.Level3Dto;
-import dp.lib.dto.geda.performance.entity.Level3Entity;
+import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
+import com.inspiresoftware.lib.dto.geda.performance.dto.Level1Dto;
+import com.inspiresoftware.lib.dto.geda.performance.dto.Level2Dto;
+import com.inspiresoftware.lib.dto.geda.performance.dto.Level3Dto;
+import com.inspiresoftware.lib.dto.geda.performance.entity.Level3Entity;
 
 /**
  * Test thread for simple level 3 objects

@@ -8,16 +8,16 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.performance;
+package com.inspiresoftware.lib.dto.geda.performance;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Ignore;
 
-import dp.lib.dto.geda.performance.entity.Level1Entity;
-import dp.lib.dto.geda.performance.entity.Level2Entity;
-import dp.lib.dto.geda.performance.entity.Level3Entity;
+import com.inspiresoftware.lib.dto.geda.performance.entity.Level1Entity;
+import com.inspiresoftware.lib.dto.geda.performance.entity.Level2Entity;
+import com.inspiresoftware.lib.dto.geda.performance.entity.Level3Entity;
 
 /**
  * Service class to build large samples of DTO's and Entities to test GeDA under load and in

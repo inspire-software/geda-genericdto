@@ -8,21 +8,21 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.performance.dto;
+package com.inspiresoftware.lib.dto.geda.performance.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Ignore;
 
-import dp.lib.dto.geda.annotations.Dto;
-import dp.lib.dto.geda.annotations.DtoCollection;
-import dp.lib.dto.geda.annotations.DtoField;
-import dp.lib.dto.geda.performance.Level1;
-import dp.lib.dto.geda.performance.Verifiable;
-import dp.lib.dto.geda.performance.dto.matcher.Level2DtoMatcher;
-import dp.lib.dto.geda.performance.entity.Level1Entity;
-import dp.lib.dto.geda.performance.entity.Level2Entity;
+import com.inspiresoftware.lib.dto.geda.annotations.Dto;
+import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
+import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
+import com.inspiresoftware.lib.dto.geda.performance.Level1;
+import com.inspiresoftware.lib.dto.geda.performance.Verifiable;
+import com.inspiresoftware.lib.dto.geda.performance.dto.matcher.Level2DtoMatcher;
+import com.inspiresoftware.lib.dto.geda.performance.entity.Level1Entity;
+import com.inspiresoftware.lib.dto.geda.performance.entity.Level2Entity;
 
 /**
  * Level 1 DTO.
