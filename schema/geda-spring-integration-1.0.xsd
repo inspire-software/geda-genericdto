@@ -26,7 +26,7 @@
 
     <xsd:element name="annotation-driven">
         <xsd:complexType>
-            <xsd:attribute name="dto-support" type="xsd:string" default="dtoSupport">
+            <xsd:attribute name="dto-support" type="xsd:string" default="dtoSupport" use="optional">
                 <xsd:annotation>
                     <xsd:documentation source="java:com.inspiresoftware.lib.dto.geda.DTOSupport"><![CDATA[
     The bean name of the DTOSupport that represents the facade for the GeDA
@@ -95,7 +95,7 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:attribute>
-            <xsd:attribute name="dto-factory" type="xsd:string" default="dtoFactory">
+            <xsd:attribute name="dto-factory" type="xsd:string" default="dtoFactory" use="optional">
                 <xsd:annotation>
                     <xsd:documentation source="java:com.inspiresoftware.lib.dto.geda.DTOFactory"><![CDATA[
     The bean name of the DTOFactory that represents the bean factory that
