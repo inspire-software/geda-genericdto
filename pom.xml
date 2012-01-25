@@ -10,46 +10,47 @@
   ~ SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.inspiresoftware.lib</groupId>
-  <artifactId>dto.GeDA</artifactId>
-  <name>DTO utilities package</name>
-  <version>2.0.0-SNAPSHOT</version>
-  <description>Provides several utilities managing DTO's in n-tier applications</description>
-  <packaging>pom</packaging>
-  <url>www.inspire-software.com</url>
-  <issueManagement>
-  	<system>JIRA</system>
-  	<url>http://inspire-software.com/jira/browse/GEDA</url>
-  </issueManagement>
-  <developers>
-  	<developer>
-  		<id>denispavlov</id>
-  		<name>Denis Pavlov</name>
-  		<email>denis.v.pavlov@inspire-software.com</email>
-  		<url>www.inspire-software.com</url>
-  	</developer>
-  </developers>
-  
-  <modules>
-    <module>core</module>
-    <module>spring-integration</module>
-  </modules>
-  
-  
-  <build>
-  	<plugins>
-  		<plugin>
-  			<artifactId>maven-compiler-plugin</artifactId>
-  			<configuration>
-  				<source>1.5</source>
-  				<target>1.5</target>
-  			</configuration>
-  		</plugin>
-  	</plugins>
-  	<defaultGoal>package</defaultGoal>
-  </build>
-  
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.inspiresoftware.lib</groupId>
+    <artifactId>dto.GeDA</artifactId>
+    <name>DTO utilities package</name>
+    <version>2.0.0-SNAPSHOT</version>
+    <description>Provides several utilities managing DTO's in n-tier applications</description>
+    <packaging>pom</packaging>
+    <url>www.inspire-software.com</url>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://inspire-software.com/jira/browse/GEDA</url>
+    </issueManagement>
+    <developers>
+        <developer>
+            <id>denispavlov</id>
+            <name>Denis Pavlov</name>
+            <email>denis.v.pavlov@inspire-software.com</email>
+            <url>www.inspire-software.com</url>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>core</module>
+        <module>spring-integration</module>
+    </modules>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <defaultGoal>package</defaultGoal>
+    </build>
+
 
 </project>
