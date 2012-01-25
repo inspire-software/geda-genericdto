@@ -8,12 +8,12 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.performance.dto.matcher;
+package com.inspiresoftware.lib.dto.geda.performance.dto.matcher;
 
 import org.junit.Ignore;
 
-import dp.lib.dto.geda.adapter.DtoToEntityMatcher;
-import dp.lib.dto.geda.performance.Level2;
+import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
+import com.inspiresoftware.lib.dto.geda.performance.Level2;
 
 /**
  * Simple matched by primary key.

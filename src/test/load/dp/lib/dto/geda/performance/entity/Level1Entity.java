@@ -8,14 +8,14 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.performance.entity;
+package com.inspiresoftware.lib.dto.geda.performance.entity;
 
 import java.util.List;
 
 import org.junit.Ignore;
 
-import dp.lib.dto.geda.performance.Level1;
-import dp.lib.dto.geda.performance.Verifiable;
+import com.inspiresoftware.lib.dto.geda.performance.Level1;
+import com.inspiresoftware.lib.dto.geda.performance.Verifiable;
 
 /**
  * Entity level 1.

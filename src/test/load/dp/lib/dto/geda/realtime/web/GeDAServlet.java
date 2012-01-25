@@ -8,7 +8,7 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.realtime.web;
+package com.inspiresoftware.lib.dto.geda.realtime.web;
 
 import java.io.IOException;
 
@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dp.lib.dto.geda.performance.PerformanceTestLevel3Thread;
-import dp.lib.dto.geda.performance.ShutdownListener;
+import com.inspiresoftware.lib.dto.geda.performance.PerformanceTestLevel3Thread;
+import com.inspiresoftware.lib.dto.geda.performance.ShutdownListener;
 
 /**
  * Basic servlet to test how GeDA works under servlet container in real-time.

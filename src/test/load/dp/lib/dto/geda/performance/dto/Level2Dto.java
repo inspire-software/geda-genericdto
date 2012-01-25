@@ -8,16 +8,16 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.performance.dto;
+package com.inspiresoftware.lib.dto.geda.performance.dto;
 
 import org.junit.Ignore;
 
-import dp.lib.dto.geda.annotations.Dto;
-import dp.lib.dto.geda.annotations.DtoField;
-import dp.lib.dto.geda.performance.Level2;
-import dp.lib.dto.geda.performance.Level3;
-import dp.lib.dto.geda.performance.Verifiable;
-import dp.lib.dto.geda.performance.entity.Level2Entity;
+import com.inspiresoftware.lib.dto.geda.annotations.Dto;
+import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
+import com.inspiresoftware.lib.dto.geda.performance.Level2;
+import com.inspiresoftware.lib.dto.geda.performance.Level3;
+import com.inspiresoftware.lib.dto.geda.performance.Verifiable;
+import com.inspiresoftware.lib.dto.geda.performance.entity.Level2Entity;
 
 /**
  * Level 2 DTO.

@@ -8,7 +8,7 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package dp.lib.dto.geda.performance;
+package com.inspiresoftware.lib.dto.geda.performance;
 
 import java.util.List;
 
