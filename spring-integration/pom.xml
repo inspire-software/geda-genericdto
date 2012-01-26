@@ -41,6 +41,22 @@
         </developer>
     </developers>
 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <suiteXmlFiles>
+                            <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                        </suiteXmlFiles>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>    
+
     <dependencies>
         <dependency>
             <groupId>com.inspiresoftware.lib</groupId>
@@ -127,8 +143,22 @@
           <artifactId>testng</artifactId>
           <version>6.1.1</version>
           <scope>test</scope>
-        </dependency>        
+        </dependency>
 
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
+        </dependency>
+        
         <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-test</artifactId>
