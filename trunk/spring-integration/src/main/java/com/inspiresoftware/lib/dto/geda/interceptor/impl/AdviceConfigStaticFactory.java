@@ -10,7 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 
 import com.inspiresoftware.lib.dto.geda.annotations.Direction;
-import com.inspiresoftware.lib.dto.geda.annotations.Occurance;
+import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public final class AdviceConfigStaticFactory {
      * @return advice.
      */
     public static AdviceConfig getConfig(final Direction direction,
-                                         final Occurance occurance,
+                                         final Occurrence occurance,
                                          final Class[] args) {
 
         if (args == null || args.length < 2) {
@@ -102,7 +102,7 @@ public final class AdviceConfigStaticFactory {
 
     }
 
-    private static String cacheKey(final Occurance occurance, final AdviceConfig.DTOSupportMode mode) {
+    private static String cacheKey(final Occurrence occurance, final AdviceConfig.DTOSupportMode mode) {
         return occurance.name() + "_" + mode.name();
     }
 

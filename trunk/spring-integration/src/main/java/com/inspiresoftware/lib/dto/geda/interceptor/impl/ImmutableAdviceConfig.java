@@ -10,7 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 
 import com.inspiresoftware.lib.dto.geda.annotations.Direction;
-import com.inspiresoftware.lib.dto.geda.annotations.Occurance;
+import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 
 /**
@@ -23,14 +23,14 @@ import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 public class ImmutableAdviceConfig implements AdviceConfig {
 
     private final Direction direction;
-    private final Occurance occurance;
+    private final Occurrence occurrence;
     private final DTOSupportMode dtoSupportMode;
 
     public ImmutableAdviceConfig(final Direction direction,
-                                 final Occurance occurance,
+                                 final Occurrence occurrence,
                                  final DTOSupportMode dtoSupportMode) {
         this.direction = direction;
-        this.occurance = occurance;
+        this.occurrence = occurrence;
         this.dtoSupportMode = dtoSupportMode;
     }
 
@@ -40,8 +40,8 @@ public class ImmutableAdviceConfig implements AdviceConfig {
     }
 
     /** {@inheritDoc} */
-    public Occurance getOccurance() {
-        return occurance;
+    public Occurrence getOccurrence() {
+        return occurrence;
     }
 
     /** {@inheritDoc} */

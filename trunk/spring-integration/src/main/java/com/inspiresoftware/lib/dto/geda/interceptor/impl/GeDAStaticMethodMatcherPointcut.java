@@ -9,7 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 
-import com.inspiresoftware.lib.dto.geda.annotations.Occurance;
+import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfigResolver;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
@@ -35,7 +35,7 @@ public class GeDAStaticMethodMatcherPointcut extends StaticMethodMatcherPointcut
 
     /** {@inheritDoc} */
     public boolean matches(final Method method, final Class<?> targetClass) {
-        final Map<Occurance, AdviceConfig> cfg = this.resolver.resolve(method, targetClass);
+        final Map<Occurrence, AdviceConfig> cfg = this.resolver.resolve(method, targetClass);
         return !CollectionUtils.isEmpty(cfg);
     }
 }

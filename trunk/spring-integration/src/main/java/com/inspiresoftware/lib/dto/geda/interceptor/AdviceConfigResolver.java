@@ -9,13 +9,13 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor;
 
-import com.inspiresoftware.lib.dto.geda.annotations.Occurance;
+import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * Examined the method being invoked for {@link com.inspiresoftware.lib.dto.geda.annotations.TransferableBefore}.
+ * Examined the method being invoked for {@link com.inspiresoftware.lib.dto.geda.annotations.Transferable}.
  * <p/>
  * User: denispavlov
  * Date: Jan 26, 2012
@@ -28,6 +28,6 @@ public interface AdviceConfigResolver {
      * @param targetClass class which contains the method
      * @return advice configuration or null if this is not an annotated method.
      */
-    Map<Occurance, AdviceConfig> resolve(final Method method, final Class<?> targetClass);
+    Map<Occurrence, AdviceConfig> resolve(final Method method, final Class<?> targetClass);
 
 }

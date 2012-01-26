@@ -9,7 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 
-import com.inspiresoftware.lib.dto.geda.annotations.Occurance;
+import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
@@ -49,7 +49,7 @@ public class AdviceConfigResolverImplTest {
 
         }
 
-    };
+    }
 
     @Test
     public void testResolve() throws Exception {
@@ -69,7 +69,7 @@ public class AdviceConfigResolverImplTest {
             private int count = 0;
 
             @Override
-            Map<Occurance, AdviceConfig> resolveConfiguration(final Method method,
+            Map<Occurrence, AdviceConfig> resolveConfiguration(final Method method,
                                                               final Class<?> targetClass,
                                                               final boolean trySpecific) {
                 assertTrue(count < 4);
@@ -90,17 +90,17 @@ public class AdviceConfigResolverImplTest {
 
         ctrl.replay();
 
-        final Map<Occurance, AdviceConfig> map1 = resolver.resolve(methAnn1, null);
+        final Map<Occurrence, AdviceConfig> map1 = resolver.resolve(methAnn1, null);
         assertNotNull(map1);
         assertSame(map1, cfg1);
 
-        final Map<Occurance, AdviceConfig> map1_1 = resolver.resolve(methAnn1, null);
+        final Map<Occurrence, AdviceConfig> map1_1 = resolver.resolve(methAnn1, null);
         assertNotNull(map1_1);
         assertSame(map1_1, cfg1);
 
         assertSame(map1, map1_1);
 
-        final Map<Occurance, AdviceConfig> map1_2 = resolver.resolve(methAnn1, null);
+        final Map<Occurrence, AdviceConfig> map1_2 = resolver.resolve(methAnn1, null);
         assertNotNull(map1_2);
         assertSame(map1_2, cfg1);
 
@@ -109,15 +109,15 @@ public class AdviceConfigResolverImplTest {
         assertTrue(resolver.isCached(methAnn1.toString()));
         assertFalse(resolver.isBlacklisted(methAnn1.toString()));
 
-        final Map<Occurance, AdviceConfig> map2 = resolver.resolve(methAnn2, null);
+        final Map<Occurrence, AdviceConfig> map2 = resolver.resolve(methAnn2, null);
         assertNotNull(map2);
         assertSame(map2, cfg2);
 
-        final Map<Occurance, AdviceConfig> map2_1 = resolver.resolve(methAnn2, null);
+        final Map<Occurrence, AdviceConfig> map2_1 = resolver.resolve(methAnn2, null);
         assertNotNull(map2_1);
         assertSame(map2_1, cfg2);
 
-        final Map<Occurance, AdviceConfig> map2_2 = resolver.resolve(methAnn2, null);
+        final Map<Occurrence, AdviceConfig> map2_2 = resolver.resolve(methAnn2, null);
         assertNotNull(map2_2);
         assertSame(map2_2, cfg2);
 
@@ -127,11 +127,11 @@ public class AdviceConfigResolverImplTest {
         assertFalse(resolver.isBlacklisted(methAnn2.toString()));
 
 
-        final Map<Occurance, AdviceConfig> map3 = resolver.resolve(methBlack1, null);
+        final Map<Occurrence, AdviceConfig> map3 = resolver.resolve(methBlack1, null);
         assertNotNull(map3);
         assertTrue(map3.isEmpty());
 
-        final Map<Occurance, AdviceConfig> map3_1 = resolver.resolve(methBlack1, null);
+        final Map<Occurrence, AdviceConfig> map3_1 = resolver.resolve(methBlack1, null);
         assertNotNull(map3_1);
         assertTrue(map3_1.isEmpty());
 
@@ -141,11 +141,11 @@ public class AdviceConfigResolverImplTest {
         assertTrue(resolver.isBlacklisted(methBlack1.toString()));
 
 
-        final Map<Occurance, AdviceConfig> map4 = resolver.resolve(methBlack2, null);
+        final Map<Occurrence, AdviceConfig> map4 = resolver.resolve(methBlack2, null);
         assertNotNull(map4);
         assertTrue(map4.isEmpty());
 
-        final Map<Occurance, AdviceConfig> map4_1 = resolver.resolve(methBlack2, null);
+        final Map<Occurrence, AdviceConfig> map4_1 = resolver.resolve(methBlack2, null);
         assertNotNull(map4_1);
         assertTrue(map4_1.isEmpty());
 

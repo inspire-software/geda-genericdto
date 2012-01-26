@@ -16,7 +16,7 @@ package com.inspiresoftware.lib.dto.geda.annotations;
  * Date: Jan 25, 2012
  * Time: 7:58:36 PM
  */
-public enum Occurance {
+public enum Occurrence {
 
     BEFORE_METHOD_INVOCATION,
     AFTER_METHOD_INVOCATION
