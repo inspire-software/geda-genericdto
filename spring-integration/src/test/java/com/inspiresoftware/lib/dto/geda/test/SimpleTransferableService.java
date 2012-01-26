@@ -9,9 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda.test;
 
-import com.inspiresoftware.lib.dto.geda.annotations.Direction;
-import com.inspiresoftware.lib.dto.geda.annotations.TransferableBefore;
-
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -24,22 +22,28 @@ import java.util.Set;
  */
 public interface SimpleTransferableService {
 
-    @TransferableBefore(direction = Direction.ENTITY_TO_DTO)
-    void loadDto(ExtendedDataTransferObject dto, DomainObject entity);
+    void loadDtoBefore(ExtendedDataTransferObject dto, DomainObject entity);
 
-    @TransferableBefore(direction = Direction.ENTITY_TO_DTO)
-    void loadDto(Class dtoClass, ExtendedDataTransferObject dto, DomainObject entity);
+    void loadDtoBefore(Class dtoClass, ExtendedDataTransferObject dto, DomainObject entity);
 
-    @TransferableBefore(direction = Direction.ENTITY_TO_DTO)
-    void loadDto(Class dtoClass, List<ExtendedDataTransferObject> dtos, List<DomainObject> entities);
+    void loadDtoBefore(Class dtoClass, List<ExtendedDataTransferObject> dtos, List<DomainObject> entities);
 
-    @TransferableBefore(direction = Direction.DTO_TO_ENTITY)
-    void loadEntity(ExtendedDataTransferObject dto, DomainObject entity);
+    void loadEntityBefore(ExtendedDataTransferObject dto, DomainObject entity);
 
-    @TransferableBefore(direction = Direction.DTO_TO_ENTITY)
-    void loadEntity(Class dtoClass, ExtendedDataTransferObject dto, DomainObject entity);
+    void loadEntityBefore(Class dtoClass, ExtendedDataTransferObject dto, DomainObject entity);
 
-    @TransferableBefore(direction = Direction.DTO_TO_ENTITY)
-    void loadEntity(Class dtoClass, List<ExtendedDataTransferObject> dtos, Set<DomainObject> entity);
+    void loadEntityBefore(Class dtoClass, List<ExtendedDataTransferObject> dtos, Set<DomainObject> entity);
+
+    ExtendedDataTransferObject loadDtoAfter(ExtendedDataTransferObject dto, DomainObject entity, boolean createNew);
+
+    ExtendedDataTransferObject loadDtoAfter(Class dtoClass, ExtendedDataTransferObject dto, DomainObject entity, boolean createNew);
+
+    Collection<ExtendedDataTransferObject> loadDtoAfter(Class dtoClass, List<ExtendedDataTransferObject> dtos, List<DomainObject> entities, boolean createNew);
+
+    DomainObject loadEntityAfter(ExtendedDataTransferObject dto, DomainObject entity, boolean createNew);
+
+    DomainObject loadEntityAfter(Class dtoClass, ExtendedDataTransferObject dto, DomainObject entity, boolean createNew);
+
+    Collection<DomainObject> loadEntityAfter(Class dtoClass, List<ExtendedDataTransferObject> dtos, Set<DomainObject> entity, boolean createNew);
 
 }
