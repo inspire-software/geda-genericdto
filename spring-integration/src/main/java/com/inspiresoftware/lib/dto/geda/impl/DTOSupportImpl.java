@@ -9,8 +9,8 @@
 
 package com.inspiresoftware.lib.dto.geda.impl;
 
-import com.inspiresoftware.lib.dto.geda.DTOFactory;
 import com.inspiresoftware.lib.dto.geda.DTOSupport;
+import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.repository.ValueConverterRepository;
 import com.inspiresoftware.lib.dto.geda.adapter.repository.impl.ValueConverterRepositoryImpl;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
@@ -19,9 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * .
@@ -34,7 +32,7 @@ public class DTOSupportImpl implements DTOSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(DTOSupportImpl.class);
 
-    private final DTOFactory dtoFactory;
+    private final BeanFactory dtoFactory;
     private final ValueConverterRepository dtoValueConverters = new ValueConverterRepositoryImpl();
 
     private DTOEventListener onDtoAssembled;
@@ -43,7 +41,7 @@ public class DTOSupportImpl implements DTOSupport {
     private DTOEventListener onEntityFailed;
 
 
-    public DTOSupportImpl(final DTOFactory dtoFactory) {
+    public DTOSupportImpl(final BeanFactory dtoFactory) {
         this.dtoFactory = dtoFactory;
         this.registerCoreConverters();
     }
@@ -98,7 +96,7 @@ public class DTOSupportImpl implements DTOSupport {
     }
 
     /** {@inheritDoc} */
-    public <T> List<T> assembleDtos(final Class dtoClass, final List<T> dtos, final Collection entities) {
+    public <T> Collection<T> assembleDtos(final Class dtoClass, final Collection<T> dtos, final Collection entities) {
         if (!CollectionUtils.isEmpty(entities)) {
             try {
                 DTOAssembler.newAssembler(dtoClass, entities.iterator().next().getClass())
@@ -107,7 +105,7 @@ public class DTOSupportImpl implements DTOSupport {
                 if (this.onDtoFailed != null) {
                     this.onDtoFailed.onEvent(dtos, entities, re);
                     if (LOG.isErrorEnabled()) {
-                        LOG.error("Exception skipped by event listenr", re);
+                        LOG.error("Exception skipped by event listener", re);
                     }
                     return dtos;
                 }
@@ -160,6 +158,29 @@ public class DTOSupportImpl implements DTOSupport {
             }
             throw re; // re-throw
         }
+    }
+
+    /** {@inheritDoc} */
+    public <T> Collection<T> assembleEntities(final Class entityClass, final Collection dtos, final Collection<T> entities) {
+        if (!CollectionUtils.isEmpty(dtos)) {
+            try {
+                DTOAssembler.newAssembler(dtos.iterator().next().getClass(), entityClass)
+                    .assembleEntities(dtos, entities, this.dtoValueConverters.getAll(), this.dtoFactory);
+            } catch (final RuntimeException re) {
+                if (this.onEntityFailed != null) {
+                    this.onEntityFailed.onEvent(dtos, entities, re);
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error("Exception skipped by event listener", re);
+                    }
+                    return entities;
+                }
+                throw re; // re-throw
+            }
+        }
+        if (this.onEntityAssembled != null) {
+            this.onEntityAssembled.onEvent(dtos, entities);
+        }
+        return entities;
     }
 
     /** {@inheritDoc} */

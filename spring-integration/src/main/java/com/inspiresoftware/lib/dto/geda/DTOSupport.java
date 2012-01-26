@@ -10,7 +10,6 @@
 package com.inspiresoftware.lib.dto.geda;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Facade for working with DTO to entity conversion that is application aware and
@@ -36,7 +35,7 @@ public interface DTOSupport {
     /**
      * Assemble dto from entity object
      *
-     * @param dtoClass specify the class level
+     * @param dtoClass specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
      *
@@ -48,14 +47,14 @@ public interface DTOSupport {
     /**
      * Assemble dto from entity object
      *
-     * @param dtoClass specify the class level
-     * @param dtos dto colelction (must not be null)
+     * @param dtoClass specify the class level (can be used as a filter if there are DTO hierarchies)
+     * @param dtos dto collection (must not be null)
      * @param entities entities collection (must not be null)
      *
      * @return convenience return object (same as dto param). Used for the
-     *         following: final DTO dto = support.assembleDto(new DTO(), entity);
+     *         following: final Collection<DTO> dtos = support.assembleDtos(DTO.class, dtos, entities);
      */
-    <T> List<T> assembleDtos(Class dtoClass, List<T> dtos, Collection entities);
+    <T> Collection<T> assembleDtos(Class dtoClass, Collection<T> dtos, Collection entities);
 
     /**
      * Assemble entity from dto object
@@ -81,12 +80,24 @@ public interface DTOSupport {
     <T> T assembleEntity(Class dtoClass, Object dto, T entity);
 
     /**
+     * Assemble entities from dto objects
+     *
+     * @param entityClass specify the class level
+     * @param dtos dto collection (must not be null)
+     * @param entities entities collection (must not be null)
+     *
+     * @return convenience return object (same as dto param). Used for the
+     *         following: final Collection<DTO> dtos = support.assembleDtos(DTO.class, dtos, entities);
+     */
+    <T> Collection<T> assembleEntities(Class entityClass, Collection dtos, Collection<T> entities);
+
+    /**
      * Enhance runtime DTO converters runtime model. This method is intended to be used in
-     * service bean constructors that need to provide additional inmplementation specific
+     * service bean constructors that need to provide additional implementation specific
      * conversions (such as retrievers for example).
      *
      * @param key converter key (as provided in DTO mapping annotations)
-     * @param converter either conveterter of a retriever.
+     * @param converter either converter of a retriever.
      */
     void registerValueConverter(final String key, final Object converter);
 

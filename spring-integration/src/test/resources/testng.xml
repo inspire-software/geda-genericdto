@@ -10,6 +10,10 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="SmokeTestSuite" verbose="3">
 
+    <test name="BasicTests">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.interceptor.impl.AdviceConfigStaticFactoryTest"/></classes>
+    </test>
+
     <test name="SetupApplicationContext">
         <classes><class name="com.inspiresoftware.lib.dto.geda.SetupApplicationContext"/></classes>
     </test>
