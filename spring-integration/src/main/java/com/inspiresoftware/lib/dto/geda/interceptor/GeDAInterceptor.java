@@ -10,7 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.interceptor;
 
 import com.inspiresoftware.lib.dto.geda.DTOSupport;
-import com.inspiresoftware.lib.dto.geda.annotations.Occurance;
+import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
@@ -50,7 +50,7 @@ public class GeDAInterceptor implements MethodInterceptor {
         final Class<?> targetClass = (invocation.getThis() != null ? invocation.getThis().getClass() : null);
 
 
-        final Map<Occurance, AdviceConfig> cfg = this.resolver.resolve(method, targetClass);
+        final Map<Occurrence, AdviceConfig> cfg = this.resolver.resolve(method, targetClass);
         if (CollectionUtils.isEmpty(cfg)) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("skipping method {} because it is not advised", invocation);
@@ -60,8 +60,8 @@ public class GeDAInterceptor implements MethodInterceptor {
 
 
 
-        if (cfg.containsKey(Occurance.BEFORE_METHOD_INVOCATION)) {
-            final AdviceConfig.DTOSupportMode mode = cfg.get(Occurance.BEFORE_METHOD_INVOCATION).getDtoSupportMode();
+        if (cfg.containsKey(Occurrence.BEFORE_METHOD_INVOCATION)) {
+            final AdviceConfig.DTOSupportMode mode = cfg.get(Occurrence.BEFORE_METHOD_INVOCATION).getDtoSupportMode();
             if (LOG.isTraceEnabled()) {
                 LOG.trace("performing transfer before invocation {} in mode {}", invocation, mode);
             }
@@ -70,8 +70,8 @@ public class GeDAInterceptor implements MethodInterceptor {
 
         final Object result = invocation.proceed();
 
-        if (cfg.containsKey(Occurance.AFTER_METHOD_INVOCATION)) {
-            final AdviceConfig.DTOSupportMode mode = cfg.get(Occurance.AFTER_METHOD_INVOCATION).getDtoSupportMode();
+        if (cfg.containsKey(Occurrence.AFTER_METHOD_INVOCATION)) {
+            final AdviceConfig.DTOSupportMode mode = cfg.get(Occurrence.AFTER_METHOD_INVOCATION).getDtoSupportMode();
             if (LOG.isTraceEnabled()) {
                 LOG.trace("performing transfer after invocation {} in mode {}", invocation, mode);
             }

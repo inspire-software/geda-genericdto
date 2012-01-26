@@ -10,7 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.interceptor;
 
 import com.inspiresoftware.lib.dto.geda.annotations.Direction;
-import com.inspiresoftware.lib.dto.geda.annotations.Occurance;
+import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 
 import java.io.Serializable;
 
@@ -45,7 +45,7 @@ public interface AdviceConfig extends Serializable {
     /**
      * @return when to perform information transfer.
      */
-    Occurance getOccurance();
+    Occurrence getOccurrence();
 
     /**
      * @return resolved method name of the {@link com.inspiresoftware.lib.dto.geda.DTOSupport}

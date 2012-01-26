@@ -10,7 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 
 import com.inspiresoftware.lib.dto.geda.annotations.Direction;
-import com.inspiresoftware.lib.dto.geda.annotations.Occurance;
+import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.annotations.Transferable;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfigResolver;
@@ -38,13 +38,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AdviceConfigResolverImpl implements AdviceConfigResolver {
 
     private final Map<String, Boolean> blacklist = new ConcurrentHashMap<String, Boolean>();
-    private final Map<String, Map<Occurance, AdviceConfig>> cache = new ConcurrentHashMap<String, Map<Occurance, AdviceConfig>>();
+    private final Map<String, Map<Occurrence, AdviceConfig>> cache = new ConcurrentHashMap<String, Map<Occurrence, AdviceConfig>>();
 
     public AdviceConfigResolverImpl() {
     }
 
     /** {@inheritDoc} */
-    public Map<Occurance, AdviceConfig> resolve(final Method method, final Class<?> targetClass) {
+    public Map<Occurrence, AdviceConfig> resolve(final Method method, final Class<?> targetClass) {
 
         final String methodCacheKey = methodCacheKey(method, targetClass);
         if (isBlacklisted(methodCacheKey)) {
@@ -55,7 +55,7 @@ public class AdviceConfigResolverImpl implements AdviceConfigResolver {
             return this.cache.get(methodCacheKey);
         }
 
-        final Map<Occurance, AdviceConfig> cfg = resolveConfiguration(method, targetClass, true);
+        final Map<Occurrence, AdviceConfig> cfg = resolveConfiguration(method, targetClass, true);
 
         if (cfg.isEmpty()) {
             this.blacklist.put(methodCacheKey, Boolean.TRUE);
@@ -74,29 +74,29 @@ public class AdviceConfigResolverImpl implements AdviceConfigResolver {
         return this.blacklist.containsKey(methodCacheKey);
     }
 
-    Map<Occurance, AdviceConfig> resolveConfiguration(final Method method,
+    Map<Occurrence, AdviceConfig> resolveConfiguration(final Method method,
                                                       final Class<?> targetClass,
                                                       final boolean trySpecific) {
         
         final Transferable annotation = method.getAnnotation(Transferable.class);
 
-        final Map<Occurance, AdviceConfig> cfg = new HashMap<Occurance, AdviceConfig>();
+        final Map<Occurrence, AdviceConfig> cfg = new HashMap<Occurrence, AdviceConfig>();
         final Class[] args = method.getParameterTypes();
 
         if (annotation != null) {
 
             if (annotation.before() != Direction.NONE) {
                 final AdviceConfig cfgBefore =
-                        AdviceConfigStaticFactory.getConfig(annotation.before(), Occurance.BEFORE_METHOD_INVOCATION, args);
+                        AdviceConfigStaticFactory.getConfig(annotation.before(), Occurrence.BEFORE_METHOD_INVOCATION, args);
                 if (cfgBefore != null) {
-                    cfg.put(Occurance.BEFORE_METHOD_INVOCATION, cfgBefore);
+                    cfg.put(Occurrence.BEFORE_METHOD_INVOCATION, cfgBefore);
                 }
             }
             if (annotation.after() != Direction.NONE) {
                 final AdviceConfig cfgAfter =
-                        AdviceConfigStaticFactory.getConfig(annotation.after(), Occurance.AFTER_METHOD_INVOCATION, args);
+                        AdviceConfigStaticFactory.getConfig(annotation.after(), Occurrence.AFTER_METHOD_INVOCATION, args);
                 if (cfgAfter != null) {
-                    cfg.put(Occurance.AFTER_METHOD_INVOCATION, cfgAfter);
+                    cfg.put(Occurrence.AFTER_METHOD_INVOCATION, cfgAfter);
                 }
             }
 
