@@ -101,7 +101,7 @@ public class GeDAInterceptor implements MethodInterceptor {
                 break;
 
             case DTOS_BY_CLASS_TO_ENTITIES:
-                this.support.assembleEntities((Class) args[0], (List) args[1], (Collection) args[2]);
+                this.support.assembleEntities((Class) args[0], (Collection) args[1], (Collection) args[2]);
                 break;
 
             case ENTITY_TO_DTO:
@@ -113,7 +113,7 @@ public class GeDAInterceptor implements MethodInterceptor {
                 break;
 
             case ENTITIES_TO_DTOS_BY_CLASS:
-                this.support.assembleDtos((Class) args[0], (List) args[1], (Collection) args[2]);
+                this.support.assembleDtos((Class) args[0], (Collection) args[1], (Collection) args[2]);
                 break;
 
             default:
@@ -148,15 +148,15 @@ public class GeDAInterceptor implements MethodInterceptor {
                 break;
 
             case ENTITY_TO_DTO:
-                this.support.assembleDto(args[0], args[1]);
+                this.support.assembleDto(result, args[1]);
                 break;
 
             case ENTITY_TO_DTO_BY_CLASS:
-                this.support.assembleDto((Class) args[0], args[1], args[2]);
+                this.support.assembleDto((Class) args[0], result, args[2]);
                 break;
 
             case ENTITIES_TO_DTOS_BY_CLASS:
-                this.support.assembleDtos((Class) args[0], (List) args[1], (Collection) args[2]);
+                this.support.assembleDtos((Class) args[0], (Collection) result, (Collection) args[2]);
                 break;
 
             default:

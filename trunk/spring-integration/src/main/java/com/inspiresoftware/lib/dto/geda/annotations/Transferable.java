@@ -19,11 +19,15 @@ import java.lang.annotation.*;
  * The first parameters to the method must match one of the signatures in the
  * {@link com.inspiresoftware.lib.dto.geda.DTOSupport}
  *
+ * This annotation will start the transfer process before the method is invoked
+ * if before direction is set to other than NONE.
+ *
  * After the method had been invoked this annotation will use result as target
- * of the conversion (either DTO or Entity depending on direction)
+ * of the conversion (either DTO or Entity depending on direction) if the
+ * after direction is other than NONE.
  *
  * E.g. signature:
- *                           @TransferableAfter(direction = ENTITY_TO_DTO)
+ *                           @Transferable(after = ENTITY_TO_DTO)
  *        final Dto dtoOut = doTransfer(dtoIn, entity);
  *
  *      will result in:
@@ -31,7 +35,7 @@ import java.lang.annotation.*;
  *        final Dto dtoOut = support.assembleDto(dtoOut, entity)
  *
  * E.g. signature:
- *                                 @TransferableAfter(direction = DTO_TO_ENTITY)
+ *                                 @Transferable(direction = DTO_TO_ENTITY)
  *        final Entity entityOut = doTransfer(dto, entityIn);
  *
  *      will result in:
@@ -47,11 +51,18 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface TransferableAfter {
+public @interface Transferable {
 
     /**
-     * @return defines direction of transfer to perform on advised method.
+     * @return defines direction of transfer to perform on advised
+     *         method before its invocation.
      */
-    Direction direction() default Direction.DTO_TO_ENTITY;
+    Direction before() default Direction.DTO_TO_ENTITY;
+
+    /**
+     * @return defines direction of transfer to perform on advised
+     *         method after its invocation.
+     */
+    Direction after() default Direction.NONE;
 
 }

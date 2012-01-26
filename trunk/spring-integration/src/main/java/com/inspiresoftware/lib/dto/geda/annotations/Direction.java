@@ -19,6 +19,7 @@ package com.inspiresoftware.lib.dto.geda.annotations;
 public enum Direction {
 
     DTO_TO_ENTITY,
-    ENTITY_TO_DTO
+    ENTITY_TO_DTO,
+    NONE
 
 }

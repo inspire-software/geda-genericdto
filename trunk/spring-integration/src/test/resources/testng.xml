@@ -11,11 +11,14 @@
 <suite name="SmokeTestSuite" verbose="3">
 
     <test name="BasicTests">
-        <classes><class name="com.inspiresoftware.lib.dto.geda.interceptor.impl.AdviceConfigStaticFactoryTest"/></classes>
+        <classes>
+            <class name="com.inspiresoftware.lib.dto.geda.interceptor.impl.AdviceConfigStaticFactoryTest"/>
+            <class name="com.inspiresoftware.lib.dto.geda.interceptor.impl.AdviceConfigResolverImplTest"/>
+        </classes>
     </test>
 
-    <test name="SetupApplicationContext">
-        <classes><class name="com.inspiresoftware.lib.dto.geda.SetupApplicationContext"/></classes>
+    <test name="IntegrationTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.IntegrationTest"/></classes>
     </test>
 
 </suite>
