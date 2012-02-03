@@ -34,7 +34,7 @@ public class InspectionInvalidDtoInstanceException extends GeDAException {
 		super("This assembler is only applicable for dto: " + className 
 				+ (dto != null ? ", found: " + dto.getClass().getCanonicalName() : ""));
 		this.className = className;
-		this.dtoName = dto.getClass().getCanonicalName();
+		this.dtoName = dto != null ? dto.getClass().getCanonicalName() : "null";
 	}
 
 	/**

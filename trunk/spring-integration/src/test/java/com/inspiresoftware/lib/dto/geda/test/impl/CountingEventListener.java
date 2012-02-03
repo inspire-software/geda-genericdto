@@ -9,7 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda.test.impl;
 
-import com.inspiresoftware.lib.dto.geda.event.DTOEventListener;
+import com.inspiresoftware.lib.dto.geda.test.DTOCountingEventListener;
 
 /**
  * .
@@ -18,7 +18,7 @@ import com.inspiresoftware.lib.dto.geda.event.DTOEventListener;
  * Date: Jan 26, 2012
  * Time: 5:12:43 PM
  */
-public class CountingEventListener implements DTOEventListener {
+public class CountingEventListener implements DTOCountingEventListener {
 
     private int count = 0;
 

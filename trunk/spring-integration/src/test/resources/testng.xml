@@ -12,13 +12,16 @@
 
     <test name="BasicTests">
         <classes>
-            <class name="com.inspiresoftware.lib.dto.geda.interceptor.impl.AdviceConfigStaticFactoryTest"/>
+            <class name="com.inspiresoftware.lib.dto.geda.interceptor.impl.TransferableUtilsTest"/>
             <class name="com.inspiresoftware.lib.dto.geda.interceptor.impl.AdviceConfigResolverImplTest"/>
         </classes>
     </test>
 
-    <test name="IntegrationTest">
-        <classes><class name="com.inspiresoftware.lib.dto.geda.IntegrationTest"/></classes>
+    <test name="IntegrationBootTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationBootTest"/></classes>
+    </test>
+    <test name="IntegrationRunTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeTest"/></classes>
     </test>
 
 </suite>

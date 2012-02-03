@@ -12,6 +12,10 @@ package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfigResolver;
+import org.springframework.aop.ClassFilter;
+import org.springframework.aop.MethodMatcher;
+import org.springframework.aop.Pointcut;
+import org.springframework.aop.support.DynamicMethodMatcher;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.util.CollectionUtils;
 
@@ -25,17 +29,25 @@ import java.util.Map;
  * Date: Jan 26, 2012
  * Time: 2:15:41 PM
  */
-public class GeDAStaticMethodMatcherPointcut extends StaticMethodMatcherPointcut {
+public class GeDAMethodMatcherPointcut extends DynamicMethodMatcher implements Pointcut {
 
     private final AdviceConfigResolver resolver;
 
-    public GeDAStaticMethodMatcherPointcut(final AdviceConfigResolver resolver) {
+    public GeDAMethodMatcherPointcut(final AdviceConfigResolver resolver) {
         this.resolver = resolver;
     }
 
     /** {@inheritDoc} */
-    public boolean matches(final Method method, final Class<?> targetClass) {
+    public boolean matches(final Method method, final Class<?> targetClass, final Object[] args) {
         final Map<Occurrence, AdviceConfig> cfg = this.resolver.resolve(method, targetClass);
         return !CollectionUtils.isEmpty(cfg);
+    }
+
+    public ClassFilter getClassFilter() {
+        return ClassFilter.TRUE;
+    }
+
+    public MethodMatcher getMethodMatcher() {
+        return this;
     }
 }

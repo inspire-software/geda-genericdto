@@ -9,17 +9,12 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 
-import com.inspiresoftware.lib.dto.geda.annotations.Direction;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
-import com.inspiresoftware.lib.dto.geda.annotations.Transferable;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfigResolver;
-import org.springframework.core.BridgeMethodResolver;
-import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,12 +30,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: Jan 26, 2012
  * Time: 1:03:36 PM
  */
-public class AdviceConfigResolverImpl implements AdviceConfigResolver {
+public class RuntimeAdviceConfigResolverImpl implements AdviceConfigResolver {
 
     private final Map<String, Boolean> blacklist = new ConcurrentHashMap<String, Boolean>();
     private final Map<String, Map<Occurrence, AdviceConfig>> cache = new ConcurrentHashMap<String, Map<Occurrence, AdviceConfig>>();
 
-    public AdviceConfigResolverImpl() {
+    public RuntimeAdviceConfigResolverImpl() {
     }
 
     /** {@inheritDoc} */
@@ -55,7 +50,7 @@ public class AdviceConfigResolverImpl implements AdviceConfigResolver {
             return this.cache.get(methodCacheKey);
         }
 
-        final Map<Occurrence, AdviceConfig> cfg = resolveConfiguration(method, targetClass, true);
+        final Map<Occurrence, AdviceConfig> cfg = resolveConfiguration(method, targetClass);
 
         if (cfg.isEmpty()) {
             this.blacklist.put(methodCacheKey, Boolean.TRUE);
@@ -75,44 +70,10 @@ public class AdviceConfigResolverImpl implements AdviceConfigResolver {
     }
 
     Map<Occurrence, AdviceConfig> resolveConfiguration(final Method method,
-                                                      final Class<?> targetClass,
-                                                      final boolean trySpecific) {
-        
-        final Transferable annotation = method.getAnnotation(Transferable.class);
+                                                      final Class<?> targetClass) {
 
-        final Map<Occurrence, AdviceConfig> cfg = new HashMap<Occurrence, AdviceConfig>();
-        final Class[] args = method.getParameterTypes();
+        return TransferableUtils.resolveConfiguration(method, targetClass);
 
-        if (annotation != null) {
-
-            if (annotation.before() != Direction.NONE) {
-                final AdviceConfig cfgBefore =
-                        AdviceConfigStaticFactory.getConfig(annotation.before(), Occurrence.BEFORE_METHOD_INVOCATION, args);
-                if (cfgBefore != null) {
-                    cfg.put(Occurrence.BEFORE_METHOD_INVOCATION, cfgBefore);
-                }
-            }
-            if (annotation.after() != Direction.NONE) {
-                final AdviceConfig cfgAfter =
-                        AdviceConfigStaticFactory.getConfig(annotation.after(), Occurrence.AFTER_METHOD_INVOCATION, args);
-                if (cfgAfter != null) {
-                    cfg.put(Occurrence.AFTER_METHOD_INVOCATION, cfgAfter);
-                }
-            }
-
-        } else if (trySpecific) {
-            
-            // The method may be on an interface, but we need attributes from the target class.
-            // If the target class is null, the method will be unchanged.
-            Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
-            // If we are dealing with method with generic parameters, find the original method.
-            specificMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
-
-            return resolveConfiguration(specificMethod, targetClass, false);
-
-        }
-
-        return cfg;
     }
 
     String methodCacheKey(final Method method, final Class<?> targetClass) {

@@ -26,12 +26,36 @@ public class ImmutableAdviceConfig implements AdviceConfig {
     private final Occurrence occurrence;
     private final DTOSupportMode dtoSupportMode;
 
+    private final String dtoFilterKey;
+    private final String dtoKey;
+    private final String entityKey;
+
+    private final int dtoSourceIndex;
+    private final int dtoTargetIndex;
+    private final int entitySourceIndex;
+    private final int entityTargetIndex;
+
+
     public ImmutableAdviceConfig(final Direction direction,
                                  final Occurrence occurrence,
-                                 final DTOSupportMode dtoSupportMode) {
+                                 final DTOSupportMode dtoSupportMode,
+                                 final String dtoFilterKey,
+                                 final String dtoKey,
+                                 final String entityKey,
+                                 final int dtoSourceIndex,
+                                 final int dtoTargetIndex,
+                                 final int entitySourceIndex,
+                                 final int entityTargetIndex) {
         this.direction = direction;
         this.occurrence = occurrence;
         this.dtoSupportMode = dtoSupportMode;
+        this.dtoKey = dtoKey;
+        this.entityKey = entityKey;
+        this.dtoFilterKey = dtoFilterKey;
+        this.dtoSourceIndex = dtoSourceIndex;
+        this.dtoTargetIndex = dtoTargetIndex;
+        this.entitySourceIndex = entitySourceIndex;
+        this.entityTargetIndex = entityTargetIndex;
     }
 
     /** {@inheritDoc} */
@@ -47,5 +71,40 @@ public class ImmutableAdviceConfig implements AdviceConfig {
     /** {@inheritDoc} */
     public DTOSupportMode getDtoSupportMode() {
         return dtoSupportMode;
+    }
+
+    /** {@inheritDoc} */
+    public String getDtoFilterKey() {
+        return dtoFilterKey;
+    }
+
+    /** {@inheritDoc} */
+    public String getDtoKey() {
+        return dtoKey;
+    }
+
+    /** {@inheritDoc} */
+    public String getEntityKey() {
+        return entityKey;
+    }
+
+    /** {@inheritDoc} */
+    public int getDtoSourceIndex() {
+        return dtoSourceIndex;
+    }
+
+    /** {@inheritDoc} */
+    public int getDtoTargetIndex() {
+        return dtoTargetIndex;
+    }
+
+    /** {@inheritDoc} */
+    public int getEntitySourceIndex() {
+        return entitySourceIndex;
+    }
+
+    /** {@inheritDoc} */
+    public int getEntityTargetIndex() {
+        return entityTargetIndex;
     }
 }

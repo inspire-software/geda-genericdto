@@ -18,8 +18,19 @@ package com.inspiresoftware.lib.dto.geda.annotations;
  */
 public enum Direction {
 
+    /**
+     * Transfer of data from DTO (source) to Entity (target)
+     */
     DTO_TO_ENTITY,
+
+    /**
+     * Transfer of data from Entity (source) to DTO (target)
+     */
     ENTITY_TO_DTO,
+
+    /**
+     * No transfer of data should be performed.
+     */
     NONE
 
 }

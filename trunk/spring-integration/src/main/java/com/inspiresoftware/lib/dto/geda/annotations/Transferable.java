@@ -26,21 +26,41 @@ import java.lang.annotation.*;
  * of the conversion (either DTO or Entity depending on direction) if the
  * after direction is other than NONE.
  *
- * E.g. signature:
- *                           @Transferable(after = ENTITY_TO_DTO)
- *        final Dto dtoOut = doTransfer(dtoIn, entity);
+ * The following signatures are supported (method names are optional but pattern
+ * for method arguments and return types must be adhered to. ", ... " specify
+ * any number of additional attributes in the method signature):
  *
- *      will result in:
+ * before = DTO_TO_ENTITY:
  *
- *        final Dto dtoOut = support.assembleDto(dtoOut, entity)
+ *  public void toEntity(DTO dto, Entity entity, ... )
+ *  public void toEntity(Collection<DTO> dto, Collection<Entity> blankCollection, ... )
  *
- * E.g. signature:
- *                                 @Transferable(direction = DTO_TO_ENTITY)
- *        final Entity entityOut = doTransfer(dto, entityIn);
+ * before = ENTITY_TO_DTO:
  *
- *      will result in:
+ *  public void toDto(DTO dto, Entity entity, ... )
+ *  public void toDto(Collection<DTO> dto, Collection<Entity> blankCollection, ... )
  *
- *        final Entity entityOut = support.assembleEntity(dto, entityOut)
+ * after = DTO_TO_ENTITY:
+ *
+ *  public Entity toEntity(DTO dto, ... )
+ *  public void toEntity(DTO dto, Entity entity, ... )
+ *  public void toEntity(Collection<DTO> dto, Collection<Entity> blankCollection, ... )
+ *
+ * after = ENTITY_TO_DTO:
+ *  
+ *  public DTO toDto(Entity entity, ... )
+ *  public void toDto(DTO dto, Entity entity, ... )
+ *  public void toDto(Collection<DTO> dto, Collection<Entity> blankCollection, ... )
+ *
+ * before = DTO_TO_ENTITY, after = ENTITY_TO_DTO (for method with return patterns is source->target->return):
+ *
+ *  public DTO toEntityAndBackToDto(DTO source, Entity target, ... )
+ *  public void toEntityAndBackToDto(DTO source, Entity target, ... )
+ *
+ * before = ENTITY_TO_DTO, after = DTO_TO_ENTITY (for method with return patterns is source->target->return):
+ *
+ *  public Entity toDtoAndBackToEntity(DTO target, Entity source, ... )
+ *  public void toDtoAndBackToEntity(DTO target, Entity source, ... )
  *
  * <p/>
  * User: denispavlov
@@ -57,12 +77,31 @@ public @interface Transferable {
      * @return defines direction of transfer to perform on advised
      *         method before its invocation.
      */
-    Direction before() default Direction.DTO_TO_ENTITY;
+    Direction before() default Direction.NONE;
 
     /**
      * @return defines direction of transfer to perform on advised
      *         method after its invocation.
      */
     Direction after() default Direction.NONE;
+
+    /**
+     * @return key of the dto that will be used as filter. This key has to reference
+     *         dto instance that would be a superclass for the one specified in the
+     *         dtoKey().
+     */
+    String dtoFilterKey() default "";
+
+    /**
+     * @return key of the "root" dto as method argument dto, return object
+     *         dto or element of a collection
+     */
+    String dtoKey() default "";
+
+    /**
+     * @return key of the "root" entity as method argument entity, return object
+     *         entity or element of a collection
+     */
+    String entityKey() default "";
 
 }
