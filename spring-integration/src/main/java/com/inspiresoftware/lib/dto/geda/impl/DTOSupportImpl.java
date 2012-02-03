@@ -32,7 +32,7 @@ public class DTOSupportImpl implements DTOSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(DTOSupportImpl.class);
 
-    private final BeanFactory dtoFactory;
+    private final BeanFactory beanFactory;
     private final ValueConverterRepository dtoValueConverters = new ValueConverterRepositoryImpl();
 
     private DTOEventListener onDtoAssembled;
@@ -41,8 +41,8 @@ public class DTOSupportImpl implements DTOSupport {
     private DTOEventListener onEntityFailed;
 
 
-    public DTOSupportImpl(final BeanFactory dtoFactory) {
-        this.dtoFactory = dtoFactory;
+    public DTOSupportImpl(final BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
         this.registerCoreConverters();
     }
 
@@ -55,9 +55,26 @@ public class DTOSupportImpl implements DTOSupport {
 
     /** {@inheritDoc} */
     public <T> T assembleDto(final T dto, final Object entity) {
+        return assembleDto(null, dto, entity);
+    }
+
+    /** {@inheritDoc} */
+    public <T> T assembleDtoByKey(final String dtoKey, final Object entity) {
+        final Object dto = this.beanFactory.get(dtoKey);
+        return (T) assembleDto(null, dto, entity);
+    }
+
+    /** {@inheritDoc} */
+    public <T> T assembleDto(final String dtoFilter, final T dto, final Object entity) {
+        final Class dtoClassFilter;
+        if (dtoFilter == null) {
+            dtoClassFilter = dto.getClass();
+        } else {
+            dtoClassFilter = this.beanFactory.get(dtoFilter).getClass();
+        }
         try {
-            DTOAssembler.newAssembler(dto.getClass(), entity.getClass())
-                    .assembleDto(dto, entity, this.dtoValueConverters.getAll(), this.dtoFactory);
+            DTOAssembler.newAssembler(dtoClassFilter, entity.getClass())
+                    .assembleDto(dto, entity, this.dtoValueConverters.getAll(), this.beanFactory);
             if (this.onDtoAssembled != null) {
                 this.onDtoAssembled.onEvent(dto, entity);
             }
@@ -74,55 +91,81 @@ public class DTOSupportImpl implements DTOSupport {
         }
     }
 
+
     /** {@inheritDoc} */
-    public <T> T assembleDto(final Class dtoClass, final T dto, final Object entity) {
-        try {
-            DTOAssembler.newAssembler(dtoClass, entity.getClass())
-                    .assembleDto(dto, entity, this.dtoValueConverters.getAll(), this.dtoFactory);
-            if (this.onDtoAssembled != null) {
-                this.onDtoAssembled.onEvent(dto, entity);
-            }
-            return dto;
-        } catch (final RuntimeException re) {
-            if (this.onDtoFailed != null) {
-                this.onDtoFailed.onEvent(dto, entity, re);
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Exception skipped by event listener", re);
-                }
-                return null;
-            }
-            throw re; // re-throw
-        }
+    public <T> T assembleDtoByKey(final String dtoFilter, final String dtoKey, final Object entity) {
+        final Object dto = this.beanFactory.get(dtoKey);
+        return (T) assembleDto(dtoFilter, dto, entity);
     }
 
     /** {@inheritDoc} */
-    public <T> Collection<T> assembleDtos(final Class dtoClass, final Collection<T> dtos, final Collection entities) {
+    public <T> void assembleDtos(final String keyDto, final Collection<T> dtos, final Collection entities) {
+        assembleDtos(null, keyDto, dtos, entities);
+    }
+
+    /** {@inheritDoc} */
+    public <T> void assembleDtos(final String dtoFilter, final String keyDto,
+                                 final Collection<T> dtos, final Collection entities) {
         if (!CollectionUtils.isEmpty(entities)) {
-            try {
-                DTOAssembler.newAssembler(dtoClass, entities.iterator().next().getClass())
-                    .assembleDtos(dtos, entities, this.dtoValueConverters.getAll(), this.dtoFactory);
-            } catch (final RuntimeException re) {
-                if (this.onDtoFailed != null) {
-                    this.onDtoFailed.onEvent(dtos, entities, re);
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("Exception skipped by event listener", re);
+            final Class dtoClassFilter;
+            if (dtoFilter == null) {
+                dtoClassFilter = this.beanFactory.get(keyDto).getClass();
+            } else {
+                dtoClassFilter = this.beanFactory.get(dtoFilter).getClass();
+            }
+            final Class entityClass = entities.iterator().next().getClass();
+
+            final DTOAssembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
+            for (final Object entity : entities) {
+                final Object dto = this.beanFactory.get(keyDto);
+                try {
+                    asm.assembleDto(dto, entity, this.dtoValueConverters.getAll(), this.beanFactory);
+                    dtos.add((T) dto);
+                    if (this.onDtoAssembled != null) {
+                        this.onDtoAssembled.onEvent(dto, entity);
                     }
-                    return dtos;
+                } catch (final RuntimeException re) {
+                    if (this.onDtoFailed != null) {
+                        this.onDtoFailed.onEvent(dto, entity, re);
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("Exception skipped by event listener", re);
+                        }
+                        continue;
+                    }
+                    throw re; // re-throw
                 }
-                throw re; // re-throw
             }
         }
-        if (this.onDtoAssembled != null) {
-            this.onDtoAssembled.onEvent(dtos, entities);
-        }
-        return dtos;
     }
 
     /** {@inheritDoc} */
     public <T> T assembleEntity(final Object dto, final T entity) {
-        try {
-            DTOAssembler.newAssembler(dto.getClass(), entity.getClass())
-                    .assembleEntity(dto, entity, this.dtoValueConverters.getAll(), this.dtoFactory);
+        return assembleEntity(null, dto, entity);
+    }
+
+    /** {@inheritDoc} */
+    public <T> T assembleEntityByKey(final Object dto, final String entityKey) {
+        final Object entity = this.beanFactory.get(entityKey);
+        return (T) assembleEntity(null, dto, entity);
+    }
+
+    /** {@inheritDoc} */
+    public <T> T assembleEntityByKey(final String dtoFilter, final Object dto, final String entityKey) {
+        final Object entity = this.beanFactory.get(entityKey);
+        return (T) assembleEntity(dtoFilter, dto, entity);
+    }
+
+
+    /** {@inheritDoc} */
+    public <T> T assembleEntity(final String dtoFilter, final Object dto, final T entity) {
+            final Class dtoClassFilter;
+            if (dtoFilter == null) {
+                dtoClassFilter = dto.getClass();
+            } else {
+                dtoClassFilter = this.beanFactory.get(dtoFilter).getClass();
+            }        try {
+            DTOAssembler.newAssembler(dtoClassFilter, entity.getClass())
+                    .assembleEntity(dto, entity, this.dtoValueConverters.getAll(), this.beanFactory);
             if (this.onEntityAssembled != null) {
                 this.onEntityAssembled.onEvent(dto, entity);
             }
@@ -140,47 +183,45 @@ public class DTOSupportImpl implements DTOSupport {
     }
 
     /** {@inheritDoc} */
-    public <T> T assembleEntity(final Class dtoClass, final Object dto, final T entity) {
-        try {
-            DTOAssembler.newAssembler(dtoClass, entity.getClass())
-                    .assembleEntity(dto, entity, this.dtoValueConverters.getAll(), this.dtoFactory);
-            if (this.onEntityAssembled != null) {
-                this.onEntityAssembled.onEvent(dto, entity);
-            }
-            return entity;
-        } catch (final RuntimeException re) {
-            if (this.onEntityFailed != null) {
-                this.onEntityFailed.onEvent(dto, entity, re);
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Exception skipped by event listener", re);
-                }
-                return null;
-            }
-            throw re; // re-throw
-        }
+    public <T> void assembleEntities(final String entityKey, final Collection dtos, final Collection<T> entities) {
+        assembleEntities(null, entityKey, dtos, entities);
+
+
     }
 
     /** {@inheritDoc} */
-    public <T> Collection<T> assembleEntities(final Class entityClass, final Collection dtos, final Collection<T> entities) {
+    public <T> void assembleEntities(final String dtoFilter, final String entityKey,
+                                     final Collection dtos, final Collection<T> entities) {
         if (!CollectionUtils.isEmpty(dtos)) {
-            try {
-                DTOAssembler.newAssembler(dtos.iterator().next().getClass(), entityClass)
-                    .assembleEntities(dtos, entities, this.dtoValueConverters.getAll(), this.dtoFactory);
-            } catch (final RuntimeException re) {
-                if (this.onEntityFailed != null) {
-                    this.onEntityFailed.onEvent(dtos, entities, re);
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("Exception skipped by event listener", re);
+            final Class dtoClassFilter;
+            if (dtoFilter == null) {
+                dtoClassFilter = dtos.iterator().next().getClass();
+            } else {
+                dtoClassFilter = this.beanFactory.get(dtoFilter).getClass();
+            }
+            final Class entityClass = this.beanFactory.get(entityKey).getClass();
+
+            final DTOAssembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
+            for (final Object dto : dtos) {
+                final Object entity = this.beanFactory.get(entityKey);
+                try {
+                    asm.assembleEntity(dto, entity, this.dtoValueConverters.getAll(), this.beanFactory);
+                    entities.add((T) entity);
+                    if (this.onEntityAssembled != null) {
+                        this.onEntityAssembled.onEvent(dto, entity);
                     }
-                    return entities;
+                } catch (final RuntimeException re) {
+                    if (this.onEntityFailed != null) {
+                        this.onEntityFailed.onEvent(dto, entity, re);
+                        if (LOG.isErrorEnabled()) {
+                            LOG.error("Exception skipped by event listener", re);
+                        }
+                        continue;
+                    }
+                    throw re; // re-throw
                 }
-                throw re; // re-throw
             }
         }
-        if (this.onEntityAssembled != null) {
-            this.onEntityAssembled.onEvent(dtos, entities);
-        }
-        return entities;
     }
 
     /** {@inheritDoc} */

@@ -10,9 +10,11 @@
 package com.inspiresoftware.lib.dto.geda.config;
 
 import com.inspiresoftware.lib.dto.geda.impl.DTOSupportImpl;
+import com.inspiresoftware.lib.dto.geda.interceptor.impl.GeDABootstrapAdvicePostProcessor;
 import com.inspiresoftware.lib.dto.geda.interceptor.GeDAInterceptor;
-import com.inspiresoftware.lib.dto.geda.interceptor.impl.AdviceConfigResolverImpl;
-import com.inspiresoftware.lib.dto.geda.interceptor.impl.GeDAStaticMethodMatcherPointcut;
+import com.inspiresoftware.lib.dto.geda.interceptor.impl.BootstrapAdviceConfigResolverImpl;
+import com.inspiresoftware.lib.dto.geda.interceptor.impl.RuntimeAdviceConfigResolverImpl;
+import com.inspiresoftware.lib.dto.geda.interceptor.impl.GeDAMethodMatcherPointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.config.AopNamespaceUtils;
@@ -46,6 +48,7 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
     private static final String XSD_ATTR__ON_DTO_FAILED = "on-dto-failed";
     private static final String XSD_ATTR__ON_ENTITY_ASSEMBLED = "on-entity-assembled";
     private static final String XSD_ATTR__ON_ENTITY_FAILED = "on-entity-failed";
+    private static final String XSD_ATTR__USE_PREPROCESSOR = "use-bean-preprocessor";
 
     public static final String ADVISOR_BEAN_NAME = AnnotationDrivenGeDABeanDefinitionParser.class.getPackage().getName() + ".internalGeDAAdvisor";
 
@@ -55,6 +58,7 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
         AopNamespaceUtils.registerAutoProxyCreatorIfNecessary(parserContext, element);
         if (!parserContext.getRegistry().containsBeanDefinition(ADVISOR_BEAN_NAME)) {
 
+            final Boolean usePreprocessor = Boolean.valueOf(element.getAttribute(XSD_ATTR__USE_PREPROCESSOR));
             final String dtoSupportBeanName = element.getAttribute(XSD_ATTR__DTO_SUPPORT);
 
             final BeanDefinitionRegistry registry = parserContext.getRegistry();
@@ -77,16 +81,36 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
 
             }
 
-            final RuntimeBeanReference defaultCfgAdvice =
-                    this.setupTransferableAdviceConfigResolver(parserContext, elementSource);
+            if (usePreprocessor) {
+                // bean pre processor version of configuration
+                this.setupBootstapBeanPostprocessor(element, parserContext, elementSource);
 
-            final RuntimeBeanReference pointcut =
-                    this.setupPointcut(parserContext, elementSource, defaultCfgAdvice);
+                final RuntimeBeanReference defaultCfgAdvice =
+                        this.setupTransferableAdviceConfigResolver(
+                                parserContext, elementSource, BootstrapAdviceConfigResolverImpl.class);
 
-            final RuntimeBeanReference defaultInterceptor =
-                    this.setupGeDAInterceptor(parserContext, elementSource, dtoSupportDef, defaultCfgAdvice);
+                final RuntimeBeanReference pointcut =
+                        this.setupPointcut(parserContext, elementSource, defaultCfgAdvice);
 
-            this.setupPointcutAdvisor(element, parserContext, elementSource, pointcut, defaultInterceptor);
+                final RuntimeBeanReference defaultInterceptor =
+                        this.setupGeDAInterceptor(parserContext, elementSource, dtoSupportDef, defaultCfgAdvice);
+
+                this.setupPointcutAdvisor(element, parserContext, elementSource, pointcut, defaultInterceptor);
+
+            } else {
+                // runtime advice discovery
+                final RuntimeBeanReference defaultCfgAdvice =
+                        this.setupTransferableAdviceConfigResolver(
+                                parserContext, elementSource, RuntimeAdviceConfigResolverImpl.class);
+
+                final RuntimeBeanReference pointcut =
+                        this.setupPointcut(parserContext, elementSource, defaultCfgAdvice);
+
+                final RuntimeBeanReference defaultInterceptor =
+                        this.setupGeDAInterceptor(parserContext, elementSource, dtoSupportDef, defaultCfgAdvice);
+
+                this.setupPointcutAdvisor(element, parserContext, elementSource, pointcut, defaultInterceptor);
+            }
         }
         return null;
     }
@@ -120,9 +144,10 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
     }
 
     protected RuntimeBeanReference setupTransferableAdviceConfigResolver(final ParserContext parserContext,
-                                                                         final Object elementSource) {
+                                                                         final Object elementSource,
+                                                                         final Class impl) {
 
-        final RootBeanDefinition defaultResolver = new RootBeanDefinition(AdviceConfigResolverImpl.class);
+        final RootBeanDefinition defaultResolver = new RootBeanDefinition(impl);
         defaultResolver.setSource(elementSource);
         defaultResolver.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 
@@ -137,7 +162,7 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
                                                  final Object elementSource,
                                                  final RuntimeBeanReference resolver) {
 
-        final RootBeanDefinition pointcut = new RootBeanDefinition(GeDAStaticMethodMatcherPointcut.class);
+        final RootBeanDefinition pointcut = new RootBeanDefinition(GeDAMethodMatcherPointcut.class);
         pointcut.setSource(elementSource);
         pointcut.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 
@@ -192,6 +217,22 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
         registry.registerBeanDefinition(ADVISOR_BEAN_NAME, pointcutAdvisor);
         return new RuntimeBeanReference(ADVISOR_BEAN_NAME);
     }
+
+    protected RuntimeBeanReference setupBootstapBeanPostprocessor(final Element element,
+                                                                  final ParserContext parserContext,
+                                                                  final Object elementSource) {
+
+        final RootBeanDefinition beanPostProcessor = new RootBeanDefinition(GeDABootstrapAdvicePostProcessor.class);
+        beanPostProcessor.setSource(elementSource);
+        beanPostProcessor.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+
+        final XmlReaderContext readerContext = parserContext.getReaderContext();
+
+        final String beanName = readerContext.registerWithGeneratedName(beanPostProcessor);
+
+        return new RuntimeBeanReference(beanName);
+    }
+
 
 
 }

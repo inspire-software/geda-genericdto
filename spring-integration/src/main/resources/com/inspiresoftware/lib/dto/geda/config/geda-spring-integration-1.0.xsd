@@ -120,7 +120,28 @@
                     ]]></xsd:documentation>
                 </xsd:annotation>
             </xsd:attribute>
+            <xsd:attribute name="use-bean-preprocessor" type="xsd:boolean" use="optional" default="true">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+    Optional configuration to define how the methods will be advised.
+
+    TRUE setting will register BeanPostProcessor that will examine all beans's
+    methods and register configurations for advisable methods.
+
+    FALSE setting will register a runtime method matcher bean that will examine
+    methods as they are invoked and blacklist all inapplicable ones as they are
+    invoked.
+                        ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="direct">
+                            <tool:expected-type type="boolean"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
         </xsd:complexType>
     </xsd:element>
+
+    <!-- TODO: value converter tag -->
 
 </xsd:schema>

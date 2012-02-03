@@ -19,7 +19,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,30 +51,32 @@ public class GeDAInterceptor implements MethodInterceptor {
 
         final Map<Occurrence, AdviceConfig> cfg = this.resolver.resolve(method, targetClass);
         if (CollectionUtils.isEmpty(cfg)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("skipping method {} because it is not advised", invocation);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("skipping method " + invocation.getMethod() + " because it is not advised");
             }
             return invocation.proceed(); // unadvised
         }
 
-
+        final Object[] args = invocation.getArguments();
 
         if (cfg.containsKey(Occurrence.BEFORE_METHOD_INVOCATION)) {
-            final AdviceConfig.DTOSupportMode mode = cfg.get(Occurrence.BEFORE_METHOD_INVOCATION).getDtoSupportMode();
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("performing transfer before invocation {} in mode {}", invocation, mode);
+            final AdviceConfig configuration = cfg.get(Occurrence.BEFORE_METHOD_INVOCATION);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("performing transfer before invocation " + invocation.getMethod()
+                        + " in mode " + configuration.getDtoSupportMode().name());
             }
-            this.invokeTransferBefore(invocation, mode);
+            this.invokeTransferBefore(args, configuration);
         }
 
         final Object result = invocation.proceed();
 
         if (cfg.containsKey(Occurrence.AFTER_METHOD_INVOCATION)) {
-            final AdviceConfig.DTOSupportMode mode = cfg.get(Occurrence.AFTER_METHOD_INVOCATION).getDtoSupportMode();
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("performing transfer after invocation {} in mode {}", invocation, mode);
+            final AdviceConfig configuration = cfg.get(Occurrence.AFTER_METHOD_INVOCATION);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("performing transfer after invocation " + invocation.getMethod()
+                        + " in mode " + configuration.getDtoSupportMode().name());
             }
-            this.invokeTransferAfter(invocation, result, mode);
+            return this.invokeTransferAfter(args, result, configuration);
         }
 
         return result;
@@ -84,40 +85,73 @@ public class GeDAInterceptor implements MethodInterceptor {
     /**
      * Perform actual assembly of the DTO/Entity
      *
-     * @param invocation current invocation
-     * @param mode support mode
+     * @param args current invocation arguments
+     * @param cfg configuration mode
      */
-    protected void invokeTransferBefore(final MethodInvocation invocation,
-                                        final AdviceConfig.DTOSupportMode mode) {
+    protected void invokeTransferBefore(final Object[] args,
+                                        final AdviceConfig cfg) {
 
-        final Object[] args = invocation.getArguments();
+        final AdviceConfig.DTOSupportMode mode = cfg.getDtoSupportMode();
+
         switch (mode) {
             case DTO_TO_ENTITY:
-                this.support.assembleEntity(args[0], args[1]);
+                this.support.assembleEntity(args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()]);
                 break;
 
-            case DTO_BY_CLASS_TO_ENTITY:
-                this.support.assembleEntity((Class) args[0], args[1], args[2]);
+            case DTO_TO_ENTITY_KEY:
+                this.support.assembleEntityByKey(args[cfg.getDtoSourceIndex()], cfg.getEntityKey());
                 break;
 
-            case DTOS_BY_CLASS_TO_ENTITIES:
-                this.support.assembleEntities((Class) args[0], (Collection) args[1], (Collection) args[2]);
+            case DTO_BY_FILTER_TO_ENTITY:
+                this.support.assembleEntity(cfg.getDtoFilterKey(),
+                        args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()]);
+                break;
+
+            case DTO_BY_FILTER_TO_ENTITY_KEY:
+                this.support.assembleEntityByKey(cfg.getDtoFilterKey(),
+                        args[cfg.getDtoSourceIndex()], cfg.getEntityKey());
+                break;
+
+            case DTOS_TO_ENTITIES:
+                this.support.assembleEntities(cfg.getEntityKey(),
+                        (Collection) args[cfg.getDtoSourceIndex()], (Collection) args[cfg.getEntityTargetIndex()]);
+                break;
+
+            case DTOS_TO_ENTITIES_BY_FILTER:
+                this.support.assembleEntities(cfg.getDtoFilterKey(), cfg.getEntityKey(),
+                        (Collection) args[cfg.getDtoSourceIndex()], (Collection) args[cfg.getEntityTargetIndex()]);
                 break;
 
             case ENTITY_TO_DTO:
-                this.support.assembleDto(args[0], args[1]);
+                this.support.assembleDto(args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()]);
                 break;
 
-            case ENTITY_TO_DTO_BY_CLASS:
-                this.support.assembleDto((Class) args[0], args[1], args[2]);
+            case ENTITY_TO_DTO_KEY:
+                this.support.assembleDtoByKey(cfg.getDtoKey(), args[cfg.getEntitySourceIndex()]);
                 break;
 
-            case ENTITIES_TO_DTOS_BY_CLASS:
-                this.support.assembleDtos((Class) args[0], (Collection) args[1], (Collection) args[2]);
+            case ENTITY_TO_DTO_BY_FILTER:
+                this.support.assembleDto(cfg.getDtoFilterKey(),
+                        args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()]);
+                break;
+
+            case ENTITY_TO_DTO_KEY_BY_FILTER:
+                this.support.assembleDtoByKey(cfg.getDtoFilterKey(),
+                        cfg.getDtoKey(), args[cfg.getEntitySourceIndex()]);
+                break;
+
+            case ENTITIES_TO_DTOS:
+                this.support.assembleDtos(cfg.getDtoKey(),
+                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()]);
+                break;
+
+            case ENTITIES_TO_DTOS_BY_FILTER:
+                this.support.assembleDtos(cfg.getDtoFilterKey(), cfg.getDtoKey(),
+                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()]);
                 break;
 
             default:
-                LOG.warn("Unknown support mode [" + mode + "] for method: " + invocation);
+                LOG.warn("Unknown support mode [" + cfg + "]");
                 break;
         }
 
@@ -126,43 +160,92 @@ public class GeDAInterceptor implements MethodInterceptor {
     /**
      * Perform actual assembly of the DTO/Entity
      *
-     * @param invocation current invocation
+     * @param args current invocation arguments
      * @param result result of the method invocation
-     * @param mode support mode
+     * @param cfg configuration mode
      */
-    protected void invokeTransferAfter(final MethodInvocation invocation,
+    protected Object invokeTransferAfter(final Object[] args,
                                        final Object result,
-                                       final AdviceConfig.DTOSupportMode mode) {
-        final Object[] args = invocation.getArguments();
+                                       final AdviceConfig cfg) {
+
+        final AdviceConfig.DTOSupportMode mode = cfg.getDtoSupportMode();
+
         switch (mode) {
             case DTO_TO_ENTITY:
-                this.support.assembleEntity(args[0], result);
-                break;
+                if (cfg.getEntityTargetIndex() == -1) {
+                    return this.support.assembleEntity(args[cfg.getDtoSourceIndex()], result);
+                } else {
+                    this.support.assembleEntity(args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()]);
+                    return result;
+                }
 
-            case DTO_BY_CLASS_TO_ENTITY:
-                this.support.assembleEntity((Class) args[0], args[1], result);
-                break;
+            case DTO_TO_ENTITY_KEY:
+                return this.support.assembleEntityByKey(args[cfg.getDtoSourceIndex()], cfg.getEntityKey());
 
-            case DTOS_BY_CLASS_TO_ENTITIES:
-                this.support.assembleEntities((Class) args[0], (List) args[1], (Collection) args[2]);
-                break;
+            case DTO_BY_FILTER_TO_ENTITY:
+                if (cfg.getEntityTargetIndex() == -1) {
+                    return this.support.assembleEntity(cfg.getDtoFilterKey(),
+                            args[cfg.getDtoSourceIndex()], result);
+                } else {
+                    this.support.assembleEntity(cfg.getDtoFilterKey(),
+                            args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()]);
+                    return result;
+                }
+
+            case DTO_BY_FILTER_TO_ENTITY_KEY:
+                return this.support.assembleEntityByKey(cfg.getDtoFilterKey(),
+                        args[cfg.getDtoSourceIndex()], cfg.getEntityKey());
+
+            case DTOS_TO_ENTITIES:
+                this.support.assembleEntities(cfg.getEntityKey(),
+                        (Collection) args[cfg.getDtoSourceIndex()], (Collection) args[cfg.getEntityTargetIndex()]);
+                return result;
+
+            case DTOS_TO_ENTITIES_BY_FILTER:
+                this.support.assembleEntities(cfg.getDtoFilterKey(), cfg.getEntityKey(),
+                        (Collection) args[cfg.getDtoSourceIndex()], (Collection)  args[cfg.getEntityTargetIndex()]);
+                return result;
 
             case ENTITY_TO_DTO:
-                this.support.assembleDto(result, args[1]);
-                break;
+                if (cfg.getDtoTargetIndex() == -1) {
+                    return this.support.assembleDto(result, args[cfg.getEntitySourceIndex()]);                    
+                } else {
+                    this.support.assembleDto(args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()]);
+                    return result;
+                }
 
-            case ENTITY_TO_DTO_BY_CLASS:
-                this.support.assembleDto((Class) args[0], result, args[2]);
-                break;
+            case ENTITY_TO_DTO_KEY:
+                return this.support.assembleDtoByKey(cfg.getDtoKey(), args[cfg.getEntitySourceIndex()]);
 
-            case ENTITIES_TO_DTOS_BY_CLASS:
-                this.support.assembleDtos((Class) args[0], (Collection) result, (Collection) args[2]);
-                break;
+            case ENTITY_TO_DTO_BY_FILTER:
+                if (cfg.getDtoTargetIndex() == -1) {
+                    return this.support.assembleDto(cfg.getDtoFilterKey(),
+                            result, args[cfg.getEntitySourceIndex()]);
+                } else {
+                    this.support.assembleDto(cfg.getDtoFilterKey(),
+                            args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()]);
+                    return result;
+                }
+
+            case ENTITY_TO_DTO_KEY_BY_FILTER:
+                return this.support.assembleDtoByKey(cfg.getDtoFilterKey(),
+                            cfg.getDtoKey(), args[cfg.getEntitySourceIndex()]);
+
+            case ENTITIES_TO_DTOS:
+                this.support.assembleDtos(cfg.getDtoKey(),
+                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()]);
+                return result;
+
+            case ENTITIES_TO_DTOS_BY_FILTER:
+                this.support.assembleDtos(cfg.getDtoFilterKey(), cfg.getDtoKey(),
+                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()]);
+                return result;
 
             default:
-                LOG.warn("Unknown support mode [" + mode + "] for method: " + invocation);
-                break;
+                LOG.warn("Unknown support mode [" + cfg + "]");
+                return result;
         }
 
     }
+
 }

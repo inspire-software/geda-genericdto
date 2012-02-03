@@ -64,14 +64,13 @@ public class AdviceConfigResolverImplTest {
         final Map cfg1 = ctrl.createMock("cfg1", Map.class);
         final Map cfg2 = ctrl.createMock("cfg2", Map.class);
 
-        final AdviceConfigResolverImpl resolver = new AdviceConfigResolverImpl() {
+        final RuntimeAdviceConfigResolverImpl resolver = new RuntimeAdviceConfigResolverImpl() {
 
             private int count = 0;
 
             @Override
             Map<Occurrence, AdviceConfig> resolveConfiguration(final Method method,
-                                                              final Class<?> targetClass,
-                                                              final boolean trySpecific) {
+                                                              final Class<?> targetClass) {
                 assertTrue(count < 4);
                 if (method == methAnn1) {
                     count++;

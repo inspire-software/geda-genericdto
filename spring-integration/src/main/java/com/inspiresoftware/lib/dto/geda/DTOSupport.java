@@ -33,28 +33,56 @@ public interface DTOSupport {
     <T> T assembleDto(T dto, Object entity);
 
     /**
+     * Assemble new dto from entity object
+     *
+     * @param dtoKey dto key (must not be null)
+     * @param entity entity (must not be null)
+     *
+     * @return DTO object with data
+     */
+    <T> T assembleDtoByKey(String dtoKey, Object entity);
+
+    /**
      * Assemble dto from entity object
      *
-     * @param dtoClass specify the class level (can be used as a filter if there are DTO hierarchies)
+     * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
      *
      * @return convenience return object (same as dto param). Used for the
      *         following: final DTO dto = support.assembleDto(new DTO(), entity);
      */
-    <T> T assembleDto(Class dtoClass, T dto, Object entity);
+    <T> T assembleDto(String dtoFilter, T dto, Object entity);
 
     /**
      * Assemble dto from entity object
      *
-     * @param dtoClass specify the class level (can be used as a filter if there are DTO hierarchies)
+     * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
+     * @param dtoKey dto key (must not be null)
+     * @param entity entity (must not be null)
+     *
+     * @return DTO object with data
+     */
+    <T> T assembleDtoByKey(String dtoFilter, String dtoKey, Object entity);
+
+    /**
+     * Assemble dto from entity object
+     *
+     * @param dtoKey dto object key
      * @param dtos dto collection (must not be null)
      * @param entities entities collection (must not be null)
-     *
-     * @return convenience return object (same as dto param). Used for the
-     *         following: final Collection<DTO> dtos = support.assembleDtos(DTO.class, dtos, entities);
      */
-    <T> Collection<T> assembleDtos(Class dtoClass, Collection<T> dtos, Collection entities);
+    <T> void assembleDtos(String dtoKey, Collection<T> dtos, Collection entities);
+
+    /**
+     * Assemble dto from entity object
+     *
+     * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
+     * @param dtoKey dto object key
+     * @param dtos dto collection (must not be null)
+     * @param entities entities collection (must not be null)
+     */
+    <T> void assembleDtos(String dtoFilter, String dtoKey, Collection<T> dtos, Collection entities);
 
     /**
      * Assemble entity from dto object
@@ -70,26 +98,54 @@ public interface DTOSupport {
     /**
      * Assemble entity from dto object
      *
-     * @param dtoClass specify the class level
+     * @param dto dto (must not be null)
+     * @param entityKey entity key (must not be null)
+     *
+     * @return new entity
+     */
+    <T> T assembleEntityByKey(Object dto, String entityKey);
+
+    /**
+     * Assemble entity from dto object
+     *
+     * @param dtoFilter specify the class level
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
      *
      * @return convenience return object (same as entity param). Used for the
      *         following: final Object dto = support.assembleEntity(dto, new Object());
      */
-    <T> T assembleEntity(Class dtoClass, Object dto, T entity);
+    <T> T assembleEntity(String dtoFilter, Object dto, T entity);
+
+    /**
+     * Assemble entity from dto object
+     *
+     * @param dtoFilter specify the class level
+     * @param dto dto (must not be null)
+     * @param entityKey entity key (must not be null)
+     *
+     * @return new entity
+     */
+    <T> T assembleEntityByKey(String dtoFilter, Object dto, String entityKey);
 
     /**
      * Assemble entities from dto objects
      *
-     * @param entityClass specify the class level
+     * @param entityKey entity object key
      * @param dtos dto collection (must not be null)
      * @param entities entities collection (must not be null)
-     *
-     * @return convenience return object (same as dto param). Used for the
-     *         following: final Collection<DTO> dtos = support.assembleDtos(DTO.class, dtos, entities);
      */
-    <T> Collection<T> assembleEntities(Class entityClass, Collection dtos, Collection<T> entities);
+    <T> void assembleEntities(String entityKey, Collection dtos, Collection<T> entities);
+
+    /**
+     * Assemble entities from dto objects
+     *
+     * @param dtoFilter specify the class level
+     * @param entityKey entity object key
+     * @param dtos dto collection (must not be null)
+     * @param entities entities collection (must not be null)
+     */
+    <T> void assembleEntities(String dtoFilter, String entityKey, Collection dtos, Collection<T> entities);
 
     /**
      * Enhance runtime DTO converters runtime model. This method is intended to be used in
