@@ -35,6 +35,8 @@ public class ImmutableAdviceConfig implements AdviceConfig {
     private final int entitySourceIndex;
     private final int entityTargetIndex;
 
+    private final String context;
+
 
     public ImmutableAdviceConfig(final Direction direction,
                                  final Occurrence occurrence,
@@ -45,7 +47,8 @@ public class ImmutableAdviceConfig implements AdviceConfig {
                                  final int dtoSourceIndex,
                                  final int dtoTargetIndex,
                                  final int entitySourceIndex,
-                                 final int entityTargetIndex) {
+                                 final int entityTargetIndex,
+                                 final String context) {
         this.direction = direction;
         this.occurrence = occurrence;
         this.dtoSupportMode = dtoSupportMode;
@@ -56,6 +59,7 @@ public class ImmutableAdviceConfig implements AdviceConfig {
         this.dtoTargetIndex = dtoTargetIndex;
         this.entitySourceIndex = entitySourceIndex;
         this.entityTargetIndex = entityTargetIndex;
+        this.context = context;
     }
 
     /** {@inheritDoc} */
@@ -106,5 +110,10 @@ public class ImmutableAdviceConfig implements AdviceConfig {
     /** {@inheritDoc} */
     public int getEntityTargetIndex() {
         return entityTargetIndex;
+    }
+
+    /** {@inheritDoc} */
+    public String getContext() {
+        return context;
     }
 }

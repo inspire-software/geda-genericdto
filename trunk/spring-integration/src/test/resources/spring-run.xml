@@ -17,8 +17,10 @@
                            http://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema/geda-spring-integration-1.0.xsd">
 
     <geda:annotation-driven dto-factory="dtoFactory"
+                            on-dto-assembly="onDto"
                             on-dto-assembled="onDtoSuccess"
                             on-dto-failed="onDtoFailure"
+                            on-entity-assembly="onEntity"
                             on-entity-assembled="onEntitySuccess"
                             on-entity-failed="onEntityFailure"
                             use-bean-preprocessor="false"/>
@@ -33,8 +35,10 @@
         </constructor-arg>
     </bean>
 
+    <bean id="onDto" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
     <bean id="onDtoSuccess" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
     <bean id="onDtoFailure" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
+    <bean id="onEntity" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
     <bean id="onEntitySuccess" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
     <bean id="onEntityFailure" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
 

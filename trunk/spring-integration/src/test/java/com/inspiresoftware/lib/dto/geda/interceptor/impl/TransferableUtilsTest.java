@@ -59,6 +59,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityBeforeExact");
 
     }
 
@@ -80,6 +81,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityBefore");
 
     }
 
@@ -101,6 +103,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityByFilterBeforeExact");
 
     }
 
@@ -122,6 +125,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityByFilterBefore");
 
     }
 
@@ -144,6 +148,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtosToEntitiesBeforeExact");
 
     }
 
@@ -166,6 +171,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtosToEntitiesBefore");
 
     }
 
@@ -188,6 +194,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtosToEntitiesByFilterBeforeExact");
 
     }
 
@@ -210,6 +217,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtosToEntitiesByFilterBefore");
 
     }
 
@@ -232,6 +240,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), RETURN_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityKeyAfterExact");
 
     }
 
@@ -254,6 +263,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), RETURN_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityKeyAfter");
 
     }
 
@@ -276,6 +286,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), RETURN_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityKeyByFilterAfterExact");
 
     }
 
@@ -298,6 +309,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), RETURN_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityKeyByFilterAfter");
 
     }
 
@@ -320,6 +332,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "dtoToEntityAfterExact");
 
     }
 
@@ -342,6 +355,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "dtoToEntityAfter");
 
     }
 
@@ -364,6 +378,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "dtoToEntityByFilterAfterExact");
 
     }
 
@@ -386,6 +401,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "dtoToEntityByFilterAfter");
 
     }
 
@@ -408,6 +424,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "dtosToEntitiesByFilterAfterExact");
 
     }
 
@@ -430,6 +447,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "dtosToEntitiesByFilterAfter");
 
     }
 
@@ -452,6 +470,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "dtosToEntitiesAfterExact");
 
     }
 
@@ -474,6 +493,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "dtosToEntitiesAfter");
 
     }
 
@@ -496,6 +516,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoBeforeExact");
 
     }
 
@@ -518,6 +539,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoBefore");
 
     }
 
@@ -540,6 +562,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoByFilterBeforeExact");
 
     }
 
@@ -562,6 +585,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoByFilterBefore");
 
     }
 
@@ -584,6 +608,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entitiesToDtosByFilterBefore");
 
     }
 
@@ -606,6 +631,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entitiesToDtosByFilterBeforeExact");
 
     }
 
@@ -628,6 +654,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entitiesToDtosBeforeExact");
 
     }
 
@@ -650,6 +677,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entitiesToDtosBefore");
 
     }
 
@@ -672,6 +700,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 0);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entityToDtoKeyAfterExact");
 
     }
 
@@ -694,6 +723,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 0);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entityToDtoKeyAfter");
 
     }
 
@@ -716,6 +746,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 0);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entityToDtoKeyByFilterAfterExact");
 
     }
 
@@ -738,6 +769,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 0);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entityToDtoKeyByFilterAfter");
 
     }
 
@@ -760,6 +792,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entityToDtoAfterExact");
 
     }
 
@@ -782,6 +815,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entityToDtoAfter");
 
     }
 
@@ -804,6 +838,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entityToDtoByFilterAfterExact");
 
     }
 
@@ -826,6 +861,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entityToDtoByFilterAfter");
 
     }
 
@@ -848,6 +884,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entitiesToDtosByFilterAfterExact");
 
     }
 
@@ -870,6 +907,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entitiesToDtosByFilterAfter");
 
     }
 
@@ -892,6 +930,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entitiesToDtosAfterExact");
 
     }
 
@@ -914,6 +953,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "entitiesToDtosAfter");
 
     }
 
@@ -937,6 +977,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityAndBackToDtoExact");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
@@ -949,6 +990,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityAndBackToDtoExact");
 
     }
 
@@ -972,6 +1014,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityAndBackToDto");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
@@ -984,6 +1027,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityAndBackToDto");
 
     }
 
@@ -1007,6 +1051,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityAndBackToDtoByFilterExact");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
@@ -1019,6 +1064,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityAndBackToDtoByFilterExact");
 
     }
 
@@ -1042,6 +1088,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityAndBackToDtoByFilter");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
@@ -1054,6 +1101,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityAndBackToDtoByFilter");
 
     }
 
@@ -1077,6 +1125,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityAndBackToDtoVoidExact");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
@@ -1089,6 +1138,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityAndBackToDtoVoidExact");
 
     }
 
@@ -1112,6 +1162,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityAndBackToDtoVoid");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
@@ -1124,6 +1175,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityAndBackToDtoVoid");
 
     }
 
@@ -1147,6 +1199,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityAndBackToDtoVoidByFilterExact");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
@@ -1159,6 +1212,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityAndBackToDtoVoidByFilterExact");
 
     }
 
@@ -1183,6 +1237,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
         assertEquals(before.getEntityTargetIndex(), 1);
+        assertEquals(before.getContext(), "dtoToEntityAndBackToDtoVoidByFilter");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
@@ -1195,6 +1250,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
         assertEquals(after.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(after.getContext(), "dtoToEntityAndBackToDtoVoidByFilter");
 
     }
 
@@ -1218,6 +1274,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoAndBackToEntityExact");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.DTO_TO_ENTITY);
@@ -1230,6 +1287,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), RETURN_INDEX);
+        assertEquals(after.getContext(), "entityToDtoAndBackToEntityExact");
 
     }
 
@@ -1253,6 +1311,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoAndBackToEntity");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.DTO_TO_ENTITY);
@@ -1265,6 +1324,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), RETURN_INDEX);
+        assertEquals(after.getContext(), "entityToDtoAndBackToEntity");
 
     }
 
@@ -1288,6 +1348,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoAndBackToEntityByFilterExact");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.DTO_TO_ENTITY);
@@ -1300,6 +1361,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), RETURN_INDEX);
+        assertEquals(after.getContext(), "entityToDtoAndBackToEntityByFilterExact");
 
     }
 
@@ -1323,6 +1385,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoAndBackToEntityByFilter");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.DTO_TO_ENTITY);
@@ -1335,6 +1398,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), RETURN_INDEX);
+        assertEquals(after.getContext(), "entityToDtoAndBackToEntityByFilter");
 
     }
 
@@ -1358,6 +1422,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoAndBackToEntityVoidExact");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.DTO_TO_ENTITY);
@@ -1370,6 +1435,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "entityToDtoAndBackToEntityVoidExact");
 
     }
 
@@ -1393,6 +1459,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoAndBackToEntityVoid");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.DTO_TO_ENTITY);
@@ -1405,6 +1472,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "entityToDtoAndBackToEntityVoid");
 
     }
 
@@ -1428,6 +1496,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoAndBackToEntityVoidByFilterExact");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.DTO_TO_ENTITY);
@@ -1440,6 +1509,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "entityToDtoAndBackToEntityVoidByFilterExact");
 
     }
 
@@ -1463,6 +1533,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
         assertEquals(before.getEntityTargetIndex(), NO_INDEX);
+        assertEquals(before.getContext(), "entityToDtoAndBackToEntityVoidByFilter");
 
         final AdviceConfig after = map.get(Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDirection(), Direction.DTO_TO_ENTITY);
@@ -1475,6 +1546,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
         assertEquals(after.getEntityTargetIndex(), 1);
+        assertEquals(after.getContext(), "entityToDtoAndBackToEntityVoidByFilter");
 
     }
 }
