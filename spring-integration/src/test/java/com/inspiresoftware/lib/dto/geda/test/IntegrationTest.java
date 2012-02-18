@@ -59,15 +59,10 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityBeforeExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -88,22 +83,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityBefore() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -124,22 +114,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityByFilterBeforeExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -160,22 +145,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityByFilterBefore() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -196,22 +176,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtosToEntitiesBeforeExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
@@ -247,22 +222,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 2, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 2, 2, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtosToEntitiesBefore() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
@@ -298,22 +268,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 2, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 2, 2, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtosToEntitiesByFilterBeforeExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
@@ -349,22 +314,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 2, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 2, 2, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtosToEntitiesByFilterBefore() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
@@ -400,22 +360,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 2, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 2, 2, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void dtoToEntityKeyAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -434,22 +389,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void dtoToEntityKeyAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -468,7 +418,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
@@ -476,15 +426,10 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     @Test(dependsOnMethods = "testBeansSetup")
     public void dtoToEntityKeyByFilterAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -503,22 +448,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void dtoToEntityKeyByFilterAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -537,22 +477,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -573,7 +508,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
@@ -588,7 +523,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -609,22 +544,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityByFilterAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -645,22 +575,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityByFilterAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -681,22 +606,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtosToEntitiesByFilterAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
@@ -732,22 +652,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 2, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 2, 2, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtosToEntitiesByFilterAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
@@ -783,22 +698,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 2, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 2, 2, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtosToEntitiesAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
@@ -834,22 +744,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 2, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 2, 2, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtosToEntitiesAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
@@ -885,22 +790,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 0, onDtoFailure, 0, onEntitySuccess, 2, onEntityFailure, 0);
+        assertCounters(0, 0, 0, 2, 2, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoBeforeExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -921,22 +821,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoBefore() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -957,21 +852,16 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoByFilterBeforeExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -992,22 +882,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoByFilterBefore() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -1028,22 +913,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntitiesToDtosByFilterBeforeExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final DomainObject entity1 = new DomainObjectImpl();
@@ -1079,22 +959,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(entity2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 2, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(2, 2, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntitiesToDtosByFilterBefore() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final DomainObject entity1 = new DomainObjectImpl();
@@ -1130,22 +1005,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(entity2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 2, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(2, 2, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntitiesToDtosBeforeExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final DomainObject entity1 = new DomainObjectImpl();
@@ -1181,22 +1051,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(entity2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 2, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(2, 2, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntitiesToDtosBefore() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final DomainObject entity1 = new DomainObjectImpl();
@@ -1232,22 +1097,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(entity2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 2, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(2, 2, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoKeyAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -1267,22 +1127,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoKeyAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -1302,22 +1157,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoKeyByFilterAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -1337,22 +1187,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoKeyByFilterAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -1372,22 +1217,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -1409,22 +1249,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -1446,22 +1281,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoByFilterAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -1483,22 +1313,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoByFilterAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -1520,22 +1345,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntitiesToDtosByFilterAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final DomainObject entity1 = new DomainObjectImpl();
@@ -1571,22 +1391,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(entity2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 2, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(2, 2, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntitiesToDtosByFilterAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final DomainObject entity1 = new DomainObjectImpl();
@@ -1622,22 +1437,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(entity2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 2, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(2, 2, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntitiesToDtosAfterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final DomainObject entity1 = new DomainObjectImpl();
@@ -1673,22 +1483,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(entity2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 2, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(2, 2, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntitiesToDtosAfter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final DomainObject entity1 = new DomainObjectImpl();
@@ -1724,22 +1529,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(entity2.getTimestamp(), time);
 
         // final check counters
-        assertCounters(onDtoSuccess, 2, onDtoFailure, 0, onEntitySuccess, 0, onEntityFailure, 0);
+        assertCounters(2, 2, 0, 0, 0, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityAndBackToDtoExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -1767,22 +1567,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(res.getTimestamp(), entity.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityAndBackToDto() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -1810,22 +1605,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(res.getTimestamp(), entity.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityAndBackToDtoByFilterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -1853,22 +1643,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(res.getTimestamp(), entity.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityAndBackToDtoByFilter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -1896,22 +1681,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(res.getTimestamp(), entity.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityAndBackToDtoVoidExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -1933,22 +1713,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), entity.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityAndBackToDtoVoid() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -1970,22 +1745,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), entity.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityAndBackToDtoVoidByFilterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -2007,22 +1777,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), entity.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testDtoToEntityAndBackToDtoVoidByFilter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
         final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
@@ -2044,22 +1809,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertEquals(dto.getTimestamp(), entity.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoAndBackToEntityExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -2088,22 +1848,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertNull(res.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoAndBackToEntity() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -2132,22 +1887,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertNull(res.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoAndBackToEntityByFilterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -2176,22 +1926,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertNull(res.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoAndBackToEntityByFilter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -2220,22 +1965,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         assertNull(res.getTimestamp());
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoAndBackToEntityVoidExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -2259,22 +1999,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
 
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoAndBackToEntityVoid() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -2298,22 +2033,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
 
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoAndBackToEntityVoidByFilterExact() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -2337,22 +2067,17 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
 
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
     @Test(dependsOnMethods = "testBeansSetup")
     public void testEntityToDtoAndBackToEntityVoidByFilter() {
 
-        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
-        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
-
         final TestService service =
                 this.applicationContext.getBean("simpleTransferableService", TestService.class);
 
-        assertCountersAreZero(onDtoSuccess, onDtoFailure, onEntitySuccess, onEntityFailure);
+        assertCountersAreZero();
 
         final Date time = new Date();
 
@@ -2376,45 +2101,60 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
 
 
         // final check counters
-        assertCounters(onDtoSuccess, 1, onDtoFailure, 0, onEntitySuccess, 1, onEntityFailure, 0);
+        assertCounters(1, 1, 0, 1, 1, 0);
 
     }
 
 
     /* TEST SUPPORT UTILITIES ******************************************************* */
 
-    void assertCountersAreZero(final DTOCountingEventListener onDtoSuccess,
-                               final DTOCountingEventListener onDtoFailure,
-                               final DTOCountingEventListener onEntitySuccess,
-                               final DTOCountingEventListener onEntityFailure) {
+    void assertCountersAreZero() {
+
+        final DTOCountingEventListener onDto = this.applicationContext.getBean("onDto", DTOCountingEventListener.class);
+        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
+        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
+        final DTOCountingEventListener onEntity = this.applicationContext.getBean("onEntity", DTOCountingEventListener.class);
+        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
+        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
 
         // reset event counters
 
+        onDto.reset();
         onDtoSuccess.reset();
         onDtoFailure.reset();
+        onEntity.reset();
         onEntitySuccess.reset();
         onEntityFailure.reset();
 
+        assertEquals(onDto.getCount(), 0);
         assertEquals(onDtoSuccess.getCount(), 0);
         assertEquals(onDtoFailure.getCount(), 0);
+        assertEquals(onEntity.getCount(), 0);
         assertEquals(onEntitySuccess.getCount(), 0);
         assertEquals(onEntityFailure.getCount(), 0);
     }
 
 
-    void assertCounters(final DTOCountingEventListener onDtoSuccess,
+    void assertCounters(final int onDtoCount,
                         final int onDtoSuccessCount,
-                        final DTOCountingEventListener onDtoFailure,
                         final int onDtoFailureCount,
-                        final DTOCountingEventListener onEntitySuccess,
+                        final int onEntityCount,
                         final int onEntitySuccessCount,
-                        final DTOCountingEventListener onEntityFailure,
                         final int onEntityFailureCount) {
-        
+
+        final DTOCountingEventListener onDto = this.applicationContext.getBean("onDto", DTOCountingEventListener.class);
+        final DTOCountingEventListener onDtoSuccess = this.applicationContext.getBean("onDtoSuccess", DTOCountingEventListener.class);
+        final DTOCountingEventListener onDtoFailure = this.applicationContext.getBean("onDtoFailure", DTOCountingEventListener.class);
+        final DTOCountingEventListener onEntity = this.applicationContext.getBean("onEntity", DTOCountingEventListener.class);
+        final DTOCountingEventListener onEntitySuccess = this.applicationContext.getBean("onEntitySuccess", DTOCountingEventListener.class);
+        final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
+
         assertEquals(onDtoSuccess.getCount(), onDtoSuccessCount);
         assertEquals(onDtoFailure.getCount(), onDtoFailureCount);
+        assertEquals(onEntity.getCount(), onEntityCount);
         assertEquals(onEntitySuccess.getCount(), onEntitySuccessCount);
         assertEquals(onEntityFailure.getCount(), onEntityFailureCount);
+        assertEquals(onDto.getCount(), onDtoCount);
 
     }
 

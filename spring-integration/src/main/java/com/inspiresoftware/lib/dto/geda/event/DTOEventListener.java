@@ -23,7 +23,7 @@ public interface DTOEventListener {
      * This method will be invoked by the DTOSupport implementor depending on the settings
      * defined in the context.xml.
      *
-     * As a specialf case with handling erroneous assembly this listener allows to swallow
+     * As a special case with handling erroneous assembly this listener allows to swallow
      * the exception and return null (if the exception passed as context is not re-thrown
      * from onEvent() method)
      *

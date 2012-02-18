@@ -44,8 +44,10 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
 
     private static final String XSD_ATTR__DTO_SUPPORT = "dto-support";
     private static final String XSD_ATTR__DTO_FACTORY = "dto-factory";
+    private static final String XSD_ATTR__ON_DTO_ASSEMBLY = "on-dto-assembly";
     private static final String XSD_ATTR__ON_DTO_ASSEMBLED = "on-dto-assembled";
     private static final String XSD_ATTR__ON_DTO_FAILED = "on-dto-failed";
+    private static final String XSD_ATTR__ON_ENTITY_ASSEMBLY = "on-entity-assembly";
     private static final String XSD_ATTR__ON_ENTITY_ASSEMBLED = "on-entity-assembled";
     private static final String XSD_ATTR__ON_ENTITY_FAILED = "on-entity-failed";
     private static final String XSD_ATTR__USE_PREPROCESSOR = "use-bean-preprocessor";
@@ -125,8 +127,10 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
         constructorArgs.addGenericArgumentValue(dtoFactoryRef);
 
         final MutablePropertyValues valuesArgs = dtoSupportDef.getPropertyValues();
+        setupListenerProperty(valuesArgs, "onDtoAssembly", element.getAttribute(XSD_ATTR__ON_DTO_ASSEMBLY));
         setupListenerProperty(valuesArgs, "onDtoAssembled", element.getAttribute(XSD_ATTR__ON_DTO_ASSEMBLED));
         setupListenerProperty(valuesArgs, "onDtoFailed", element.getAttribute(XSD_ATTR__ON_DTO_FAILED));
+        setupListenerProperty(valuesArgs, "onEntityAssembly", element.getAttribute(XSD_ATTR__ON_ENTITY_ASSEMBLY));
         setupListenerProperty(valuesArgs, "onEntityAssembled", element.getAttribute(XSD_ATTR__ON_ENTITY_ASSEMBLED));
         setupListenerProperty(valuesArgs, "onEntityFailed", element.getAttribute(XSD_ATTR__ON_ENTITY_FAILED));
 

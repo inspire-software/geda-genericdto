@@ -94,4 +94,10 @@ public interface AdviceConfig extends Serializable {
      */
     int getEntityTargetIndex();
 
+
+    /**
+     * @return event listener context for this configuration
+     */
+    String getContext();
+
 }

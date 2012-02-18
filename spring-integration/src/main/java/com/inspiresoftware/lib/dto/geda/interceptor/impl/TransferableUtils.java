@@ -117,14 +117,14 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), ann.dtoFilterKey(), "", ann.entityKey(),
                                 AdviceConfig.DTOSupportMode.DTOS_TO_ENTITIES_BY_FILTER,
-                                0, NO_INDEX, NO_INDEX, 1);
+                                0, NO_INDEX, NO_INDEX, 1, ann.context());
                         return;
                     } else if (!firstArgIsCollection && !secondArgIsCollection) {
                         // public void toEntity(Class<DTO> dtoFilter, DTO dto, Entity entity, ... )
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), ann.dtoFilterKey(), "", "",
                                 AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY,
-                                0, NO_INDEX, NO_INDEX, 1);
+                                0, NO_INDEX, NO_INDEX, 1, ann.context());
                         return;
                     }
 
@@ -136,14 +136,14 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), "", "", ann.entityKey(),
                                 AdviceConfig.DTOSupportMode.DTOS_TO_ENTITIES,
-                                0, NO_INDEX, NO_INDEX, 1);
+                                0, NO_INDEX, NO_INDEX, 1, ann.context());
                         return;
                     } else if (!firstArgIsCollection && !secondArgIsCollection) {
                         // public void toEntity(DTO dto, Entity entity, ... )
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), "", "", "",
                                 AdviceConfig.DTOSupportMode.DTO_TO_ENTITY,
-                                0, NO_INDEX, NO_INDEX, 1);
+                                0, NO_INDEX, NO_INDEX, 1, ann.context());
                         return;
                     }
 
@@ -163,14 +163,14 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), ann.dtoFilterKey(), ann.dtoKey(), "",
                                 AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS_BY_FILTER,
-                                NO_INDEX, 0, 1, NO_INDEX);
+                                NO_INDEX, 0, 1, NO_INDEX, ann.context());
                         return;
                     } else if (!firstArgIsCollection && !secondArgIsCollection) {
                         // public void toDto(Class<DTO> dtoFilter, DTO dto, Entity entity, ... )
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), ann.dtoFilterKey(), "", "",
                                 AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER,
-                                NO_INDEX, 0, 1, NO_INDEX);
+                                NO_INDEX, 0, 1, NO_INDEX, ann.context());
                         return;
                     }
 
@@ -182,14 +182,14 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), "", ann.dtoKey(), "",
                                 AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS,
-                                NO_INDEX, 0, 1, NO_INDEX);
+                                NO_INDEX, 0, 1, NO_INDEX, ann.context());
                         return;
                     } else if (!firstArgIsCollection && !secondArgIsCollection) {
                         // public void toDto(DTO dto, Entity entity, ... )
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), "", "", "",
                                 AdviceConfig.DTOSupportMode.ENTITY_TO_DTO,
-                                NO_INDEX, 0, 1, NO_INDEX);
+                                NO_INDEX, 0, 1, NO_INDEX, ann.context());
                         return;
                     }
 
@@ -227,7 +227,7 @@ public final class TransferableUtils {
                             addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                     ann.after(), ann.dtoFilterKey(), ann.dtoKey(), "",
                                     AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS_BY_FILTER,
-                                    NO_INDEX, 0, 1, NO_INDEX);
+                                    NO_INDEX, 0, 1, NO_INDEX, ann.context());
                             return;
                         } else if (!firstArgIsCollection && !returnIsVoid) {
                              // public DTO toDto(Class<DTO> dtoFilter, Entity entity, ... )
@@ -235,7 +235,7 @@ public final class TransferableUtils {
                              addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                      ann.after(), ann.dtoFilterKey(), ann.dtoKey(), "",
                                      AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY_BY_FILTER,
-                                     NO_INDEX, RETURN_INDEX, 0, NO_INDEX);
+                                     NO_INDEX, RETURN_INDEX, 0, NO_INDEX, ann.context());
                              return;
 
                         } else if (!firstArgIsCollection && !secondArgIsCollection) {
@@ -243,7 +243,7 @@ public final class TransferableUtils {
                             addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                     ann.after(), ann.dtoFilterKey(), "", "",
                                     AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER,
-                                    NO_INDEX, 0, 1, NO_INDEX);
+                                    NO_INDEX, 0, 1, NO_INDEX, ann.context());
                             return;
                         }
                     } else if (args.length == 1 && !returnIsVoid) {
@@ -252,7 +252,7 @@ public final class TransferableUtils {
                          addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                  ann.after(), ann.dtoFilterKey(), ann.dtoKey(), "",
                                  AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY_BY_FILTER,
-                                 NO_INDEX, RETURN_INDEX, 0, NO_INDEX);
+                                 NO_INDEX, RETURN_INDEX, 0, NO_INDEX, ann.context());
                          return;
                     }
 
@@ -271,7 +271,7 @@ public final class TransferableUtils {
                             addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                     ann.after(), "", ann.dtoKey(), "",
                                     AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS,
-                                    NO_INDEX, 0, 1, NO_INDEX);
+                                    NO_INDEX, 0, 1, NO_INDEX, ann.context());
                             return;
                         } else if (!firstArgIsCollection && !returnIsVoid) {
                              // public DTO toDto(Entity entity, ... )
@@ -279,7 +279,7 @@ public final class TransferableUtils {
                              addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                      ann.after(), "", ann.dtoKey(), "",
                                      AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY,
-                                     NO_INDEX, RETURN_INDEX, 0, NO_INDEX);
+                                     NO_INDEX, RETURN_INDEX, 0, NO_INDEX, ann.context());
                              return;
                             
                         } else if (!firstArgIsCollection && !secondArgIsCollection) {
@@ -287,7 +287,7 @@ public final class TransferableUtils {
                             addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                     ann.after(), "", "", "",
                                     AdviceConfig.DTOSupportMode.ENTITY_TO_DTO,
-                                    NO_INDEX, 0, 1, NO_INDEX);
+                                    NO_INDEX, 0, 1, NO_INDEX, ann.context());
                             return;
                         }
                     } else if (args.length == 1 && !returnIsVoid) {
@@ -296,7 +296,7 @@ public final class TransferableUtils {
                          addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                  ann.after(), "", ann.dtoKey(), "",
                                  AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY,
-                                 NO_INDEX, RETURN_INDEX, 0, NO_INDEX);
+                                 NO_INDEX, RETURN_INDEX, 0, NO_INDEX, ann.context());
                          return;
                     }
 
@@ -320,7 +320,7 @@ public final class TransferableUtils {
                             addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                     ann.after(), ann.dtoFilterKey(), "", ann.entityKey(),
                                     AdviceConfig.DTOSupportMode.DTOS_TO_ENTITIES_BY_FILTER,
-                                    0, NO_INDEX, NO_INDEX, 1);
+                                    0, NO_INDEX, NO_INDEX, 1, ann.context());
                             return;
 
                         } else if (!firstArgIsCollection && !returnIsVoid) {
@@ -329,7 +329,7 @@ public final class TransferableUtils {
                             addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                     ann.after(), ann.dtoFilterKey(), "", ann.entityKey(),
                                     AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY_KEY,
-                                    0, NO_INDEX, NO_INDEX, RETURN_INDEX);
+                                    0, NO_INDEX, NO_INDEX, RETURN_INDEX, ann.context());
                             return;
 
                         } else if (!firstArgIsCollection && !secondArgIsCollection) {
@@ -337,7 +337,7 @@ public final class TransferableUtils {
                             addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                     ann.after(), ann.dtoFilterKey(), "", "",
                                     AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY,
-                                    0, NO_INDEX, NO_INDEX, 1);
+                                    0, NO_INDEX, NO_INDEX, 1, ann.context());
                             return;
 
                         }
@@ -347,7 +347,7 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                 ann.after(), ann.dtoFilterKey(), "", ann.entityKey(),
                                 AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY_KEY,
-                                0, NO_INDEX, NO_INDEX, RETURN_INDEX);
+                                0, NO_INDEX, NO_INDEX, RETURN_INDEX, ann.context());
                         return;
                     }
 
@@ -364,7 +364,7 @@ public final class TransferableUtils {
                             addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                     ann.after(), "", "", ann.entityKey(),
                                     AdviceConfig.DTOSupportMode.DTOS_TO_ENTITIES,
-                                    0, NO_INDEX, NO_INDEX, 1);
+                                    0, NO_INDEX, NO_INDEX, 1, ann.context());
                             return;
                             
                         } else if (!firstArgIsCollection && !returnIsVoid) {
@@ -373,7 +373,7 @@ public final class TransferableUtils {
                             addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                     ann.after(), "", "", ann.entityKey(),
                                     AdviceConfig.DTOSupportMode.DTO_TO_ENTITY_KEY,
-                                    0, NO_INDEX, NO_INDEX, RETURN_INDEX);
+                                    0, NO_INDEX, NO_INDEX, RETURN_INDEX, ann.context());
                             return;
 
                         } else if (!firstArgIsCollection && !secondArgIsCollection) {
@@ -381,7 +381,7 @@ public final class TransferableUtils {
                             addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                     ann.after(), "", "", "",
                                     AdviceConfig.DTOSupportMode.DTO_TO_ENTITY,
-                                    0, NO_INDEX, NO_INDEX, 1);
+                                    0, NO_INDEX, NO_INDEX, 1, ann.context());
                             return;
 
                         }
@@ -391,7 +391,7 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                 ann.after(), "", "", ann.entityKey(),
                                 AdviceConfig.DTOSupportMode.DTO_TO_ENTITY_KEY,
-                                0, NO_INDEX, NO_INDEX, RETURN_INDEX);
+                                0, NO_INDEX, NO_INDEX, RETURN_INDEX, ann.context());
                         return;
                     }
 
@@ -423,11 +423,11 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), ann.dtoFilterKey(), "", "",
                                 AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY,
-                                0, NO_INDEX, NO_INDEX, 1);
+                                0, NO_INDEX, NO_INDEX, 1, ann.context());
                         addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                 ann.after(), ann.dtoFilterKey(), "", "",
                                 AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER,
-                                NO_INDEX, 0, 1, NO_INDEX);
+                                NO_INDEX, 0, 1, NO_INDEX, ann.context());
                         return;
 
                     } else {
@@ -435,12 +435,12 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), ann.dtoFilterKey(), "", "",
                                 AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY,
-                                0, NO_INDEX, NO_INDEX, 1);
+                                0, NO_INDEX, NO_INDEX, 1, ann.context());
                         assertKey(method, ann.dtoKey(), true);
                         addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                 ann.after(), ann.dtoFilterKey(), ann.dtoKey(), "",
                                 AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY_BY_FILTER,
-                                NO_INDEX, RETURN_INDEX, 1, NO_INDEX);
+                                NO_INDEX, RETURN_INDEX, 1, NO_INDEX, ann.context());
                         return;
 
                     }
@@ -451,11 +451,11 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), "", "", "",
                                 AdviceConfig.DTOSupportMode.DTO_TO_ENTITY,
-                                0, NO_INDEX, NO_INDEX, 1);
+                                0, NO_INDEX, NO_INDEX, 1, ann.context());
                         addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                 ann.after(), "", "", "",
                                 AdviceConfig.DTOSupportMode.ENTITY_TO_DTO,
-                                NO_INDEX, 0, 1, NO_INDEX);
+                                NO_INDEX, 0, 1, NO_INDEX, ann.context());
                         return;
 
                     } else {
@@ -463,12 +463,12 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), "", "", "",
                                 AdviceConfig.DTOSupportMode.DTO_TO_ENTITY,
-                                0, NO_INDEX, NO_INDEX, 1);
+                                0, NO_INDEX, NO_INDEX, 1, ann.context());
                         assertKey(method, ann.dtoKey(), true);
                         addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                 ann.after(), "", ann.dtoKey(), "",
                                 AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY,
-                                NO_INDEX, RETURN_INDEX, 1, NO_INDEX);
+                                NO_INDEX, RETURN_INDEX, 1, NO_INDEX, ann.context());
                         return;
 
                     }
@@ -482,11 +482,11 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), ann.dtoFilterKey(), "", "",
                                 AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER,
-                                NO_INDEX, 0, 1, NO_INDEX);
+                                NO_INDEX, 0, 1, NO_INDEX, ann.context());
                         addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                 ann.after(), ann.dtoFilterKey(), "", "",
                                 AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY,
-                                0, NO_INDEX, NO_INDEX, 1);
+                                0, NO_INDEX, NO_INDEX, 1, ann.context());
                         return;
 
                     } else {
@@ -494,12 +494,12 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), ann.dtoFilterKey(), "", "",
                                 AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER,
-                                NO_INDEX, 0, 1, NO_INDEX);
+                                NO_INDEX, 0, 1, NO_INDEX, ann.context());
                         assertKey(method, ann.entityKey(), false);
                         addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                 ann.after(), ann.dtoFilterKey(), "", ann.entityKey(),
                                 AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY_KEY,
-                                0, NO_INDEX, NO_INDEX, RETURN_INDEX);
+                                0, NO_INDEX, NO_INDEX, RETURN_INDEX, ann.context());
                         return;
 
                     }
@@ -509,11 +509,11 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), "", "", "",
                                 AdviceConfig.DTOSupportMode.ENTITY_TO_DTO,
-                                NO_INDEX, 0, 1, NO_INDEX);
+                                NO_INDEX, 0, 1, NO_INDEX, ann.context());
                         addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                 ann.after(), "", "", "",
                                 AdviceConfig.DTOSupportMode.DTO_TO_ENTITY,
-                                0, NO_INDEX, NO_INDEX, 1);
+                                0, NO_INDEX, NO_INDEX, 1, ann.context());
                         return;
 
                     } else {
@@ -521,12 +521,12 @@ public final class TransferableUtils {
                         addConfiguration(cfg, Occurrence.BEFORE_METHOD_INVOCATION,
                                 ann.before(), "", "", "",
                                 AdviceConfig.DTOSupportMode.ENTITY_TO_DTO,
-                                NO_INDEX, 0, 1, NO_INDEX);
+                                NO_INDEX, 0, 1, NO_INDEX, ann.context());
                         assertKey(method, ann.entityKey(), false);
                         addConfiguration(cfg, Occurrence.AFTER_METHOD_INVOCATION,
                                 ann.after(), "", "", ann.entityKey(),
                                 AdviceConfig.DTOSupportMode.DTO_TO_ENTITY_KEY,
-                                0, NO_INDEX, NO_INDEX, RETURN_INDEX);
+                                0, NO_INDEX, NO_INDEX, RETURN_INDEX, ann.context());
                         return;
 
                     }
@@ -550,12 +550,13 @@ public final class TransferableUtils {
                                          final int dtoSourceIndex,
                                          final int dtoTargetIndex,
                                          final int entitySourceIndex,
-                                         final int entityTargetIndex) {
+                                         final int entityTargetIndex,
+                                         final String context) {
         final AdviceConfig bCfg =
                 new ImmutableAdviceConfig(
                     direction, occur, mode, dtoFilterKey, dtoKey, entityKey,
                     dtoSourceIndex, dtoTargetIndex,
-                    entitySourceIndex, entityTargetIndex);
+                    entitySourceIndex, entityTargetIndex, context);
 
         cfg.put(occur, bCfg);
     }

@@ -95,59 +95,59 @@ public class GeDAInterceptor implements MethodInterceptor {
 
         switch (mode) {
             case DTO_TO_ENTITY:
-                this.support.assembleEntity(args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()]);
+                this.support.assembleEntity(args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()], cfg.getContext());
                 break;
 
             case DTO_TO_ENTITY_KEY:
-                this.support.assembleEntityByKey(args[cfg.getDtoSourceIndex()], cfg.getEntityKey());
+                this.support.assembleEntityByKey(args[cfg.getDtoSourceIndex()], cfg.getEntityKey(), cfg.getContext());
                 break;
 
             case DTO_BY_FILTER_TO_ENTITY:
                 this.support.assembleEntity(cfg.getDtoFilterKey(),
-                        args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()]);
+                        args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()], cfg.getContext());
                 break;
 
             case DTO_BY_FILTER_TO_ENTITY_KEY:
                 this.support.assembleEntityByKey(cfg.getDtoFilterKey(),
-                        args[cfg.getDtoSourceIndex()], cfg.getEntityKey());
+                        args[cfg.getDtoSourceIndex()], cfg.getEntityKey(), cfg.getContext());
                 break;
 
             case DTOS_TO_ENTITIES:
                 this.support.assembleEntities(cfg.getEntityKey(),
-                        (Collection) args[cfg.getDtoSourceIndex()], (Collection) args[cfg.getEntityTargetIndex()]);
+                        (Collection) args[cfg.getDtoSourceIndex()], (Collection) args[cfg.getEntityTargetIndex()], cfg.getContext());
                 break;
 
             case DTOS_TO_ENTITIES_BY_FILTER:
                 this.support.assembleEntities(cfg.getDtoFilterKey(), cfg.getEntityKey(),
-                        (Collection) args[cfg.getDtoSourceIndex()], (Collection) args[cfg.getEntityTargetIndex()]);
+                        (Collection) args[cfg.getDtoSourceIndex()], (Collection) args[cfg.getEntityTargetIndex()], cfg.getContext());
                 break;
 
             case ENTITY_TO_DTO:
-                this.support.assembleDto(args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()]);
+                this.support.assembleDto(args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()], cfg.getContext());
                 break;
 
             case ENTITY_TO_DTO_KEY:
-                this.support.assembleDtoByKey(cfg.getDtoKey(), args[cfg.getEntitySourceIndex()]);
+                this.support.assembleDtoByKey(cfg.getDtoKey(), args[cfg.getEntitySourceIndex()], cfg.getContext());
                 break;
 
             case ENTITY_TO_DTO_BY_FILTER:
                 this.support.assembleDto(cfg.getDtoFilterKey(),
-                        args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()]);
+                        args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()], cfg.getContext());
                 break;
 
             case ENTITY_TO_DTO_KEY_BY_FILTER:
                 this.support.assembleDtoByKey(cfg.getDtoFilterKey(),
-                        cfg.getDtoKey(), args[cfg.getEntitySourceIndex()]);
+                        cfg.getDtoKey(), args[cfg.getEntitySourceIndex()], cfg.getContext());
                 break;
 
             case ENTITIES_TO_DTOS:
                 this.support.assembleDtos(cfg.getDtoKey(),
-                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()]);
+                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()], cfg.getContext());
                 break;
 
             case ENTITIES_TO_DTOS_BY_FILTER:
                 this.support.assembleDtos(cfg.getDtoFilterKey(), cfg.getDtoKey(),
-                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()]);
+                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()], cfg.getContext());
                 break;
 
             default:
@@ -173,72 +173,72 @@ public class GeDAInterceptor implements MethodInterceptor {
         switch (mode) {
             case DTO_TO_ENTITY:
                 if (cfg.getEntityTargetIndex() == -1) {
-                    return this.support.assembleEntity(args[cfg.getDtoSourceIndex()], result);
+                    return this.support.assembleEntity(args[cfg.getDtoSourceIndex()], result, cfg.getContext());
                 } else {
-                    this.support.assembleEntity(args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()]);
+                    this.support.assembleEntity(args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()], cfg.getContext());
                     return result;
                 }
 
             case DTO_TO_ENTITY_KEY:
-                return this.support.assembleEntityByKey(args[cfg.getDtoSourceIndex()], cfg.getEntityKey());
+                return this.support.assembleEntityByKey(args[cfg.getDtoSourceIndex()], cfg.getEntityKey(), cfg.getContext());
 
             case DTO_BY_FILTER_TO_ENTITY:
                 if (cfg.getEntityTargetIndex() == -1) {
                     return this.support.assembleEntity(cfg.getDtoFilterKey(),
-                            args[cfg.getDtoSourceIndex()], result);
+                            args[cfg.getDtoSourceIndex()], result, cfg.getContext());
                 } else {
                     this.support.assembleEntity(cfg.getDtoFilterKey(),
-                            args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()]);
+                            args[cfg.getDtoSourceIndex()], args[cfg.getEntityTargetIndex()], cfg.getContext());
                     return result;
                 }
 
             case DTO_BY_FILTER_TO_ENTITY_KEY:
                 return this.support.assembleEntityByKey(cfg.getDtoFilterKey(),
-                        args[cfg.getDtoSourceIndex()], cfg.getEntityKey());
+                        args[cfg.getDtoSourceIndex()], cfg.getEntityKey(), cfg.getContext());
 
             case DTOS_TO_ENTITIES:
                 this.support.assembleEntities(cfg.getEntityKey(),
-                        (Collection) args[cfg.getDtoSourceIndex()], (Collection) args[cfg.getEntityTargetIndex()]);
+                        (Collection) args[cfg.getDtoSourceIndex()], (Collection) args[cfg.getEntityTargetIndex()], cfg.getContext());
                 return result;
 
             case DTOS_TO_ENTITIES_BY_FILTER:
                 this.support.assembleEntities(cfg.getDtoFilterKey(), cfg.getEntityKey(),
-                        (Collection) args[cfg.getDtoSourceIndex()], (Collection)  args[cfg.getEntityTargetIndex()]);
+                        (Collection) args[cfg.getDtoSourceIndex()], (Collection)  args[cfg.getEntityTargetIndex()], cfg.getContext());
                 return result;
 
             case ENTITY_TO_DTO:
                 if (cfg.getDtoTargetIndex() == -1) {
-                    return this.support.assembleDto(result, args[cfg.getEntitySourceIndex()]);                    
+                    return this.support.assembleDto(result, args[cfg.getEntitySourceIndex()], cfg.getContext());
                 } else {
-                    this.support.assembleDto(args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()]);
+                    this.support.assembleDto(args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()], cfg.getContext());
                     return result;
                 }
 
             case ENTITY_TO_DTO_KEY:
-                return this.support.assembleDtoByKey(cfg.getDtoKey(), args[cfg.getEntitySourceIndex()]);
+                return this.support.assembleDtoByKey(cfg.getDtoKey(), args[cfg.getEntitySourceIndex()], cfg.getContext());
 
             case ENTITY_TO_DTO_BY_FILTER:
                 if (cfg.getDtoTargetIndex() == -1) {
                     return this.support.assembleDto(cfg.getDtoFilterKey(),
-                            result, args[cfg.getEntitySourceIndex()]);
+                            result, args[cfg.getEntitySourceIndex()], cfg.getContext());
                 } else {
                     this.support.assembleDto(cfg.getDtoFilterKey(),
-                            args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()]);
+                            args[cfg.getDtoTargetIndex()], args[cfg.getEntitySourceIndex()], cfg.getContext());
                     return result;
                 }
 
             case ENTITY_TO_DTO_KEY_BY_FILTER:
                 return this.support.assembleDtoByKey(cfg.getDtoFilterKey(),
-                            cfg.getDtoKey(), args[cfg.getEntitySourceIndex()]);
+                            cfg.getDtoKey(), args[cfg.getEntitySourceIndex()], cfg.getContext());
 
             case ENTITIES_TO_DTOS:
                 this.support.assembleDtos(cfg.getDtoKey(),
-                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()]);
+                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()], cfg.getContext());
                 return result;
 
             case ENTITIES_TO_DTOS_BY_FILTER:
                 this.support.assembleDtos(cfg.getDtoFilterKey(), cfg.getDtoKey(),
-                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()]);
+                        (Collection) args[cfg.getDtoTargetIndex()], (Collection) args[cfg.getEntitySourceIndex()], cfg.getContext());
                 return result;
 
             default:

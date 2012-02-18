@@ -104,4 +104,10 @@ public @interface Transferable {
      */
     String entityKey() default "";
 
+    /**
+     * @return context provides additional control over the what is happening to
+     *         provide the "context" to event listeners
+     */
+    String context() default "";
+
 }
