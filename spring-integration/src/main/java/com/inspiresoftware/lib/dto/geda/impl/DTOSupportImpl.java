@@ -10,6 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.impl;
 
 import com.inspiresoftware.lib.dto.geda.DTOSupport;
+import com.inspiresoftware.lib.dto.geda.ValueConverterRegistrator;
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.repository.ValueConverterRepository;
 import com.inspiresoftware.lib.dto.geda.adapter.repository.impl.ValueConverterRepositoryImpl;
@@ -46,6 +47,7 @@ public class DTOSupportImpl implements DTOSupport {
     private static final Logger LOG = LoggerFactory.getLogger(DTOSupportImpl.class);
 
     private final BeanFactory beanFactory;
+    private final ValueConverterRegistrator registrator;
     private final ValueConverterRepository dtoValueConverters = new ValueConverterRepositoryImpl();
 
     private DTOEventListener onDtoAssembly;
@@ -58,7 +60,13 @@ public class DTOSupportImpl implements DTOSupport {
 
 
     public DTOSupportImpl(final BeanFactory beanFactory) {
+        this(beanFactory, null);
+    }
+
+    public DTOSupportImpl(final BeanFactory beanFactory,
+                          final ValueConverterRegistrator registrator) {
         this.beanFactory = beanFactory;
+        this.registrator = registrator;
         this.registerCoreConverters();
     }
 
@@ -66,7 +74,9 @@ public class DTOSupportImpl implements DTOSupport {
      * Extension hook to register converters at the time of bean construction.
      */
     protected void registerCoreConverters() {
-        // register all converters, matchers and retrievers here.
+        if (this.registrator != null) {
+            this.registrator.registerValueConverters(this);
+        }
     }
 
     /** {@inheritDoc} */

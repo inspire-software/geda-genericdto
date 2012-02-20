@@ -18,7 +18,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * Date: Jan 25, 2012
  * Time: 4:08:07 PM
  */
-public class AnnotationDrivenGeDANamespaceHandler extends NamespaceHandlerSupport {
+public class GeDANamespaceHandler extends NamespaceHandlerSupport {
 
     /** {@inheritDoc} */
     public void init() {

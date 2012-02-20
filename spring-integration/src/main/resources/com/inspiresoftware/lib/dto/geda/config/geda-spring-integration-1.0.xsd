@@ -12,11 +12,13 @@
 <xsd:schema xmlns="http://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         xmlns:tool="http://www.springframework.org/schema/tool"
+        xmlns:beans="http://www.springframework.org/schema/beans"
         targetNamespace="http://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema"
         elementFormDefault="qualified"
         attributeFormDefault="unqualified">
 
     <xsd:import namespace="http://www.springframework.org/schema/tool" schemaLocation="http://www.springframework.org/schema/tool/spring-tool-3.0.xsd"/>
+    <xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"/>
 
     <xsd:annotation>
         <xsd:documentation><![CDATA[
@@ -39,6 +41,21 @@
                     <xsd:appinfo>
                         <tool:annotation kind="ref">
                             <tool:expected-type type="com.inspiresoftware.lib.dto.geda.DTOSupport"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="value-converters-registrator" type="xsd:string" default="" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation source="java:com.inspiresoftware.lib.dto.geda.ValueConverterRegistrator"><![CDATA[
+    The bean name of the ValueConverterRegistrator that acts as a factory for registering
+    value converters, retriever and matchers definitions.
+
+    This attribute is not required.
+                    ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.ValueConverterRegistrator"/>
                         </tool:annotation>
                     </xsd:appinfo>
                 </xsd:annotation>
@@ -168,6 +185,25 @@
         </xsd:complexType>
     </xsd:element>
 
-    <!-- TODO: value converter tag -->
+	<xsd:element name="valueconverter">
+		<xsd:annotation>
+			<xsd:documentation source="java:org.springframework.beans.factory.config.BeanDefinition"><![CDATA[
+	Defines a single (usually named) bean.
+
+	A bean definition may contain nested tags for constructor arguments,
+	property values, lookup methods, and replaced methods. Mixing constructor
+	injection and setter injection on the same bean is explicitly supported.
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:group ref="beans:beanElements"/>
+					<xsd:attributeGroup ref="beans:beanAttributes"/>
+                    <xsd:attribute name="dto-support-prop" type="xsd:string"/>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
 
 </xsd:schema>
