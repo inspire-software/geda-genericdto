@@ -10,11 +10,10 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.converter;
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.ValueConverter;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.converter.TestDto3Class.Decision;
+import org.junit.Ignore;
 
 
 /**

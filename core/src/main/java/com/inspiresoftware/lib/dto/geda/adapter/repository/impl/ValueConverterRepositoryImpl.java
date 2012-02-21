@@ -9,22 +9,26 @@
 
 package com.inspiresoftware.lib.dto.geda.adapter.repository.impl;
 
+import com.inspiresoftware.lib.dto.geda.adapter.repository.ValueConverterRepository;
+import com.inspiresoftware.lib.dto.geda.exception.DuplicateValueConverterKeyException;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.inspiresoftware.lib.dto.geda.adapter.repository.ValueConverterRepository;
-import com.inspiresoftware.lib.dto.geda.exception.DuplicateValueConverterKeyException;
 
 
 /**
  * Repository for all converters and entity retrievers.
  * Rationale - default implementation to provide basic support for value conversions.
+ *
+ * @deprecated use {@link com.inspiresoftware.lib.dto.geda.adapter.repository.impl.AdaptersRepositoryImpl} instead
+ *
  * <p/>
  * User: Denis Pavlov
  * Date: Jan 26, 2010
  * Time: 4:13:40 PM
  */
+@Deprecated
 public class ValueConverterRepositoryImpl implements ValueConverterRepository {
 
     private static final long serialVersionUID = 20100126L;

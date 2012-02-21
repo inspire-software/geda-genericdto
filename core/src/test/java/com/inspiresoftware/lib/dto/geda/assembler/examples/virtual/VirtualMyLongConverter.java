@@ -10,10 +10,9 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.virtual;
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.ValueConverter;
+import org.junit.Ignore;
 
 
 /**

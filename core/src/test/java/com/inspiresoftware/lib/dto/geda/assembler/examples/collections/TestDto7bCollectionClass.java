@@ -11,10 +11,9 @@
 package com.inspiresoftware.lib.dto.geda.assembler.examples.collections;
 
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
+import org.junit.Ignore;
 
 /**
  * .

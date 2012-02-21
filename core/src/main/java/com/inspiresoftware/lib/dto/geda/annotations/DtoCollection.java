@@ -11,11 +11,11 @@
 
 package com.inspiresoftware.lib.dto.geda.annotations;
 
+import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-
-import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
 
 
 /**

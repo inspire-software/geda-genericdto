@@ -10,8 +10,17 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
 
-import static org.apache.bcel.Constants.ACC_PUBLIC;
-import static org.apache.bcel.Constants.ACC_SUPER;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.FileClassLoader.BaseDirectoryProvider;
+import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
+import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
+import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+import org.apache.bcel.Constants;
+import org.apache.bcel.generic.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,27 +29,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.bcel.Constants;
-import org.apache.bcel.generic.ALOAD;
-import org.apache.bcel.generic.ASTORE;
-import org.apache.bcel.generic.ClassGen;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.InstructionFactory;
-import org.apache.bcel.generic.InstructionList;
-import org.apache.bcel.generic.LDC_W;
-import org.apache.bcel.generic.LocalVariableGen;
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.ObjectType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.FileClassLoader.BaseDirectoryProvider;
-import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
-import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
-import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+import static org.apache.bcel.Constants.ACC_PUBLIC;
+import static org.apache.bcel.Constants.ACC_SUPER;
 
 
 /**

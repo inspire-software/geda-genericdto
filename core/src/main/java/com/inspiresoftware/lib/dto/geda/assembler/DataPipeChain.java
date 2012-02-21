@@ -10,33 +10,13 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import java.util.Map;
-
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationDuplicateBindingException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingBeanKeyException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingBindingException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationValidatingBindingException;
-import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
-import com.inspiresoftware.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
-import com.inspiresoftware.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.EntityRetrieverNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionBindingNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionScanningException;
-import com.inspiresoftware.lib.dto.geda.exception.NotDtoToEntityMatcherException;
-import com.inspiresoftware.lib.dto.geda.exception.NotEntityRetrieverException;
-import com.inspiresoftware.lib.dto.geda.exception.NotValueConverterException;
-import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
-import com.inspiresoftware.lib.dto.geda.exception.ValueConverterNotFoundException;
+import com.inspiresoftware.lib.dto.geda.exception.*;
+
+import java.util.Map;
 
 
 

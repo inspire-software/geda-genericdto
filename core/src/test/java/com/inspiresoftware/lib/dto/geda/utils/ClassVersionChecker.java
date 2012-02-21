@@ -10,11 +10,11 @@
 
 package com.inspiresoftware.lib.dto.geda.utils;
 
+import org.junit.Ignore;
+
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import org.junit.Ignore;
 
 /**
  * Manual check for class version.

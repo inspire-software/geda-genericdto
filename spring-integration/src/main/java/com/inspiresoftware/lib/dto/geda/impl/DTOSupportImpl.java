@@ -9,15 +9,16 @@
 
 package com.inspiresoftware.lib.dto.geda.impl;
 
+import com.inspiresoftware.lib.dto.geda.DTOAdaptersRegistrar;
 import com.inspiresoftware.lib.dto.geda.DTOSupport;
-import com.inspiresoftware.lib.dto.geda.ValueConverterRegistrator;
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
-import com.inspiresoftware.lib.dto.geda.adapter.repository.ValueConverterRepository;
-import com.inspiresoftware.lib.dto.geda.adapter.repository.impl.ValueConverterRepositoryImpl;
+import com.inspiresoftware.lib.dto.geda.adapter.repository.AdaptersRepository;
+import com.inspiresoftware.lib.dto.geda.adapter.repository.impl.AdaptersRepositoryImpl;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
 import com.inspiresoftware.lib.dto.geda.event.DTOEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -42,13 +43,13 @@ import java.util.Collection;
  * Date: Sep 27, 2011
  * Time: 5:33:05 PM
  */
-public class DTOSupportImpl implements DTOSupport {
+public class DTOSupportImpl implements DTOSupport, InitializingBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(DTOSupportImpl.class);
 
     private final BeanFactory beanFactory;
-    private final ValueConverterRegistrator registrator;
-    private final ValueConverterRepository dtoValueConverters = new ValueConverterRepositoryImpl();
+    private final DTOAdaptersRegistrar registrator;
+    private final AdaptersRepository dtoValueConverters = new AdaptersRepositoryImpl();
 
     private DTOEventListener onDtoAssembly;
     private DTOEventListener onEntityAssembly;
@@ -64,18 +65,22 @@ public class DTOSupportImpl implements DTOSupport {
     }
 
     public DTOSupportImpl(final BeanFactory beanFactory,
-                          final ValueConverterRegistrator registrator) {
+                          final DTOAdaptersRegistrar registrator) {
         this.beanFactory = beanFactory;
         this.registrator = registrator;
-        this.registerCoreConverters();
+    }
+
+    public void afterPropertiesSet() throws Exception {
+        this.registerCoreAdapters();
     }
 
     /**
-     * Extension hook to register converters at the time of bean construction.
+     * Extension hook to register converters, retrievers and matchers immediately after
+     * bean construction.
      */
-    protected void registerCoreConverters() {
+    protected void registerCoreAdapters() {
         if (this.registrator != null) {
-            this.registrator.registerValueConverters(this);
+            this.registrator.registerAdapters(this);
         }
     }
 
@@ -266,11 +271,11 @@ public class DTOSupportImpl implements DTOSupport {
     }
 
     /** {@inheritDoc} */
-    public void registerValueConverter(final String key, final Object converter) {
+    public void registerAdapter(final String key, final Object converter) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Registering [" + converter.toString() + "] with key [" + key + "]");
         }
-        this.dtoValueConverters.registerValueConverter(key, converter);
+        this.dtoValueConverters.registerAdapter(key, converter);
     }
 
     /**
@@ -295,7 +300,7 @@ public class DTOSupportImpl implements DTOSupport {
     }
 
     /**
-     * @param onEntityFailed  listener invoked after failed assembly
+     * @param onEntityFailed  listener
      */
     public void setOnEntityFailed(final DTOEventListener onEntityFailed) {
         this.onEntityFailed = onEntityFailed;

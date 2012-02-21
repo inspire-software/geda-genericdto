@@ -10,8 +10,6 @@
 package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfigRepository;
-import com.inspiresoftware.lib.dto.geda.interceptor.impl.AdviceConfigRepositoryImpl;
-import com.inspiresoftware.lib.dto.geda.interceptor.impl.BootstrapAdviceConfigResolverImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;

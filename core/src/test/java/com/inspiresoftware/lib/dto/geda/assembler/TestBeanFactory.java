@@ -11,11 +11,10 @@
 package com.inspiresoftware.lib.dto.geda.assembler;
 
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestEntity4Class;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestEntity4SubClass;
+import org.junit.Ignore;
 
 /**
  * Test bean factory.

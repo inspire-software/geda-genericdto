@@ -10,17 +10,6 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
@@ -28,6 +17,16 @@ import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
 import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 /**

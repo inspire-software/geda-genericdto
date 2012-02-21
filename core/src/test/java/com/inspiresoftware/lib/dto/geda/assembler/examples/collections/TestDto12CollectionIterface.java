@@ -10,9 +10,9 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.collections;
 
-import java.util.Collection;
-
 import org.junit.Ignore;
+
+import java.util.Collection;
 
 /**
  * Test DTO for Assembler.

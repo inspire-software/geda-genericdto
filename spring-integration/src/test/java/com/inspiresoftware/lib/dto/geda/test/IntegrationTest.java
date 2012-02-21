@@ -23,7 +23,6 @@ import org.testng.annotations.Test;
 import java.util.*;
 
 import static org.testng.Assert.*;
-import static org.testng.Assert.assertEquals;
 
 /**
  * .
@@ -53,6 +52,22 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
                 this.applicationContext.getBean(
                         AnnotationDrivenGeDABeanDefinitionParser.ADVISOR_BEAN_NAME, PointcutAdvisor.class);
         assertNotNull(advisor);
+
+        final ExposedDTOAdaptersRegistrar registrar = this.applicationContext.getBean("adapterRegistrar", ExposedDTOAdaptersRegistrar.class);
+        assertNotNull(registrar);
+
+        final Map<String, Object> adapters = registrar.getAdapters();
+        assertNotNull(adapters);
+        assertEquals(3, adapters.size());
+
+        final ExposedValueConverter vc = (ExposedValueConverter) adapters.get("vc");
+        assertNotNull(vc.getDtoSupport());
+
+        final ExposedEntityRetriever er = (ExposedEntityRetriever) adapters.get("er");
+        assertNotNull(er.getDtoSupport());
+
+        final ExposedMatcher ma = (ExposedMatcher) adapters.get("ma");
+        assertNotNull(ma.getDtoSupport());
 
     }
 

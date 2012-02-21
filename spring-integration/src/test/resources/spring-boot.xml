@@ -17,6 +17,7 @@
                            http://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema/geda-spring-integration-1.0.xsd">
 
     <geda:annotation-driven dto-factory="dtoFactory"
+                            dto-adapters-registrar="adapterRegistrar"
                             on-dto-assembly="onDto"
                             on-dto-assembled="onDtoSuccess"
                             on-dto-failed="onDtoFailure"
@@ -44,5 +45,19 @@
 
     <bean id="simpleTransferableService"
           class="com.inspiresoftware.lib.dto.geda.test.impl.TestServiceImpl"/>
+
+    <bean id="adapterRegistrar" class="com.inspiresoftware.lib.dto.geda.test.impl.ExposedDTOAdaptersRegistrarImpl">
+        <constructor-arg>
+            <map>
+                <entry key="vc" value-ref="adapterValueConverter"/>
+                <entry key="er" value-ref="adapterEntityRetriever"/>
+                <entry key="ma" value-ref="adapterMatcher"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="adapterValueConverter" class="com.inspiresoftware.lib.dto.geda.test.impl.ValueConverterImpl"/>
+    <bean id="adapterEntityRetriever" class="com.inspiresoftware.lib.dto.geda.test.impl.EntityRetrieverImpl"/>
+    <bean id="adapterMatcher" class="com.inspiresoftware.lib.dto.geda.test.impl.DtoToEntityMatcherImpl"/>
 
 </beans>

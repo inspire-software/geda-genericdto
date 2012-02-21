@@ -10,27 +10,20 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.inspiresoftware.lib.dto.geda.adapter.ValueConverter;
-import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
-import com.inspiresoftware.lib.dto.geda.assembler.MethodSynthesizerProxy;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.converter.TestConverter3;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.converter.TestDto3Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.converter.TestEntity3Class;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.converter.TestDto3Class.Decision;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.converter.TestEntity3Class;
 import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
 import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer;
 import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer.Parameters;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**

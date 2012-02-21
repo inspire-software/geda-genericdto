@@ -10,19 +10,6 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.Cache;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
@@ -32,6 +19,18 @@ import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
 import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 /**

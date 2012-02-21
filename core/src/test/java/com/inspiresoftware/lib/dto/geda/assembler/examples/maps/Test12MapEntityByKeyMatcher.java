@@ -11,11 +11,10 @@
 package com.inspiresoftware.lib.dto.geda.assembler.examples.maps;
 
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto12CollectionItemIterface;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity12CollectionItemInterface;
+import org.junit.Ignore;
 
 /**
  * Test matches that matches the Strings.

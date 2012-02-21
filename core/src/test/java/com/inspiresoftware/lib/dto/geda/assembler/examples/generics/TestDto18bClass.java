@@ -11,15 +11,14 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.generics;
 
-import java.util.ArrayList;
-
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoMap;
+import org.junit.Ignore;
+
+import java.util.ArrayList;
 
 
 /**

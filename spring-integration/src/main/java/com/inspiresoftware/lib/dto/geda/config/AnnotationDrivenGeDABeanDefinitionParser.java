@@ -10,11 +10,11 @@
 package com.inspiresoftware.lib.dto.geda.config;
 
 import com.inspiresoftware.lib.dto.geda.impl.DTOSupportImpl;
-import com.inspiresoftware.lib.dto.geda.interceptor.impl.GeDABootstrapAdvicePostProcessor;
 import com.inspiresoftware.lib.dto.geda.interceptor.GeDAInterceptor;
 import com.inspiresoftware.lib.dto.geda.interceptor.impl.BootstrapAdviceConfigResolverImpl;
-import com.inspiresoftware.lib.dto.geda.interceptor.impl.RuntimeAdviceConfigResolverImpl;
+import com.inspiresoftware.lib.dto.geda.interceptor.impl.GeDABootstrapAdvicePostProcessor;
 import com.inspiresoftware.lib.dto.geda.interceptor.impl.GeDAMethodMatcherPointcut;
+import com.inspiresoftware.lib.dto.geda.interceptor.impl.RuntimeAdviceConfigResolverImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.config.AopNamespaceUtils;
@@ -44,7 +44,7 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
 
     private static final String XSD_ATTR__DTO_SUPPORT = "dto-support";
     private static final String XSD_ATTR__DTO_FACTORY = "dto-factory";
-    private static final String XSD_ATTR__DTO_VCR = "value-converters-registrator";
+    private static final String XSD_ATTR__DTO_ADAPTERS_REGISTRAR = "dto-adapters-registrar";
     private static final String XSD_ATTR__ON_DTO_ASSEMBLY = "on-dto-assembly";
     private static final String XSD_ATTR__ON_DTO_ASSEMBLED = "on-dto-assembled";
     private static final String XSD_ATTR__ON_DTO_FAILED = "on-dto-failed";
@@ -74,7 +74,7 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
                 final String dtoFactoryBeanName = element.getAttribute(XSD_ATTR__DTO_FACTORY);
                 final RuntimeBeanReference dtoFactoryRef = new RuntimeBeanReference(dtoFactoryBeanName);
 
-                final String dtoVcrBeanName = element.getAttribute(XSD_ATTR__DTO_VCR);
+                final String dtoVcrBeanName = element.getAttribute(XSD_ATTR__DTO_ADAPTERS_REGISTRAR);
                 final RuntimeBeanReference dtoVcrRef;
                 if (StringUtils.hasLength(dtoVcrBeanName)) {
                     dtoVcrRef = new RuntimeBeanReference(dtoVcrBeanName);

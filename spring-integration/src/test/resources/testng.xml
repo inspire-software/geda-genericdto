@@ -17,6 +17,12 @@
         </classes>
     </test>
 
+    <test name="IntegrationMinimalBootTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationMinimalBootTest"/></classes>
+    </test>
+    <test name="IntegrationMinimalRunTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationMinimalRuntimeTest"/></classes>
+    </test>
     <test name="IntegrationBootTest">
         <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationBootTest"/></classes>
     </test>

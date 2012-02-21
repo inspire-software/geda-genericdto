@@ -10,14 +10,13 @@
 
 package com.inspiresoftware.lib.dto.geda.performance;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.performance.entity.Level1Entity;
 import com.inspiresoftware.lib.dto.geda.performance.entity.Level2Entity;
 import com.inspiresoftware.lib.dto.geda.performance.entity.Level3Entity;
+import org.junit.Ignore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service class to build large samples of DTO's and Entities to test GeDA under load and in

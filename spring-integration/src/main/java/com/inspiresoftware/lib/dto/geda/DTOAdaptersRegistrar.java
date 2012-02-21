@@ -17,7 +17,7 @@ package com.inspiresoftware.lib.dto.geda;
  * Date: Feb 20, 2012
  * Time: 10:21:52 PM
  */
-public interface ValueConverterRegistrator {
+public interface DTOAdaptersRegistrar {
 
     /**
      * Enhance runtime DTO converters runtime model. This method is intended to be used in
@@ -26,6 +26,6 @@ public interface ValueConverterRegistrator {
      *
      * @param dtoSupport dto support
      */
-    void registerValueConverters(DTOSupport dtoSupport);
+    void registerAdapters(DTOSupport dtoSupport);
 
 }

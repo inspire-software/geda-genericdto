@@ -12,15 +12,11 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
+import com.inspiresoftware.lib.dto.geda.exception.*;
+
 import java.beans.PropertyDescriptor;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.inspiresoftware.lib.dto.geda.exception.GetFieldValueException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionScanningException;
-import com.inspiresoftware.lib.dto.geda.exception.NullParametersNotAllowedException;
-import com.inspiresoftware.lib.dto.geda.exception.SetFieldValueException;
 
 
 /**

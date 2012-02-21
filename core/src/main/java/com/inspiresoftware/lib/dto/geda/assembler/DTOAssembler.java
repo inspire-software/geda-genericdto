@@ -11,17 +11,6 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.Cache;
@@ -30,32 +19,14 @@ import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.SoftReferenceCa
 import com.inspiresoftware.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationDuplicateBindingException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingAutobindingException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingBeanKeyException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingBindingException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationValidatingBindingException;
-import com.inspiresoftware.lib.dto.geda.exception.AutobindingClassNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
-import com.inspiresoftware.lib.dto.geda.exception.CollectionEntityGenericReturnTypeException;
-import com.inspiresoftware.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.EntityRetrieverNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
-import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionBindingNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionScanningException;
-import com.inspiresoftware.lib.dto.geda.exception.InvalidDtoCollectionException;
-import com.inspiresoftware.lib.dto.geda.exception.InvalidEntityCollectionException;
-import com.inspiresoftware.lib.dto.geda.exception.NotDtoToEntityMatcherException;
-import com.inspiresoftware.lib.dto.geda.exception.NotEntityRetrieverException;
-import com.inspiresoftware.lib.dto.geda.exception.NotValueConverterException;
-import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
-import com.inspiresoftware.lib.dto.geda.exception.ValueConverterNotFoundException;
+import com.inspiresoftware.lib.dto.geda.exception.*;
+
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
