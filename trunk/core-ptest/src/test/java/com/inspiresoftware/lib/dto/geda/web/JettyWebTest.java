@@ -9,7 +9,6 @@
 
 package com.inspiresoftware.lib.dto.geda.web;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

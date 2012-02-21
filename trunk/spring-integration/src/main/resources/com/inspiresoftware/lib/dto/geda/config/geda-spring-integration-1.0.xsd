@@ -45,9 +45,9 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:attribute>
-            <xsd:attribute name="value-converters-registrator" type="xsd:string" default="" use="optional">
+            <xsd:attribute name="dto-adapters-registrar" type="xsd:string" default="" use="optional">
                 <xsd:annotation>
-                    <xsd:documentation source="java:com.inspiresoftware.lib.dto.geda.ValueConverterRegistrator"><![CDATA[
+                    <xsd:documentation source="java:com.inspiresoftware.lib.dto.geda.DTOAdaptersRegistrar"><![CDATA[
     The bean name of the ValueConverterRegistrator that acts as a factory for registering
     value converters, retriever and matchers definitions.
 
@@ -55,7 +55,7 @@
                     ]]></xsd:documentation>
                     <xsd:appinfo>
                         <tool:annotation kind="ref">
-                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.ValueConverterRegistrator"/>
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.DTOAdaptersRegistrar"/>
                         </tool:annotation>
                     </xsd:appinfo>
                 </xsd:annotation>
@@ -184,26 +184,5 @@
             </xsd:attribute>
         </xsd:complexType>
     </xsd:element>
-
-	<xsd:element name="valueconverter">
-		<xsd:annotation>
-			<xsd:documentation source="java:org.springframework.beans.factory.config.BeanDefinition"><![CDATA[
-	Defines a single (usually named) bean.
-
-	A bean definition may contain nested tags for constructor arguments,
-	property values, lookup methods, and replaced methods. Mixing constructor
-	injection and setter injection on the same bean is explicitly supported.
-			]]></xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:extension base="beans:identifiedType">
-					<xsd:group ref="beans:beanElements"/>
-					<xsd:attributeGroup ref="beans:beanAttributes"/>
-                    <xsd:attribute name="dto-support-prop" type="xsd:string"/>
-				</xsd:extension>
-			</xsd:complexContent>
-		</xsd:complexType>
-	</xsd:element>
 
 </xsd:schema>

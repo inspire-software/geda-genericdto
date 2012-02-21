@@ -10,14 +10,13 @@
 
 package com.inspiresoftware.lib.dto.geda.performance.dto;
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.inspiresoftware.lib.dto.geda.performance.Level2;
 import com.inspiresoftware.lib.dto.geda.performance.Level3;
 import com.inspiresoftware.lib.dto.geda.performance.Verifiable;
 import com.inspiresoftware.lib.dto.geda.performance.entity.Level2Entity;
+import org.junit.Ignore;
 
 /**
  * Level 2 DTO.

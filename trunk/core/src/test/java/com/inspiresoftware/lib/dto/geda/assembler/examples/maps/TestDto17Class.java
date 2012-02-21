@@ -11,13 +11,12 @@
 package com.inspiresoftware.lib.dto.geda.assembler.examples.maps;
 
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoMap;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto15Class;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity15Class;
+import org.junit.Ignore;
 
 import java.util.Map;
 

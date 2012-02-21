@@ -10,13 +10,12 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
 
-import java.lang.reflect.Type;
-
+import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
+import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
-import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
+import java.lang.reflect.Type;
 
 
 /**

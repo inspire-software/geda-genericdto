@@ -10,11 +10,10 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.maps;
 
-import java.util.Map;
-
+import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity12CollectionItemInterface;
 import org.junit.Ignore;
 
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity12CollectionItemInterface;
+import java.util.Map;
 
 
 /**

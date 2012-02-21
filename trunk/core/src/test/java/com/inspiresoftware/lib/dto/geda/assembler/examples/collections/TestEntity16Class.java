@@ -10,10 +10,8 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.collections;
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity15Class;
-
+import org.junit.Ignore;
 
 import java.util.Collection;
 

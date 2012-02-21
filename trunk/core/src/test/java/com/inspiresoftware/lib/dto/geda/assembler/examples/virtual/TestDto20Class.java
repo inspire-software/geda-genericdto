@@ -11,10 +11,9 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.virtual;
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoVirtualField;
+import org.junit.Ignore;
 
 
 /**

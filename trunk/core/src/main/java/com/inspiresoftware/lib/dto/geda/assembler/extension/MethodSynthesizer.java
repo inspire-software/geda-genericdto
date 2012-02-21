@@ -10,11 +10,11 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.extension;
 
-import java.beans.PropertyDescriptor;
-
 import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+
+import java.beans.PropertyDescriptor;
 
 
 /**

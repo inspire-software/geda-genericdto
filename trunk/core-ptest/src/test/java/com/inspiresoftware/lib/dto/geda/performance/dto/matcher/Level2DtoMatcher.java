@@ -10,10 +10,9 @@
 
 package com.inspiresoftware.lib.dto.geda.performance.dto.matcher;
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
 import com.inspiresoftware.lib.dto.geda.performance.Level2;
+import org.junit.Ignore;
 
 /**
  * Simple matched by primary key.

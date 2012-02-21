@@ -10,17 +10,6 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
-import com.inspiresoftware.lib.dto.geda.assembler.MethodSynthesizerProxy;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestDto1Class;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestEntity1Class;
 import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
@@ -28,6 +17,14 @@ import com.inspiresoftware.lib.dto.geda.exception.InvalidDtoCollectionException;
 import com.inspiresoftware.lib.dto.geda.exception.InvalidEntityCollectionException;
 import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer;
 import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer.Parameters;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 
 /**

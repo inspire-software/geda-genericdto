@@ -11,16 +11,6 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collection;
-import java.util.Map;
-
-import org.junit.Test;
-
-import com.inspiresoftware.lib.dto.geda.assembler.PropertyInspector;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestDto1Class;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestDto1Interface;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto12CollectionClass;
@@ -30,6 +20,12 @@ import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.BCELMethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
+import org.junit.Test;
+
+import java.util.Collection;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 
 /**

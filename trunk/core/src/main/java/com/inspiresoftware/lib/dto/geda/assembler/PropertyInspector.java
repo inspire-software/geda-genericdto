@@ -11,6 +11,10 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
+import com.inspiresoftware.lib.dto.geda.exception.InspectionBindingNotFoundException;
+import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
+import com.inspiresoftware.lib.dto.geda.exception.InspectionScanningException;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -20,10 +24,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.inspiresoftware.lib.dto.geda.exception.InspectionBindingNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionScanningException;
 
 
 /**

@@ -158,6 +158,16 @@ public interface DTOSupport {
      * @param context transfer context
      */
     <T> void assembleEntities(String dtoFilter, String entityKey, Collection dtos, Collection<T> entities, String context);
-    
+
+    /**
+     * Enhance runtime DTO converters runtime model. This method is intended to be used in
+     * service bean constructors that need to provide additional implementation specific
+     * conversions (such as retrievers for example).
+     *
+     * @param key converter key (as provided in DTO mapping annotations)
+     * @param converter either converter of a retriever.
+     */
+    void registerAdapter(final String key, final Object converter);
+
 
 }

@@ -11,12 +11,11 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.generics;
 
-import java.util.Collection;
-import java.util.Map;
-
+import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import org.junit.Ignore;
 
-import com.inspiresoftware.lib.dto.geda.annotations.Dto;
+import java.util.Collection;
+import java.util.Map;
 
 
 /**

@@ -10,13 +10,13 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
 
+import com.inspiresoftware.lib.dto.geda.assembler.extension.Cache;
+
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.inspiresoftware.lib.dto.geda.assembler.extension.Cache;
 
 
 /**

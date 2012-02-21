@@ -10,15 +10,15 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.meta;
 
-import java.util.Collection;
-import java.util.Map;
-
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
 import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryNotFoundException;
 import com.inspiresoftware.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
 import com.inspiresoftware.lib.dto.geda.exception.NotDtoToEntityMatcherException;
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+
+import java.util.Collection;
+import java.util.Map;
 
 
 /**

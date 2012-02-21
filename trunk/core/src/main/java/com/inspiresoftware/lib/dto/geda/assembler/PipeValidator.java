@@ -14,8 +14,8 @@ import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingBindingException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationValidatingBindingException;
 import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingBindingException.MissingBindingType;
+import com.inspiresoftware.lib.dto.geda.exception.AnnotationValidatingBindingException;
 
 /**
  * Small utility class that validates pipes.

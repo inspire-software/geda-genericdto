@@ -10,58 +10,8 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
-import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
-import com.inspiresoftware.lib.dto.geda.assembler.MethodSynthesizerProxy;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.Test7Matcher;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto12CollectionClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto12CollectionItemClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto12CollectionItemIterface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto12CollectionIterface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto16Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto7CollectionClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto7CollectionInterface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto7CollectionSubClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto7CollectionSubInterface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto7NestedCollectionClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto7aCollectionClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto7bCollectionClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto7iCollectionClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestDto7iCollectionSubClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity12CollectionClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity12CollectionInterface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity12CollectionItemClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity12CollectionItemInterface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity12WrapCollectionClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity12WrapCollectionInterface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity16Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity7CollectionClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity7CollectionInterface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity7CollectionSubClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity7CollectionSubInterface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity7CollectionWrapperClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity7CollectionWrapperInterface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity7iCollectionClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.TestEntity7iCollectionSubClass;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.collections.*;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto15Class;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity15Class;
 import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryNotFoundException;
@@ -70,6 +20,12 @@ import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
 import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer;
 import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer.Parameters;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.*;
+
+import static org.junit.Assert.*;
 
 
 /**

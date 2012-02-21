@@ -10,17 +10,13 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
+import com.inspiresoftware.lib.dto.geda.annotations.*;
+import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
+import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
-import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.inspiresoftware.lib.dto.geda.annotations.DtoMap;
-import com.inspiresoftware.lib.dto.geda.annotations.DtoParent;
-import com.inspiresoftware.lib.dto.geda.annotations.DtoVirtualField;
-import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
-import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 
 /**

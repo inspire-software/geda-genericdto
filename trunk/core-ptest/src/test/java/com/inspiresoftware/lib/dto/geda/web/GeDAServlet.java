@@ -10,17 +10,14 @@
 
 package com.inspiresoftware.lib.dto.geda.web;
 
-import java.io.IOException;
+import com.inspiresoftware.lib.dto.geda.performance.PerformanceTestLevel3Thread;
+import com.inspiresoftware.lib.dto.geda.performance.ShutdownListener;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.inspiresoftware.lib.dto.geda.performance.PerformanceTestLevel3Thread;
-import com.inspiresoftware.lib.dto.geda.performance.ShutdownListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
 /**
  * Basic servlet to test how GeDA works under servlet container in real-time.

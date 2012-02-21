@@ -10,11 +10,6 @@
 
 package com.inspiresoftware.lib.dto.geda.performance.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
@@ -23,6 +18,10 @@ import com.inspiresoftware.lib.dto.geda.performance.Verifiable;
 import com.inspiresoftware.lib.dto.geda.performance.dto.matcher.Level2DtoMatcher;
 import com.inspiresoftware.lib.dto.geda.performance.entity.Level1Entity;
 import com.inspiresoftware.lib.dto.geda.performance.entity.Level2Entity;
+import org.junit.Ignore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Level 1 DTO.

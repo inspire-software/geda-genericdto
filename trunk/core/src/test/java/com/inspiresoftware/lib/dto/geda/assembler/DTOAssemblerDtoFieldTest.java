@@ -10,41 +10,25 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
-import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
-import com.inspiresoftware.lib.dto.geda.assembler.MethodSynthesizerProxy;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestDto8AutowireNameClass;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestEntity8AutowireNameClass;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestDto4DelegatingReadOnlyClass;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestDto4DelegatingWritableClass;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestEntity4Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto10Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto14Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto14IfaceDescriptable;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto15Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto9InheritanceChildClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity10Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity10Interface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity10SubClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity14Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity14IfaceDescriptable;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity15Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity9InheritanceClass;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.*;
 import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryNotFoundException;
 import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
 import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer;
 import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer.Parameters;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 
 /**

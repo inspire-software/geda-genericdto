@@ -11,11 +11,10 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
-import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 /**

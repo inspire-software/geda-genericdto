@@ -10,13 +10,13 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * ClassLoader that loads classes from specified directory.

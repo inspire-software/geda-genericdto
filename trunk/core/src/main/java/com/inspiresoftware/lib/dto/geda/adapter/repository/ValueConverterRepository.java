@@ -11,19 +11,23 @@
 
 package com.inspiresoftware.lib.dto.geda.adapter.repository;
 
+import com.inspiresoftware.lib.dto.geda.exception.DuplicateValueConverterKeyException;
+
 import java.io.Serializable;
 import java.util.Map;
-
-import com.inspiresoftware.lib.dto.geda.exception.DuplicateValueConverterKeyException;
 
 
 /**
  * A convenience repository that can be mapped into IoC container.
+ *
+ * @deprecated use {@link com.inspiresoftware.lib.dto.geda.adapter.repository.AdaptersRepository} instead
+ *
  * <p/>
  * User: Denis Pavlov
  * Date: Jan 26, 2010
  * Time: 4:11:13 PM
  */
+@Deprecated
 public interface ValueConverterRepository extends Serializable {
 
     /**

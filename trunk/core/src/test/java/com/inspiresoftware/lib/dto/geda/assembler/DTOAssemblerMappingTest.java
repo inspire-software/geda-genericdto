@@ -10,59 +10,24 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
-import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
-import com.inspiresoftware.lib.dto.geda.assembler.MethodSynthesizerProxy;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestDto13Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestDto1Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestDto1Interface;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestEntity1Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.TestEntity1Interface;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.*;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestDto18Class;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestDto18aClass;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestEntity18Class;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestEntity18aClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestDto4Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestDto4ComplexClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestDto4ComplexSubClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestEntity4Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestEntity4SubClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto10Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto2Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto5Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto6Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity2Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestEntity5Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.virtual.TestDto20Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.virtual.TestDto20ncClass;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.virtual.TestEntity20Class;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.virtual.VirtualMyBooleanConverter;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.virtual.VirtualMyLongConverter;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingAutobindingException;
-import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingBindingException;
-import com.inspiresoftware.lib.dto.geda.exception.AutobindingClassNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionBindingNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionInvalidDtoInstanceException;
-import com.inspiresoftware.lib.dto.geda.exception.InspectionInvalidEntityInstanceException;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.*;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.*;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.virtual.*;
+import com.inspiresoftware.lib.dto.geda.exception.*;
 import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer;
 import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer.Parameters;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.*;
+
+import static org.junit.Assert.*;
 
 
 /**

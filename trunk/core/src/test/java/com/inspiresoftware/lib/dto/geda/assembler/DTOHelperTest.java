@@ -12,18 +12,14 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto2Class;
+import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
-
-import com.inspiresoftware.lib.dto.geda.assembler.DTOHelper;
-import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.TestDto2Class;
-import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
+import static org.junit.Assert.*;
 
 
 /**

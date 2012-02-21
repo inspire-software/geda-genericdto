@@ -10,10 +10,9 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.nested;
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
+import org.junit.Ignore;
 
 /**
  * .

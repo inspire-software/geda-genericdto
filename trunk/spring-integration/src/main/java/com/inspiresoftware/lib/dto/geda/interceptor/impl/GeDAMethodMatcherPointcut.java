@@ -16,7 +16,6 @@ import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.DynamicMethodMatcher;
-import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;

@@ -11,15 +11,6 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-
-import java.beans.PropertyDescriptor;
-
-import org.junit.Test;
-
-import com.inspiresoftware.lib.dto.geda.assembler.MethodSynthesizerProxy;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
@@ -31,6 +22,11 @@ import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
 import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+import org.junit.Test;
+
+import java.beans.PropertyDescriptor;
+
+import static org.junit.Assert.*;
 
 
 /**

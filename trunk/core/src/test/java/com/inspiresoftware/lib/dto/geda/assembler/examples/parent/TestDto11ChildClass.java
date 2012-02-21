@@ -10,11 +10,10 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.parent;
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoParent;
+import org.junit.Ignore;
 
 
 /**

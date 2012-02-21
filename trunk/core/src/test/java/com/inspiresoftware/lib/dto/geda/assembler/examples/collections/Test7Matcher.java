@@ -11,9 +11,8 @@
 package com.inspiresoftware.lib.dto.geda.assembler.examples.collections;
 
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
+import org.junit.Ignore;
 
 /**
  * Test matches that matches the Strings.

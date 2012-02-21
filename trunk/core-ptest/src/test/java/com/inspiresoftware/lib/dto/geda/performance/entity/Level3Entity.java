@@ -10,10 +10,9 @@ package com.inspiresoftware.lib.dto.geda.performance.entity;
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.performance.Level3;
 import com.inspiresoftware.lib.dto.geda.performance.Verifiable;
+import org.junit.Ignore;
 
 /**
  * Level 3 entity.

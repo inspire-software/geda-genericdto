@@ -10,9 +10,8 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.examples.simple;
 
-import org.junit.Ignore;
-
 import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.TestEntity4Class;
+import org.junit.Ignore;
 
 
 /**
