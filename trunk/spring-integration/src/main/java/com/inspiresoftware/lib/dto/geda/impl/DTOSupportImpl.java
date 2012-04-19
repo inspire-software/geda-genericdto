@@ -47,8 +47,8 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(DTOSupportImpl.class);
 
-    private final BeanFactory beanFactory;
-    private final DTOAdaptersRegistrar registrator;
+    private BeanFactory beanFactory;
+    private DTOAdaptersRegistrar registrator;
     private final AdaptersRepository dtoValueConverters = new AdaptersRepositoryImpl();
 
     private DTOEventListener onDtoAssembly;
@@ -59,14 +59,11 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
     private DTOEventListener onEntityAssembled;
     private DTOEventListener onEntityFailed;
 
-
-    public DTOSupportImpl(final BeanFactory beanFactory) {
-        this(beanFactory, null);
+    public void setBeanFactory(final BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
-    public DTOSupportImpl(final BeanFactory beanFactory,
-                          final DTOAdaptersRegistrar registrator) {
-        this.beanFactory = beanFactory;
+    public void setRegistrator(final DTOAdaptersRegistrar registrator) {
         this.registrator = registrator;
     }
 

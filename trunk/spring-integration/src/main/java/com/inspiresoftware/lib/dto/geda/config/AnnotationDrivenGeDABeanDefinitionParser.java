@@ -18,6 +18,7 @@ import com.inspiresoftware.lib.dto.geda.interceptor.impl.RuntimeAdviceConfigReso
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.config.AopNamespaceUtils;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.aop.support.DefaultBeanFactoryPointcutAdvisor;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -137,13 +138,11 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
         dtoSupportDef.setSource(elementSource);
         dtoSupportDef.setRole(BeanDefinition.ROLE_APPLICATION);
 
-        final ConstructorArgumentValues constructorArgs = dtoSupportDef.getConstructorArgumentValues();
-        constructorArgs.addGenericArgumentValue(dtoFactoryRef);
-        if (dtoVcrRef != null) {
-            constructorArgs.addGenericArgumentValue(dtoVcrRef);
-        }
-
         final MutablePropertyValues valuesArgs = dtoSupportDef.getPropertyValues();
+        valuesArgs.addPropertyValue("beanFactory", dtoFactoryRef);
+        if (dtoVcrRef != null) {
+            valuesArgs.addPropertyValue("registrator", dtoVcrRef);
+        }
         setupListenerProperty(valuesArgs, "onDtoAssembly", element.getAttribute(XSD_ATTR__ON_DTO_ASSEMBLY));
         setupListenerProperty(valuesArgs, "onDtoAssembled", element.getAttribute(XSD_ATTR__ON_DTO_ASSEMBLED));
         setupListenerProperty(valuesArgs, "onDtoFailed", element.getAttribute(XSD_ATTR__ON_DTO_FAILED));
@@ -205,9 +204,9 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
         defaultInterceptor.setSource(elementSource);
         defaultInterceptor.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 
-        final ConstructorArgumentValues constructorArgs = defaultInterceptor.getConstructorArgumentValues();
-        constructorArgs.addIndexedArgumentValue(0, defaultSupport);
-        constructorArgs.addIndexedArgumentValue(1, defaultResolver);
+        final MutablePropertyValues propertyValues = defaultInterceptor.getPropertyValues();
+        propertyValues.addPropertyValue("support", defaultSupport);
+        propertyValues.addPropertyValue("resolver", defaultResolver);
 
         final XmlReaderContext readerContext = parserContext.getReaderContext();
 
