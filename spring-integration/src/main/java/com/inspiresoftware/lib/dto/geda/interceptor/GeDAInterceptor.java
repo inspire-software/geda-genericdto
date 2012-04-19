@@ -33,12 +33,17 @@ public class GeDAInterceptor implements MethodInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(GeDAInterceptor.class);
 
-    private final DTOSupport support;
-    private final AdviceConfigResolver resolver;
+    private DTOSupport support;
+    private AdviceConfigResolver resolver;
 
-    public GeDAInterceptor(final DTOSupport support,
-                           final AdviceConfigResolver resolver) {
+    public GeDAInterceptor() {
+    }
+
+    public void setSupport(final DTOSupport support) {
         this.support = support;
+    }
+
+    public void setResolver(final AdviceConfigResolver resolver) {
         this.resolver = resolver;
     }
 
