@@ -32,9 +32,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto</url>
-        <connection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto</connection>
-        <developerConnection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto</developerConnection>
+        <url>https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/trunk</url>
+        <connection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/trunk</connection>
+        <developerConnection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/trunk</developerConnection>
     </scm>
     <issueManagement>
         <system>JIRA</system>
