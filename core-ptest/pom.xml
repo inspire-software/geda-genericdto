@@ -9,17 +9,16 @@
   ~ SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.inspire-software.lib.dto.geda</groupId>
         <artifactId>geda</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <version>2.0.0</version>
     </parent>
     <artifactId>geda.core-ptest</artifactId>
     <name>DTO utilities package core integration and performance tests</name>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
     <description>Provides several integrations tests for core package</description>
     <packaging>jar</packaging>
     <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
@@ -31,9 +30,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto</url>
-        <connection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto</connection>
-        <developerConnection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto</developerConnection>
+        <url>https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/tags/geda-2.0.0/geda-genericdto</url>
+        <connection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/tags/geda-2.0.0/geda-genericdto</connection>
+        <developerConnection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/tags/geda-2.0.0/geda-genericdto</developerConnection>
     </scm>
     <issueManagement>
         <system>JIRA</system>
@@ -65,7 +64,7 @@
         <dependency>
             <groupId>com.inspire-software.lib.dto.geda</groupId>
             <artifactId>geda.core</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
