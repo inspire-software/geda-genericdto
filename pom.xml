@@ -33,7 +33,7 @@
     </licenses>
     <scm>
         <url>https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto</url>
-        <connection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/trunk</connection>
+        <connection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto</connection>
         <developerConnection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/trunk</developerConnection>
     </scm>
     <issueManagement>
