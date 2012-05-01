@@ -9,6 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor;
 
+import com.inspiresoftware.lib.dto.geda.GeDAInfrastructure;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 
 import java.lang.reflect.Method;
@@ -21,7 +22,7 @@ import java.util.Map;
  * Date: Jan 27, 2012
  * Time: 4:39:47 PM
  */
-public interface AdviceConfigRepository {
+public interface AdviceConfigRepository extends GeDAInfrastructure {
 
     /**
      * Check if method is advisable and add it to this repository.

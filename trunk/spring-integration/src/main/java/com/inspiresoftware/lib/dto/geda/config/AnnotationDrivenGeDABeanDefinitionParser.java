@@ -11,15 +11,13 @@ package com.inspiresoftware.lib.dto.geda.config;
 
 import com.inspiresoftware.lib.dto.geda.impl.DTOSupportImpl;
 import com.inspiresoftware.lib.dto.geda.interceptor.GeDAInterceptor;
-import com.inspiresoftware.lib.dto.geda.interceptor.impl.BootstrapAdviceConfigResolverImpl;
-import com.inspiresoftware.lib.dto.geda.interceptor.impl.GeDABootstrapAdvicePostProcessor;
-import com.inspiresoftware.lib.dto.geda.interceptor.impl.GeDAMethodMatcherPointcut;
-import com.inspiresoftware.lib.dto.geda.interceptor.impl.RuntimeAdviceConfigResolverImpl;
+import com.inspiresoftware.lib.dto.geda.interceptor.impl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.config.AopNamespaceUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.aop.support.DefaultBeanFactoryPointcutAdvisor;
+import org.springframework.aop.support.RegexpMethodPointcutAdvisor;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
@@ -53,6 +51,8 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
     private static final String XSD_ATTR__ON_ENTITY_ASSEMBLED = "on-entity-assembled";
     private static final String XSD_ATTR__ON_ENTITY_FAILED = "on-entity-failed";
     private static final String XSD_ATTR__USE_PREPROCESSOR = "use-bean-preprocessor";
+    private static final String XSD_ATTR__POINTCUT_MATCH_REGEX = "pointcut-match-regex";
+    private static final String XSD_ATTR__POINTCUT_NOMATCH_REGEX = "pointcut-nomatch-regex";
 
     public static final String ADVISOR_BEAN_NAME = AnnotationDrivenGeDABeanDefinitionParser.class.getPackage().getName() + ".internalGeDAAdvisor";
 
@@ -101,8 +101,11 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
                         this.setupTransferableAdviceConfigResolver(
                                 parserContext, elementSource, BootstrapAdviceConfigResolverImpl.class);
 
+                final String[] matchRegEx = this.getPointcutRegex(element, XSD_ATTR__POINTCUT_MATCH_REGEX);
+                final String[] noMatchRegEx = this.getPointcutRegex(element, XSD_ATTR__POINTCUT_NOMATCH_REGEX);
+
                 final RuntimeBeanReference pointcut =
-                        this.setupPointcut(parserContext, elementSource, defaultCfgAdvice);
+                        this.setupPointcut(parserContext, elementSource, defaultCfgAdvice, matchRegEx, noMatchRegEx);
 
                 final RuntimeBeanReference defaultInterceptor =
                         this.setupGeDAInterceptor(parserContext, elementSource, dtoSupportDef, defaultCfgAdvice);
@@ -115,8 +118,11 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
                         this.setupTransferableAdviceConfigResolver(
                                 parserContext, elementSource, RuntimeAdviceConfigResolverImpl.class);
 
+                final String[] matchRegEx = this.getPointcutRegex(element, XSD_ATTR__POINTCUT_MATCH_REGEX);
+                final String[] noMatchRegEx = this.getPointcutRegex(element, XSD_ATTR__POINTCUT_NOMATCH_REGEX);
+
                 final RuntimeBeanReference pointcut =
-                        this.setupPointcut(parserContext, elementSource, defaultCfgAdvice);
+                        this.setupPointcut(parserContext, elementSource, defaultCfgAdvice, matchRegEx, noMatchRegEx);
 
                 final RuntimeBeanReference defaultInterceptor =
                         this.setupGeDAInterceptor(parserContext, elementSource, dtoSupportDef, defaultCfgAdvice);
@@ -178,16 +184,47 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
         return new RuntimeBeanReference(beanName);    
     }
 
+    protected String[] getPointcutRegex(final Element element, final String attrName) {
+        final String matchRegexAttr = element.getAttribute(attrName);
+        final String[] matchRegex;
+        if (StringUtils.hasText(matchRegexAttr)) {
+            final String[] regex = matchRegexAttr.split(",");
+            matchRegex = new String[regex.length];
+            for (int i = 0; i < regex.length; i++) {
+                matchRegex[i] = regex[i].trim();
+            }
+            return matchRegex;
+        }
+        return new String[0];
+    }
+
     protected RuntimeBeanReference setupPointcut(final ParserContext parserContext,
                                                  final Object elementSource,
-                                                 final RuntimeBeanReference resolver) {
+                                                 final RuntimeBeanReference resolver,
+                                                 final String[] pointcutMatchRegex,
+                                                 final String[] pointcutNoMatchRegex) {
 
-        final RootBeanDefinition pointcut = new RootBeanDefinition(GeDAMethodMatcherPointcut.class);
+        final RootBeanDefinition pointcut;
+
+        if (pointcutMatchRegex.length == 0 && pointcutNoMatchRegex.length == 0) {
+            pointcut = new RootBeanDefinition(GeDAMethodMatcherPointcut.class);
+            final ConstructorArgumentValues constructorArgs = pointcut.getConstructorArgumentValues();
+            constructorArgs.addGenericArgumentValue(resolver);
+        } else {
+            pointcut = new RootBeanDefinition(GeDAMethodRegExMatcherPointcut.class);            
+            final ConstructorArgumentValues constructorArgs = pointcut.getConstructorArgumentValues();
+            constructorArgs.addGenericArgumentValue(resolver);
+            final MutablePropertyValues propertyValues = pointcut.getPropertyValues();
+            if (pointcutMatchRegex.length > 0) {
+                propertyValues.addPropertyValue("patterns", pointcutMatchRegex);
+            }
+            if (pointcutNoMatchRegex.length > 0) {
+                propertyValues.addPropertyValue("excludedPatterns", pointcutNoMatchRegex);                
+            }
+        }
+
         pointcut.setSource(elementSource);
         pointcut.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
-
-        final ConstructorArgumentValues constructorArgs = pointcut.getConstructorArgumentValues();
-        constructorArgs.addGenericArgumentValue(resolver);
 
         final XmlReaderContext readerContext = parserContext.getReaderContext();
         final String pointcutBeanName = readerContext.registerWithGeneratedName(pointcut);

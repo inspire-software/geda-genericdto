@@ -24,7 +24,7 @@ package com.inspiresoftware.lib.dto.geda.adapter;
  * Date: Jan 25, 2010
  * Time: 1:05:45 PM
  */
-public interface DtoToEntityMatcher<DTO, Entity> {
+public interface DtoToEntityMatcher<DTO, Entity> extends Adapter {
 
     /**
      * @param dto DTO to match

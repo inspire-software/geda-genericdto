@@ -18,7 +18,7 @@ package com.inspiresoftware.lib.dto.geda.adapter;
  * @since 1.0.0
  *
  */
-public interface ValueConverter {
+public interface ValueConverter extends Adapter {
 
 	/**
 	 * Convert one object into another to resolve incompatibilities between DTO and Entities.

@@ -12,6 +12,8 @@ package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfigResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -31,6 +33,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Time: 1:03:36 PM
  */
 public class RuntimeAdviceConfigResolverImpl implements AdviceConfigResolver {
+
+    private static final Logger LOG = LoggerFactory.getLogger(RuntimeAdviceConfigResolverImpl.class);
 
     private final Map<String, Boolean> blacklist = new ConcurrentHashMap<String, Boolean>();
     private final Map<String, Map<Occurrence, AdviceConfig>> cache = new ConcurrentHashMap<String, Map<Occurrence, AdviceConfig>>();
@@ -56,6 +60,10 @@ public class RuntimeAdviceConfigResolverImpl implements AdviceConfigResolver {
             this.blacklist.put(methodCacheKey, Boolean.TRUE);
         } else {
             cache.put(methodCacheKey, cfg);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Added GeDA configuration for method: " + methodCacheKey
+                        + "... " + cache.size() + " total mappings");
+            }
         }
 
         return cfg;

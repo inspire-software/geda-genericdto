@@ -17,7 +17,7 @@ package com.inspiresoftware.lib.dto.geda.adapter;
  * @since 1.0.0
  *
  */
-public interface EntityRetriever {
+public interface EntityRetriever extends Adapter {
 	
 	/**
 	 * Method that allows to retrieve entity from persistence layer by providing the interface, class and primary key.

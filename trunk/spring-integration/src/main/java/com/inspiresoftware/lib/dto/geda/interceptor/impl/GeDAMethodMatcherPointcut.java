@@ -32,6 +32,9 @@ public class GeDAMethodMatcherPointcut extends DynamicMethodMatcher implements P
 
     private final AdviceConfigResolver resolver;
 
+    /**
+     * @param resolver resolver that will actually match the invocations
+     */
     public GeDAMethodMatcherPointcut(final AdviceConfigResolver resolver) {
         this.resolver = resolver;
     }

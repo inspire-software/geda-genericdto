@@ -29,5 +29,17 @@
     <test name="IntegrationRunTest">
         <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeTest"/></classes>
     </test>
+    <test name="IntegrationBootRegExTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationBootRegExTest"/></classes>
+    </test>
+    <test name="IntegrationRuntimeRegExTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeRegExTest"/></classes>
+    </test>
+    <test name="IntegrationBootRegExNoMatchTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationBootRegExNoMatchTest"/></classes>
+    </test>
+    <test name="IntegrationRuntimeRegExNoMatchTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeRegExNoMatchTest"/></classes>
+    </test>
 
 </suite>

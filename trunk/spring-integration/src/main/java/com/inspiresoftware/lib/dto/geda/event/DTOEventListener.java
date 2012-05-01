@@ -9,6 +9,8 @@
 
 package com.inspiresoftware.lib.dto.geda.event;
 
+import com.inspiresoftware.lib.dto.geda.GeDAInfrastructure;
+
 /**
  * Simple event interface that allows to act upon events produced by the DTOSupport
  * implementor.
@@ -17,7 +19,7 @@ package com.inspiresoftware.lib.dto.geda.event;
  * Date: Jan 25, 2012
  * Time: 3:07:55 PM
  */
-public interface DTOEventListener {
+public interface DTOEventListener extends GeDAInfrastructure {
 
     /**
      * This method will be invoked by the DTOSupport implementor depending on the settings

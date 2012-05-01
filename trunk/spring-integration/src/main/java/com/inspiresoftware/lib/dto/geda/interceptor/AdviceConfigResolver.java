@@ -9,6 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor;
 
+import com.inspiresoftware.lib.dto.geda.GeDAInfrastructure;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 
 import java.lang.reflect.Method;
@@ -21,7 +22,7 @@ import java.util.Map;
  * Date: Jan 26, 2012
  * Time: 8:03:21 AM
  */
-public interface AdviceConfigResolver {
+public interface AdviceConfigResolver extends GeDAInfrastructure {
 
     /**
      * @param method current method invocation
