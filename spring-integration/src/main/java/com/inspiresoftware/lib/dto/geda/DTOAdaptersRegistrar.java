@@ -17,7 +17,7 @@ package com.inspiresoftware.lib.dto.geda;
  * Date: Feb 20, 2012
  * Time: 10:21:52 PM
  */
-public interface DTOAdaptersRegistrar {
+public interface DTOAdaptersRegistrar extends GeDAInfrastructure {
 
     /**
      * Enhance runtime DTO converters runtime model. This method is intended to be used in

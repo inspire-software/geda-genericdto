@@ -9,6 +9,8 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 
+import com.inspiresoftware.lib.dto.geda.GeDAInfrastructure;
+import com.inspiresoftware.lib.dto.geda.adapter.Adapter;
 import com.inspiresoftware.lib.dto.geda.annotations.Direction;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.annotations.Transferable;
@@ -38,6 +40,7 @@ public final class TransferableUtils {
     static int NO_INDEX = Integer.MAX_VALUE;
     static int RETURN_INDEX = -1;
 
+
     /**
      * Work out configurations from {@link com.inspiresoftware.lib.dto.geda.annotations.Transferable}
      *
@@ -48,6 +51,10 @@ public final class TransferableUtils {
     public static Map<Occurrence, AdviceConfig> resolveConfiguration(final Method method,
                                                                      final Class<?> targetClass) {
 
+        if (GeDAInfrastructure.class.isAssignableFrom(targetClass) ||
+                Adapter.class.isAssignableFrom(targetClass)) {
+            return Collections.emptyMap(); 
+        }
         return resolveConfiguration(method, targetClass, true);
     }
 

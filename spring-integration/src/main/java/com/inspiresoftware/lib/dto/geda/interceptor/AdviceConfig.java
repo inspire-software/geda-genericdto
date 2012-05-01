@@ -9,6 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor;
 
+import com.inspiresoftware.lib.dto.geda.GeDAInfrastructure;
 import com.inspiresoftware.lib.dto.geda.annotations.Direction;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 
@@ -22,7 +23,7 @@ import java.io.Serializable;
  * Date: Jan 26, 2012
  * Time: 7:54:26 AM
  */
-public interface AdviceConfig extends Serializable {
+public interface AdviceConfig extends Serializable, GeDAInfrastructure {
 
     /**
      * Simple enum of available methods on the

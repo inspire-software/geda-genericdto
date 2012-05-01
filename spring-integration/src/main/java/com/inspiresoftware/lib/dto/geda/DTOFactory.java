@@ -18,7 +18,7 @@ import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
  * Date: Jan 25, 2012
  * Time: 2:49:11 PM
  */
-public interface DTOFactory extends BeanFactory {
+public interface DTOFactory extends BeanFactory, GeDAInfrastructure {
 
     /**
      * Allows to enrich bean factory with new bean mappings

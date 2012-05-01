@@ -19,7 +19,7 @@ import java.util.Collection;
  * Date: Sep 27, 2011
  * Time: 8:29:02 AM
  */
-public interface DTOSupport {
+public interface DTOSupport extends GeDAInfrastructure {
 
     /**
      * Assemble dto from entity object

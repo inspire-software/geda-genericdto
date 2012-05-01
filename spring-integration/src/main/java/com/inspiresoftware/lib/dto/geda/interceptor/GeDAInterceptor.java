@@ -10,6 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.interceptor;
 
 import com.inspiresoftware.lib.dto.geda.DTOSupport;
+import com.inspiresoftware.lib.dto.geda.GeDAInfrastructure;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -29,7 +30,7 @@ import java.util.Map;
  * Date: Jan 25, 2012
  * Time: 8:03:32 PM
  */
-public class GeDAInterceptor implements MethodInterceptor {
+public class GeDAInterceptor implements MethodInterceptor, GeDAInfrastructure {
 
     private static final Logger LOG = LoggerFactory.getLogger(GeDAInterceptor.class);
 

@@ -9,6 +9,11 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 
+import com.inspiresoftware.lib.dto.geda.DTOFactory;
+import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
+import com.inspiresoftware.lib.dto.geda.adapter.EntityRetriever;
+import com.inspiresoftware.lib.dto.geda.adapter.ValueConverter;
 import com.inspiresoftware.lib.dto.geda.annotations.Direction;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
@@ -16,11 +21,13 @@ import com.inspiresoftware.lib.dto.geda.test.impl.TestServiceImpl;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Map;
 
 import static com.inspiresoftware.lib.dto.geda.interceptor.impl.TransferableUtils.NO_INDEX;
 import static com.inspiresoftware.lib.dto.geda.interceptor.impl.TransferableUtils.RETURN_INDEX;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
 /**
  * .
@@ -1549,4 +1556,78 @@ public class TransferableUtilsTest {
         assertEquals(after.getContext(), "entityToDtoAndBackToEntityVoidByFilter");
 
     }
+
+
+    @Test
+    public void testNotUsingInfrastructureBeansDtoToEntityMatcher() throws Exception {
+
+        class DtoToEntityMatcherAdapter implements DtoToEntityMatcher {
+
+            public boolean match(final Object o, final Object o1) {
+                return false;
+            }
+        }
+
+        final Map<Occurrence, AdviceConfig> map =
+                TransferableUtils.resolveConfiguration(getMethod(DtoToEntityMatcherAdapter.class, "match"), DtoToEntityMatcherAdapter.class);
+
+        assertSame(map, Collections.<Object, Object>emptyMap());
+
+    }
+
+    @Test
+    public void testNotUsingInfrastructureBeansEntityRetriever() throws Exception {
+
+        class EntityRetrieverAdapter implements EntityRetriever {
+
+            public Object retrieveByPrimaryKey(final Class entityInterface, final Class entityClass, final Object primaryKey) {
+                return null;
+            }
+        }
+
+        final Map<Occurrence, AdviceConfig> map =
+                TransferableUtils.resolveConfiguration(getMethod(EntityRetrieverAdapter.class, "retrieveByPrimaryKey"), EntityRetrieverAdapter.class);
+
+        assertSame(map, Collections.<Object, Object>emptyMap());
+
+    }
+
+    @Test
+    public void testNotUsingInfrastructureBeansValueConverter() throws Exception {
+
+        class ValueConverterAdapter implements ValueConverter {
+
+            public Object convertToDto(final Object object, final BeanFactory beanFactory) {
+                return null;
+            }
+
+            public Object convertToEntity(final Object object, final Object oldEntity, final BeanFactory beanFactory) {
+                return null;
+            }
+        }
+
+        final Map<Occurrence, AdviceConfig> mapToDto =
+                TransferableUtils.resolveConfiguration(getMethod(ValueConverterAdapter.class, "convertToDto"), ValueConverterAdapter.class);
+
+        assertSame(mapToDto, Collections.<Object, Object>emptyMap());
+
+        final Map<Occurrence, AdviceConfig> mapToEntity =
+                TransferableUtils.resolveConfiguration(getMethod(ValueConverterAdapter.class, "convertToEntity"), ValueConverterAdapter.class);
+
+        assertSame(mapToEntity, Collections.<Object, Object>emptyMap());
+
+    }
+
+    @Test
+    public void testNotUsingInfrastructureBeansGeDAInfrastructure() throws Exception {
+
+        final Map<Occurrence, AdviceConfig> mapToDto =
+                TransferableUtils.resolveConfiguration(getMethod(DTOFactory.class, "register"), DTOFactory.class);
+
+        assertSame(mapToDto, Collections.<Object, Object>emptyMap());
+
+
+    }
+
+
 }
