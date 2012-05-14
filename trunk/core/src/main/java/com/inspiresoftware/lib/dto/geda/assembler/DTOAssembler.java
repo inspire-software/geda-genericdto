@@ -415,7 +415,7 @@ public final class DTOAssembler {
 	 * @param converters the converters to be used during conversion. The rationale for injecting the converters
 	 *        during conversion is to enforce them being stateless and unattached to assembler.
 	 * @param dtoBeanFactory bean factory for creating new instances of nested DTO objects mapped by
-	 *        {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField#dtoBeanKeys()} key.
+	 *        {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField#dtoBeanKey()} key.
 	 *        
 	 * @throws InspectionInvalidEntityInstanceException if sub entity assembler encounters a mismatch 
 	 * @throws InspectionInvalidDtoInstanceException if sub entity assembler encounters a mismatch
@@ -459,7 +459,7 @@ public final class DTOAssembler {
 	 * @param converters the converters to be used during conversion. The rationale for injecting the converters
 	 *        during conversion is to enforce them being stateless and unattached to assembler.
 	 * @param dtoBeanFactory bean factory for creating new instances of nested DTO objects mapped by
-	 *        {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField#dtoBeanKeys()} key.
+	 *        {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField#dtoBeanKey()} key.
 	 *        
 	 * @throws InvalidDtoCollectionException dto collection is null of not empty
 	 * @throws UnableToCreateInstanceException if unable to create dto class instance
