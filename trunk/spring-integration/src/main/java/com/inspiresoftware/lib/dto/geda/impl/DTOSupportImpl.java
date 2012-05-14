@@ -89,6 +89,9 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
     /** {@inheritDoc} */
     public <T> T assembleDtoByKey(final String dtoKey, final Object entity, final String context) {
         final Object dto = this.beanFactory.get(dtoKey);
+        if (dto == null) {
+            throw new IllegalArgumentException("DTO factory has no class specified for key: " + dtoKey);
+        }
         return (T) assembleDto(null, dto, entity, context);
     }
 
@@ -98,7 +101,11 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
         if (dtoFilter == null) {
             dtoClassFilter = dto.getClass();
         } else {
-            dtoClassFilter = this.beanFactory.get(dtoFilter).getClass();
+            final Object filterProto = this.beanFactory.get(dtoFilter);
+            if (filterProto == null) {
+                throw new IllegalArgumentException("DTO factory has no class specified for key: " + dtoFilter);
+            }
+            dtoClassFilter = filterProto.getClass();
         }
         try {
             if (this.onDtoAssembly != null) {
@@ -126,6 +133,9 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
     /** {@inheritDoc} */
     public <T> T assembleDtoByKey(final String dtoFilter, final String dtoKey, final Object entity, final String context) {
         final Object dto = this.beanFactory.get(dtoKey);
+        if (dto == null) {
+            throw new IllegalArgumentException("DTO factory has no class specified for key: " + dtoKey);
+        }
         return (T) assembleDto(dtoFilter, dto, entity, context);
     }
 
@@ -140,15 +150,26 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
         if (!CollectionUtils.isEmpty(entities)) {
             final Class dtoClassFilter;
             if (dtoFilter == null) {
-                dtoClassFilter = this.beanFactory.get(keyDto).getClass();
+                final Object dtoProto = this.beanFactory.get(keyDto);
+                if (dtoProto == null) {
+                    throw new IllegalArgumentException("DTO factory has no class specified for key: " + keyDto);
+                }
+                dtoClassFilter = dtoProto.getClass();
             } else {
-                dtoClassFilter = this.beanFactory.get(dtoFilter).getClass();
+                final Object filterProto = this.beanFactory.get(dtoFilter);
+                if (filterProto == null) {
+                    throw new IllegalArgumentException("DTO factory has no class specified for key: " + dtoFilter);
+                }
+                dtoClassFilter = filterProto.getClass();
             }
             final Class entityClass = entities.iterator().next().getClass();
 
             final DTOAssembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
             for (final Object entity : entities) {
                 final Object dto = this.beanFactory.get(keyDto);
+                if (dto == null) {
+                    throw new IllegalArgumentException("DTO factory has no class specified for key: " + keyDto);
+                }
                 try {
                     if (this.onDtoAssembly != null) {
                         this.onDtoAssembly.onEvent(context, dto, entity);
@@ -180,12 +201,18 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
     /** {@inheritDoc} */
     public <T> T assembleEntityByKey(final Object dto, final String entityKey, final String context) {
         final Object entity = this.beanFactory.get(entityKey);
+        if (entity == null) {
+            throw new IllegalArgumentException("DTO factory has no class specified for key: " + entityKey);
+        }
         return (T) assembleEntity(null, dto, entity, context);
     }
 
     /** {@inheritDoc} */
     public <T> T assembleEntityByKey(final String dtoFilter, final Object dto, final String entityKey, final String context) {
         final Object entity = this.beanFactory.get(entityKey);
+        if (entity == null) {
+            throw new IllegalArgumentException("DTO factory has no class specified for key: " + entityKey);
+        }
         return (T) assembleEntity(dtoFilter, dto, entity, context);
     }
 
@@ -197,7 +224,11 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
         if (dtoFilter == null) {
             dtoClassFilter = dto.getClass();
         } else {
-            dtoClassFilter = this.beanFactory.get(dtoFilter).getClass();
+            final Object filterProto = this.beanFactory.get(dtoFilter);
+            if (filterProto == null) {
+                throw new IllegalArgumentException("DTO factory has no class specified for key: " + dtoFilter);
+            }
+            dtoClassFilter = filterProto.getClass();
         }
 
         try {
@@ -237,13 +268,24 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
             if (dtoFilter == null) {
                 dtoClassFilter = dtos.iterator().next().getClass();
             } else {
-                dtoClassFilter = this.beanFactory.get(dtoFilter).getClass();
+                final Object filterProto = this.beanFactory.get(dtoFilter);
+                if (filterProto == null) {
+                    throw new IllegalArgumentException("DTO factory has no class specified for key: " + dtoFilter);
+                }
+                dtoClassFilter = filterProto.getClass();
             }
-            final Class entityClass = this.beanFactory.get(entityKey).getClass();
+            final Object entityProto = this.beanFactory.get(entityKey);
+            if (entityProto == null) {
+                throw new IllegalArgumentException("DTO factory has no class specified for key: " + entityKey);
+            }
+            final Class entityClass = entityProto.getClass();
 
             final DTOAssembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
             for (final Object dto : dtos) {
                 final Object entity = this.beanFactory.get(entityKey);
+                if (entity == null) {
+                    throw new IllegalArgumentException("DTO factory has no class specified for key: " + entityKey);
+                }
                 try {
                     if (this.onEntityAssembly != null) {
                         this.onEntityAssembly.onEvent(context, dto, entity);
