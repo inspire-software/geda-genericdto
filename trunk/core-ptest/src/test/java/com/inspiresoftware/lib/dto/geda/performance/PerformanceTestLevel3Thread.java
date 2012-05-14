@@ -58,7 +58,7 @@ public class PerformanceTestLevel3Thread implements Runnable {
             final Date assemberStart = new Date();
             out.append(assemberStart + " - Finished creating objects in " + (assemberStart.getTime() - start.getTime()) + " millis\n");
 
-            out.append(assemberStart + " - Initializing assembler");
+            out.append(assemberStart + " - Initializing assembler\n");
             final DTOAssembler assembler = DTOAssembler.newAssembler(Level3Dto.class, Level3Entity.class);
             final Date assemberEnd = new Date();
             out.append(assemberEnd + " - Initialized assembler in " + (assemberEnd.getTime() - assemberStart.getTime()) + " millis\n");
