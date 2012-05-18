@@ -70,16 +70,20 @@ public class FileClassLoader extends ClassLoader {
 		try {
 			final File file = new File(filename);
 			file.deleteOnExit();
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Trying to read class file: " + file.getAbsolutePath());
+
+            if (LOG.isDebugEnabled()) {
+				LOG.debug("Trying to read class file: {}", file.getAbsolutePath());
 			}
-			final FileInputStream fis = new FileInputStream(file);
+
+            final FileInputStream fis = new FileInputStream(file);
 			byte[] clazz = new byte[(int) file.length()];
 			fis.read(clazz);
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Sucessfully loaded class file: " + file.getAbsolutePath());
+
+            if (LOG.isDebugEnabled()) {
+				LOG.debug("Successfully loaded class file: {}", file.getAbsolutePath());
 			}
-			return defineClass(name, clazz, 0, clazz.length);
+
+            return defineClass(name, clazz, 0, clazz.length);
 		} catch (FileNotFoundException e) {
 			throw new ClassNotFoundException("No class: " + name + " located at " + filename, e);
 		} catch (IOException ioe) {

@@ -89,7 +89,7 @@ public final class TransferableUtils {
                                              final Transferable ann) {
 
         if (ann.before() == Direction.NONE && ann.after() == Direction.NONE) {
-            LOG.warn("Both before and after are set to NONE on method: " + method + ". No transfer shall be performed.");
+            LOG.warn("Both before and after are set to NONE on method: {}. No transfer shall be performed.", method);
             return; // no transfer
         }
         if (ann.before() == Direction.NONE) {

@@ -171,10 +171,10 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 	 */
 	public boolean configure(final String configuration, final Object value) throws GeDAException {
 		if ("readerCleanUpCycle".equals(configuration)) {
-			LOG.info("Setting reader cleanup cycle to " + value);
+			LOG.info("Setting reader cleanup cycle to {}", value);
 			return this.setCleanUpReaderCycle(value);
 		} else if ("writerCleanUpCycle".equals(configuration)) {
-			LOG.info("Setting writer cleanup cycle to " + value);
+			LOG.info("Setting writer cleanup cycle to {}", value);
 			return this.setCleanUpWriterCycle(value);
 		}
 		return false;

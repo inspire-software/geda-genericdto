@@ -96,8 +96,10 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 			} else {
 				this.baseDir = dir + "/";
 			}
-			LOG.info("Setting class loader base dir to: " + this.baseDir);
-			return true;
+
+            LOG.info("Setting class loader base dir to: {}", this.baseDir);
+
+            return true;
 		}
 		return super.configure(configuration, value);
 	}
@@ -205,14 +207,14 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 		final File clazz = new File(this.baseDir + readerSimpleName + ".java");
 		clazz.deleteOnExit();
 		try {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Attempt to create source file: " + clazz.getAbsolutePath());
+
+            if (LOG.isDebugEnabled()) {
+				LOG.debug("Attempt to create source file: {}", clazz.getAbsolutePath());
 			}
-			clazz.createNewFile();
+
+            clazz.createNewFile();
 			
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Source: \n\n" + source);
-			}
+            LOG.debug("Source: \n{}\n", source);
 			
 			FileOutputStream fos = null;
 			try {
@@ -223,9 +225,11 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 					fos.close();
 				}
 			}
+
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Successfuly created source file: " + clazz.getAbsolutePath());
+				LOG.debug("Successfully created source file: {}", clazz.getAbsolutePath());
 			}
+            
 			return clazz;
 		} catch (IOException ioe) {
 			throw new UnableToCreateInstanceException("DataReader", 

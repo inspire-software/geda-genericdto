@@ -58,7 +58,7 @@ public class GeDAInterceptor implements MethodInterceptor, GeDAInfrastructure {
         final Map<Occurrence, AdviceConfig> cfg = this.resolver.resolve(method, targetClass);
         if (CollectionUtils.isEmpty(cfg)) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("skipping method " + invocation.getMethod() + " because it is not advised");
+                LOG.debug("skipping method {} because it is not advised", invocation.getMethod());
             }
             return invocation.proceed(); // unadvised
         }
@@ -68,8 +68,8 @@ public class GeDAInterceptor implements MethodInterceptor, GeDAInfrastructure {
         if (cfg.containsKey(Occurrence.BEFORE_METHOD_INVOCATION)) {
             final AdviceConfig configuration = cfg.get(Occurrence.BEFORE_METHOD_INVOCATION);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("performing transfer before invocation " + invocation.getMethod()
-                        + " in mode " + configuration.getDtoSupportMode().name());
+                LOG.debug("performing transfer in mode {} before invocation of {} ",
+                        configuration.getDtoSupportMode().name(), invocation.getMethod());
             }
             this.invokeTransferBefore(args, configuration);
         }
@@ -79,8 +79,8 @@ public class GeDAInterceptor implements MethodInterceptor, GeDAInfrastructure {
         if (cfg.containsKey(Occurrence.AFTER_METHOD_INVOCATION)) {
             final AdviceConfig configuration = cfg.get(Occurrence.AFTER_METHOD_INVOCATION);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("performing transfer after invocation " + invocation.getMethod()
-                        + " in mode " + configuration.getDtoSupportMode().name());
+                LOG.debug("performing transfer in mode {} after invocation of {}",
+                        configuration.getDtoSupportMode().name(), invocation.getMethod());
             }
             return this.invokeTransferAfter(args, result, configuration);
         }
@@ -157,7 +157,7 @@ public class GeDAInterceptor implements MethodInterceptor, GeDAInfrastructure {
                 break;
 
             default:
-                LOG.warn("Unknown support mode [" + cfg + "]");
+                LOG.warn("Unknown support mode [{}]", cfg);
                 break;
         }
 
@@ -248,7 +248,7 @@ public class GeDAInterceptor implements MethodInterceptor, GeDAInfrastructure {
                 return result;
 
             default:
-                LOG.warn("Unknown support mode [" + cfg + "]");
+                LOG.warn("Unknown support mode [{}]", cfg);
                 return result;
         }
 

@@ -83,8 +83,10 @@ public class JavassitMethodSynthesizer extends AbstractPlainTextMethodSynthesize
 			
 		} catch (CannotCompileException cce) {
 			ctx.next(cce, readMethodCode.toString() + "\n\n" + getReturnTypeMethodCode.toString());
-			LOG.warn("Unable to create method in class: " + readerClassName + "... posibly class already loaded");
-			return null;
+
+            LOG.warn("Unable to create method in class: {}... possibly class already loaded", readerClassName);
+
+            return null;
 		} catch (Exception ite) {
 			throw new UnableToCreateInstanceException(readerClassName, "Unable to instantiate class: " + readerClassName, ite);
 		}
@@ -123,8 +125,10 @@ public class JavassitMethodSynthesizer extends AbstractPlainTextMethodSynthesize
 			
 		} catch (CannotCompileException cce) {
 			ctx.next(cce, writeMethodCode.toString() + "\n\n" + getParameterTypeMethodCode.toString());
-			LOG.warn("Unable to create method in class: " + writerClassName + "... possibly class had been loaded");
-			return null;
+
+            LOG.warn("Unable to create method in class: {}... possibly class had been loaded", writerClassName);
+
+            return null;
 		} catch (Exception ite) {
 			throw new UnableToCreateInstanceException(writerClassName, "Unable to instantiate class: " + writerClassName, ite);
 		}

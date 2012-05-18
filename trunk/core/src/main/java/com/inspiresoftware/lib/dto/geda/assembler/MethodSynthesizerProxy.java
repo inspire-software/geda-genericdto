@@ -138,7 +138,7 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 							}
 							final Class clazz = Class.forName(this.synthesizerImpl);
 							this.synthesizer = (MethodSynthesizer) clazz.newInstance();
-						} else if (LOG.isWarnEnabled()) {
+						} else {
 							throw new UnableToCreateInstanceException("MethodSynthesizer", 
 									"Unable to create [" + value + "] implementation: "
 									+ "configuration not recognizer (Must be either: " 
@@ -157,10 +157,9 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 			} finally {
 				lock.unlock();
 			}
-		} else if (value != null && LOG.isWarnEnabled()) {
-			LOG.warn("Synthesizer is already set to: " 
-					+ this.synthesizer.getClass().getCanonicalName() 
-					+ (value == null ? "" : ", configuration [" + value + "] ignored"));
+		} else if (value != null) {
+			LOG.warn("Synthesizer is already set to: {}, configuration [{}] ignored",
+					this.synthesizer.getClass().getCanonicalName(), value);
 		}
 		return this.synthesizer;
 	}

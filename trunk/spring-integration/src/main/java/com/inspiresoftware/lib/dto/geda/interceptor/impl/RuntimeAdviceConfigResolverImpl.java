@@ -61,8 +61,8 @@ public class RuntimeAdviceConfigResolverImpl implements AdviceConfigResolver {
         } else {
             cache.put(methodCacheKey, cfg);
             if (LOG.isInfoEnabled()) {
-                LOG.info("Added GeDA configuration for method: " + methodCacheKey
-                        + "... " + cache.size() + " total mappings");
+                LOG.info("Added GeDA configuration for method: {}... {} total mappings so far",
+                        methodCacheKey, cache.size());
             }
         }
 
