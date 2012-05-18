@@ -112,10 +112,10 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 		final String readerSimpleName = className.substring(className.lastIndexOf('.') + 1); 
 		final File clazz = new File(this.baseDir + readerSimpleName + ".class");
 		clazz.deleteOnExit();
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Attempt to create source file: " + clazz.getAbsolutePath());
-		}
-		clazz.createNewFile();			
+
+        LOG.debug("Attempt to create source file: {}", clazz.getAbsolutePath());
+
+		clazz.createNewFile();
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(clazz);
@@ -125,9 +125,9 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 				fos.close();
 			}
 		}
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Successfuly created source file: " + clazz.getAbsolutePath());
-		}
+
+        LOG.debug("Successfuly created source file: {}", clazz.getAbsolutePath());
+
 		try {
 			final Class< ? > clazzF = loader.loadClass(className);
 			return (T) clazzF.newInstance();
@@ -155,9 +155,8 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 			final MakeContext ctx) throws UnableToCreateInstanceException, GeDARuntimeException {
 		
 		try {
-			if (LOG.isErrorEnabled()) {
-				LOG.error("Generating: " + readerClassName);
-			}
+
+            LOG.debug("Generating DataReader: {}", readerClassName);
 
 			final ReturnTypeContext rtc = getReturnTypeContext(readerClassName, sourceClassGetterMethodReturnType);
 			
@@ -169,8 +168,9 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 			cg.setMinor(MINOR);
 			
 			cg.addEmptyConstructor(ACC_PUBLIC);
-			if (LOG.isErrorEnabled()) {
-				LOG.error("<init> method:\n" + cg.getMethods()[0].getCode().toString(true));
+
+            if (LOG.isDebugEnabled()) {
+				LOG.debug("<init> method:\n{}", cg.getMethods()[0].getCode().toString(true));
 			}
 			
 			final InstructionList il = new InstructionList();
@@ -214,10 +214,12 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 			clazz.setEnd(il.append(InstructionFactory.ARETURN));
 			read.setMaxStack();
 			cg.addMethod(read.getMethod());
-			if (LOG.isErrorEnabled()) {
-				LOG.error("read method:\n" + read.getMethod().getCode().toString(true));
+
+            if (LOG.isDebugEnabled()) {
+				LOG.debug("read method:\n{}", read.getMethod().getCode().toString(true));
 			}
-			il.dispose();
+
+            il.dispose();
 			
 			// return type method
 			final MethodGen returnType = new MethodGen(
@@ -230,10 +232,12 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 			il.append(InstructionFactory.ARETURN);
 			returnType.setMaxStack();
 			cg.addMethod(returnType.getMethod());
-			if (LOG.isErrorEnabled()) {
-				LOG.error("return type method:\n" + returnType.getMethod().getCode().toString(true));
+
+            if (LOG.isDebugEnabled()) {
+				LOG.debug("return type method:\n{}", returnType.getMethod().getCode().toString(true));
 			}
-			il.dispose();
+
+            il.dispose();
 				
 			return loadClass(loader, readerClassName, cg);
 			
@@ -253,10 +257,9 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 			final MakeContext ctx) throws UnableToCreateInstanceException {
 		
 		try {
-			if (LOG.isErrorEnabled()) {
-				LOG.error("Generating: " + writerClassName);
-			}
-			
+
+            LOG.error("Generating WriterClass: {}", writerClassName);
+
 			final ArgumentTypeContext atc = getArgumentTypeContext(sourceClassSetterMethodArgumentClass);		
 			
 			final ClassGen cg = new ClassGen(writerClassName, "java.lang.Object",
@@ -267,8 +270,9 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 			cg.setMinor(MINOR);
 			
 			cg.addEmptyConstructor(ACC_PUBLIC);
-			if (LOG.isErrorEnabled()) {
-				LOG.error("<init> method:\n" + cg.getMethods()[0].getCode().toString(true));
+
+            if (LOG.isDebugEnabled()) {
+				LOG.debug("<init> method:\n{}", cg.getMethods()[0].getCode().toString(true));
 			}
 			
 			final InstructionList il = new InstructionList();
@@ -319,10 +323,12 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 			clazz.setEnd(il.append(InstructionFactory.RETURN));
 			write.setMaxStack();
 			cg.addMethod(write.getMethod());
-			if (LOG.isErrorEnabled()) {
-				LOG.error("write method:\n" + write.getMethod().getCode().toString(true));
+
+            if (LOG.isDebugEnabled()) {
+				LOG.debug("write method:\n{}", write.getMethod().getCode().toString(true));
 			}
-			il.dispose();
+
+            il.dispose();
 			
 			// arg type method
 			final MethodGen paramType = new MethodGen(
@@ -335,10 +341,12 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 			il.append(InstructionFactory.ARETURN);
 			paramType.setMaxStack();
 			cg.addMethod(paramType.getMethod());
-			if (LOG.isErrorEnabled()) {
-				LOG.error("return type method:\n" + paramType.getMethod().getCode().toString(true));
+
+            if (LOG.isDebugEnabled()) {
+				LOG.debug("return type method:\n{}", paramType.getMethod().getCode().toString(true));
 			}
-			il.dispose();
+
+            il.dispose();
 	
 			return loadClass(loader, writerClassName, cg);
 			
@@ -374,7 +382,7 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 			} else {
 				this.baseDir = dir + "/";
 			}
-			LOG.info("Setting class loader base dir to: " + this.baseDir);
+			LOG.info("Setting class loader base dir to: {}", this.baseDir);
 			return true;
 		}
 		return super.configure(configuration, value);

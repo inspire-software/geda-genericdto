@@ -120,9 +120,9 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
         } catch (final RuntimeException re) {
             if (this.onDtoFailed != null) {
                 this.onDtoFailed.onEvent(context, dto, entity, re);
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Exception skipped by event listener", re);
-                }
+
+                LOG.error("Exception skipped by event listener", re);
+
                 return null;
             }
             throw re; // re-throw
@@ -182,9 +182,9 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
                 } catch (final RuntimeException re) {
                     if (this.onDtoFailed != null) {
                         this.onDtoFailed.onEvent(context, dto, entity, re);
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("Exception skipped by event listener", re);
-                        }
+
+                        LOG.error("Exception skipped by event listener", re);
+
                         continue;
                     }
                     throw re; // re-throw
@@ -244,9 +244,9 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
         } catch (final RuntimeException re) {
             if (this.onEntityFailed != null) {
                 this.onEntityFailed.onEvent(context, dto, entity, re);
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Exception skipped by event listener", re);
-                }
+
+                LOG.error("Exception skipped by event listener", re);
+
                 return null;
             }
             throw re; // re-throw
@@ -298,9 +298,9 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
                 } catch (final RuntimeException re) {
                     if (this.onEntityFailed != null) {
                         this.onEntityFailed.onEvent(context, dto, entity, re);
-                        if (LOG.isErrorEnabled()) {
-                            LOG.error("Exception skipped by event listener", re);
-                        }
+
+                        LOG.error("Exception skipped by event listener", re);
+
                         continue;
                     }
                     throw re; // re-throw
@@ -311,9 +311,9 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
 
     /** {@inheritDoc} */
     public void registerAdapter(final String key, final Object converter) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Registering [" + converter.toString() + "] with key [" + key + "]");
-        }
+
+        LOG.debug("Registering [{}] with key [{}]", converter, key);
+
         this.dtoValueConverters.registerAdapter(key, converter);
     }
 

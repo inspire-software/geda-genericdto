@@ -30,7 +30,7 @@ public class CountingEventListener implements DTOCountingEventListener, BeanName
 
     public void onEvent(final Object... context) {
         count++;
-        LOG.debug(name + " is called " + count + " times");
+        LOG.debug("{} is called {} times", name, count);
     }
 
     public int getCount() {

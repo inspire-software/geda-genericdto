@@ -58,10 +58,11 @@ public class DTOFactoryImpl implements DTOFactory {
                 final Class clazz = Class.forName(className);
                 return clazz.newInstance();
             } catch (Exception exp) {
-                LOG.error("Unable to create instance for key = " + entityBeanKey, exp);
+                LOG.error("Unable to create instance for key = {}", entityBeanKey);
+                LOG.error(exp.getMessage(), exp);
             }
         } else {
-            LOG.error("No mapping for key = " + entityBeanKey);
+            LOG.error("No mapping for key = {}", entityBeanKey);
         }
         return null;
     }

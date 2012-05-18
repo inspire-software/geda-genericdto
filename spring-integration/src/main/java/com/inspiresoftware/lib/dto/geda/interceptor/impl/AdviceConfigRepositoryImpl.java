@@ -66,9 +66,8 @@ public class AdviceConfigRepositoryImpl implements AdviceConfigRepository {
                 for (Map meths : cache.values()) {
                     methCount += meths.size();
                 }
-                LOG.info("Added GeDA configuration for method: "
-                        + targetClass.getCanonicalName() + "." + key
-                        + "... " + methCount + " total mappings");
+                LOG.info("Added GeDA configuration for method: {}.{}... {} total mappings so far",
+                        new Object[] { targetClass.getCanonicalName(), key, methCount });
             }
         }
 

@@ -69,11 +69,7 @@ public abstract class AbstractPlainTextMethodSynthesizer extends AbstractMethodS
 			.append("return ").append(returnType.getMethodReturnType()).append(".class;\n")
 			.append("}");
 		
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Creating DataReader Class: \n" 
-					+ readMethodCode.toString() + "\n"
-					+ getReturnTypeMethodCode.toString());
-		}	
+		LOG.debug("Creating DataReader Class: \n{}\n{}\n", readMethodCode, getReturnTypeMethodCode);
 	}
 	
 	/**
@@ -112,12 +108,8 @@ public abstract class AbstractPlainTextMethodSynthesizer extends AbstractMethodS
 			.append("public Class getParameterType() {\n")
 			.append("return ").append(argType.getMethodArgType()).append(".class;\n")
 			.append("}");
-		
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Creating DataWriter Class: \n" 
-					+ writeMethodCode.toString() + "\n"
-					+ getParameterTypeMethodCode.toString());
-		}
+
+        LOG.debug("Creating DataWriter Class: \n{}\n{}\n", writeMethodCode, getParameterTypeMethodCode);
 
 	}
 		
