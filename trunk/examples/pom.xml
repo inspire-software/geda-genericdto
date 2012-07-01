@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <!--
   ~ This code is distributed under The GNU Lesser General Public License (LGPLv3)
   ~ Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
@@ -13,16 +12,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <groupId>com.inspire-software.lib.dto.geda</groupId>
+        <artifactId>geda</artifactId>
+        <version>2.0.2-SNAPSHOT</version>
     </parent>
-    <groupId>com.inspire-software.lib.dto.geda</groupId>
-    <artifactId>geda</artifactId>
-    <name>DTO utilities package</name>
+    <artifactId>geda.examples</artifactId>
+    <name>Examples for GeDA</name>
     <version>2.0.2-SNAPSHOT</version>
-    <description>Provides several utilities managing DTO's in n-tier applications</description>
-    <packaging>pom</packaging>
+    <description>Provides several examples of use of GeDA</description>
+    <packaging>jar</packaging>
     <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
     <licenses>
         <license>
@@ -49,14 +47,6 @@
         </developer>
     </developers>
 
-    <modules>
-        <module>core</module>
-        <module>spring-integration</module>
-        <module>core-ptest</module>
-        <module>examples</module>
-    </modules>
-
-
     <build>
         <plugins>
             <plugin>
@@ -66,22 +56,34 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
         <defaultGoal>package</defaultGoal>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.inspire-software.lib.dto.geda</groupId>
+            <artifactId>geda.core</artifactId>
+            <version>2.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.8</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.5.6</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 </project>
