@@ -34,7 +34,7 @@ public class InspectionInvalidEntityInstanceException extends GeDAException {
 		super("This assembler is only applicable for entity: " + className 
 				+ (entity != null ? ", found: " + entity.getClass().getCanonicalName() : ""));
 		this.className = className;
-		this.entityName = entity.getClass().getCanonicalName();
+		this.entityName = entity != null ? entity.getClass().getCanonicalName() : null;
 	}
 
 	/**
