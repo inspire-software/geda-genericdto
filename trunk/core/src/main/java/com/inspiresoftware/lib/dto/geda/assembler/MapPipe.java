@@ -112,7 +112,7 @@ class MapPipe implements Pipe {
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
 
             try {
-                final DTOAssembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
+                final Assembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
 
                 for (Object object : entities) {
 
@@ -146,7 +146,7 @@ class MapPipe implements Pipe {
             final boolean useKey = this.meta.isEntityMapKey();
 
             try {
-                final DTOAssembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
+                final Assembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
 
                 for (Object key : entities.keySet()) {
 
@@ -241,7 +241,7 @@ class MapPipe implements Pipe {
 
     }
     
-	private DTOAssembler lazyCreateAssembler(final DTOAssembler assembler, final Object dtoItem) 
+	private Assembler lazyCreateAssembler(final Assembler assembler, final Object dtoItem)
 			throws CollectionEntityGenericReturnTypeException, AnnotationMissingException, InspectionScanningException, 
 			       UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
 			       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
@@ -277,7 +277,7 @@ class MapPipe implements Pipe {
 			   EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, 
 			   AnnotationMissingBeanKeyException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 		
-		DTOAssembler assembler = null;
+		Assembler assembler = null;
 		final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
 		for (Object dtoKey : dtos.keySet()) {
 			
@@ -315,7 +315,7 @@ class MapPipe implements Pipe {
     	       EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, 
     	       AnnotationMissingBeanKeyException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 
-        DTOAssembler assembler = null;
+        Assembler assembler = null;
         final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
         final boolean useKey = this.meta.isEntityMapKey();
         for (Object dtoKey : dtos.keySet()) {

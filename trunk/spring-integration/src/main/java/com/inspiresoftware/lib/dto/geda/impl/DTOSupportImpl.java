@@ -14,6 +14,7 @@ import com.inspiresoftware.lib.dto.geda.DTOSupport;
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.repository.AdaptersRepository;
 import com.inspiresoftware.lib.dto.geda.adapter.repository.impl.AdaptersRepositoryImpl;
+import com.inspiresoftware.lib.dto.geda.assembler.Assembler;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
 import com.inspiresoftware.lib.dto.geda.event.DTOEventListener;
 import org.slf4j.Logger;
@@ -164,7 +165,7 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
             }
             final Class entityClass = entities.iterator().next().getClass();
 
-            final DTOAssembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
+            final Assembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
             for (final Object entity : entities) {
                 final Object dto = this.beanFactory.get(keyDto);
                 if (dto == null) {
@@ -280,7 +281,7 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
             }
             final Class entityClass = entityProto.getClass();
 
-            final DTOAssembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
+            final Assembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
             for (final Object dto : dtos) {
                 final Object entity = this.beanFactory.get(entityKey);
                 if (entity == null) {

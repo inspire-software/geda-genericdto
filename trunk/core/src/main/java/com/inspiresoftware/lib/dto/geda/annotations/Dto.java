@@ -28,6 +28,6 @@ public @interface Dto {
 	 * textual reference to class that will be binded to dto.
 	 * E.g. com.inspiresoftware.lib.dto.geda.example.MyEntityClass or com.inspiresoftware.lib.dto.geda.example.MyEntityInterface
 	 */
-	String value() default "";
+	String[] value() default "";
 	
 }

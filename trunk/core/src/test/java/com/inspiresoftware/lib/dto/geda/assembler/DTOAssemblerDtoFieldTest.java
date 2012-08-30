@@ -78,7 +78,7 @@ public class DTOAssemblerDtoFieldTest {
 		final TestEntity8AutowireNameClass entity = new TestEntity8AutowireNameClass();
 		entity.setName(name);
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto8AutowireNameClass.class, TestEntity8AutowireNameClass.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, null);
@@ -114,7 +114,7 @@ public class DTOAssemblerDtoFieldTest {
 		entity.setName(name);
 		entity.setNameChild(nameChild);
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto9InheritanceChildClass.class, TestEntity9InheritanceClass.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, null);
@@ -149,7 +149,7 @@ public class DTOAssemblerDtoFieldTest {
 		
 		final TestEntity4Class entity = new TestEntity4Class(); // entity with nested string null.
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto4DelegatingReadOnlyClass.class, TestEntity4Class.class, synthesizer);
 		
 		assertNotNull(dto.getNestedString());
@@ -175,7 +175,7 @@ public class DTOAssemblerDtoFieldTest {
 		
 		final TestEntity4Class entity = new TestEntity4Class(); // entity with nested string null.
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto4DelegatingWritableClass.class, TestEntity4Class.class, synthesizer);
 
 		assertNotNull(dto.getNestedString());
@@ -204,7 +204,7 @@ public class DTOAssemblerDtoFieldTest {
 		subEntity.setIm3("im3");
 		entity.setNested(subEntity);
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto10Class.class, TestEntity10Class.class, synthesizer);
 		
 		assembler.assembleDto(dto, entity, null, null);
@@ -258,7 +258,7 @@ public class DTOAssemblerDtoFieldTest {
 		entity.setName("name");
 		entity.setDesc("desc");
 	
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(dto.getClass(), TestEntity14IfaceDescriptable.class, synthesizer);
 		
 		assembler.assembleDto(dto, entity, null, null);
@@ -288,7 +288,7 @@ public class DTOAssemblerDtoFieldTest {
 
         final TestEntity15Class entity = new TestEntity15Class("name", "desc");
 
-        final DTOAssembler assembler =
+        final Assembler assembler =
             DTOAssembler.newCustomAssembler(TestDto15Class.class, TestEntity15Class.class, synthesizer);
 
         assembler.assembleDto(dto, entity, null, null);

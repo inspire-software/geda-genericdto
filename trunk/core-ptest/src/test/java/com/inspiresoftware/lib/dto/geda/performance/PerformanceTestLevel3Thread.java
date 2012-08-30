@@ -11,6 +11,7 @@
 package com.inspiresoftware.lib.dto.geda.performance;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.assembler.Assembler;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
 import com.inspiresoftware.lib.dto.geda.performance.dto.Level1Dto;
 import com.inspiresoftware.lib.dto.geda.performance.dto.Level2Dto;
@@ -59,7 +60,7 @@ public class PerformanceTestLevel3Thread implements Runnable {
             out.append(assemberStart + " - Finished creating objects in " + (assemberStart.getTime() - start.getTime()) + " millis\n");
 
             out.append(assemberStart + " - Initializing assembler\n");
-            final DTOAssembler assembler = DTOAssembler.newAssembler(Level3Dto.class, Level3Entity.class);
+            final Assembler assembler = DTOAssembler.newAssembler(Level3Dto.class, Level3Entity.class);
             final Date assemberEnd = new Date();
             out.append(assemberEnd + " - Initialized assembler in " + (assemberEnd.getTime() - assemberStart.getTime()) + " millis\n");
 

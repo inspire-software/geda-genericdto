@@ -67,7 +67,7 @@ public class DTOAssemblerBatchTest {
 	@Test(expected = InvalidDtoCollectionException.class)
 	public void testAssembleDtosThrowsExceptionForNullDtoCollection() throws GeDAException {
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
 		assembler.assembleDtos(null, new ArrayList<TestEntity1Class>(), null, null);
 		
 	}
@@ -83,7 +83,7 @@ public class DTOAssemblerBatchTest {
 		final List<TestDto1Class> dtos = new ArrayList<TestDto1Class>();
 		dtos.add(createTestDto1(0));
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
 		assembler.assembleDtos(dtos, new ArrayList<TestEntity1Class>(), null, null);
 		
 	}
@@ -96,7 +96,7 @@ public class DTOAssemblerBatchTest {
 	@Test(expected = InvalidDtoCollectionException.class)
 	public void testAssembleDtosThrowsExceptionForNullEntitiesCollection() throws GeDAException {
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
 		assembler.assembleDtos(new ArrayList<TestDto1Class>(), null, null, null);
 		
 	}
@@ -119,7 +119,7 @@ public class DTOAssemblerBatchTest {
 		
 		final long timeStart = System.currentTimeMillis();
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
 		assembler.assembleDtos(dtos, entities, null, null);
 		
 		final long deltaTime = System.currentTimeMillis() - timeStart;
@@ -143,7 +143,7 @@ public class DTOAssemblerBatchTest {
 	@Test(expected = InvalidEntityCollectionException.class)
 	public void testAssembleEntitiesThrowsExceptionForNullDtoCollection() throws GeDAException {
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
 		assembler.assembleEntities(null, new ArrayList<TestEntity1Class>(), null, null);
 		
 	}
@@ -156,7 +156,7 @@ public class DTOAssemblerBatchTest {
 	@Test(expected = InvalidEntityCollectionException.class)
 	public void testAssembleEntitieThrowsExceptionForNullEntitiesCollection() throws GeDAException {
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
 		assembler.assembleEntities(new ArrayList<TestDto1Class>(), null, null, null);
 		
 	}
@@ -172,7 +172,7 @@ public class DTOAssemblerBatchTest {
 		final List<TestEntity1Class> entities = new ArrayList<TestEntity1Class>();
 		entities.add(createTestEntity1(0));
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
 		assembler.assembleEntities(new ArrayList<TestDto1Class>(), entities, null, null);
 		
 	}
@@ -195,7 +195,7 @@ public class DTOAssemblerBatchTest {
 		
 		final long timeStart = System.currentTimeMillis();
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
 		assembler.assembleEntities(dtos, entities, null, null);
 		
 		final long deltaTime = System.currentTimeMillis() - timeStart;

@@ -106,7 +106,7 @@ class CollectionPipe implements Pipe {
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
 
             try {
-                final DTOAssembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
+                final Assembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
 
                 for (Object object : entities) {
 
@@ -187,7 +187,7 @@ class CollectionPipe implements Pipe {
 
     }
     
-	private DTOAssembler lazyCreateAssembler(final DTOAssembler assembler, final Object dtoItem) 
+	private Assembler lazyCreateAssembler(final Assembler assembler, final Object dtoItem)
 			throws CollectionEntityGenericReturnTypeException, AnnotationMissingException, InspectionScanningException, 
 			       UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
 			       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
@@ -224,7 +224,7 @@ class CollectionPipe implements Pipe {
     	       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
     	       AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 
-        DTOAssembler assembler = null;
+        Assembler assembler = null;
         final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
         for (Object dtoItem : dtos) {
 
