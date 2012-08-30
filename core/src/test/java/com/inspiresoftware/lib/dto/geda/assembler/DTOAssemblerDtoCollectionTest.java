@@ -94,7 +94,7 @@ public class DTOAssemblerDtoCollectionTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto7CollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, factory);
@@ -154,7 +154,7 @@ public class DTOAssemblerDtoCollectionTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto7CollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, factory);
@@ -194,7 +194,7 @@ public class DTOAssemblerDtoCollectionTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto7CollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, factory);
@@ -239,7 +239,7 @@ public class DTOAssemblerDtoCollectionTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(dto.getClass(), TestEntity7CollectionInterface.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, factory);
@@ -299,7 +299,7 @@ public class DTOAssemblerDtoCollectionTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(dto.getClass(), TestEntity7CollectionInterface.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, factory);
@@ -338,7 +338,7 @@ public class DTOAssemblerDtoCollectionTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(dto.getClass(), TestEntity7CollectionInterface.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, factory);
@@ -374,7 +374,7 @@ public class DTOAssemblerDtoCollectionTest {
 		
 		final TestDto12CollectionIterface dColl = new TestDto12CollectionClass();
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dColl.getClass(), eWrap.getClass(), synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(dColl.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dColl, eWrap, null, new BeanFactory() {
 
@@ -452,7 +452,7 @@ public class DTOAssemblerDtoCollectionTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(dto.getClass(), entity.getClass(), synthesizer);
 
 		dto.setNestedString(new ArrayList<TestDto7CollectionSubInterface>());
@@ -511,7 +511,7 @@ public class DTOAssemblerDtoCollectionTest {
 
         final TestDto16Class dtos = new TestDto16Class();
 
-        final DTOAssembler assembler = DTOAssembler.newCustomAssembler(
+        final Assembler assembler = DTOAssembler.newCustomAssembler(
                 TestDto16Class.class, TestEntity16Class.class, synthesizer);
 
         assembler.assembleDto(dtos, entities, null, new BeanFactory() {
@@ -577,7 +577,7 @@ public class DTOAssemblerDtoCollectionTest {
     		}
     	};
     	
-    	final DTOAssembler assembler =
+    	final Assembler assembler =
     		DTOAssembler.newCustomAssembler(TestDto7aCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
     	
     	assembler.assembleDto(dto, entity, null, factory);
@@ -627,7 +627,7 @@ public class DTOAssemblerDtoCollectionTest {
     		}
     	};
     	
-    	final DTOAssembler assembler =
+    	final Assembler assembler =
     		DTOAssembler.newCustomAssembler(TestDto7aCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
     	
     	assembler.assembleDto(dto, entity, null, factory);
@@ -676,7 +676,7 @@ public class DTOAssemblerDtoCollectionTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto7aCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
 
 		final Map<String, Object> converters = new HashMap<String, Object>();
@@ -728,7 +728,7 @@ public class DTOAssemblerDtoCollectionTest {
 		entity.getCollection().add(item2);
 		entity.getCollection().add(item3);
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
 
 		final Map<String, Object> converters = new HashMap<String, Object>();
@@ -770,7 +770,7 @@ public class DTOAssemblerDtoCollectionTest {
 			}
 		};
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
 		
 		final Map<String, Object> converters = new HashMap<String, Object>();
@@ -814,7 +814,7 @@ public class DTOAssemblerDtoCollectionTest {
 			}
 		};
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
 		
 		final Map<String, Object> converters = new HashMap<String, Object>();
@@ -879,7 +879,7 @@ public class DTOAssemblerDtoCollectionTest {
 			}
 		};
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
 		
 		final Map<String, Object> converters = new HashMap<String, Object>();
@@ -935,7 +935,7 @@ public class DTOAssemblerDtoCollectionTest {
 			}
 		};
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
 		
 		final Map<String, Object> converters = new HashMap<String, Object>();
@@ -1004,7 +1004,7 @@ public class DTOAssemblerDtoCollectionTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto7bCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
 
 		final Map<String, Object> converters = new HashMap<String, Object>();

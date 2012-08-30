@@ -72,7 +72,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto1Class dto = new TestDto1Class();
 		final TestEntity1Interface entity = createTestEntity1();
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
 		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
@@ -109,7 +109,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto2Class dto = new TestDto2Class();
 		final TestEntity2Class entity = createTestEntity2();
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto2Class.class, TestEntity2Class.class, synthesizer);
 		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
@@ -146,7 +146,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto1Class dto = new TestDto1Class();
 		final TestEntity2Class entity = createTestEntity2();
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity2Class.class, synthesizer);
 		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
@@ -185,7 +185,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto1Interface dto1 = new TestDto1Class();
 		final TestEntity1Interface entity1 = createTestEntity1();
 		
-		final DTOAssembler assembler = 
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity2Class.class, synthesizer);
 		
 		assembler.assembleDto(dto1, entity1, null, null);
@@ -203,7 +203,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto2Class dto2 = new TestDto2Class();
 		final TestEntity2Class entity2 = createTestEntity2();
 		
-		final DTOAssembler assembler = 
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity2Class.class, synthesizer);
 		
 		assembler.assembleDto(dto2, entity2, null, null);
@@ -221,7 +221,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto2Class dto2 = new TestDto2Class();
 		final TestEntity1Interface entity1 = createTestEntity1();
 		
-		final DTOAssembler assembler = 
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity2Class.class, synthesizer);
 
 		assembler.assembleDto(dto2, entity1, null, null);
@@ -239,7 +239,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto6Class dto = new TestDto6Class();
 		final TestEntity1Interface entity = createTestEntity1();
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto6Class.class, TestEntity1Class.class, synthesizer);
 		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
@@ -267,7 +267,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto1Interface dto = new TestDto1Class();
 		final TestEntity1Interface entity = createTestEntity1();
 		
-		final DTOAssembler assembler = 
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(dto.getClass(), TestEntity1Class.class, synthesizer);
 		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
@@ -295,7 +295,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto1Interface dto = new TestDto1Class();
 		final TestEntity1Interface entity = createTestEntity1();
 		
-		final DTOAssembler assembler = 
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(dto.getClass(), TestEntity1Interface.class, synthesizer);
 		assembler.assembleDto(dto, entity, null, null);
 		assertEquals(entity.getEntityId(), dto.getMyLong());
@@ -324,7 +324,7 @@ public class DTOAssemblerMappingTest {
 		entity.setWrapper(new TestEntity4SubClass());
 		entity.getWrapper().setName("Name");
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto4Class.class, TestEntity4Class.class, synthesizer);
 		
 		assembler.assembleDto(dto, entity, null, null);
@@ -360,7 +360,7 @@ public class DTOAssemblerMappingTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto4ComplexClass.class, TestEntity4Class.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, factory);
@@ -396,7 +396,7 @@ public class DTOAssemblerMappingTest {
             }
         };
 
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto4ComplexClass.class, TestEntity4Class.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, factory);
@@ -425,7 +425,7 @@ public class DTOAssemblerMappingTest {
 		entity.getWrapper().setWrapper(new TestEntity4SubClass());
 		entity.getWrapper().getWrapper().setName("Name");
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto5Class.class, TestEntity5Class.class, synthesizer);
 		
 		assembler.assembleDto(dto, entity, null, null);
@@ -454,7 +454,7 @@ public class DTOAssemblerMappingTest {
 		entity.getWrapper().setWrapper(null);
 		final BeanFactory beanFactory = new TestBeanFactory();
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto5Class.class, TestEntity5Class.class, synthesizer);
 		
 		assembler.assembleDto(dto, entity, null, null);
@@ -483,7 +483,7 @@ public class DTOAssemblerMappingTest {
 		entity.setWrapper(null);
 		final BeanFactory beanFactory = new TestBeanFactory();
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto5Class.class, TestEntity5Class.class, synthesizer);
 
 		assembler.assembleDto(dto, entity, null, null);
@@ -518,7 +518,7 @@ public class DTOAssemblerMappingTest {
 		assertNotNull(dto.getMyLong());
 		assertNotNull(dto.getMyString());
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto1Class.class, TestEntity1Class.class, synthesizer);
 		
 		assembler.assembleDto(dto, entity, null, null);
@@ -542,7 +542,7 @@ public class DTOAssemblerMappingTest {
 		final TestEntity4Class entity = new TestEntity4Class();
 		entity.setWrapper(new TestEntity4SubClass());
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto4ComplexClass.class, TestEntity4Class.class, synthesizer);
 
 		assertNull(dto.getNestedString());
@@ -592,7 +592,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto1Interface dto = new TestDto1Class();
 		final TestEntity1Interface entity = new TestEntity1Class();
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(TestDto1Class.class, synthesizer);
 		
 		final double myDouble = 0.2d;
 		
@@ -629,7 +629,7 @@ public class DTOAssemblerMappingTest {
 		final TestDto18Class dto = new TestDto18Class();
 		final TestEntity18Class entity = new TestEntity18Class();
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dto.getClass(), entity.getClass(), synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(dto.getClass(), entity.getClass(), synthesizer);
 
 		final TestDto18aClass<String> item = new TestDto18aClass<String>();
 		item.setMyProp("item");
@@ -705,7 +705,7 @@ public class DTOAssemblerMappingTest {
 		converters.put("VirtualMyBoolean", new VirtualMyBooleanConverter());
 		converters.put("VirtualMyLong", new VirtualMyLongConverter());
 		
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dto.getClass(), entity.getClass(), synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(dto.getClass(), entity.getClass(), synthesizer);
 		
 		assembler.assembleDto(dto, entity, converters, null);
 		

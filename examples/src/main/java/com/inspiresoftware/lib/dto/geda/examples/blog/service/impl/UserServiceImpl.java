@@ -10,6 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.examples.blog.service.impl;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.assembler.Assembler;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
 import com.inspiresoftware.lib.dto.geda.examples.blog.domain.User;
 import com.inspiresoftware.lib.dto.geda.examples.blog.domain.UserEntry;
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserService {
         final List<User> users = dao.list();
         final List<UserDTO> dtos = new ArrayList<UserDTO>();
 
-        final DTOAssembler asm = DTOAssembler.newAssembler(bf.get(filter).getClass(), bf.get("User").getClass());
+        final Assembler asm = DTOAssembler.newAssembler(bf.get(filter).getClass(), bf.get("User").getClass());
 
         for (final User user : users) {
             final UserDTO dto = (UserDTO) bf.get("UserDTO");

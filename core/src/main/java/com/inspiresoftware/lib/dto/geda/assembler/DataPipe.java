@@ -171,7 +171,7 @@ class DataPipe implements Pipe {
                 dto,
                 this.dtoWrite
         ).create();
-        final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dtoDataDelegate.getClass(), entityData.getClass(), synthesizer);
+        final Assembler assembler = DTOAssembler.newCustomAssembler(dtoDataDelegate.getClass(), entityData.getClass(), synthesizer);
         
         assembler.assembleDto(dtoDataDelegate, entityData,  converters, dtoBeanFactory);
     }
@@ -258,7 +258,7 @@ class DataPipe implements Pipe {
 		    this.entityWrite.write(parentEntity, dataEntity);
 		}
 
-		final DTOAssembler assembler = DTOAssembler.newCustomAssembler(dtoValue.getClass(), dataEntity.getClass(), synthesizer);
+		final Assembler assembler = DTOAssembler.newCustomAssembler(dtoValue.getClass(), dataEntity.getClass(), synthesizer);
 		assembler.assembleEntity(dtoValue, dataEntity, converters, entityBeanFactory);
 	}
 

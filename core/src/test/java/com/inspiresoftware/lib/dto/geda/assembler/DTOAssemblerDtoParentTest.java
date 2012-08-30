@@ -80,7 +80,7 @@ public class DTOAssemblerDtoParentTest {
 		
 		final TestDto11ChildInterface childDto = new TestDto11ChildClass();
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(childDto.getClass(), childEntity.getClass(), synthesizer);
 		
 		assembler.assembleDto(childDto, childEntity, null, createDtoBeanFactory());
@@ -173,7 +173,7 @@ public class DTOAssemblerDtoParentTest {
 		
 		final TestDto11ChildInterface childDto = new TestDto11ChildClass();
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(childDto.getClass(), childEntity.getClass(), synthesizer);
 		
 		assembler.assembleEntity(childDto, childEntity, null, null);

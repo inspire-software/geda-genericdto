@@ -71,7 +71,7 @@ public class DTOAssemblerConvertersTest {
 		final Map<String, Object> converters = new HashMap<String, Object>();
 		converters.put("boolToEnum", conv3toDto);
 		
-		final DTOAssembler assembler =
+		final Assembler assembler =
 			DTOAssembler.newCustomAssembler(TestDto3Class.class, TestEntity3Class.class, synthesizer);
 		
 		assembler.assembleDto(dto, entity, converters, null);
