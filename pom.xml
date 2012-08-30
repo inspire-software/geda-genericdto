@@ -52,7 +52,6 @@
     <modules>
         <module>core</module>
         <module>spring-integration</module>
-        <module>core-ptest</module>
         <module>examples</module>
     </modules>
 
@@ -82,6 +81,17 @@
         </plugins>
         <defaultGoal>package</defaultGoal>
     </build>
+
+    <profiles>
+
+        <profile>
+            <id>with-ptest</id>
+            <modules>
+                <module>core-ptest</module>
+            </modules>
+        </profile>
+
+    </profiles>
 
 
 </project>
