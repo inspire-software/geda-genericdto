@@ -9,6 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda;
 
+import com.inspiresoftware.lib.dto.geda.performance.MemUtils;
 import org.junit.Test;
 
 /**
@@ -22,21 +23,14 @@ public class MemoryCheckTest {
 
     @Test
     public void testSufficientMemory() {
-        final Runtime runtime = Runtime.getRuntime();
 
-        long maxMemory = runtime.maxMemory() / 1024;
-        long allocatedMemory = runtime.totalMemory() / 1024;
-        long freeMemory = runtime.freeMemory()  / 1024;
+        int available = MemUtils.availableMb();
 
-        long available = freeMemory + (maxMemory - allocatedMemory);
+        MemUtils.statsToStream(System.out);
 
-        System.out.println("free memory: " + freeMemory);
-        System.out.println("allocated memory: " + allocatedMemory);
-        System.out.println("max memory: " + maxMemory);
-        System.out.println("total free memory: " + available);
-
-        if (available < 1024) {
-            System.out.println("Need more memory for this test...");
+        if (available < 1000) {
+            System.out.println("[WARN]: Need more memory for this test...");
+            System.out.println("[WARN]: use - export MAVEN_OPTS=\"-Xms512M -Xmx1024M -XX:MaxPermSize=128M\" \n\n");
         }
     }
 

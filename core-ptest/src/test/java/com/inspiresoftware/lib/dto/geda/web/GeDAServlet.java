@@ -12,6 +12,7 @@ package com.inspiresoftware.lib.dto.geda.web;
 
 import com.inspiresoftware.lib.dto.geda.performance.PerformanceTestLevel3Thread;
 import com.inspiresoftware.lib.dto.geda.performance.ShutdownListener;
+import org.junit.Ignore;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +26,7 @@ import java.io.IOException;
  * @author denispavlov
  *
  */
+@Ignore
 public class GeDAServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 20110401L;
