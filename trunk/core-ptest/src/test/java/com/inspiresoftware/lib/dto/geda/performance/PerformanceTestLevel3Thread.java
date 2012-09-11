@@ -48,6 +48,8 @@ public class PerformanceTestLevel3Thread implements Runnable {
 
         try {
 
+            MemUtils.statsToStream(out);
+
             final int allCount = lvl3;
 
             final Date start = new Date();
@@ -71,7 +73,7 @@ public class PerformanceTestLevel3Thread implements Runnable {
 
                 final Date startProcess = new Date();
                 out.append(startProcess + " - started assembly on "
-                        + allCount + " entities)\n");
+                        + allCount + " entities\n");
 
                 assembler.assembleDtos(dtos, testSample, null, getFactory());
 

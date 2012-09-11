@@ -49,6 +49,8 @@ public class PerformanceTestLevel1Thread implements Runnable {
 	public void run() {
 
         try {
+
+            MemUtils.statsToStream(out);
 		
             final int lvl2Count = (lvl2 * lvl1 * 5);
             final int lvl3Count = (lvl2 * lvl1 * 5 * 5);
@@ -78,7 +80,7 @@ public class PerformanceTestLevel1Thread implements Runnable {
                         + lvl1 + " lvl1, "
                         + lvl2Count + " lvl2, and "
                         + lvl3Count + " lvl3 entities (total of "
-                        + allCount + " entities)\n");
+                        + allCount + " entities\n");
 
                 assembler.assembleDtos(dtos, testSample, null, getFactory());
 

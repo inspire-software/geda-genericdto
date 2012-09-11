@@ -110,7 +110,7 @@ public class RunGeDARunTest {
 		final int numThreads = 1;
 		final ExecutorService exec = Executors.newFixedThreadPool(numThreads);
 		final ExecutorListener listener = new ExecutorListener(exec);
-		final Runnable task = new PerformanceTestLevel1Thread(50, 50, listener);
+		final Runnable task = new PerformanceTestLevel1Thread(25, 35, listener);
 		exec.execute(task);
 		listener.keepAlive();
 		
@@ -121,8 +121,8 @@ public class RunGeDARunTest {
 		final int numThreads = 2;
 		final ExecutorService exec = Executors.newFixedThreadPool(numThreads);
 		final ExecutorListener listener = new ExecutorListener(exec);
-		final Runnable task1 = new PerformanceTestLevel1Thread(25, 50, listener);
-		final Runnable task2 = new PerformanceTestLevel1Thread(25, 50, listener);
+		final Runnable task1 = new PerformanceTestLevel1Thread(25, 35, listener);
+		final Runnable task2 = new PerformanceTestLevel1Thread(25, 35, listener);
 		exec.execute(task1);
 		exec.execute(task2);
 		listener.keepAlive();
@@ -133,11 +133,11 @@ public class RunGeDARunTest {
 		final int numThreads = 5;
 		final ExecutorService exec = Executors.newFixedThreadPool(numThreads);
 		final ExecutorListener listener = new ExecutorListener(exec);
-		final Runnable task1 = new PerformanceTestLevel1Thread(10, 50, listener);
-		final Runnable task2 = new PerformanceTestLevel1Thread(10, 50, listener);
-		final Runnable task3 = new PerformanceTestLevel1Thread(10, 50, listener);
-		final Runnable task4 = new PerformanceTestLevel1Thread(10, 50, listener);
-		final Runnable task5 = new PerformanceTestLevel1Thread(10, 50, listener);
+		final Runnable task1 = new PerformanceTestLevel1Thread(15, 25, listener);
+		final Runnable task2 = new PerformanceTestLevel1Thread(15, 25, listener);
+		final Runnable task3 = new PerformanceTestLevel1Thread(15, 25, listener);
+		final Runnable task4 = new PerformanceTestLevel1Thread(15, 25, listener);
+		final Runnable task5 = new PerformanceTestLevel1Thread(15, 25, listener);
 		exec.execute(task1);
 		exec.execute(task2);
 		exec.execute(task3);
