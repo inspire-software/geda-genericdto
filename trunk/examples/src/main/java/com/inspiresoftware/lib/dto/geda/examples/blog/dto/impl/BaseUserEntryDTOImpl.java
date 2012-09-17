@@ -11,7 +11,6 @@ package com.inspiresoftware.lib.dto.geda.examples.blog.dto.impl;
 
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.inspiresoftware.lib.dto.geda.examples.blog.domain.User;
 import com.inspiresoftware.lib.dto.geda.examples.blog.dto.BaseUserEntryDTO;
 
 /**

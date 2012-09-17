@@ -14,7 +14,6 @@ import com.inspiresoftware.lib.dto.geda.annotations.Transferable;
 import com.inspiresoftware.lib.dto.geda.test.DomainObject;
 import com.inspiresoftware.lib.dto.geda.test.ExtendedDataTransferObject;
 import com.inspiresoftware.lib.dto.geda.test.TestNoMatchService;
-import com.inspiresoftware.lib.dto.geda.test.TestService;
 
 import java.util.Collection;
 import java.util.Date;

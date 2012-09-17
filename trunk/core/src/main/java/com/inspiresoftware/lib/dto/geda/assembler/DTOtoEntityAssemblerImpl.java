@@ -39,7 +39,6 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 	private final Class entityClass;
 	private final MethodSynthesizer synthesizer;
 
-    private final Set<String> bindings = new TreeSet<String>();
     private final LinkedList<Pipe> pipes = new LinkedList<Pipe>();
 
 	DTOtoEntityAssemblerImpl(final Class dto, final Class entity, final MethodSynthesizer synthesizer)
@@ -84,7 +83,8 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 			PropertyInspector.getPropertyDescriptorsForClass(entity);
 
 
-		final Field[] dtoFields = dto.getDeclaredFields();
+        final Set<String> bindings = new TreeSet<String>();
+        final Field[] dtoFields = dto.getDeclaredFields();
 		for (Field dtoField : dtoFields) {
 
 			final List<PipeMetadata> metas = MetadataChainBuilder.build(dtoField);
@@ -94,7 +94,10 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
             try {
 			    final Pipe pipe = createPipeChain(dtoClass, dtoPropertyDescriptors, entityClass, entityPropertyDescriptors, dtoField, metas, 0);
                 final String binding = pipe.getBinding();
-                validateNewBinding(binding);
+
+                if (bindings.contains(binding)) {
+                    throw new AnnotationDuplicateBindingException(dtoClass.getCanonicalName(), binding);
+                }
                 bindings.add(binding);
                 pipes.addLast(pipe);
             } catch (InspectionBindingNotFoundException noField) {
@@ -148,12 +151,6 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 			);
 
 	}
-
-    private void validateNewBinding(final String binding) throws AnnotationDuplicateBindingException {
-        if (bindings.contains(binding)) {
-            throw new AnnotationDuplicateBindingException(dtoClass.getCanonicalName(), binding);
-        }
-    }
 
 	/**
 	 * Configure synthesizer.

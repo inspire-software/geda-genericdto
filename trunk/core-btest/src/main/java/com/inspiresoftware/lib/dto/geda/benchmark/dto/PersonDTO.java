@@ -10,11 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.benchmark.dto;
 
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
-import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.geda.AddressMatcher;
-
-import java.util.List;
 
 /**
  * .
