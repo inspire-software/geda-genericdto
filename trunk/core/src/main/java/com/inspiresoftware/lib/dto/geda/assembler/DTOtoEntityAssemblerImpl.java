@@ -39,7 +39,8 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 	private final Class entityClass;
 	private final MethodSynthesizer synthesizer;
 
-	private final Map<String, Pipe> relationMapping = new HashMap<String, Pipe>();
+    private final Set<String> bindings = new TreeSet<String>();
+    private final LinkedList<Pipe> pipes = new LinkedList<Pipe>();
 
 	DTOtoEntityAssemblerImpl(final Class dto, final Class entity, final MethodSynthesizer synthesizer)
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
@@ -94,7 +95,8 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 			    final Pipe pipe = createPipeChain(dtoClass, dtoPropertyDescriptors, entityClass, entityPropertyDescriptors, dtoField, metas, 0);
                 final String binding = pipe.getBinding();
                 validateNewBinding(binding);
-                relationMapping.put(binding, pipe);
+                bindings.add(binding);
+                pipes.addLast(pipe);
             } catch (InspectionBindingNotFoundException noField) {
                 if (strict) { // only throw exception if we are in strict mode
                     throw noField;
@@ -148,7 +150,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 	}
 
     private void validateNewBinding(final String binding) throws AnnotationDuplicateBindingException {
-        if (relationMapping.containsKey(binding)) {
+        if (bindings.contains(binding)) {
             throw new AnnotationDuplicateBindingException(dtoClass.getCanonicalName(), binding);
         }
     }
@@ -179,7 +181,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 
 		validateDtoAndEntity(dto, entity);
 
-		for (Pipe pipe : relationMapping.values()) {
+		for (Pipe pipe : pipes) {
 			pipe.writeFromEntityToDto(entity, dto, converters, dtoBeanFactory);
 		}
 
@@ -231,7 +233,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 
 		validateDtoAndEntity(dto, entity);
 
-		for (Pipe pipe : relationMapping.values()) {
+		for (Pipe pipe : pipes) {
 			pipe.writeFromDtoToEntity(entity, dto, converters, entityBeanFactory);
 		}
 
