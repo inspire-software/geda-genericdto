@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ This code is distributed under The GNU Lesser General Public License (LGPLv3)
+  ~ Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+  ~
+  ~ Copyright Denis Pavlov 2009
+  ~ Web: http://www.inspire-software.com
+  ~ SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <properties>
+        <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+    </properties>
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.inspire-software.lib.dto.geda</groupId>
+        <artifactId>geda</artifactId>
+        <version>2.0.3</version>
+    </parent>
+    <artifactId>geda.spring-integration</artifactId>
+    <name>DTO utilities package spring integration</name>
+    <version>2.0.3</version>
+    <description>Provides GeDA core integration for Spring framework</description>
+    <packaging>jar</packaging>
+    <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License (LGPLv3)</name>
+            <url>http://www.gnu.org/copyleft/lesser.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/tags/geda-2.0.3/geda-genericdto</url>
+        <connection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/tags/geda-2.0.3/geda-genericdto</connection>
+        <developerConnection>scm:svn:https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/tags/geda-2.0.3/trunk</developerConnection>
+    </scm>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://inspire-software.com/jira/browse/GEDA</url>
+    </issueManagement>
+    <developers>
+        <developer>
+            <id>denis.pavlov</id>
+            <name>Denis Pavlov</name>
+            <email>denis.v.pavlov@inspire-software.com</email>
+            <url>www.inspire-software.com</url>
+        </developer>
+    </developers>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <suiteXmlFiles>
+                            <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                        </suiteXmlFiles>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>    
+
+    <dependencies>
+        <dependency>
+            <groupId>com.inspire-software.lib.dto.geda</groupId>
+            <artifactId>geda.core</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.8</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.5.6</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${org.springframework.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${org.springframework.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${org.springframework.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${org.springframework.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${org.springframework.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--
+            TestNG provides better support for integration tests by means of groups
+            and test dependencies.
+            Use: mvn testng
+        -->
+        <dependency>
+          <groupId>org.testng</groupId>
+          <artifactId>testng</artifactId>
+          <version>6.1.1</version>
+          <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-test</artifactId>
+          <version>${org.springframework.version}</version>
+          <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>            
+        </dependency>
+
+    </dependencies>
+
+</project>
