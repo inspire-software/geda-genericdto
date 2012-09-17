@@ -70,7 +70,9 @@ public final class DTOAssembler {
 	private static Pattern entityClassNameBlacklistPatternValue = Pattern.compile(SETTING_ENTITY_CLASS_NAME_BLACKLIST_PATTERN_DEFAULT);
 	
 	
-	private static final Cache<String, Assembler> CACHE = new SoftReferenceCache<String, Assembler>(500);	
+	private static final Cache<Integer, Assembler> CACHE = new SoftReferenceCache<Integer, Assembler>(500);
+
+    private static final Set<Integer> WHITELIST_ENTITIES = new HashSet<Integer>();
 	
 	/**
 	 * Setup allows to configure some of the behaviour of GeDA. Currently it is used to tune the caching cleanup cycles.
@@ -113,12 +115,17 @@ public final class DTOAssembler {
 	
 
 	private static Class filterBlacklisted(final Class className) {
-		if (matches(className.getSimpleName())) {
-            if (!className.getSuperclass().equals(Object.class)) {
-                // some proxies are derived straight from Object.class - we do not want those 
-			    return filterBlacklisted(className.getSuperclass());
+        final int hash = className.hashCode();
+        if (!WHITELIST_ENTITIES.contains(hash)) {
+            if (matches(className.getSimpleName())) {
+                if (!className.getSuperclass().equals(Object.class)) {
+                    // some proxies are derived straight from Object.class - we do not want those
+                    return filterBlacklisted(className.getSuperclass());
+                }
+            } else {
+                WHITELIST_ENTITIES.add(hash);
             }
-		}
+        }
 		return className;
 	}
 	
@@ -139,12 +146,22 @@ public final class DTOAssembler {
 			       GeDARuntimeException, AnnotationDuplicateBindingException {
 
         final Class< ? > realEntity = filterBlacklisted(entity);
-		final MethodSynthesizer syn = synthesizer == null ? SYNTHESIZER : new MethodSynthesizerProxy(synthesizer);
-		final String key = createAssemberKey(dto, realEntity, syn);
+		final Integer key;
+        if (synthesizer == null) {
+            key = createAssemberKey(dto, realEntity, SYNTHESIZER);
+        } else {
+            key = createAssemberKey(dto, realEntity, synthesizer);
+        }
     	
 		Assembler assembler = CACHE.get(key);
 		if (assembler == null) {
-			assembler = new DTOtoEntityAssemblerImpl(dto, realEntity, syn);
+            final MethodSynthesizer syn;
+            if (synthesizer == null) {
+                syn = SYNTHESIZER;
+            } else {
+                syn = new MethodSynthesizerProxy(synthesizer);
+            }
+            assembler = new DTOtoEntityAssemblerImpl(dto, realEntity, syn);
 	    	CACHE.put(key, assembler);
 		}
     	return assembler;
@@ -160,12 +177,22 @@ public final class DTOAssembler {
             realEntities[i] = filterBlacklisted(entities[i]);
         }
 
-		final MethodSynthesizer syn = synthesizer == null ? SYNTHESIZER : new MethodSynthesizerProxy(synthesizer);
-		final String key = createAssemberKey(dto, realEntities, syn);
+        final Integer key;
+        if (synthesizer == null) {
+            key = createAssemberKey(dto, realEntities, SYNTHESIZER);
+        } else {
+            key = createAssemberKey(dto, realEntities, synthesizer);
+        }
 
 		Assembler assembler = CACHE.get(key);
 		if (assembler == null) {
-			assembler = new DTOtoEntitiesAssemblerDecoratorImpl(dto, realEntities, syn);
+            final MethodSynthesizer syn;
+            if (synthesizer == null) {
+                syn = SYNTHESIZER;
+            } else {
+                syn = new MethodSynthesizerProxy(synthesizer);
+            }
+            assembler = new DTOtoEntitiesAssemblerDecoratorImpl(dto, realEntities, syn);
 	    	CACHE.put(key, assembler);
 		}
     	return assembler;
@@ -197,24 +224,23 @@ public final class DTOAssembler {
         return classes;
 	}
 
-	private static <DTO, Entity> String createAssemberKey(final Class<DTO> dto,
-			final Class<Entity> entity, final MethodSynthesizer synthesizer) {
-        final StringBuilder key = new StringBuilder(dto.getCanonicalName());
-        key.append('-');
-        key.append(entity.getCanonicalName()).append('-');
-        key.append(synthesizer.toString());
-		return key.toString();
+	private static <DTO, Entity> Integer createAssemberKey(final Class<DTO> dto,
+			final Class<Entity> entity, final Object synthesizer) {
+        int result = dto.hashCode();
+        result = 31 * result + entity.hashCode();
+        result = 31 * result + synthesizer.hashCode();
+        return Integer.valueOf(result);
 	}
 
-	private static <DTO, Entity> String createAssemberKey(final Class<DTO> dto,
-			final Class<Entity>[] entities, final MethodSynthesizer synthesizer) {
-        final StringBuilder key = new StringBuilder(dto.getCanonicalName());
-        key.append('-');
+	private static <DTO, Entity> Integer createAssemberKey(final Class<DTO> dto,
+			final Class<Entity>[] entities, final Object synthesizer) {
+
+        int result = dto.hashCode();
         for (final Class entity : entities) {
-            key.append(entity.getCanonicalName()).append('-');
+            result = 31 * result + entity.hashCode();
         }
-        key.append(synthesizer.toString());
-		return key.toString();
+        result = 31 * result + synthesizer.hashCode();
+        return Integer.valueOf(result);
 	}
 
 	/**

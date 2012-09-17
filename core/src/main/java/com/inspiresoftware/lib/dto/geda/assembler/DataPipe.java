@@ -45,6 +45,9 @@ class DataPipe implements Pipe {
 	
 	private final DataReader entityRead;
 	private final DataWriter entityWrite;
+
+    private final boolean usesConverter;
+    private final boolean hasSubEntity;
 	
 	private static final Object NULL = null;
 	
@@ -69,6 +72,9 @@ class DataPipe implements Pipe {
 		
 		this.meta = meta;
 
+        this.usesConverter = meta.getConverterKey() != null && meta.getConverterKey().length() > 0;
+        this.hasSubEntity = meta.getDtoBeanKey() != null && meta.getDtoBeanKey().length() > 0;
+
 		this.synthesizer = synthesizer;
 		
 		this.dtoWrite = dtoWrite;
@@ -80,7 +86,7 @@ class DataPipe implements Pipe {
 			
 			this.dtoRead = null;
 			this.entityWrite = null;
-            if (!usesConverter()) {
+            if (!usesConverter) {
                 PipeValidator.validateReadPipeTypes(this.dtoWrite, this.meta.getDtoFieldName(), 
                 		this.entityRead, this.meta.getEntityFieldName());
             }
@@ -92,7 +98,7 @@ class DataPipe implements Pipe {
 			PipeValidator.validatePipeNonNull(this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(), 
 					this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
 			
-			if (!usesConverter()) {
+			if (!usesConverter) {
                 PipeValidator.validatePipeTypes(this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(), 
                 		this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
             }
@@ -134,13 +140,13 @@ class DataPipe implements Pipe {
 		final Object entityData = this.entityRead.read(entity);
 
 		if (entityData != null) {
-	        if (hasSubEntity()) {
+	        if (hasSubEntity) {
 	
                 createDtoAndWriteFromEntityToDto(dto, converters, dtoBeanFactory, entityData);
 	
 	        } else {
 			
-	            if (usesConverter()) {
+	            if (usesConverter) {
 	                this.dtoWrite.write(dto, getConverter(converters).convertToDto(entityData, dtoBeanFactory));
 	            } else {
 	                this.dtoWrite.write(dto, entityData);
@@ -210,7 +216,7 @@ class DataPipe implements Pipe {
         	
             final Object parentEntity = getOrCreateParentEntityForDtoValue(entity);
             
-            if (hasSubEntity()) {
+            if (hasSubEntity) {
 
                 assembleSubEntity(dtoValue, parentEntity, converters, entityBeanFactory);
                 
@@ -227,7 +233,7 @@ class DataPipe implements Pipe {
 
 	private Object getDtoValue(final Object dtoData, final Object entity, final Map<String, Object> converters,
 			final BeanFactory entityBeanFactory) throws NotValueConverterException, ValueConverterNotFoundException {
-        if (usesConverter()) {
+        if (usesConverter) {
             if (entity instanceof NewDataProxy) {
                 return getConverter(converters).convertToEntity(dtoData, null, entityBeanFactory);
             }
@@ -294,15 +300,7 @@ class DataPipe implements Pipe {
 			this.entityWrite.write(entity, entityForPk);
 		}
 	}
-	
-	private boolean usesConverter() {
-		return this.meta.getConverterKey() != null && this.meta.getConverterKey().length() > 0;
-	}
 
-    private boolean hasSubEntity() {
-        return this.meta.getDtoBeanKey() != null && this.meta.getDtoBeanKey().length() > 0;
-    }
-	
     private ValueConverter getConverter(final Map<String, Object> converters) 
     		throws NotValueConverterException, ValueConverterNotFoundException {
     	
