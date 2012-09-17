@@ -51,7 +51,7 @@ public class CaliperBenchmark extends SimpleBenchmark {
 
     @Param
     private Lib lib;
-    @Param({"1", "100", "10000", "25000"})
+    @Param({ "1", "100", "10000", "25000" })
     private int length;
 
     private Person personLoaded;
