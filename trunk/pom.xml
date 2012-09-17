@@ -91,6 +91,13 @@
             </modules>
         </profile>
 
+        <profile>
+            <id>with-btest</id>
+            <modules>
+                <module>core-btest</module>
+            </modules>
+        </profile>
+
     </profiles>
 
 
