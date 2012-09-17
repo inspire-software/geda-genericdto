@@ -84,6 +84,9 @@
 
     <profiles>
 
+        <!--
+            Performance testing with GeDA multi-threading
+         -->
         <profile>
             <id>with-ptest</id>
             <modules>
@@ -91,9 +94,23 @@
             </modules>
         </profile>
 
+        <!--
+            Benchmarking geda against rival libraries
+         -->
         <profile>
             <id>with-btest</id>
             <modules>
+                <module>core-btest</module>
+            </modules>
+        </profile>
+
+        <!--
+            Full build with all modules
+         -->
+        <profile>
+            <id>all</id>
+            <modules>
+                <module>core-ptest</module>
                 <module>core-btest</module>
             </modules>
         </profile>

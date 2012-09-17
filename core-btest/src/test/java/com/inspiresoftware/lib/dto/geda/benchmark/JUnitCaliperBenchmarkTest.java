@@ -23,16 +23,16 @@ import com.inspiresoftware.lib.dto.geda.benchmark.support.geda.GeDABasicMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.manual.ManualBasicMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.modelmapper.ModelMapperMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaMapper;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
- * Caliper powered benchmark.
- * <p/>
  * User: denispavlov
- * Date: Sep 17, 2012
- * Time: 8:35:29 AM
+ * Date: 12-09-17
+ * Time: 5:02 PM
  */
-public class CaliperBenchmark extends SimpleBenchmark {
-
+public class JUnitCaliperBenchmarkTest extends SimpleBenchmark {
 
     public enum Lib {
 
@@ -100,9 +100,10 @@ public class CaliperBenchmark extends SimpleBenchmark {
         }
     }
 
-
-    public static void main(String[] args) throws Exception {
-        Runner.main(CaliperBenchmark.class, args);
+    @Test
+    public void testBenchmark() {
+        Runner.main(CaliperBenchmark.class, new String[] { });
+        assertTrue(true);
     }
 
 }

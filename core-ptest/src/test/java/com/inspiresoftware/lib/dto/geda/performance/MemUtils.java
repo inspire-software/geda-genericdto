@@ -11,7 +11,6 @@ package com.inspiresoftware.lib.dto.geda.performance;
 
 import org.junit.Ignore;
 
-import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**

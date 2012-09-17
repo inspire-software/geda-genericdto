@@ -1,8 +1,5 @@
 package com.inspiresoftware.lib.dto.geda.examples.blog.dto;
 
-import com.inspiresoftware.lib.dto.geda.examples.blog.dto.BaseUserDTO;
-import com.inspiresoftware.lib.dto.geda.examples.blog.dto.BaseUserEntryDTO;
-
 import java.util.List;
 
 /**

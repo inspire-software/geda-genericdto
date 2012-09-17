@@ -16,14 +16,11 @@ import com.inspiresoftware.lib.dto.geda.examples.addressbook.service.PersonDAO;
 import com.inspiresoftware.lib.dto.geda.examples.addressbook.service.impl.AddressBookServiceImpl;
 import com.inspiresoftware.lib.dto.geda.examples.addressbook.service.impl.PersonDAOImpl;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * .

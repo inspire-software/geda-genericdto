@@ -15,7 +15,6 @@ import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
 import com.inspiresoftware.lib.dto.geda.examples.blog.domain.User;
 import com.inspiresoftware.lib.dto.geda.examples.blog.domain.UserEntry;
 import com.inspiresoftware.lib.dto.geda.examples.blog.dto.BaseUserDTO;
-import com.inspiresoftware.lib.dto.geda.examples.blog.dto.BaseUserEntryDTO;
 import com.inspiresoftware.lib.dto.geda.examples.blog.dto.UserDTO;
 import com.inspiresoftware.lib.dto.geda.examples.blog.dto.UserEntryDTO;
 import com.inspiresoftware.lib.dto.geda.examples.blog.service.UserDAO;
