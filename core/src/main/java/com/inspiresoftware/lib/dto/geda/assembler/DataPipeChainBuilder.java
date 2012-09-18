@@ -21,6 +21,8 @@ import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundExce
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 import java.beans.PropertyDescriptor;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -31,9 +33,9 @@ import java.beans.PropertyDescriptor;
  *
  */
 @SuppressWarnings("unchecked")
-final class DataPipeChainBuilder {
-	
-	private DataPipeChainBuilder() {
+final class DataPipeChainBuilder extends BasePipeBuilder {
+
+    private DataPipeChainBuilder() {
 		// prevent instantiation
 	}
 	
@@ -60,12 +62,29 @@ final class DataPipeChainBuilder {
 			final PropertyDescriptor[] entityPropertyDescriptors,
 			final PipeMetadata meta, final Pipe pipe) 
 		throws InspectionBindingNotFoundException, InspectionPropertyNotFoundException, UnableToCreateInstanceException, GeDARuntimeException {
+
+        final boolean isMapEntity = Map.class.isAssignableFrom(entityClass);
+        final boolean isListEntity = !isMapEntity && List.class.isAssignableFrom(entityClass);
+
+        final MethodSynthesizer entitySynthesizer;
+        final PropertyDescriptor entityFieldDesc;
+
+        if (isMapEntity || isListEntity) {
+            if (isMapEntity) {
+                entitySynthesizer = mapSynthesizer;
+            } else {
+                entitySynthesizer = listSynthesizer;
+            }
+            entityFieldDesc = PropertyInspector.getDtoPropertyDescriptorForField(
+                    dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);
+        } else {
+            entitySynthesizer = synthesizer;
+            entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
+				    dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
+        }
 		
-		final PropertyDescriptor entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
-				dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
-		
-		final DataReader entityFieldRead = synthesizer.synthesizeReader(entityFieldDesc);
-		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : synthesizer.synthesizeWriter(entityFieldDesc);
+		final DataReader entityFieldRead = entitySynthesizer.synthesizeReader(entityFieldDesc);
+		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : entitySynthesizer.synthesizeWriter(entityFieldDesc);
 		
 		return new DataPipeChain(entityFieldRead, entityFieldWrite, pipe, meta);
 		

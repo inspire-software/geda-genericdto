@@ -15,7 +15,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.BCELMethodSynthesizer;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.JavassitMethodSynthesizer;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.JavassistMethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.ReflectionMethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.SunJavaToolsMethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
@@ -58,7 +58,7 @@ public class MethodSynthesizerProxyTest {
 		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
 		proxy.configure("synthesizerImpl", "javassist");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
-		assertTrue(syn instanceof JavassitMethodSynthesizer);
+		assertTrue(syn instanceof JavassistMethodSynthesizer);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class MethodSynthesizerProxyTest {
 	public void testJavassistConfigConstructor() throws GeDAException {
 		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy("javassist");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
-		assertTrue(syn instanceof JavassitMethodSynthesizer);
+		assertTrue(syn instanceof JavassistMethodSynthesizer);
 	}
 	
 	/**
@@ -148,9 +148,9 @@ public class MethodSynthesizerProxyTest {
 	@Test
 	public void testClassnameConfig() throws GeDAException {
 		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
-		proxy.configure("synthesizerImpl", JavassitMethodSynthesizer.class.getCanonicalName());
+		proxy.configure("synthesizerImpl", JavassistMethodSynthesizer.class.getCanonicalName());
 		final MethodSynthesizer syn = proxy.getSynthesizer();
-		assertTrue(syn instanceof JavassitMethodSynthesizer);
+		assertTrue(syn instanceof JavassistMethodSynthesizer);
 	}
 	
 	/**
@@ -159,9 +159,9 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testClassnameConfigConstructor() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(JavassitMethodSynthesizer.class.getCanonicalName());
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(JavassistMethodSynthesizer.class.getCanonicalName());
 		final MethodSynthesizer syn = proxy.getSynthesizer();
-		assertTrue(syn instanceof JavassitMethodSynthesizer);
+		assertTrue(syn instanceof JavassistMethodSynthesizer);
 	}
 	
 	/**
@@ -214,7 +214,7 @@ public class MethodSynthesizerProxyTest {
 		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
 		proxy.configure("synthesizerImpl", new Integer(1));
 		final MethodSynthesizer syn = proxy.getSynthesizer();
-		assertTrue(syn instanceof JavassitMethodSynthesizer);
+		assertTrue(syn instanceof JavassistMethodSynthesizer);
 	}
 	
 	/**
@@ -225,7 +225,7 @@ public class MethodSynthesizerProxyTest {
 	public void testWrongConfigConstructorThrowsException() throws GeDAException {
 		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(new Integer(1));
 		final MethodSynthesizer syn = proxy.getSynthesizer();
-		assertTrue(syn instanceof JavassitMethodSynthesizer);
+		assertTrue(syn instanceof JavassistMethodSynthesizer);
 	}
 	
 }

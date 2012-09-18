@@ -41,14 +41,14 @@ public final class DTOAssembler {
 	public static final String SETTING_ASSEMBLER_CACHE_CLEANUP_CYCLE = 
 		"com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler.ASSEMBLER_CACHE_CLEANUP_CYCLE";
 	/**
-	 * int number that allows to define the number of JavassitMethodSynthesizer.READER_CACHE.put() calls after which cache cleanup is launched.
+	 * int number that allows to define the number of JavassistMethodSynthesizer.READER_CACHE.put() calls after which cache cleanup is launched.
 	 * Default setting for this is 100 (i.e. after 100 put's the clean up is launched).
 	 */
 	public static final String SETTING_DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE = 
 		"com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler.DYNAMIC_READER_CLASS_CACHE_CLEANUP_CYCLE";
 	
 	/**
-	 * int number that allows to define the number of JavassitMethodSynthesizer.WRITER_CACHE.put() calls after which cache cleanup is launched.
+	 * int number that allows to define the number of JavassistMethodSynthesizer.WRITER_CACHE.put() calls after which cache cleanup is launched.
 	 * Default setting for this is 100 (i.e. after 100 put's the clean up is launched).
 	 */
 	public static final String SETTING_DYNAMIC_WRITER_CLASS_CACHE_CLEANUP_CYCLE = 

@@ -29,16 +29,16 @@ import java.lang.reflect.Type;
  * @author DPavlov
  * @since 1.1.0
  */
-public class JavassitMethodSynthesizer extends AbstractPlainTextMethodSynthesizer implements MethodSynthesizer {
+public class JavassistMethodSynthesizer extends AbstractPlainTextMethodSynthesizer implements MethodSynthesizer {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(JavassitMethodSynthesizer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(JavassistMethodSynthesizer.class);
 	
 	private final ClassPool pool = new ClassPool(true);
 	
 	/**
 	 * Default constructor that adds GeDA path to pool for generating files.
 	 */
-	public JavassitMethodSynthesizer() {
+	public JavassistMethodSynthesizer() {
 		pool.appendClassPath(new LoaderClassPath(super.getClassLoader()));
 	}
 	

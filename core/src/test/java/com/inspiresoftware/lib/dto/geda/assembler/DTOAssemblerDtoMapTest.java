@@ -1149,6 +1149,4 @@ public class DTOAssemblerDtoMapTest {
 			}
 		}
 	}
-
-	
 }

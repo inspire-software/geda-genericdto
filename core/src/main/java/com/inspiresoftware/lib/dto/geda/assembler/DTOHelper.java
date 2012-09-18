@@ -14,8 +14,9 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
-import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -44,31 +45,18 @@ public final class DTOHelper {
 	 * @throws InspectionPropertyNotFoundException if field not found
 	 * @throws NullParametersNotAllowedException when #dto or #values is null
 	 * @throws SetFieldValueException when value cannot be set to a field
+     *
+     * @deprecated use DTOAssembler.newAssembler(dto.getClass(), HashMap.class);
 	 */
+    @Deprecated
 	public static void load(final Object dto, final Map<String, Object> values) 
 			throws InspectionScanningException, InspectionPropertyNotFoundException, NullParametersNotAllowedException, SetFieldValueException {
 		
 		if (dto != null && values != null && !values.isEmpty()) {
-			
-			final PropertyDescriptor[] descriptors = 
-				PropertyInspector.getPropertyDescriptorsForClass(dto.getClass());
-			
-			for (String fieldName : values.keySet()) {
-				
-				final Object value = values.get(fieldName);
-				final PropertyDescriptor descriptor = 
-					PropertyInspector.getDtoPropertyDescriptorForField(dto.getClass(), fieldName, descriptors);
-				
-				try {
-					if (value == null) {
-						descriptor.getWriteMethod().invoke(dto, NULL);
-					} else {
-						descriptor.getWriteMethod().invoke(dto, value);
-					}
-				} catch (Exception exp) {
-					throw new SetFieldValueException(dto.getClass().getCanonicalName(), fieldName, value);
-				}	
-			}			
+
+            final Assembler asm = DTOAssembler.newAssembler(dto.getClass(), values.getClass());
+            asm.assembleDto(dto, values, null, null);
+
 		} else {
 			throw new NullParametersNotAllowedException("Dto must not be null, Map must not be null or empty");
 		}
@@ -87,34 +75,33 @@ public final class DTOHelper {
 	 * @throws InspectionPropertyNotFoundException if field is not found on the dto
 	 * @throws SetFieldValueException if cannot set value to the dto
  	 * 
-	 * @ if field not found or cannot be accessed or cannot 
-	 *         be set with a provided value
+     * @deprecated use DTOAssembler.newAssembler(dto.getClass(), ArrayList.class);
 	 */
+    @Deprecated
 	public static void load(final Object dto, final Object ... fieldValuePairs) 
 			throws NullParametersNotAllowedException, InspectionScanningException, InspectionPropertyNotFoundException, SetFieldValueException {
 		
 		if (dto != null && fieldValuePairs != null && fieldValuePairs.length > 0 && (fieldValuePairs.length % 2 == 0)) {
-			
-			final PropertyDescriptor[] descriptors = 
-				PropertyInspector.getPropertyDescriptorsForClass(dto.getClass());
-			
+
+            final List<Object> entity = new ArrayList<Object>();
+            final Assembler asm = DTOAssembler.newAssembler(dto.getClass(), entity.getClass());
+            asm.assembleEntity(dto, entity, null, null);
+
 			for (int index = 0; index + 1 < fieldValuePairs.length; index += 2) {
-				
+
 				final String fieldName = (String) fieldValuePairs[index];
 				final Object value = fieldValuePairs[index + 1];
-				final PropertyDescriptor descriptor = 
-					PropertyInspector.getDtoPropertyDescriptorForField(dto.getClass(), fieldName, descriptors);
-				
-				try {
-					if (value == null) {
-						descriptor.getWriteMethod().invoke(dto, NULL);
-					} else {
-						descriptor.getWriteMethod().invoke(dto, value);
-					}
-				} catch (Exception exp) {
-					throw new SetFieldValueException(dto.getClass().getCanonicalName(), fieldName, value);
-				}	
-			}			
+
+                final int fieldNameIndex = entity.indexOf(fieldName);
+                if (fieldNameIndex != -1) {
+                    entity.set(fieldNameIndex + 1, value);
+                } else {
+                    throw new SetFieldValueException(dto.getClass().getCanonicalName(), fieldName, value);
+                }
+
+            }
+            asm.assembleDto(dto, entity, null, null);
+
 		} else {
 			throw new NullParametersNotAllowedException(
 					"Dto must not be null, Array must not be null or empty or not have enough parameters (length % 2)");
@@ -136,37 +123,25 @@ public final class DTOHelper {
 	public static Map<String, Object> unloadMap(final Object dto, final String ... fields) 
 			throws InspectionScanningException, InspectionPropertyNotFoundException, NullParametersNotAllowedException, GetFieldValueException {
 		if (dto != null) {
-			
-			final PropertyDescriptor[] descriptors = 
-				PropertyInspector.getPropertyDescriptorsForClass(dto.getClass());
-			
-			final String[] unloadFields;
-			if (fields != null && fields.length > 0) {
-				unloadFields = fields;
-			} else {
-				unloadFields = new String[descriptors.length];
-				for (int index = 0; index < descriptors.length; index++) {
-					unloadFields[index] = descriptors[index].getName();
-				}
-			}
-			
-			final Map<String, Object> values = new HashMap<String, Object>();
-			for (String fieldName : unloadFields) {
-				
-				final PropertyDescriptor descriptor = 
-					PropertyInspector.getDtoPropertyDescriptorForField(dto.getClass(), fieldName, descriptors);
-				
-				try {
-					
-					values.put(fieldName, descriptor.getReadMethod().invoke(dto));
-					
-				} catch (Exception exp) {
-					throw new GetFieldValueException(dto.getClass().getCanonicalName(), fieldName);
-				}
-				
-			}
-			return values;
-			
+
+            final Assembler asm = DTOAssembler.newAssembler(dto.getClass(), HashMap.class);
+            final Map<String, Object> allValues = new HashMap<String, Object>();
+            asm.assembleEntity(dto, allValues, null, null);
+
+            if (fields != null && fields.length > 0) {
+                final Map<String, Object> values = new HashMap<String, Object>();
+                for (final String field : fields) {
+                    if (allValues.containsKey(field)) {
+                        values.put(field, allValues.get(field));
+                    } else {
+                        throw new GetFieldValueException(dto.getClass().getCanonicalName(), field);
+                    }
+                }
+                return values;
+            }
+            allValues.put("class", dto.getClass());
+            return allValues;
+
 		} else {
 			throw new NullParametersNotAllowedException("Dto must not be null");
 		}
@@ -184,41 +159,39 @@ public final class DTOHelper {
 	 * @throws InspectionPropertyNotFoundException if field cannot be found on dto
 	 * @throws NullParametersNotAllowedException if dto is null
 	 * @throws GetFieldValueException if cannot get value from dto
+     *
+     * @deprecated use DTOAssembler.newAssembler(dto.getClass(), ArrayList.class);
 	 */
+    @Deprecated
 	public static Object[] unloadValues(final Object dto, final String ... fields) 
 		throws InspectionScanningException, InspectionPropertyNotFoundException, NullParametersNotAllowedException, GetFieldValueException {
 		
 		if (dto != null) {
-			
-			final PropertyDescriptor[] descriptors = 
-				PropertyInspector.getPropertyDescriptorsForClass(dto.getClass());
-			
-			final String[] unloadFields;
+
+            final List<Object> entity = new ArrayList<Object>();
+            final Assembler asm = DTOAssembler.newAssembler(dto.getClass(), entity.getClass());
+            asm.assembleEntity(dto, entity, null, null);
+
 			if (fields != null && fields.length > 0) {
-				unloadFields = fields;
-			} else {
-				unloadFields = new String[descriptors.length];
-				for (int index = 0; index < descriptors.length; index++) {
-					unloadFields[index] = descriptors[index].getName();
-				}
-			}
-			
-			final Object[] values = new Object[unloadFields.length];
-			for (int index = 0; index < unloadFields.length; index++) {
-				
-				final PropertyDescriptor descriptor = 
-					PropertyInspector.getDtoPropertyDescriptorForField(dto.getClass(), unloadFields[index], descriptors);
-				
-				try {
-					
-					values[index] = descriptor.getReadMethod().invoke(dto);
-					
-				} catch (Exception exp) {
-					throw new GetFieldValueException(dto.getClass().getCanonicalName(), unloadFields[index]);
-				}
-				
-			}
-			return values;
+                final List<Object> values = new ArrayList<Object>();
+                for (final String field : fields) {
+                    final int fieldNameIndex = entity.indexOf(field);
+                    if (fieldNameIndex != -1) {
+                        values.add(entity.get(fieldNameIndex + 1));
+                    } else {
+                        throw new GetFieldValueException(dto.getClass().getCanonicalName(), field);
+                    }
+
+                }
+                return values.toArray(new Object[values.size()]);
+            }
+
+            final List<Object> allValues = new ArrayList<Object>();
+            allValues.add(dto.getClass());
+            for (int i = 1; i < entity.size(); i += 2) {
+                allValues.add(entity.get(i));
+            }
+			return allValues.toArray(new Object[allValues.size()]);
 			
 		} else {
 			throw new NullParametersNotAllowedException("Dto must not be null");

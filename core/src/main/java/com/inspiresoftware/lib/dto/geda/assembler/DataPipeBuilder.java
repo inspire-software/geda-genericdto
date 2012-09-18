@@ -18,6 +18,8 @@ import com.inspiresoftware.lib.dto.geda.exception.*;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,13 +30,8 @@ import java.lang.reflect.Method;
  *
  */
 @SuppressWarnings("unchecked")
-final class DataPipeBuilder {
-	
-	/**
-	 * Assembles DataPipe.
-	 * @param dtoClass
-	 * @param entityClass
-	 */
+final class DataPipeBuilder extends BasePipeBuilder {
+
 	private DataPipeBuilder() {
 		// prevent instatiation
 	}
@@ -66,12 +63,27 @@ final class DataPipeBuilder {
 			final FieldPipeMetadata meta) 
 		throws InspectionPropertyNotFoundException, InspectionBindingNotFoundException, InspectionScanningException, 
 		       UnableToCreateInstanceException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException {
-		
+
+        final boolean isMapEntity = Map.class.isAssignableFrom(entityClass);
+        final boolean isListEntity = !isMapEntity && List.class.isAssignableFrom(entityClass);
+
 		final PropertyDescriptor dtoFieldDesc = PropertyInspector.getDtoPropertyDescriptorForField(
 				dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);
 
-		final PropertyDescriptor entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
+        final MethodSynthesizer entitySynthesizer;
+		final PropertyDescriptor entityFieldDesc;
+        if (isMapEntity || isListEntity) {
+            if (isMapEntity) {
+                entitySynthesizer = mapSynthesizer;
+            } else {
+                entitySynthesizer = listSynthesizer;
+            }
+            entityFieldDesc = dtoFieldDesc;
+        } else {
+            entitySynthesizer = synthesizer;
+            entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
 				dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
+        }
 		
 		final DataReader dtoParentReadMethod;
 		
@@ -94,8 +106,8 @@ final class DataPipeBuilder {
 				synthesizer.synthesizeReader(dtoFieldDesc),
 				synthesizer.synthesizeWriter(dtoFieldDesc),
 				dtoParentReadMethod,
-				synthesizer.synthesizeReader(entityFieldDesc),
-				meta.isReadOnly() ? null : synthesizer.synthesizeWriter(entityFieldDesc),
+                entitySynthesizer.synthesizeReader(entityFieldDesc),
+				meta.isReadOnly() ? null : entitySynthesizer.synthesizeWriter(entityFieldDesc),
 				meta
 		);
 	}
