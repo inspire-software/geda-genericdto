@@ -26,8 +26,15 @@ import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
 public class GeDABasicMapper implements Mapper {
 
     private final BeanFactory bf = new GeDABeanFactory();
-    private final Assembler asm = DTOAssembler.newAssembler(PersonDTO.class, Person.class);
+    private final Assembler asm;
 
+    public GeDABasicMapper() {
+        asm = DTOAssembler.newAssembler(PersonDTO.class, Person.class);
+    }
+
+    public GeDABasicMapper(final String synthesizer) {
+        this.asm = DTOAssembler.newCustomAssembler(PersonDTO.class, Person.class, synthesizer);
+    }
 
     public Object fromEntity(final Object entity) {
         final PersonDTO person = new PersonDTO();
