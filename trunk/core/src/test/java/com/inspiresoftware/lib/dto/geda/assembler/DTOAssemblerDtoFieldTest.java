@@ -24,9 +24,7 @@ import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer.Parameter
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -305,5 +303,256 @@ public class DTOAssemblerDtoFieldTest {
         assertEquals("desc", entity.getDesc());
 
     }
-	
+
+    /**
+     * Test that it is possible to load/unload map into/from DTO.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testLoadingIntoMap() throws GeDAException {
+
+        final TestDto14IfaceDescriptable dto = new TestDto14Class();
+
+        final Map<String, Object> entity = new HashMap<String, Object>();
+        entity.put("name", "name");
+        entity.put("desc", "desc");
+
+        final Assembler assembler =
+                DTOAssembler.newCustomAssembler(TestDto14Class.class, entity.getClass(), synthesizer);
+
+        assembler.assembleDto(dto, entity, null, null);
+
+        assertEquals("name", dto.getName());
+        assertEquals("desc", dto.getDesc());
+
+        dto.setName("Name DTO");
+        dto.setDesc("Desc DTO");
+
+        assembler.assembleEntity(dto, entity, null, null);
+
+        assertEquals("Name DTO", entity.get("name"));
+        assertEquals("Desc DTO", entity.get("desc"));
+
+    }
+
+    /**
+     * Test that it is possible to load/unload map into/from DTO.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testLoadingIntoEmptyMap() throws GeDAException {
+
+        final TestDto14IfaceDescriptable dto = new TestDto14Class();
+
+        final Map<String, Object> entity = new HashMap<String, Object>();
+
+        final Assembler assembler =
+                DTOAssembler.newCustomAssembler(TestDto14Class.class, entity.getClass(), synthesizer);
+
+        assembler.assembleDto(dto, entity, null, null);
+
+        assertNull(dto.getName());
+        assertNull(dto.getDesc());
+
+        dto.setName("Name DTO");
+        dto.setDesc("Desc DTO");
+
+        assembler.assembleEntity(dto, entity, null, null);
+
+        assertEquals("Name DTO", entity.get("name"));
+        assertEquals("Desc DTO", entity.get("desc"));
+
+    }
+
+    /**
+     * Test that it is possible to load/unload list into/from DTO.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testLoadingIntoList() throws GeDAException {
+
+        final TestDto14IfaceDescriptable dto = new TestDto14Class();
+
+        final List<Object> entity = new ArrayList<Object>();
+        entity.add("name");
+        entity.add("name");
+        entity.add("desc");
+        entity.add("desc");
+
+        final Assembler assembler =
+                DTOAssembler.newCustomAssembler(TestDto14Class.class, entity.getClass(), synthesizer);
+
+        assembler.assembleDto(dto, entity, null, null);
+
+        assertEquals("name", dto.getName());
+        assertEquals("desc", dto.getDesc());
+
+        dto.setName("Name DTO");
+        dto.setDesc("Desc DTO");
+
+        assembler.assembleEntity(dto, entity, null, null);
+
+        assertEquals("Name DTO", entity.get(1));
+        assertEquals("Desc DTO", entity.get(3));
+
+    }
+
+    /**
+     * Test that it is possible to load/unload list into/from DTO.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testLoadingIntoEmptyList() throws GeDAException {
+
+        final TestDto14IfaceDescriptable dto = new TestDto14Class();
+
+        final List<Object> entity = new ArrayList<Object>();
+
+        final Assembler assembler =
+                DTOAssembler.newCustomAssembler(TestDto14Class.class, entity.getClass(), synthesizer);
+
+        assembler.assembleDto(dto, entity, null, null);
+
+        assertNull(dto.getName());
+        assertNull(dto.getDesc());
+
+        dto.setName("Name DTO");
+        dto.setDesc("Desc DTO");
+
+        assembler.assembleEntity(dto, entity, null, null);
+
+        assertEquals("Name DTO", entity.get(1));
+        assertEquals("Desc DTO", entity.get(3));
+
+    }
+
+    /**
+     * Test that it is possible to load/unload map into/from DTO.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testLoadingIntoMapReadOnly() throws GeDAException {
+
+        final TestDto15Class dto = new TestDto15Class();
+
+        final Map<String, Object> entity = new HashMap<String, Object>();
+        entity.put("name", "name");
+        entity.put("desc", "desc");
+
+        final Assembler assembler =
+                DTOAssembler.newCustomAssembler(TestDto15Class.class, entity.getClass(), synthesizer);
+
+        assembler.assembleDto(dto, entity, null, null);
+
+        assertEquals("name", dto.getName());
+        assertEquals("desc", dto.getDesc());
+
+        dto.setName("Name DTO");
+        dto.setDesc("Desc DTO");
+
+        assembler.assembleEntity(dto, entity, null, null);
+
+        assertEquals("name", entity.get("name"));
+        assertEquals("desc", entity.get("desc"));
+
+    }
+
+    /**
+     * Test that it is possible to load/unload map into/from DTO.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testLoadingIntoEmptyMapReadOnly() throws GeDAException {
+
+        final TestDto15Class dto = new TestDto15Class();
+
+        final Map<String, Object> entity = new HashMap<String, Object>();
+
+        final Assembler assembler =
+                DTOAssembler.newCustomAssembler(TestDto15Class.class, entity.getClass(), synthesizer);
+
+        assembler.assembleDto(dto, entity, null, null);
+
+        assertNull(dto.getName());
+        assertNull(dto.getDesc());
+
+        dto.setName("Name DTO");
+        dto.setDesc("Desc DTO");
+
+        assembler.assembleEntity(dto, entity, null, null);
+
+        assertTrue(entity.isEmpty());
+
+    }
+
+
+    /**
+     * Test that it is possible to load/unload list into/from DTO.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testLoadingIntoListReadOnly() throws GeDAException {
+
+        final TestDto15Class dto = new TestDto15Class();
+
+        final List<Object> entity = new ArrayList<Object>();
+        entity.add("name");
+        entity.add("name");
+        entity.add("desc");
+        entity.add("desc");
+
+        final Assembler assembler =
+                DTOAssembler.newCustomAssembler(TestDto15Class.class, entity.getClass(), synthesizer);
+
+        assembler.assembleDto(dto, entity, null, null);
+
+        assertEquals("name", dto.getName());
+        assertEquals("desc", dto.getDesc());
+
+        dto.setName("Name DTO");
+        dto.setDesc("Desc DTO");
+
+        assembler.assembleEntity(dto, entity, null, null);
+
+        assertEquals("name", entity.get(1));
+        assertEquals("desc", entity.get(3));
+
+    }
+
+    /**
+     * Test that it is possible to load/unload list into/from DTO.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testLoadingIntoEmptyListReadOnly() throws GeDAException {
+
+        final TestDto15Class dto = new TestDto15Class();
+
+        final List<Object> entity = new ArrayList<Object>();
+
+        final Assembler assembler =
+                DTOAssembler.newCustomAssembler(TestDto15Class.class, entity.getClass(), synthesizer);
+
+        assembler.assembleDto(dto, entity, null, null);
+
+        assertNull("name", dto.getName());
+        assertNull("desc", dto.getDesc());
+
+        dto.setName("Name DTO");
+        dto.setDesc("Desc DTO");
+
+        assembler.assembleEntity(dto, entity, null, null);
+
+        assertTrue(entity.isEmpty());
+
+    }
+
 }

@@ -26,13 +26,8 @@ import java.beans.PropertyDescriptor;
  *
  */
 @SuppressWarnings("unchecked")
-final class DataVirtualPipeBuilder {
+final class DataVirtualPipeBuilder extends BasePipeBuilder {
 	
-	/**
-	 * Assembles DataPipe.
-	 * @param dtoClass
-	 * @param entityClass
-	 */
 	private DataVirtualPipeBuilder() {
 		// prevent instatiation
 	}

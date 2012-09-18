@@ -126,7 +126,6 @@ public class DTOHelperTest {
 		assertNotNull(values);
 		assertEquals(TestDto2Class.class, values.get("class"));
 		assertEquals(true, values.get("myBoolean"));
-		assertEquals(true, values.get("myBoolean"));
 		assertEquals(new Double(2), values.get("myDouble"));
 		assertEquals(Long.valueOf(L_3), values.get("myLong"));
 		assertEquals("test", values.get("myString"));
@@ -167,11 +166,11 @@ public class DTOHelperTest {
 		assertNotNull(values);
 		assertEquals(I_5, values.length);
 		assertEquals(TestDto2Class.class, values[0]);
-		assertEquals(true, values[1]);
-		assertEquals(new Double(2), values[2]);
-		assertEquals(Long.valueOf(L_3), values[I_3]);
-		assertEquals("test", values[I_4]);
-		
+        assertEquals(Long.valueOf(L_3), values[1]);
+        assertEquals("test", values[2]);
+        assertEquals(new Double(2), values[3]);
+        assertEquals(true, values[4]);
+
 		values = DTOHelper.unloadValues(dto, "myBoolean", "myLong");
 		
 		assertNotNull(values);

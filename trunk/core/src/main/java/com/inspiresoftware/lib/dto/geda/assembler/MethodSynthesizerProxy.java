@@ -45,7 +45,7 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 	private static final Map<String, String> FACTORY = new HashMap<String, String>();
 	static {
 		FACTORY.put("javassist", 
-				"com.inspiresoftware.lib.dto.geda.assembler.extension.impl.JavassitMethodSynthesizer");
+				"com.inspiresoftware.lib.dto.geda.assembler.extension.impl.JavassistMethodSynthesizer");
 		FACTORY.put("suntools", 
 				"com.inspiresoftware.lib.dto.geda.assembler.extension.impl.SunJavaToolsMethodSynthesizer");
 		FACTORY.put("reflection", 

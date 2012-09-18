@@ -18,6 +18,8 @@ import com.inspiresoftware.lib.dto.geda.assembler.meta.MapPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
 import java.beans.PropertyDescriptor;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,7 +30,7 @@ import java.beans.PropertyDescriptor;
  *
  */
 @SuppressWarnings("unchecked")
-final class MapPipeBuilder {
+final class MapPipeBuilder extends BasePipeBuilder {
 	
 	private MapPipeBuilder() {
 		// prevent instatiation
@@ -59,19 +61,36 @@ final class MapPipeBuilder {
     		final MapPipeMetadata meta) 
     	throws InspectionBindingNotFoundException, InspectionPropertyNotFoundException, UnableToCreateInstanceException, InspectionScanningException, 
     		   AnnotationValidatingBindingException, GeDARuntimeException  {
-    	
-        final PropertyDescriptor entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
-        		dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
-
-		final DataReader entityFieldRead = synthesizer.synthesizeReader(entityFieldDesc);
-		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : synthesizer.synthesizeWriter(entityFieldDesc);
 
         final PropertyDescriptor dtoFieldDesc = PropertyInspector.getDtoPropertyDescriptorForField(
-        		dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);
+                dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);
 
         final DataReader dtoFieldRead = synthesizer.synthesizeReader(dtoFieldDesc);
-		final DataWriter dtoFieldWrite = synthesizer.synthesizeWriter(dtoFieldDesc);
-		
+        final DataWriter dtoFieldWrite = synthesizer.synthesizeWriter(dtoFieldDesc);
+
+
+        final boolean isMapEntity = Map.class.isAssignableFrom(entityClass);
+        final boolean isListEntity = !isMapEntity && List.class.isAssignableFrom(entityClass);
+
+        final MethodSynthesizer entitySynthesizer;
+        final PropertyDescriptor entityFieldDesc;
+
+        if (isMapEntity || isListEntity) {
+            if (isMapEntity) {
+                entitySynthesizer = mapSynthesizer;
+            } else {
+                entitySynthesizer = listSynthesizer;
+            }
+            entityFieldDesc = dtoFieldDesc;
+        } else {
+            entitySynthesizer = synthesizer;
+            entityFieldDesc = PropertyInspector.getEntityPropertyDescriptorForField(
+        		dtoClass, entityClass, meta.getDtoFieldName(), meta.getEntityFieldName(), entityPropertyDescriptors);
+        }
+
+		final DataReader entityFieldRead = entitySynthesizer.synthesizeReader(entityFieldDesc);
+		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : entitySynthesizer.synthesizeWriter(entityFieldDesc);
+
 		final DataReader entityItemKeyRead;
 		if (meta.getMapKeyForCollection() != null && meta.getMapKeyForCollection().length() > 0) {
 		
