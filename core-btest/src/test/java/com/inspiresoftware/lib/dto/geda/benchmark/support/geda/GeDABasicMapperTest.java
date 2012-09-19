@@ -13,12 +13,14 @@ import com.inspiresoftware.lib.dto.geda.benchmark.Mapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Person;
 import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.AbstractMapperTest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * .
+ * Ignored tests are just loop versions of regular tests so that we have some
+ * time to exhibit what is going on using profiling tools.
  * <p/>
  * User: denispavlov
  * Date: Sep 17, 2012
@@ -37,6 +39,61 @@ public class GeDABasicMapperTest extends AbstractMapperTest {
         assertEquals(entity, mapper.fromDto(dto));
         assertEquals(dto, mapper.fromEntity(entity));
 
+    }
+
+    private static final int PERFORMANCE_TEST_CYCLES = 100000000;
+
+    @Test
+    @Ignore
+    public void testMapperPerformance() throws Exception {
+
+        for (int i = 0; i < PERFORMANCE_TEST_CYCLES; i++) {
+            testMapper();
+        }
+    }
+
+    @Test
+    public void testCollectionsMapper() throws Exception {
+
+        final Person entity = getEntityWithHistory();
+        final PersonDTO dto = getDtoWithHistory();
+
+        final Mapper mapper = new GeDABasicMapper();
+
+        assertEquals(entity, mapper.fromDto(dto));
+        assertEquals(dto, mapper.fromEntity(entity));
+
+    }
+
+    @Test
+    @Ignore
+    public void testCollectionsMapperPerformance() throws Exception {
+
+        for (int i = 0; i < PERFORMANCE_TEST_CYCLES; i++) {
+            testCollectionsMapper();
+        }
+    }
+
+    @Test
+    public void testMapMapper() throws Exception {
+
+        final Person entity = getEntityWithHistory();
+        final PersonDTO dto = getDtoWithHistoryByCity();
+
+        final Mapper mapper = new GeDABasicMapper();
+
+        assertEquals(entity, mapper.fromDto(dto));
+        assertEquals(dto, mapper.fromEntity(entity));
+
+    }
+
+    @Test
+    @Ignore
+    public void testMapMapperPerformance() throws Exception {
+
+        for (int i = 0; i < PERFORMANCE_TEST_CYCLES; i++) {
+            testMapMapper();
+        }
     }
 
 }
