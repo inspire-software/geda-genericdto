@@ -352,6 +352,11 @@ public class DTOAssemblerMappingTest {
 		entity.getWrapper().setName("Name");
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto4ComplexSubClass".equals(entityBeanKey)) {
                     return new TestDto4ComplexSubClass();
@@ -386,6 +391,11 @@ public class DTOAssemblerMappingTest {
 		final TestEntity4Class entity = new TestEntity4Class();
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto4ComplexSubClass".equals(entityBeanKey)) {
                     return new TestDto4ComplexSubClass();
@@ -644,7 +654,11 @@ public class DTOAssemblerMappingTest {
 		
 		assembler.assembleEntity(dto, entity, null, new BeanFactory() {
 
-			public Object get(final String entityBeanKey) {
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				return new TestEntity18aClass<String>();
 			}
 			
@@ -668,7 +682,11 @@ public class DTOAssemblerMappingTest {
 		
 		assembler.assembleDto(dto, entity, null, new BeanFactory() {
 
-			public Object get(final String entityBeanKey) {
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				return new TestDto18aClass<String>();
 			}
 			

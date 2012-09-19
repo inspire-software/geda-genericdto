@@ -91,21 +91,9 @@ final class MapPipeBuilder extends BasePipeBuilder {
 		final DataReader entityFieldRead = entitySynthesizer.synthesizeReader(entityFieldDesc);
 		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : entitySynthesizer.synthesizeWriter(entityFieldDesc);
 
-		final DataReader entityItemKeyRead;
-		if (meta.getMapKeyForCollection() != null && meta.getMapKeyForCollection().length() > 0) {
-		
-			final PropertyDescriptor[] itemDesc = PropertyInspector.getPropertyDescriptorsForClass(meta.getReturnType());
-			final PropertyDescriptor itemKeyDesc = PropertyInspector.getEntityPropertyDescriptorForField(
-	        		dtoClass, meta.getReturnType(), meta.getDtoFieldName(), meta.getMapKeyForCollection(), itemDesc);
-			entityItemKeyRead = synthesizer.synthesizeReader(itemKeyDesc);
-		} else {
-			entityItemKeyRead = null;
-		}
-
         return new MapPipe(synthesizer,
                 dtoFieldRead, dtoFieldWrite,
                 entityFieldRead, entityFieldWrite,
-                entityItemKeyRead,
                 meta);
     }
 	

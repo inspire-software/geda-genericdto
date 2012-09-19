@@ -25,6 +25,20 @@ import com.inspiresoftware.lib.dto.geda.benchmark.dto.AddressDTO;
 public class GeDABeanFactory implements BeanFactory {
 
     /** {@inheritDoc} */
+    public Class getClazz(final String entityBeanKey) {
+        if ("addressDto".equals(entityBeanKey)) {
+            return AddressDTO.class;
+        } else if ("countryEntity".equals(entityBeanKey)) {
+            return Country.class;
+        } else if ("nameEntity".equals(entityBeanKey)) {
+            return Name.class;
+        } else if ("addressEntity".equals(entityBeanKey)) {
+            return Address.class;
+        }
+        return null;
+    }
+
+    /** {@inheritDoc} */
     public Object get(final String entityBeanKey) {
         if ("addressDto".equals(entityBeanKey)) {
             return new AddressDTO();

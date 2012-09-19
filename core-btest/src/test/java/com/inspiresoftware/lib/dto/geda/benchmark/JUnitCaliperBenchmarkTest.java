@@ -13,13 +13,11 @@ import com.google.caliper.Param;
 import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
 import com.inspiresoftware.lib.dto.geda.benchmark.data.DataProvider;
-import com.inspiresoftware.lib.dto.geda.benchmark.domain.Person;
-import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.dozer.DozerBasicMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.geda.GeDABasicMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.manual.ManualBasicMapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.modelmapper.ModelMapperMapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaMapper;
+import com.inspiresoftware.lib.dto.geda.benchmark.support.modelmapper.ModelMapperBasicMapper;
+import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaBasicMapper;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -38,8 +36,8 @@ public class JUnitCaliperBenchmarkTest extends SimpleBenchmark {
 
         JAVA_MANUAL(new ManualBasicMapper()),
         GEDA(new GeDABasicMapper()),
-        ORIKA(new OrikaMapper()),
-        MODELMAPPER(new ModelMapperMapper()),
+        ORIKA(new OrikaBasicMapper()),
+        MODELMAPPER(new ModelMapperBasicMapper()),
         DOZER(new DozerBasicMapper());
 
         private Mapper mapper;
@@ -49,28 +47,54 @@ public class JUnitCaliperBenchmarkTest extends SimpleBenchmark {
         }
     }
 
+
+    public enum Mode {
+
+        BASIC(
+                DataProvider.providePersonDTO(false, false),
+                DataProvider.providePersonEntity(false)
+        ),
+        COLL(
+                DataProvider.providePersonDTO(true, false),
+                DataProvider.providePersonEntity(true)
+        ),
+        MAP(
+                DataProvider.providePersonDTO(true, true),
+                DataProvider.providePersonEntity(true)
+        );
+
+        private Object dto;
+        private Object entity;
+
+        private Mode(final Object dto, final Object entity) {
+            this.dto = dto;
+            this.entity = entity;
+        }
+    }
+
     @Param
     private Lib lib;
     @Param({ "1", "100", "10000", "25000" })
     private int length;
+    @Param
+    private Mode mode;
 
-    private Person personLoaded;
-    private PersonDTO personDTOLoaded;
+    private Object dto;
+    private Object entity;
 
     private Mapper mapper;
 
     @Override
     protected void setUp() throws Exception {
-
-        personLoaded = DataProvider.providePersonEntity(false);
-        personDTOLoaded = DataProvider.providePersonDTO(false, false);
+        dto = mode.dto;
+        entity = mode.entity;
         mapper = lib.mapper;
     }
 
     public void timeFromDTOToEntity(int reps) {
         for (int i = 0; i < reps; i++) {
             for (int ii = 0; ii < length; ii++) {
-                mapper.fromDto(personDTOLoaded);
+                mapper.fromDto(dto);
             }
         }
     }
@@ -78,7 +102,7 @@ public class JUnitCaliperBenchmarkTest extends SimpleBenchmark {
     public void timeFromEntityToDTO(int reps) {
         for (int i = 0; i < reps; i++) {
             for (int ii = 0; ii < length; ii++) {
-                mapper.fromEntity(personLoaded);
+                mapper.fromEntity(entity);
             }
         }
     }

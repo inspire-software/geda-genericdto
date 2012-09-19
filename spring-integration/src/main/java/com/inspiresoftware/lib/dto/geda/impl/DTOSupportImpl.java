@@ -102,11 +102,10 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
         if (dtoFilter == null) {
             dtoClassFilter = dto.getClass();
         } else {
-            final Object filterProto = this.beanFactory.get(dtoFilter);
-            if (filterProto == null) {
+            dtoClassFilter = this.beanFactory.getClazz(dtoFilter);
+            if (dtoClassFilter == null) {
                 throw new IllegalArgumentException("DTO factory has no class specified for key: " + dtoFilter);
             }
-            dtoClassFilter = filterProto.getClass();
         }
         try {
             if (this.onDtoAssembly != null) {
@@ -151,17 +150,15 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
         if (!CollectionUtils.isEmpty(entities)) {
             final Class dtoClassFilter;
             if (dtoFilter == null) {
-                final Object dtoProto = this.beanFactory.get(keyDto);
-                if (dtoProto == null) {
+                dtoClassFilter = this.beanFactory.getClazz(keyDto);
+                if (dtoClassFilter == null) {
                     throw new IllegalArgumentException("DTO factory has no class specified for key: " + keyDto);
                 }
-                dtoClassFilter = dtoProto.getClass();
             } else {
-                final Object filterProto = this.beanFactory.get(dtoFilter);
-                if (filterProto == null) {
+                dtoClassFilter = this.beanFactory.getClazz(dtoFilter);
+                if (dtoClassFilter == null) {
                     throw new IllegalArgumentException("DTO factory has no class specified for key: " + dtoFilter);
                 }
-                dtoClassFilter = filterProto.getClass();
             }
             final Class entityClass = entities.iterator().next().getClass();
 
@@ -225,11 +222,10 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
         if (dtoFilter == null) {
             dtoClassFilter = dto.getClass();
         } else {
-            final Object filterProto = this.beanFactory.get(dtoFilter);
-            if (filterProto == null) {
+            dtoClassFilter = this.beanFactory.getClazz(dtoFilter);
+            if (dtoClassFilter == null) {
                 throw new IllegalArgumentException("DTO factory has no class specified for key: " + dtoFilter);
             }
-            dtoClassFilter = filterProto.getClass();
         }
 
         try {
@@ -269,17 +265,15 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
             if (dtoFilter == null) {
                 dtoClassFilter = dtos.iterator().next().getClass();
             } else {
-                final Object filterProto = this.beanFactory.get(dtoFilter);
-                if (filterProto == null) {
+                dtoClassFilter = this.beanFactory.getClazz(dtoFilter);
+                if (dtoClassFilter == null) {
                     throw new IllegalArgumentException("DTO factory has no class specified for key: " + dtoFilter);
                 }
-                dtoClassFilter = filterProto.getClass();
             }
-            final Object entityProto = this.beanFactory.get(entityKey);
-            if (entityProto == null) {
+            final Class entityClass =  this.beanFactory.getClazz(entityKey);
+            if (entityClass == null) {
                 throw new IllegalArgumentException("DTO factory has no class specified for key: " + entityKey);
             }
-            final Class entityClass = entityProto.getClass();
 
             final Assembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
             for (final Object dto : dtos) {

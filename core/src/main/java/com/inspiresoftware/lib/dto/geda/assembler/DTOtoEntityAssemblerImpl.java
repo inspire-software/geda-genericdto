@@ -39,7 +39,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 	private final Class entityClass;
 	private final MethodSynthesizer synthesizer;
 
-    private final LinkedList<Pipe> pipes = new LinkedList<Pipe>();
+    private Pipe[] pipes;
 
 	DTOtoEntityAssemblerImpl(final Class dto, final Class entity, final MethodSynthesizer synthesizer)
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
@@ -58,9 +58,10 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 		this.synthesizer = synthesizer;
 
 		Class dtoMap = dto;
-		while (dtoMap != null) { // when we reach Object.class this should be null
+        final LinkedList pipes = new LinkedList();
+        while (dtoMap != null) { // when we reach Object.class this should be null
 
-			mapRelationMapping(dtoMap, entity, strict);
+			mapRelationMapping(dtoMap, entity, strict, pipes);
 			Object supType = dtoMap.getGenericSuperclass();
 			if (supType instanceof ParameterizedType) {
 				dtoMap = (Class) ((ParameterizedType) supType).getRawType();
@@ -69,10 +70,11 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 			}
 
 		}
+        this.pipes = (Pipe[]) pipes.toArray(new Pipe[pipes.size()]);
 
-	}
+    }
 
-	private void mapRelationMapping(final Class dto, final Class entity, final boolean strict)
+	private void mapRelationMapping(final Class dto, final Class entity, final boolean strict, final List<Pipe> pipes)
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
 		       GeDARuntimeException, AnnotationDuplicateBindingException {
@@ -99,7 +101,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
                     throw new AnnotationDuplicateBindingException(dtoClass.getCanonicalName(), binding);
                 }
                 bindings.add(binding);
-                pipes.addLast(pipe);
+                pipes.add(pipe);
             } catch (InspectionBindingNotFoundException noField) {
                 if (strict) { // only throw exception if we are in strict mode
                     throw noField;

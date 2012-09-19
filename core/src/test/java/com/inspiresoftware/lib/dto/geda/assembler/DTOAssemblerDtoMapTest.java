@@ -85,8 +85,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -115,8 +122,17 @@ public class DTOAssemblerDtoMapTest {
 		dMap.getItems().remove("itm1"); // first
 		
 		assembler.assembleEntity(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return TestDto12CollectionIterface.class;
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("nestedEntity".equals(entityBeanKey)) {
 					return new TestDto12CollectionClass();
 				} else if ("entityItem".equals(entityBeanKey)) {
@@ -160,8 +176,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eMap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eMap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -190,8 +213,15 @@ public class DTOAssemblerDtoMapTest {
 		dMap.getItems().remove("itm1"); // first
 		
 		assembler.assembleEntity(dMap, eMap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("entityItem".equals(entityBeanKey)) {
 					return new TestEntity12CollectionItemClass();
 				}
@@ -239,7 +269,14 @@ public class DTOAssemblerDtoMapTest {
 		
 		assembler.assembleDto(dMap, eMap, null, new BeanFactory() {
 
-			public Object get(final String entityBeanKey) {
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -274,8 +311,15 @@ public class DTOAssemblerDtoMapTest {
 		dMap.getItems().remove(dItem1); // first
 
 		assembler.assembleEntity(dMap, eMap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("entityItem".equals(entityBeanKey)) {
 					return new TestEntity12CollectionItemClass();
 				}
@@ -325,8 +369,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -345,7 +396,7 @@ public class DTOAssemblerDtoMapTest {
 		assertNotNull(eWrap.getCollectionWrapper().getItems());
 		assertEquals(0, eWrap.getCollectionWrapper().getItems().size());
 	}
-	
+
 	/**
 	 * Test collection of nested objects.
 	 * 
@@ -369,7 +420,14 @@ public class DTOAssemblerDtoMapTest {
 		
 		assembler.assembleDto(dMap, eMap, null, new BeanFactory() {
 
-			public Object get(final String entityBeanKey) {
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -466,8 +524,17 @@ public class DTOAssemblerDtoMapTest {
 		dMap.getItems().put("itm3", dto3);
 		
 		assembler.assembleEntity(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return TestEntity12CollectionInterface.class;
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("nestedEntity".equals(entityBeanKey)) {
 					return new TestEntity12CollectionClass();
 				} else if ("entityItem".equals(entityBeanKey)) {
@@ -520,6 +587,14 @@ public class DTOAssemblerDtoMapTest {
                 TestDto17Class.class, TestEntity16Class.class, synthesizer);
 
         assembler.assembleDto(dtos, entities, null, new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("TestDto15Class".equals(entityBeanKey)) {
+                    return TestDto15Class.class;
+                }
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("TestDto15Class".equals(entityBeanKey)) {
                     return new TestDto15Class();
@@ -577,8 +652,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -607,8 +689,17 @@ public class DTOAssemblerDtoMapTest {
 		dMap.getItems().remove("itm1"); // first
 		
 		assembler.assembleEntity(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return TestDto12CollectionClass.class;
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("nestedEntity".equals(entityBeanKey)) {
 					return new TestDto12CollectionClass();
 				} else if ("entityItem".equals(entityBeanKey)) {
@@ -646,8 +737,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -679,8 +777,17 @@ public class DTOAssemblerDtoMapTest {
 		converters.put("Test12KeyMapToEntityMatcher.class", new Object());
 		
 		assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return TestDto12CollectionClass.class;
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("nestedEntity".equals(entityBeanKey)) {
 					return new TestDto12CollectionClass();
 				} else if ("entityItem".equals(entityBeanKey)) {
@@ -718,8 +825,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -751,8 +865,17 @@ public class DTOAssemblerDtoMapTest {
 		converters.put("Test12KeyMapToEntityMatcher.class", new Test12KeyMapToEntityMatcher());
 		
 		assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return TestDto12CollectionClass.class;
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("nestedEntity".equals(entityBeanKey)) {
 					return new TestDto12CollectionClass();
 				} else if ("entityItem".equals(entityBeanKey)) {
@@ -827,8 +950,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -863,8 +993,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				} else if ("dtoMap".equals(entityBeanKey)) {
@@ -898,8 +1035,17 @@ public class DTOAssemblerDtoMapTest {
 		converters.put("Test12KeyMapToEntityMatcher.class", new Test12KeyMapToEntityMatcher());
 		
 		assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return TestDto12CollectionClass.class;
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("nestedEntity".equals(entityBeanKey)) {
 					return new TestDto12CollectionClass();
 				} else if ("entityItem".equals(entityBeanKey)) {
@@ -946,8 +1092,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				} else if ("dtoMap".equals(entityBeanKey)) {
@@ -1011,8 +1164,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				} else if ("dtoMap".equals(entityBeanKey)) {
@@ -1048,8 +1208,17 @@ public class DTOAssemblerDtoMapTest {
 		eWrap.getCollectionWrapper().setItems(null);
 		
 		assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return TestDto12CollectionClass.class;
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("nestedEntity".equals(entityBeanKey)) {
 					return new TestDto12CollectionClass();
 				} else if ("entityItem".equals(entityBeanKey)) {
@@ -1086,8 +1255,15 @@ public class DTOAssemblerDtoMapTest {
 		final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
 		
 		assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				} else if ("dtoMap".equals(entityBeanKey)) {
@@ -1123,8 +1299,17 @@ public class DTOAssemblerDtoMapTest {
 		eWrap.getCollectionWrapper().setItems(null);
 		
 		assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return TestDto12CollectionClass.class;
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("nestedEntity".equals(entityBeanKey)) {
 					return new TestDto12CollectionClass();
 				} else if ("entityItem".equals(entityBeanKey)) {
@@ -1149,4 +1334,212 @@ public class DTOAssemblerDtoMapTest {
 			}
 		}
 	}
+
+
+    /**
+     * Test that DTO map correctly maps to entity collection.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testMapToCollectionMappingWithDtoMapKeyWithGenericTypeIoC() throws GeDAException {
+        final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+        eItem1.setName("itm1");
+        final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+        eItem2.setName("itm2");
+
+        final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+        eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+        eColl.getItems().add(eItem1);
+        eColl.getItems().add(eItem2);
+
+        final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+        eWrap.setCollectionWrapper(eColl);
+
+        final TestDto12MapIterface dMap = new TestDto12cMapToCollectionClass();
+
+        final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
+
+        assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                } else if ("TestEntity12CollectionItemInterface".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return new TestDto12CollectionItemClass();
+                } else if ("dtoMap".equals(entityBeanKey)) {
+                    return new HashMap<Object, Object>();
+                }
+                return null;
+            }
+
+        });
+
+        assertNotNull(dMap.getItems());
+        assertEquals(2, dMap.getItems().size());
+        final Set<String> keys = dMap.getItems().keySet();
+        for (String key : keys) {
+            if ("itm1".equals(key)) {
+                assertEquals("itm1", dMap.getItems().get(key).getName());
+            } else if ("itm2".equals(key)) {
+                assertEquals("itm2", dMap.getItems().get(key).getName());
+            } else {
+                fail("Unknown key");
+            }
+        }
+
+        final TestDto12CollectionItemClass dto3 = new TestDto12CollectionItemClass();
+        dto3.setName("itm3");
+        dMap.getItems().put("itm3", dto3);
+
+        dMap.getItems().remove("itm1"); // first
+
+        final Map<String, Object> converters = new HashMap<String, Object>();
+        converters.put("Test12KeyMapToEntityMatcher.class", new Test12KeyMapToEntityMatcher());
+
+        assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return TestDto12CollectionClass.class;
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                } else if ("TestEntity12CollectionItemInterface".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return new TestDto12CollectionClass();
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return new TestEntity12CollectionItemClass();
+                }
+                return null;
+            }
+
+        });
+
+        assertNotNull(eWrap.getCollectionWrapper().getItems());
+        assertEquals(2, eWrap.getCollectionWrapper().getItems().size());
+        Iterator<TestEntity12CollectionItemInterface> eiter;
+
+        eiter = eWrap.getCollectionWrapper().getItems().iterator();
+        final TestEntity12CollectionItemInterface itm1 = eiter.next();
+        final TestEntity12CollectionItemInterface itm2 = eiter.next();
+        assertEquals("itm2", itm1.getName());
+        assertEquals("itm3", itm2.getName());
+    }
+
+    /**
+     * Test that DTO map correctly maps to entity collection.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testMapToCollectionMappingWithDtoMapKeyWithGenericTypeAuto() throws GeDAException {
+        final TestEntity12CollectionItemInterface eItem1 = new TestEntity12CollectionItemClass();
+        eItem1.setName("itm1");
+        final TestEntity12CollectionItemInterface eItem2 = new TestEntity12CollectionItemClass();
+        eItem2.setName("itm2");
+
+        final TestEntity12CollectionInterface eColl = new TestEntity12CollectionClass();
+        eColl.setItems(new ArrayList<TestEntity12CollectionItemInterface>());
+        eColl.getItems().add(eItem1);
+        eColl.getItems().add(eItem2);
+
+        final TestEntity12WrapCollectionInterface eWrap = new TestEntity12WrapCollectionClass();
+        eWrap.setCollectionWrapper(eColl);
+
+        final TestDto12MapIterface dMap = new TestDto12dMapToCollectionClass();
+
+        final Assembler assembler = DTOAssembler.newCustomAssembler(dMap.getClass(), eWrap.getClass(), synthesizer);
+
+        assembler.assembleDto(dMap, eWrap, null, new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return TestDto12CollectionItemClass.class;
+                } else if ("TestEntity12CollectionItemInterface".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
+                if ("dtoItem".equals(entityBeanKey)) {
+                    return new TestDto12CollectionItemClass();
+                } else if ("dtoMap".equals(entityBeanKey)) {
+                    return new HashMap<Object, Object>();
+                }
+                return null;
+            }
+
+        });
+
+        assertNotNull(dMap.getItems());
+        assertEquals(2, dMap.getItems().size());
+        final Set<String> keys = dMap.getItems().keySet();
+        for (String key : keys) {
+            if ("itm1".equals(key)) {
+                assertEquals("itm1", dMap.getItems().get(key).getName());
+            } else if ("itm2".equals(key)) {
+                assertEquals("itm2", dMap.getItems().get(key).getName());
+            } else {
+                fail("Unknown key");
+            }
+        }
+
+        final TestDto12CollectionItemClass dto3 = new TestDto12CollectionItemClass();
+        dto3.setName("itm3");
+        dMap.getItems().put("itm3", dto3);
+
+        dMap.getItems().remove("itm1"); // first
+
+        final Map<String, Object> converters = new HashMap<String, Object>();
+        converters.put("Test12KeyMapToEntityMatcher.class", new Test12KeyMapToEntityMatcher());
+
+        assembler.assembleEntity(dMap, eWrap, converters, new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return TestDto12CollectionClass.class;
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                } else if ("TestEntity12CollectionItemInterface".equals(entityBeanKey)) {
+                    return TestEntity12CollectionItemInterface.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
+                if ("nestedEntity".equals(entityBeanKey)) {
+                    return new TestDto12CollectionClass();
+                } else if ("entityItem".equals(entityBeanKey)) {
+                    return new TestEntity12CollectionItemClass();
+                }
+                return null;
+            }
+
+        });
+
+        assertNotNull(eWrap.getCollectionWrapper().getItems());
+        assertEquals(2, eWrap.getCollectionWrapper().getItems().size());
+        Iterator<TestEntity12CollectionItemInterface> eiter;
+
+        eiter = eWrap.getCollectionWrapper().getItems().iterator();
+        final TestEntity12CollectionItemInterface itm1 = eiter.next();
+        final TestEntity12CollectionItemInterface itm2 = eiter.next();
+        assertEquals("itm2", itm1.getName());
+        assertEquals("itm3", itm2.getName());
+    }
+
 }

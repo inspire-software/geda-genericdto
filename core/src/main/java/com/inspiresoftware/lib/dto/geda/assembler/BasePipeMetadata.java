@@ -15,6 +15,7 @@ import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryNotFoundException;
 import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryUnableToCreateInstanceException;
+import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryUnableToLocateRepresentationException;
 
 
 /**
@@ -85,8 +86,55 @@ class BasePipeMetadata implements PipeMetadata {
 			throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException {
 		return newBean(this.getEntityBeanKey(), factory, false);
 	}
-	
-	private Object newBean(final String beanKey, final BeanFactory factory, final boolean isDto) 
+
+    /**
+     * Get representation class/interface for given key.
+     *
+     * @param beanKey key
+     * @param factory bean factory
+     * @param isDto true if this is a DTO representative
+     *
+     * @return class or interface that best describes objects by given key.
+     *
+     * @throws BeanFactoryNotFoundException if bean factory is null
+     * @throws BeanFactoryUnableToLocateRepresentationException if factory returns null
+     */
+    protected Class getRepresentation(final String beanKey, final BeanFactory factory, final boolean isDto)
+            throws BeanFactoryNotFoundException, BeanFactoryUnableToLocateRepresentationException {
+        if (factory == null) {
+            if (isDto) {
+                throw new BeanFactoryNotFoundException(
+                        dtoFieldName, beanKey, true);
+            } else {
+                throw new BeanFactoryNotFoundException(
+                        entityFieldName, beanKey, false);
+            }
+        }
+        final Class representation = factory.getClazz(beanKey);
+        if (representation == null) {
+            if (isDto) {
+                throw new BeanFactoryUnableToLocateRepresentationException(factory.toString(),
+                        dtoFieldName, beanKey, true);
+            } else {
+                throw new BeanFactoryUnableToLocateRepresentationException(factory.toString(),
+                        entityFieldName, beanKey, false);
+            }
+        }
+        return representation;
+    }
+
+    /**
+     * Get new instance for bean key.
+     *
+     * @param beanKey key
+     * @param factory bean factory
+     * @param isDto true if this is a DTO instance
+     * @return new instance.
+     *
+     * @throws BeanFactoryNotFoundException if bean factory is null
+     * @throws BeanFactoryUnableToCreateInstanceException if bean factory returns null
+     */
+	protected Object newBean(final String beanKey, final BeanFactory factory, final boolean isDto)
 			throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException {
 		if (factory == null) {
 			if (isDto) {

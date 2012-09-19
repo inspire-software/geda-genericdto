@@ -15,7 +15,9 @@ import com.inspiresoftware.lib.dto.geda.benchmark.domain.Country;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Name;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Person;
 import com.inspiresoftware.lib.dto.geda.benchmark.dto.AddressDTO;
-import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
+import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonWithHistoryDTO;
+
+import java.util.ArrayList;
 
 /**
  * .
@@ -24,13 +26,18 @@ import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
  * Date: Sep 17, 2012
  * Time: 10:29:18 AM
  */
-public class ManualBasicMapper implements Mapper {
+public class ManualListMapper implements Mapper {
 
     public Object fromEntity(final Object entity) {
 
         final Person person = (Person) entity;
-        final PersonDTO dto = new PersonDTO();
-
+        final PersonWithHistoryDTO dto = new PersonWithHistoryDTO();
+        if (person.getPreviousAddresses() != null) {
+            dto.setPreviousAddresses(new ArrayList<AddressDTO>());
+            for (final Address address : person.getPreviousAddresses()) {
+                dto.getPreviousAddresses().add(fromAddress(address));
+            }
+        }
         if (person.getName() != null) {
             dto.setFirstName(person.getName().getFirstname());
             dto.setLastName(person.getName().getSurname());
@@ -58,7 +65,7 @@ public class ManualBasicMapper implements Mapper {
     public Object fromDto(final Object dto) {
 
         final Person person = new Person();
-        final PersonDTO personDTO = (PersonDTO) dto;
+        final PersonWithHistoryDTO personDTO = (PersonWithHistoryDTO) dto;
 
         person.setName(new Name(personDTO.getFirstName(), personDTO.getLastName()));
 
@@ -67,6 +74,10 @@ public class ManualBasicMapper implements Mapper {
             final Address address = fromAddressDTO(addressDTO);
 
             person.setCurrentAddress(address);
+        }
+        person.setPreviousAddresses(new ArrayList<Address>());
+        for (final AddressDTO addressDTO : personDTO.getPreviousAddresses()) {
+            person.getPreviousAddresses().add(fromAddressDTO(addressDTO));
         }
         return person;
     }

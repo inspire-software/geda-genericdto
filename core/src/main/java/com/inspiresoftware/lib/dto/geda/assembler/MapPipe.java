@@ -19,6 +19,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.MapPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
+import java.beans.PropertyDescriptor;
 import java.util.*;
 
 
@@ -41,8 +42,9 @@ class MapPipe implements Pipe {
 
 	private final DataReader entityRead;
 	private final DataWriter entityWrite;
-	
-	private final DataReader entityCollectionKeyRead;
+
+	private DataReader entityCollectionKeyRead;
+    private final Object entityCollectionKeyReadMutex = new Object();
 
     /**
      * @param synthesizer synthesizer
@@ -50,7 +52,6 @@ class MapPipe implements Pipe {
      * @param dtoWrite method for writting data to DTO field
      * @param entityRead method for reading data from Entity field
      * @param entityWrite method for writting data to Entity field
-     * @param entityCollectionKeyRead for reading the key of collection
      * @param meta collection pipe meta
      * 
      * @throws AnnotationValidatingBindingException when missmaped binding
@@ -61,7 +62,6 @@ class MapPipe implements Pipe {
                    final DataWriter dtoWrite,
                    final DataReader entityRead,
                    final DataWriter entityWrite,
-                   final DataReader entityCollectionKeyRead,
                    final MapPipeMetadata meta) throws AnnotationValidatingBindingException {
 
     	this.meta = meta;
@@ -70,7 +70,6 @@ class MapPipe implements Pipe {
     	
         this.dtoWrite = dtoWrite;
         this.entityRead = entityRead;
-        this.entityCollectionKeyRead = entityCollectionKeyRead;
 
         if (this.meta.isReadOnly()) {
 			this.dtoRead = null;
@@ -105,18 +104,24 @@ class MapPipe implements Pipe {
         final Object entityCollection = this.entityRead.read(entity);
 
         if (entityCollection instanceof Collection) {
+
             final Collection entities = (Collection) entityCollection;
 
             final Map dtos = this.meta.newDtoMap(dtoBeanFactory);
 
+            final Class entityRepresentative = this.meta.getReturnType(dtoBeanFactory);
+
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
 
             try {
-                final Assembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
+                Assembler assembler = null;
+                DataReader keyRead = null;
 
                 for (Object object : entities) {
 
-                	final Object key = this.entityCollectionKeyRead.read(object);
+                    assembler = lazyCreateAssembler(assembler, newDto, object, dtoBeanFactory);
+                    keyRead = lazyCollectionKeyRead(keyRead, newDto, object, dtoBeanFactory);
+                	final Object key = keyRead.read(object);
                     assembler.assembleDto(newDto, object, converters, dtoBeanFactory);
                     dtos.put(key, newDto);
 
@@ -127,12 +132,12 @@ class MapPipe implements Pipe {
 
             } catch (InspectionInvalidDtoInstanceException invDto) {
 				throw new CollectionEntityGenericReturnTypeException(
-						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-						this.meta.getReturnType() != null ? this.meta.getReturnType().getCanonicalName() : "unspecified");
+						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        entityRepresentative != null ? entityRepresentative.getCanonicalName() : "unspecified");
 			} catch (InspectionInvalidEntityInstanceException invEntity) {
 				throw new CollectionEntityGenericReturnTypeException(
-						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-						this.meta.getReturnType() != null ? this.meta.getReturnType().getCanonicalName() : "unspecified");
+						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        entityRepresentative != null ? entityRepresentative.getCanonicalName() : "unspecified");
 			}
 
         } else if (entityCollection instanceof Map) {
@@ -141,21 +146,25 @@ class MapPipe implements Pipe {
 
             final Map dtos = this.meta.newDtoMap(dtoBeanFactory);
 
+            final Class entityRepresentative = this.meta.getReturnType(dtoBeanFactory);
+
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
             
             final boolean useKey = this.meta.isEntityMapKey();
 
             try {
-                final Assembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
+                Assembler assembler = null;
 
                 for (Object key : entities.keySet()) {
 
                 	if (useKey) {
                 		final Object value = entities.get(key);
+                        assembler = lazyCreateAssembler(assembler, newDto, key, dtoBeanFactory);
                 		assembler.assembleDto(newDto, key, converters, dtoBeanFactory);
                 		dtos.put(newDto, value);
                 	} else {
 	                	final Object object = entities.get(key);
+                        assembler = lazyCreateAssembler(assembler, newDto, object, dtoBeanFactory);
 	                    assembler.assembleDto(newDto, object, converters, dtoBeanFactory);
 	                    dtos.put(key, newDto);
                 	}
@@ -166,12 +175,12 @@ class MapPipe implements Pipe {
 
             } catch (InspectionInvalidDtoInstanceException invDto) {
 				throw new CollectionEntityGenericReturnTypeException(
-						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-						this.meta.getReturnType() != null ? this.meta.getReturnType().getCanonicalName() : "unspecified");
+						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        entityRepresentative != null ? entityRepresentative.getCanonicalName() : "unspecified");
 			} catch (InspectionInvalidEntityInstanceException invEntity) {
 				throw new CollectionEntityGenericReturnTypeException(
-						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-						this.meta.getReturnType() != null ? this.meta.getReturnType().getCanonicalName() : "unspecified");
+						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        entityRepresentative != null ? entityRepresentative.getCanonicalName() : "unspecified");
 			}
         	
         }
@@ -240,28 +249,58 @@ class MapPipe implements Pipe {
        } // else it was null anyways
 
     }
+
+    private DataReader lazyCollectionKeyRead(DataReader reader, final Object dtoItem, final Object entityItem, final BeanFactory beanFactory) {
+        if (reader == null) {
+            if (meta.getMapKeyForCollection() != null && meta.getMapKeyForCollection().length() > 0) {
+
+                Class representative = this.meta.getReturnType(beanFactory);
+                if (Object.class.equals(representative) && entityItem != null) {
+                    representative = entityItem.getClass();
+                }
+                final PropertyDescriptor[] itemDesc = PropertyInspector.getPropertyDescriptorsForClass(representative);
+                final PropertyDescriptor itemKeyDesc = PropertyInspector.getEntityPropertyDescriptorForField(
+                        dtoItem.getClass(), representative, meta.getDtoFieldName(), meta.getMapKeyForCollection(), itemDesc);
+                reader = synthesizer.synthesizeReader(itemKeyDesc);
+            } else {
+                throw new AnnotationValidatingBindingException(
+                        meta.getDtoFieldName(),
+                        dtoWrite.getClass().getCanonicalName(),
+                        dtoWrite.getParameterType().getSimpleName(),
+                        meta.getEntityFieldName(),
+                        "", "", false);
+            }
+        }
+        return reader;
+    }
     
-	private Assembler lazyCreateAssembler(final Assembler assembler, final Object dtoItem)
+	private Assembler lazyCreateAssembler(final Assembler assembler, final Object dtoItem, final Object entityItem, final BeanFactory beanFactory)
 			throws CollectionEntityGenericReturnTypeException, AnnotationMissingException, InspectionScanningException, 
 			       UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
 			       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
 			       AnnotationDuplicateBindingException {
 		if (assembler == null) {
-		    try {
-		    	if (Object.class.equals(this.meta.getReturnType())) {
+
+            Class representative = this.meta.getReturnType(beanFactory);
+            if (Object.class.equals(representative) && entityItem != null) {
+                representative = entityItem.getClass();
+            }
+
+            try {
+		    	if (Object.class.equals(representative)) {
 		    		throw new CollectionEntityGenericReturnTypeException(
-							dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-							this.meta.getReturnType().getCanonicalName());
+							dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                            representative.getCanonicalName());
 		    	}
-		        return DTOAssembler.newCustomAssembler(dtoItem.getClass(), this.meta.getReturnType(), synthesizer);
+		        return DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, synthesizer);
             } catch (InspectionInvalidDtoInstanceException invDto) {
 				throw new CollectionEntityGenericReturnTypeException(
-						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-						this.meta.getReturnType() != null ? this.meta.getReturnType().getCanonicalName() : "unspecified");
+						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        representative != null ? representative.getCanonicalName() : "unspecified");
 			} catch (InspectionInvalidEntityInstanceException invEntity) {
 				throw new CollectionEntityGenericReturnTypeException(
-						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-						this.meta.getReturnType() != null ? this.meta.getReturnType().getCanonicalName() : "unspecified");
+						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        representative != null ? representative.getCanonicalName() : "unspecified");
 			}  
 		}
 		return assembler;
@@ -287,7 +326,7 @@ class MapPipe implements Pipe {
 			for (Object orItem : original) {
 				
 				if (matcher.match(dtoKey, orItem)) {
-					assembler = lazyCreateAssembler(assembler, dtoItem);
+					assembler = lazyCreateAssembler(assembler, dtoItem, orItem, entityBeanFactory);
 					assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
 					toAdd = false;
 					break;
@@ -296,8 +335,8 @@ class MapPipe implements Pipe {
 			}
 			
 			if (toAdd) {
-				assembler = lazyCreateAssembler(assembler, dtoItem);
-				final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+                assembler = lazyCreateAssembler(assembler, dtoItem, newItem, entityBeanFactory);
 				assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
 				original.add(newItem);
 			}
@@ -326,12 +365,12 @@ class MapPipe implements Pipe {
 
                 if (matcher.match(dtoKey, orKey)) {
                 	if (useKey) {
-	                	assembler = lazyCreateAssembler(assembler, dtoKey);
+	                	assembler = lazyCreateAssembler(assembler, dtoKey, orKey, entityBeanFactory);
 	                    assembler.assembleEntity(dtoKey, orKey, converters, entityBeanFactory);
 	                    original.put(orKey, dtoItem);
                 	} else {
 	                	final Object orItem = original.get(orKey);
-	                	assembler = lazyCreateAssembler(assembler, dtoItem);
+	                	assembler = lazyCreateAssembler(assembler, dtoItem, orItem, entityBeanFactory);
 	                    assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
                 	}
                     toAdd = false;
@@ -342,13 +381,13 @@ class MapPipe implements Pipe {
 
             if (toAdd) {
             	if (useKey) {
-            		assembler = lazyCreateAssembler(assembler, dtoKey);
-	                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+                    final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+                    assembler = lazyCreateAssembler(assembler, dtoKey, newItem, entityBeanFactory);
 	                assembler.assembleEntity(dtoKey, newItem, converters, entityBeanFactory);
 	                original.put(newItem, dtoItem);
             	} else {
-	                assembler = lazyCreateAssembler(assembler, dtoItem);
-	                final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+                    final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+                    assembler = lazyCreateAssembler(assembler, dtoItem, newItem, entityBeanFactory);
 	                assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
 	                original.put(dtoKey, newItem);
             	}

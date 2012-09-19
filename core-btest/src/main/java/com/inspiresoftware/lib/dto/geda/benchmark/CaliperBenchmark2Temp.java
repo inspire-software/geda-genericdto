@@ -13,11 +13,11 @@ import com.google.caliper.Param;
 import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
 import com.inspiresoftware.lib.dto.geda.benchmark.data.DataProvider;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.dozer.DozerBasicMapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.geda.GeDABasicMapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.manual.ManualBasicMapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.modelmapper.ModelMapperBasicMapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaBasicMapper;
+import com.inspiresoftware.lib.dto.geda.benchmark.support.dozer.DozerListMapper;
+import com.inspiresoftware.lib.dto.geda.benchmark.support.geda.GeDAListMapper;
+import com.inspiresoftware.lib.dto.geda.benchmark.support.manual.ManualListMapper;
+import com.inspiresoftware.lib.dto.geda.benchmark.support.modelmapper.ModelMapperListMapper;
+import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaListMapper;
 
 /**
  * Caliper powered benchmark.
@@ -26,16 +26,16 @@ import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaBasicMapper
  * Date: Sep 17, 2012
  * Time: 8:35:29 AM
  */
-public class CaliperBenchmark extends SimpleBenchmark {
+public class CaliperBenchmark2Temp extends SimpleBenchmark {
 
 
     public enum Lib {
 
-        JAVA_MANUAL(new ManualBasicMapper()),
-        GEDA(new GeDABasicMapper()),
-        ORIKA(new OrikaBasicMapper()),
-        MODELMAPPER(new ModelMapperBasicMapper()),
-        DOZER(new DozerBasicMapper());
+        JAVA_MANUAL(new ManualListMapper()),
+        GEDA(new GeDAListMapper()),
+        ORIKA(new OrikaListMapper()),
+        MODELMAPPER(new ModelMapperListMapper()),
+        DOZER(new DozerListMapper());
 
         private Mapper mapper;
 
@@ -46,7 +46,7 @@ public class CaliperBenchmark extends SimpleBenchmark {
 
     @Param
     private Lib lib;
-    @Param({ "1", "100", "10000", "25000" })
+    @Param({ "100" /*, "100", "10000", "25000" */})
     private int length;
 
     private Object dto;
@@ -56,8 +56,8 @@ public class CaliperBenchmark extends SimpleBenchmark {
 
     @Override
     protected void setUp() throws Exception {
-        dto = DataProvider.providePersonDTO(false, false);
-        entity = DataProvider.providePersonEntity(false);
+        dto = DataProvider.providePersonDTO(true, false);
+        entity = DataProvider.providePersonEntity(true);
         mapper = lib.mapper;
     }
 
@@ -78,7 +78,7 @@ public class CaliperBenchmark extends SimpleBenchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        Runner.main(CaliperBenchmark.class, args);
+        Runner.main(CaliperBenchmark2Temp.class, args);
     }
 
 }

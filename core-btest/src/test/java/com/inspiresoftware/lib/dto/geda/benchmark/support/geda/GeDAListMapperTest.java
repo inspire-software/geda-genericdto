@@ -26,13 +26,37 @@ import static org.junit.Assert.assertEquals;
  * Date: Sep 17, 2012
  * Time: 10:53:37 AM
  */
-public class GeDABasicMapperTest extends AbstractMapperTest {
+public class GeDAListMapperTest extends AbstractMapperTest {
+
+    private static final int PERFORMANCE_TEST_CYCLES = 1000000000;
 
     @Test
-    public void testMapper() throws Exception {
+    public void testCollectionsMapper() throws Exception {
 
-        final Person entity = getEntity();
-        final PersonDTO dto = getDto();
+        final Person entity = getEntityWithHistory();
+        final PersonDTO dto = getDtoWithHistory();
+
+        final Mapper mapper = new GeDAListMapper();
+
+        assertEquals(entity, mapper.fromDto(dto));
+        assertEquals(dto, mapper.fromEntity(entity));
+
+    }
+
+    @Test
+    @Ignore
+    public void testCollectionsMapperPerformance() throws Exception {
+
+        for (int i = 0; i < PERFORMANCE_TEST_CYCLES; i++) {
+            testCollectionsMapper();
+        }
+    }
+
+    @Test
+    public void testMapMapper() throws Exception {
+
+        final Person entity = getEntityWithHistory();
+        final PersonDTO dto = getDtoWithHistoryByCity();
 
         final Mapper mapper = new GeDABasicMapper();
 
@@ -41,14 +65,12 @@ public class GeDABasicMapperTest extends AbstractMapperTest {
 
     }
 
-    private static final int PERFORMANCE_TEST_CYCLES = 1000000;
-
     @Test
-    @Ignore
-    public void testMapperPerformance() throws Exception {
+    //@Ignore
+    public void testMapMapperPerformance() throws Exception {
 
         for (int i = 0; i < PERFORMANCE_TEST_CYCLES; i++) {
-            testMapper();
+            testMapMapper();
         }
     }
 

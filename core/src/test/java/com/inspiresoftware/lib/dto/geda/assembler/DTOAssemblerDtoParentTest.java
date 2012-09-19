@@ -112,7 +112,11 @@ public class DTOAssemblerDtoParentTest {
 	private BeanFactory createEntityBeanFactory() {
 		return new BeanFactory() {
 
-			public Object get(final String entityBeanKey) {
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if (entityBeanKey.equals("com.inspiresoftware.lib.dto.geda.assembler.TestEntity11ParentClass")) {
 					return new TestEntity11ParentClass();
 				}
@@ -125,7 +129,11 @@ public class DTOAssemblerDtoParentTest {
 	private BeanFactory createDtoBeanFactory() {
 		return new BeanFactory() {
 
-			public Object get(final String entityBeanKey) {
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if (entityBeanKey.equals("com.inspiresoftware.lib.dto.geda.assembler.TestDto11ParentClass")) {
 					return new TestDto11ParentClass();
 				}

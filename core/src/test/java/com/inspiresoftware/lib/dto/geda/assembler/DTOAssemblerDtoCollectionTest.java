@@ -84,6 +84,11 @@ public class DTOAssemblerDtoCollectionTest {
         entity.getCollection().add(item3);
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
                     return new TestDto7CollectionSubClass();
@@ -144,6 +149,11 @@ public class DTOAssemblerDtoCollectionTest {
         entity.getCollection().add(item3);
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
                     return new TestDto7CollectionSubClass();
@@ -184,6 +194,11 @@ public class DTOAssemblerDtoCollectionTest {
         entity.setCollection(null);
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
                     return new TestDto7CollectionSubClass();
@@ -229,6 +244,11 @@ public class DTOAssemblerDtoCollectionTest {
         entity.getCollection().add(item3);
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7iCollectionSubClass".equals(entityBeanKey)) {
                     return new TestDto7iCollectionSubClass();
@@ -289,6 +309,11 @@ public class DTOAssemblerDtoCollectionTest {
         entity.getCollection().add(item3);
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7iCollectionSubClass".equals(entityBeanKey)) {
                     return new TestDto7iCollectionSubClass();
@@ -328,6 +353,11 @@ public class DTOAssemblerDtoCollectionTest {
         entity.setCollection(null);
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7iCollectionSubClass".equals(entityBeanKey)) {
                     return new TestDto7iCollectionSubClass();
@@ -378,7 +408,11 @@ public class DTOAssemblerDtoCollectionTest {
 		
 		assembler.assembleDto(dColl, eWrap, null, new BeanFactory() {
 
-			public Object get(final String entityBeanKey) {
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("dtoItem".equals(entityBeanKey)) {
 					return new TestDto12CollectionItemClass();
 				}
@@ -406,8 +440,12 @@ public class DTOAssemblerDtoCollectionTest {
 		iter.remove(); // first
 		
 		assembler.assembleEntity(dColl, eWrap, null, new BeanFactory() {
-			
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("nestedEntity".equals(entityBeanKey)) {
 					return new TestDto12CollectionClass();
 				} else if ("entityItem".equals(entityBeanKey)) {
@@ -442,6 +480,11 @@ public class DTOAssemblerDtoCollectionTest {
 
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
                     return new TestEntity7iCollectionSubClass();
@@ -515,6 +558,11 @@ public class DTOAssemblerDtoCollectionTest {
                 TestDto16Class.class, TestEntity16Class.class, synthesizer);
 
         assembler.assembleDto(dtos, entities, null, new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("TestDto15Class".equals(entityBeanKey)) {
                     return new TestDto15Class();
@@ -567,7 +615,12 @@ public class DTOAssemblerDtoCollectionTest {
     	entity.getCollection().add(item3);
     	
     	final BeanFactory factory = new BeanFactory() {
-    		public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
     			if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
     				return new TestDto7CollectionSubClass();
     			} else if ("com.inspiresoftware.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
@@ -617,7 +670,12 @@ public class DTOAssemblerDtoCollectionTest {
     	entity.getCollection().add(item3);
     	
     	final BeanFactory factory = new BeanFactory() {
-    		public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
     			if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
     				return new TestDto7CollectionSubClass();
     			} else if ("com.inspiresoftware.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
@@ -666,6 +724,11 @@ public class DTOAssemblerDtoCollectionTest {
         entity.getCollection().add(item3);
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
                     return new TestDto7CollectionSubClass();
@@ -760,7 +823,12 @@ public class DTOAssemblerDtoCollectionTest {
 		entity.getCollection().add(item3);
 		
 		final BeanFactory factory = new BeanFactory() {
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
 					return new TestDto7CollectionSubClass();
 				} else if ("com.inspiresoftware.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
@@ -802,7 +870,12 @@ public class DTOAssemblerDtoCollectionTest {
 		entity.getCollection().add(item3);
 		
 		final BeanFactory factory = new BeanFactory() {
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
 					return new TestDto7CollectionSubClass();
 				} else if ("com.inspiresoftware.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
@@ -867,7 +940,12 @@ public class DTOAssemblerDtoCollectionTest {
 		entity.getCollection().add(item3);
 		
 		final BeanFactory factory = new BeanFactory() {
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
 					return new TestDto7CollectionSubClass();
 				} else if ("com.inspiresoftware.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
@@ -923,7 +1001,12 @@ public class DTOAssemblerDtoCollectionTest {
 		entity.getCollection().add(item3);
 		
 		final BeanFactory factory = new BeanFactory() {
-			public Object get(final String entityBeanKey) {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
 				if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
 					return new TestDto7CollectionSubClass();
 				} else if ("com.inspiresoftware.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
@@ -990,6 +1073,11 @@ public class DTOAssemblerDtoCollectionTest {
         entity.getCollection().add(item3);
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
                     return new TestDto7CollectionSubClass();
@@ -1059,6 +1147,11 @@ public class DTOAssemblerDtoCollectionTest {
         ((Collection) entity.get("nestedString")).add(item3);
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
                     return new TestDto7CollectionSubClass();
@@ -1129,6 +1222,11 @@ public class DTOAssemblerDtoCollectionTest {
         ((Collection) entity.get(1)).add(item3);
 
         final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
             public Object get(final String entityBeanKey) {
                 if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
                     return new TestDto7CollectionSubClass();
@@ -1176,5 +1274,157 @@ public class DTOAssemblerDtoCollectionTest {
 
 	}
 
-	
+
+    /**
+     * Test collection of nested objects.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testCollectionPropertyWithEntityCollectionKeyGenericTypeIoC() throws GeDAException {
+        final TestDto7cCollectionClass dto = new TestDto7cCollectionClass();
+        final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+        entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+
+        final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+        item1.setName("1");
+        final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+        item2.setName("2");
+        final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+        item3.setName("3");
+        entity.getCollection().add(item1);
+        entity.getCollection().add(item2);
+        entity.getCollection().add(item3);
+
+        final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                if ("TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+                    return TestEntity7CollectionSubClass.class;
+                }
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
+                if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestDto7CollectionSubClass();
+                } else if ("com.inspiresoftware.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7CollectionSubClass();
+                } else if ("dtoColl".equals(entityBeanKey)) {
+                    return new ArrayList<Object>();
+                } else if ("entityColl".equals(entityBeanKey)) {
+                    return new ArrayList<Object>();
+                }
+                return null;
+            }
+        };
+
+        final Assembler assembler =
+                DTOAssembler.newCustomAssembler(TestDto7cCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
+
+        final Map<String, Object> converters = new HashMap<String, Object>();
+        converters.put("Test7Matcher", new Test7Matcher());
+
+        assembler.assembleDto(dto, entity, null, factory);
+
+        assertNotNull(dto.getNestedString());
+        assertEquals(I_3, dto.getNestedString().size());
+
+        Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
+        for (int index = 0; it.hasNext(); index++) {
+            it.next().setName("sameName" + index);
+        }
+
+        entity.setCollection(null);
+
+        assembler.assembleEntity(dto, entity, converters, factory);
+
+        assertNotNull(entity.getCollection());
+        assertEquals(I_3, entity.getCollection().size());
+
+        Iterator<TestEntity7CollectionSubClass> itr = entity.getCollection().iterator();
+        while (itr.hasNext()) {
+            final TestEntity7CollectionSubClass next = itr.next();
+
+            assertNotNull(next.getName());
+            assertTrue(next.getName().startsWith("sameName"));
+        }
+
+    }
+
+    /**
+     * Test collection of nested objects.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testCollectionPropertyWithEntityCollectionKeyGenericTypeAuto() throws GeDAException {
+        final TestDto7dCollectionClass dto = new TestDto7dCollectionClass();
+        final TestEntity7CollectionClass entity = new TestEntity7CollectionClass();
+        entity.setCollection(new HashSet<TestEntity7CollectionSubClass>());
+
+        final TestEntity7CollectionSubClass item1 = new TestEntity7CollectionSubClass();
+        item1.setName("1");
+        final TestEntity7CollectionSubClass item2 = new TestEntity7CollectionSubClass();
+        item2.setName("2");
+        final TestEntity7CollectionSubClass item3 = new TestEntity7CollectionSubClass();
+        item3.setName("3");
+        entity.getCollection().add(item1);
+        entity.getCollection().add(item2);
+        entity.getCollection().add(item3);
+
+        final BeanFactory factory = new BeanFactory() {
+
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
+                if ("com.inspiresoftware.lib.dto.geda.assembler.TestDto7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestDto7CollectionSubClass();
+                } else if ("com.inspiresoftware.lib.dto.geda.assembler.TestEntity7CollectionSubClass".equals(entityBeanKey)) {
+                    return new TestEntity7CollectionSubClass();
+                } else if ("dtoColl".equals(entityBeanKey)) {
+                    return new ArrayList<Object>();
+                } else if ("entityColl".equals(entityBeanKey)) {
+                    return new ArrayList<Object>();
+                }
+                return null;
+            }
+        };
+
+        final Assembler assembler =
+                DTOAssembler.newCustomAssembler(TestDto7dCollectionClass.class, TestEntity7CollectionClass.class, synthesizer);
+
+        final Map<String, Object> converters = new HashMap<String, Object>();
+        converters.put("Test7Matcher", new Test7Matcher());
+
+        assembler.assembleDto(dto, entity, null, factory);
+
+        assertNotNull(dto.getNestedString());
+        assertEquals(I_3, dto.getNestedString().size());
+
+        Iterator<TestDto7CollectionSubClass> it = dto.getNestedString().iterator();
+        for (int index = 0; it.hasNext(); index++) {
+            it.next().setName("sameName" + index);
+        }
+
+        entity.setCollection(null);
+
+        assembler.assembleEntity(dto, entity, converters, factory);
+
+        assertNotNull(entity.getCollection());
+        assertEquals(I_3, entity.getCollection().size());
+
+        Iterator<TestEntity7CollectionSubClass> itr = entity.getCollection().iterator();
+        while (itr.hasNext()) {
+            final TestEntity7CollectionSubClass next = itr.next();
+
+            assertNotNull(next.getName());
+            assertTrue(next.getName().startsWith("sameName"));
+        }
+
+    }
+
+
 }

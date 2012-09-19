@@ -99,17 +99,21 @@ class CollectionPipe implements Pipe {
         final Object entityCollection = this.entityRead.read(entity);
 
         if (entityCollection instanceof Collection) {
+
             final Collection entities = (Collection) entityCollection;
 
             final Collection dtos = this.meta.newDtoCollection(dtoBeanFactory);
 
+            final Class entityRepresentative = this.meta.getReturnType(dtoBeanFactory);
+
             Object newDto = this.meta.newDtoBean(dtoBeanFactory);
 
             try {
-                final Assembler assembler = DTOAssembler.newCustomAssembler(newDto.getClass(), this.meta.getReturnType(), synthesizer);
+                Assembler assembler = null;
 
                 for (Object object : entities) {
 
+                    assembler = lazyCreateAssembler(assembler, newDto, object, dtoBeanFactory);
                     assembler.assembleDto(newDto, object, converters, dtoBeanFactory);
                     dtos.add(newDto);
 
@@ -118,14 +122,18 @@ class CollectionPipe implements Pipe {
 
                 this.dtoWrite.write(dto, dtos);
 
+            } catch (BeanFactoryUnableToLocateRepresentationException bfulr) {
+                throw new CollectionEntityGenericReturnTypeException(
+                        newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        "Not found for key provided");
             } catch (InspectionInvalidDtoInstanceException invDto) {
 				throw new CollectionEntityGenericReturnTypeException(
-						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-						this.meta.getReturnType() != null ? this.meta.getReturnType().getCanonicalName() : "unspecified");
+						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        entityRepresentative != null ? entityRepresentative.getCanonicalName() : "unspecified");
 			} catch (InspectionInvalidEntityInstanceException invEntity) {
 				throw new CollectionEntityGenericReturnTypeException(
-						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-						this.meta.getReturnType() != null ? this.meta.getReturnType().getCanonicalName() : "unspecified");
+						newDto.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        entityRepresentative != null ? entityRepresentative.getCanonicalName() : "unspecified");
 			}
 
         }
@@ -187,28 +195,33 @@ class CollectionPipe implements Pipe {
 
     }
     
-	private Assembler lazyCreateAssembler(final Assembler assembler, final Object dtoItem)
+	private Assembler lazyCreateAssembler(final Assembler assembler, final Object dtoItem, final Object entityItem, final BeanFactory beanFactory)
 			throws CollectionEntityGenericReturnTypeException, AnnotationMissingException, InspectionScanningException, 
 			       UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, 
 			       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
 			       AnnotationDuplicateBindingException {
 		if (assembler == null) {
-		    try {
-		    	if (Object.class.equals(this.meta.getReturnType())) {
+
+            Class representative = this.meta.getReturnType(beanFactory);
+            if (Object.class.equals(representative) && entityItem != null) {
+                representative = entityItem.getClass();
+            }
+
+            try {
+		    	if (Object.class.equals(representative)) {
 					throw new CollectionEntityGenericReturnTypeException(
-							dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-							this.meta.getReturnType().getCanonicalName());
+							dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                            representative.getCanonicalName());
 		    	}
-		        return 
-		        DTOAssembler.newCustomAssembler(dtoItem.getClass(), this.meta.getReturnType(), synthesizer);
+		        return DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, synthesizer);
 		    } catch (InspectionInvalidEntityInstanceException invEntity) {
 				throw new CollectionEntityGenericReturnTypeException(
-						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-						this.meta.getReturnType() != null ? this.meta.getReturnType().getCanonicalName() : "unspecified");
+						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        representative != null ? representative.getCanonicalName() : "unspecified");
 		    } catch (InspectionInvalidDtoInstanceException invDto) {
 				throw new CollectionEntityGenericReturnTypeException(
-						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(), 
-						this.meta.getReturnType() != null ? this.meta.getReturnType().getCanonicalName() : "unspecified");
+						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
+                        representative != null ? representative.getCanonicalName() : "unspecified");
 		    }   
 		}
 		return assembler;
@@ -232,7 +245,7 @@ class CollectionPipe implements Pipe {
             for (Object orItem : original) {
 
                 if (matcher.match(dtoItem, orItem)) {
-                	assembler = lazyCreateAssembler(assembler, dtoItem);
+                	assembler = lazyCreateAssembler(assembler, dtoItem, orItem, entityBeanFactory);
                     assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
                     toAdd = false;
                     break;
@@ -241,8 +254,8 @@ class CollectionPipe implements Pipe {
             }
 
             if (toAdd) {
-                assembler = lazyCreateAssembler(assembler, dtoItem);
                 final Object newItem = this.meta.newEntityBean(entityBeanFactory);
+                assembler = lazyCreateAssembler(assembler, dtoItem, newItem, entityBeanFactory);
                 assembler.assembleEntity(dtoItem, newItem, converters, entityBeanFactory);
                 original.add(newItem);
             }
@@ -252,7 +265,8 @@ class CollectionPipe implements Pipe {
 
     private void removeDeletedItems(final Collection original, final Collection dtos, final Map<String, Object> converters, 
     			final BeanFactory entityBeanFactory) throws DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
-    	final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
+
+        final DtoToEntityMatcher matcher = this.meta.getDtoToEntityMatcher(converters);
         Iterator orIt = original.iterator();
         while (orIt.hasNext()) {
 

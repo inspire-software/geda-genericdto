@@ -101,14 +101,28 @@ public @interface DtoCollection {
      * Entity generic type i.e. the type of collection item for entities. Can be either
      * class or interface to be used for DTO collection items mapping.
      *
-     * This property is mandatory since it cannot be extracted through reflection API
-     * when collection is null.
+     * This property is optional as entity type will be deduced from newly created beans
+     * or existing bean classes. Although care should be taken when not specifying this
+     * parameter as auto detect concrete classes mapping may make your collections inflexible
+     * to accepting other item types (say by interface). It is strongly recommended to
+     * provide reasonable interface for this setting.
      *
      * Assembler will automatically generate an internal sub assembler to map DTO items
      * to entity items and this is the class or interface that will be used for
      * creating assembler instance.
      */
     Class entityGenericType() default Object.class;
+
+    /**
+     * Specifies entity bean key chain that will be used by bean factory injected to
+     * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler}
+     * assembleEntity methods.
+     *
+     * This setting has priority over the {@link #entityGenericType()} setting.
+     *
+     * @since 2.0.4
+     */
+    String entityGenericTypeKey() default "";
 
     /**
      * Matcher used to synchronize collection of DTO's and Entities.

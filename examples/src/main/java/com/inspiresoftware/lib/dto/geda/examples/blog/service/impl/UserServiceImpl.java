@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     public List<BaseUserDTO> list() {
         final List<User> users = dao.list();
         final List<BaseUserDTO> dtos = new ArrayList<BaseUserDTO>();
-        DTOAssembler.newAssembler(bf.get("BaseUserDTO").getClass(), bf.get("User").getClass())
+        DTOAssembler.newAssembler(bf.getClazz("BaseUserDTO"), bf.getClazz("User"))
                 .assembleDtos(dtos, users, converters, bf);
         return dtos;
     }
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         final List<User> users = dao.list();
         final List<UserDTO> dtos = new ArrayList<UserDTO>();
 
-        final Assembler asm = DTOAssembler.newAssembler(bf.get(filter).getClass(), bf.get("User").getClass());
+        final Assembler asm = DTOAssembler.newAssembler(bf.getClazz(filter), bf.getClazz("User"));
 
         for (final User user : users) {
             final UserDTO dto = (UserDTO) bf.get("UserDTO");
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO findUser(final Long userId) {
         final User user = dao.findUser(userId);
         final UserDTO dto = (UserDTO) bf.get("UserDTO");
-        DTOAssembler.newAssembler(dto.getClass(), bf.get("User").getClass())
+        DTOAssembler.newAssembler(dto.getClass(), bf.getClazz("User"))
                 .assembleDto(dto, user, converters, bf);
         return dto;
     }
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     public UserEntryDTO findEntry(final Long entryId) {
         final UserEntry entry = dao.findEntry(entryId);
         final UserEntryDTO dto = (UserEntryDTO) bf.get("UserEntryDTO");
-        DTOAssembler.newAssembler(dto.getClass(), bf.get("UserEntry").getClass())
+        DTOAssembler.newAssembler(dto.getClass(), bf.getClazz("UserEntry"))
                 .assembleDto(dto, entry, converters, bf);
         return dto;
     }

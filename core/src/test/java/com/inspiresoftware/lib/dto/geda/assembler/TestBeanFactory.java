@@ -26,7 +26,17 @@ import org.junit.Ignore;
 @Ignore
 public class TestBeanFactory implements BeanFactory {
 
-	/** {@inheritDoc} */
+    /** {@inheritDoc} */
+    public Class getClazz(final String entityBeanKey) {
+        if ("wrapper.wrapper.key".equals(entityBeanKey)) {
+            return TestEntity4SubClass.class;
+        } else if ("wrapper.key".equals(entityBeanKey)) {
+            return TestEntity4Class.class;
+        }
+        return null;
+    }
+
+    /** {@inheritDoc} */
 	public Object get(final String entityBeanKey) {
 		if ("wrapper.wrapper.key".equals(entityBeanKey)) {
 			return new TestEntity4SubClass();
