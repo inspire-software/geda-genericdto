@@ -26,10 +26,10 @@ import java.util.Map;
  * @author Denis Pavlov
  * @since 1.0.0
  *
+ * @deprecated this class is scheduled for removal in version 2.0.5
  */
+@Deprecated
 public final class DTOHelper {
-	
-	private static final Object[] NULL = new Object[] { null };
 	
 	private DTOHelper() {
 		// prevent instantiation
