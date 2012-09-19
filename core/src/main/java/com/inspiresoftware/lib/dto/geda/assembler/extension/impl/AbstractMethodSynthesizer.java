@@ -553,7 +553,7 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 			// That's OK we don't have it
 			return null;
 		} catch (Throwable exp) {
-			throw new UnableToCreateInstanceException(clazzName, "Uanble to create instance of: " + clazzName, exp);
+			throw new UnableToCreateInstanceException(clazzName, "Unable to create instance of: " + clazzName, exp);
 		}
 	}
 	

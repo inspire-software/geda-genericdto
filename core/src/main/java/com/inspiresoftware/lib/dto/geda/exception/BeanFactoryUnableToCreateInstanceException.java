@@ -39,7 +39,7 @@ public class BeanFactoryUnableToCreateInstanceException extends GeDAException {
 			final boolean dto) {
 		super("Unable to construct " + (dto ? "dto " : "entity ") 
 				+ " bean with key: " + beanKey 
-				+ " using beanFactory: " + factoryToString + "for: " 
+				+ " using beanFactory: " + factoryToString + " for: "
 				+ fieldName);
 		this.beanKey = beanKey;
 		this.factoryToString = factoryToString;
