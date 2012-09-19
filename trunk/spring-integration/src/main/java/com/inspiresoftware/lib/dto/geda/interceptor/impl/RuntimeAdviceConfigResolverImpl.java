@@ -36,8 +36,8 @@ public class RuntimeAdviceConfigResolverImpl implements AdviceConfigResolver {
 
     private static final Logger LOG = LoggerFactory.getLogger(RuntimeAdviceConfigResolverImpl.class);
 
-    private final Map<String, Boolean> blacklist = new ConcurrentHashMap<String, Boolean>();
-    private final Map<String, Map<Occurrence, AdviceConfig>> cache = new ConcurrentHashMap<String, Map<Occurrence, AdviceConfig>>();
+    private final Map<Integer, Boolean> blacklist = new ConcurrentHashMap<Integer, Boolean>();
+    private final Map<Integer, Map<Occurrence, AdviceConfig>> cache = new ConcurrentHashMap<Integer, Map<Occurrence, AdviceConfig>>();
 
     public RuntimeAdviceConfigResolverImpl() {
     }
@@ -45,7 +45,7 @@ public class RuntimeAdviceConfigResolverImpl implements AdviceConfigResolver {
     /** {@inheritDoc} */
     public Map<Occurrence, AdviceConfig> resolve(final Method method, final Class<?> targetClass) {
 
-        final String methodCacheKey = methodCacheKey(method, targetClass);
+        final Integer methodCacheKey = methodCacheKey(method, targetClass);
         if (isBlacklisted(methodCacheKey)) {
             return Collections.emptyMap();
         }
@@ -69,11 +69,11 @@ public class RuntimeAdviceConfigResolverImpl implements AdviceConfigResolver {
         return cfg;
     }
 
-    boolean isCached(final String methodCacheKey) {
+    boolean isCached(final Integer methodCacheKey) {
         return this.cache.containsKey(methodCacheKey);
     }
 
-    boolean isBlacklisted(final String methodCacheKey) {
+    boolean isBlacklisted(final Integer methodCacheKey) {
         return this.blacklist.containsKey(methodCacheKey);
     }
 
@@ -84,33 +84,18 @@ public class RuntimeAdviceConfigResolverImpl implements AdviceConfigResolver {
 
     }
 
-    String methodCacheKey(final Method method, final Class<?> targetClass) {
+    Integer methodCacheKey(final Method method, final Class<?> targetClass) {
 
-        /*
-           As per java documentation:
-           "Returns a string describing this Method. The string is formatted as the method
-            access modifiers, if any, followed by the method return type, followed by a
-            space, followed by the class declaring the method, followed by a period, followed
-            by the method name, followed by a parenthesized, comma-separated list of the
-            method's formal parameter types. If the method throws checked exceptions, the
-            parameter list is followed by a space, followed by the word throws followed by
-            a comma-separated list of the thrown exception types. For example:
-
-                public boolean java.lang.Object.equals(java.lang.Object)
-
-            "  - see documentation on java.lang.reflect.Method.toString();
-
-           This suggests that full method signature must be present in toString() output and
-           therefore it should provide sufficient caching key for the method.
-
-         */
-
-        final String signature = method.toString();
-        final String objectSignature = "java.lang.Object." + method.getName() + "(";
-
-        if (signature.indexOf(objectSignature) == -1) {
-            return (targetClass != null ? targetClass.getCanonicalName() : "") + signature;
+        int hashKey = targetClass != null ? targetClass.getCanonicalName().hashCode() : method.getDeclaringClass().getCanonicalName().hashCode();
+        hashKey = 31 * hashKey + method.getName().hashCode();
+        final Class[] args = method.getParameterTypes();
+        if (args.length > 0) {
+            for (Class arg : args) {
+                hashKey = 31 * hashKey + arg.hashCode();
+            }
         }
-        return signature; // do not distinguish between targetClass for java.lang.Object.* methods.
+
+        return Integer.valueOf(hashKey);
+
     }
 }

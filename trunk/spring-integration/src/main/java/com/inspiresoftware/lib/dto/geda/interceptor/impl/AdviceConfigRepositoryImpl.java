@@ -32,8 +32,8 @@ public class AdviceConfigRepositoryImpl implements AdviceConfigRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdviceConfigRepositoryImpl.class);
 
-    private final Map<String, Map<String, Map<Occurrence, AdviceConfig>>> cache
-            = new ConcurrentHashMap<String, Map<String, Map<Occurrence, AdviceConfig>>>();
+    private final Map<String, Map<Integer, Map<Occurrence, AdviceConfig>>> cache
+            = new ConcurrentHashMap<String, Map<Integer, Map<Occurrence, AdviceConfig>>>();
 
 
     /** {@inheritDoc} */
@@ -48,13 +48,13 @@ public class AdviceConfigRepositoryImpl implements AdviceConfigRepository {
 
     public void addMethodIfApplicable(final Method method, final Class<?> targetClass) {
 
-        Map<String, Map<Occurrence, AdviceConfig>> cMap = getAdvisableMethodsConfigurations(targetClass);
+        Map<Integer, Map<Occurrence, AdviceConfig>> cMap = getAdvisableMethodsConfigurations(targetClass);
         if (cMap.isEmpty()) {
-            cMap = new ConcurrentHashMap<String, Map<Occurrence, AdviceConfig>>();
+            cMap = new ConcurrentHashMap<Integer, Map<Occurrence, AdviceConfig>>();
             cache.put(targetClass.getCanonicalName(), cMap);
         }
 
-        final String key = methodCacheKey(method, targetClass);
+        final Integer key = methodCacheKey(method, targetClass);
         if (!cMap.containsKey(key)) {
             final Map<Occurrence, AdviceConfig> methodCfg = resolveConfiguration(method, targetClass);
             if (methodCfg.isEmpty()) {
@@ -81,11 +81,11 @@ public class AdviceConfigRepositoryImpl implements AdviceConfigRepository {
     }
 
     /** {@inheritDoc} */
-    public Map<String, Map<Occurrence, AdviceConfig>> getAdvisableMethodsConfigurations(final Class<?> targetClass) {
+    public Map<Integer, Map<Occurrence, AdviceConfig>> getAdvisableMethodsConfigurations(final Class<?> targetClass) {
         if (targetClass == null) {
             return Collections.emptyMap();
         }
-        final Map<String, Map<Occurrence, AdviceConfig>> cMap = cache.get(targetClass.getCanonicalName());
+        final Map<Integer, Map<Occurrence, AdviceConfig>> cMap = cache.get(targetClass.getCanonicalName());
         if (cMap == null) {
             return Collections.emptyMap();
         }
@@ -100,7 +100,7 @@ public class AdviceConfigRepositoryImpl implements AdviceConfigRepository {
      * @param targetClass bean class on which it is invoked
      * @return key for this method/class pair
      */
-    public String methodCacheKey(final Method method, final Class<?> targetClass) {
+    public Integer methodCacheKey(final Method method, final Class<?> targetClass) {
 
         final StringBuilder signature = new StringBuilder(method.getName()).append('(');
         final Class[] args = method.getParameterTypes();
@@ -112,6 +112,18 @@ public class AdviceConfigRepositoryImpl implements AdviceConfigRepository {
         }
         signature.append(')');
 
-        return signature.toString();
+        return signature.toString().hashCode();
+
+        /*
+        int hashKey = method.getName().hashCode();
+        final Class[] args = method.getParameterTypes();
+        if (args.length > 0) {
+            for (Class arg : args) {
+                hashKey = 31 * hashKey + arg.hashCode();
+            }
+        }
+
+        return Integer.valueOf(hashKey);
+        */
     }
 }
