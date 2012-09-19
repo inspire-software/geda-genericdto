@@ -10,11 +10,11 @@
 package com.inspiresoftware.lib.dto.geda.benchmark.dto;
 
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
-import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
+import com.inspiresoftware.lib.dto.geda.annotations.DtoMap;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Address;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.geda.AddressMatcher;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * .
@@ -24,21 +24,22 @@ import java.util.List;
  * Time: 10:15:42 AM
  */
 @Dto
-public class PersonWithHistoryDTO extends PersonDTO {
+public class PersonWithHistoryByCityDTO extends PersonDTO {
 
-    @DtoCollection(value = "previousAddresses",
-                   dtoBeanKey = "addressDto",
-                   entityBeanKeys = "addressEntity",
-                   entityGenericType = Address.class,
-                   dtoToEntityMatcher = AddressMatcher.class)
-    private List<AddressDTO> previousAddresses;
+    @DtoMap(value = "previousAddresses",
+            dtoBeanKey = "addressDto",
+            entityBeanKeys = "addressEntity",
+            entityCollectionMapKey = "city",
+            entityGenericType = Address.class,
+            dtoToEntityMatcher = AddressMatcher.class)
+    private Map<String, AddressDTO> previousAddresses;
 
 
-    public List<AddressDTO> getPreviousAddresses() {
+    public Map<String, AddressDTO> getPreviousAddresses() {
         return previousAddresses;
     }
 
-    public void setPreviousAddresses(final List<AddressDTO> previousAddresses) {
+    public void setPreviousAddresses(final Map<String, AddressDTO> previousAddresses) {
         this.previousAddresses = previousAddresses;
     }
     
