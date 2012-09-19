@@ -66,7 +66,7 @@ public class GeDAListMapperTest extends AbstractMapperTest {
     }
 
     @Test
-    //@Ignore
+    @Ignore
     public void testMapMapperPerformance() throws Exception {
 
         for (int i = 0; i < PERFORMANCE_TEST_CYCLES; i++) {
