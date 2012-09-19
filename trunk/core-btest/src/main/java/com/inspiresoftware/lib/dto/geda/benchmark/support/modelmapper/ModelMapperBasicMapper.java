@@ -22,12 +22,12 @@ import org.modelmapper.PropertyMap;
  * Date: Sep 17, 2012
  * Time: 11:39:32 AM
  */
-public class ModelMapperMapper implements Mapper {
+public class ModelMapperBasicMapper implements Mapper {
 
     private ModelMapper mapperFromDto;
     private ModelMapper mapperFromEntity;
 
-    public ModelMapperMapper() {
+    public ModelMapperBasicMapper() {
         mapperFromDto = new ModelMapper();
         mapperFromDto.addMappings(new PropertyMap<PersonDTO, Person>() {
             @Override

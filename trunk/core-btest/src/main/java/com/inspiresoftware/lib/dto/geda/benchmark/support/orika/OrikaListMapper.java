@@ -14,6 +14,7 @@ import com.inspiresoftware.lib.dto.geda.benchmark.domain.Address;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Person;
 import com.inspiresoftware.lib.dto.geda.benchmark.dto.AddressDTO;
 import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
+import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonWithHistoryDTO;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -26,14 +27,14 @@ import ma.glasnost.orika.metadata.ClassMapBuilder;
  * Date: Sep 17, 2012
  * Time: 12:04:50 PM
  */
-public class OrikaMapper implements Mapper {
+public class OrikaListMapper implements Mapper {
 
     private MapperFacade mapper;
     private MapperFacade addressMapper;
 
-    public OrikaMapper() {
+    public OrikaListMapper() {
         final MapperFactory factory = new DefaultMapperFactory.Builder().build();
-        factory.registerClassMap(ClassMapBuilder.map(Address.class, AddressDTO.class).
+        factory.registerClassMap(factory.classMap(Address.class, AddressDTO.class).
             field("addressLine1", "addressLine1").
             field("addressLine2", "addressLine2").
             field("postCode", "postCode").
@@ -41,18 +42,18 @@ public class OrikaMapper implements Mapper {
             field("country.name", "countryName").
             toClassMap()
         );
-        factory.registerClassMap(ClassMapBuilder.map(Person.class, PersonDTO.class).
+        factory.registerClassMap(factory.classMap(Person.class, PersonWithHistoryDTO.class).
             field("name.firstname", "firstName").
             field("name.surname", "lastName").
             field("currentAddress", "currentAddress").
+            field("previousAddresses", "previousAddresses").
             toClassMap()
         );
-        factory.build();
         this.mapper = factory.getMapperFacade();
     }
 
     public Object fromEntity(final Object entity) {
-        return mapper.map(entity, PersonDTO.class);
+        return mapper.map(entity, PersonWithHistoryDTO.class);
     }
 
     public Object fromDto(final Object dto) {

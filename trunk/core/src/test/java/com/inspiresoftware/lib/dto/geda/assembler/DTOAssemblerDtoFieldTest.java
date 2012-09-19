@@ -216,7 +216,11 @@ public class DTOAssemblerDtoFieldTest {
 		dto.setIm3("dto3");
 		
 		assembler.assembleEntity(dto, entity, null, new BeanFactory() {
-			public Object get(final String entityBeanKey) {
+            public Class getClazz(final String entityBeanKey) {
+                return TestEntity10Interface.class;
+            }
+
+            public Object get(final String entityBeanKey) {
 				return new TestEntity10SubClass();
 			}
 			
@@ -229,7 +233,10 @@ public class DTOAssemblerDtoFieldTest {
 		entity.setNested(null);
 		
 		assembler.assembleEntity(dto, entity, null, new BeanFactory() {
-			public Object get(final String entityBeanKey) {
+            public Class getClazz(final String entityBeanKey) {
+                return TestEntity10Interface.class;
+            }
+            public Object get(final String entityBeanKey) {
 				return new TestEntity10SubClass();
 			}
 			

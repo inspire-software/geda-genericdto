@@ -296,7 +296,7 @@ class DataPipe implements Pipe {
 		    }
 			final Class beanClass = this.meta.newEntityBean(entityBeanFactory).getClass(); // overhead but need to be stateless!!!
 			final Object entityForPk = getRetriever(converters).retrieveByPrimaryKey(returnType, beanClass, primaryKey);
-			// if we did not find anything, setting null. Maybe need to throw exception here or maybe it is retiriever's job?
+			// if we did not find anything, setting null. Maybe need to throw exception here or maybe it is retriever's job?
 			this.entityWrite.write(entity, entityForPk);
 		}
 	}

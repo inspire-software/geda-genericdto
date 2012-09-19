@@ -120,7 +120,11 @@ public class PerformanceTestLevel1Thread implements Runnable {
 	private BeanFactory getFactory() {
 		return new BeanFactory() {
 
-			public Object get(String entityBeanKey) {
+            public Class getClazz(final String entityBeanKey) {
+                return null;
+            }
+
+            public Object get(String entityBeanKey) {
 				if ("lvl1".equals(entityBeanKey)) {
 					return new Level1Dto();
 				} else if ("lvl2".equals(entityBeanKey)) {

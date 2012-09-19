@@ -13,10 +13,7 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
-import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.NotDtoToEntityMatcherException;
-import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+import com.inspiresoftware.lib.dto.geda.exception.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,6 +36,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements com.inspiresoft
     private final String entityMapOrCollectionClassKey;
 
     private final Class< ? > returnType;
+    private final String returnTypeKey;
     private final String mapKeyForCollection;
     private final boolean entityMapKey;
     
@@ -46,6 +44,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements com.inspiresoft
     private final String dtoToEntityMatcherKey;
     
 	/**
+     *
      * @param dtoFieldName key for accessing field on DTO object
      * @param entityFieldName key for accessing field on Entity bean
      * @param dtoBeanKey key for constructing DTO bean
@@ -55,32 +54,33 @@ public class MapPipeMetadata extends BasePipeMetadata implements com.inspiresoft
      * @param dtoMapClassKey key for dto map class fetched from beanFactory
      * @param entityMapOrCollectionClass the entity collection/map class for creating new collection/map instance
      * @param entityMapOrCollectionClassKey key for entity collection/map class fetched from beanFactory
+     * @param returnType the generic type for entity collection/map item
+     * @param returnTypeKey bean factory key for generic type for entity collection/map item
      * @param mapKeyForCollection property whose value will be used as key for dto map.
      * @param entityMapKey true if map key is entity object, false if map value is entity object.
-     * @param returnType the generic return time for entity collection
      * @param dtoToEntityMatcherClass matcher for synchronising collections
      * @param dtoToEntityMatcherKey key of matcher in the converters map
-     * 
-	 * @throws UnableToCreateInstanceException if unable to create item matcher
+     * @throws UnableToCreateInstanceException if unable to create item matcher
 	 */
-	public MapPipeMetadata(final String dtoFieldName, 
-							 final String entityFieldName, 
-							 final String dtoBeanKey, 
-							 final String entityBeanKey,
-							 final boolean readOnly,
-							 final Class< ? extends Collection> dtoMapClass,
-							 final String dtoMapClassKey,
-							 final Class< ? > entityMapOrCollectionClass, 
-							 final String entityMapOrCollectionClassKey, 
-							 final Class< ? > returnType,
-							 final String mapKeyForCollection,
-							 final boolean entityMapKey,
-							 final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcherClass,
-							 final String dtoToEntityMatcherKey) throws UnableToCreateInstanceException {
+	public MapPipeMetadata(final String dtoFieldName,
+                           final String entityFieldName,
+                           final String dtoBeanKey,
+                           final String entityBeanKey,
+                           final boolean readOnly,
+                           final Class<? extends Collection> dtoMapClass,
+                           final String dtoMapClassKey,
+                           final Class<?> entityMapOrCollectionClass,
+                           final String entityMapOrCollectionClassKey,
+                           final Class<?> returnType,
+                           final String returnTypeKey, final String mapKeyForCollection,
+                           final boolean entityMapKey,
+                           final Class<? extends DtoToEntityMatcher> dtoToEntityMatcherClass,
+                           final String dtoToEntityMatcherKey) throws UnableToCreateInstanceException {
 		
 		super(dtoFieldName, entityFieldName, dtoBeanKey, entityBeanKey, readOnly);
 		this.dtoMapClass = dtoMapClass;
-		this.dtoMapClassKey = dtoMapClassKey != null && dtoMapClassKey.length() > 0 ? dtoMapClassKey : null;
+        this.returnTypeKey = returnTypeKey != null && returnTypeKey.length() > 0 ? returnTypeKey : null;
+        this.dtoMapClassKey = dtoMapClassKey != null && dtoMapClassKey.length() > 0 ? dtoMapClassKey : null;
 		this.entityMapOrCollectionClass = entityMapOrCollectionClass;
 		this.entityMapOrCollectionClassKey = 
 			entityMapOrCollectionClassKey != null && entityMapOrCollectionClassKey.length() > 0 ? entityMapOrCollectionClassKey : null;
@@ -93,8 +93,8 @@ public class MapPipeMetadata extends BasePipeMetadata implements com.inspiresoft
 				this.dtoToEntityMatcher = CACHE.get(dtoToEntityMatcherClass);
 			} else {
 				this.dtoToEntityMatcher = newBeanForClass(
-						dtoToEntityMatcherClass, "Unable to create matcher: " + dtoToEntityMatcherClass.getCanonicalName()
-		                + " for: " + this.getDtoBeanKey() + " - " + this.getEntityBeanKey());
+						dtoToEntityMatcherClass, "Unable to create matcher: {0} for: {1} - {2}",
+                        dtoToEntityMatcherClass, this.getDtoBeanKey(), this.getEntityBeanKey());
 				CACHE.put(dtoToEntityMatcherClass, this.dtoToEntityMatcher);
 			}
 			this.dtoToEntityMatcherKey = null;
@@ -110,7 +110,7 @@ public class MapPipeMetadata extends BasePipeMetadata implements com.inspiresoft
 		if (this.dtoMapClassKey != null) {
 			return newCollection(this.dtoMapClassKey, beanFactory, true);
 		}
-		return newCollection(this.dtoMapClass, " Dto field: " + this.getDtoFieldName());
+		return newCollection(this.dtoMapClass, " Dto field: ", this.getDtoFieldName());
 	}
 	
 	/** {@inheritDoc} */
@@ -118,16 +118,19 @@ public class MapPipeMetadata extends BasePipeMetadata implements com.inspiresoft
 		if (this.entityMapOrCollectionClassKey != null) {
 			return newCollection(this.entityMapOrCollectionClassKey, beanFactory, false);
 		}
-		return newCollection(this.entityMapOrCollectionClass, " Entity field: " + this.getEntityFieldName());
+		return newCollection(this.entityMapOrCollectionClass, " Entity field: ", this.getEntityFieldName());
 	}
 
+    /** {@inheritDoc} */
+    public Class< ? > getReturnType(BeanFactory beanFactory)
+            throws BeanFactoryUnableToLocateRepresentationException, BeanFactoryNotFoundException {
+        if (this.returnTypeKey == null) {
+            return returnType;
+        }
+        return getRepresentation(this.returnTypeKey, beanFactory, false);
+    }
 
-	/** {@inheritDoc} */
-	public Class< ? > getReturnType() {
-		return returnType;
-	}
-	
-	/** {@inheritDoc} */
+    /** {@inheritDoc} */
 	public String getMapKeyForCollection() {
 		return mapKeyForCollection;
 	}
@@ -172,15 +175,15 @@ public class MapPipeMetadata extends BasePipeMetadata implements com.inspiresoft
 		
 	}
 	
-	private  <T> T newCollection(final Class< ? > clazz, final String type) throws UnableToCreateInstanceException {
-        return (T) newBeanForClass(clazz, "Unable to create collection: " + clazz.getCanonicalName() + " for " + type);
+	private  <T> T newCollection(final Class< ? > clazz, final String type, final String field) throws UnableToCreateInstanceException {
+        return (T) newBeanForClass(clazz, "Unable to create collection: {0} for {1} {2}", clazz, type, field);
     }
 
-    private <T> T newBeanForClass(final Class<T> clazz, final String errMsg) throws UnableToCreateInstanceException {
+    private <T> T newBeanForClass(final Class<T> clazz, final String errMsg, final Object ... msgParams) throws UnableToCreateInstanceException {
         try {
             return clazz.newInstance();
         } catch (Exception iex) {
-            throw new UnableToCreateInstanceException(clazz.getCanonicalName(), errMsg, iex);
+            throw new UnableToCreateInstanceException(clazz.getCanonicalName(), String.format(errMsg, msgParams), iex);
         }
     }
 	

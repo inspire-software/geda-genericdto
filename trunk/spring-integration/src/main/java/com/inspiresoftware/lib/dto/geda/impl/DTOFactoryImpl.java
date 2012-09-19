@@ -29,36 +29,101 @@ public class DTOFactoryImpl implements DTOFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DTOFactoryImpl.class);
 
-    private final Map<String, String> mapping = new ConcurrentHashMap<String, String>();
+    private final Map<String, String> mappingClasses = new ConcurrentHashMap<String, String>();
+    private final Map<String, String> mappingReps = new ConcurrentHashMap<String, String>();
+    private final Map<String, Class> cacheClasses = new ConcurrentHashMap<String, Class>();
+    private final Map<String, Class> cacheReps = new ConcurrentHashMap<String, Class>();
 
     public DTOFactoryImpl() {
     }
 
-    public DTOFactoryImpl(final Map<String, String> mapping) {
-        this.mapping.putAll(mapping);
+    /**
+     * @param mappingClasses simple key to class mapping
+     */
+    @Deprecated
+    public DTOFactoryImpl(final Map<String, String> mappingClasses) {
+        this(mappingClasses, mappingClasses);
+    }
+
+    /**
+     * @param mappingClasses simple key to class mapping
+     * @param mappingEntityRepresentatives simple key to interface mapping for entities
+     */
+    public DTOFactoryImpl(final Map<String, String> mappingClasses,
+                          final Map<String, String> mappingEntityRepresentatives) {
+        // put all classes
+        this.mappingClasses.putAll(mappingClasses);
+        // by default all representatives are implementation classes
+        this.mappingReps.putAll(mappingClasses);
+        // override all entity ones
+        this.mappingReps.putAll(mappingEntityRepresentatives);
     }
 
     /** {@inheritDoc} */
     public void register(final String key, final String className) throws IllegalArgumentException {
+        registerDto(key, className);
+    }
+
+    /** {@inheritDoc} */
+    public void registerDto(final String key, final String className) throws IllegalArgumentException {
         if (StringUtils.hasText(key) && StringUtils.hasText(className)) {
-            if (this.mapping.containsKey(key)) {
+            if (this.mappingClasses.containsKey(key)) {
                 throw new IllegalArgumentException("key is already used: [key=" + key + ", className=" + className + "]");
             }
-            this.mapping.put(key, className);
+            this.mappingClasses.put(key, className);
+            this.mappingReps.put(key, className);
         } else {
             throw new IllegalArgumentException("all args are mandatory: [key=" + key + ", className=" + className + "]");
         }
     }
 
     /** {@inheritDoc} */
+    public void registerEntity(final String key, final String className, final String representative) throws IllegalArgumentException {
+        if (StringUtils.hasText(key) && StringUtils.hasText(className)) {
+            if (this.mappingClasses.containsKey(key)) {
+                throw new IllegalArgumentException("key is already used: [key=" + key + ", className=" + className + "]");
+            }
+            this.mappingClasses.put(key, className);
+            this.mappingReps.put(key, representative);
+        } else {
+            throw new IllegalArgumentException("all args are mandatory: [key=" + key + ", className=" + className + "]");
+        }
+    }
+
+    /** {@inheritDoc} */
+    public Class getClazz(final String entityBeanKey) {
+        return getClassFromMapping(entityBeanKey, mappingReps, cacheReps);
+    }
+
+    /** {@inheritDoc} */
     public Object get(final String entityBeanKey) {
+        final Class clazz = getClassFromMapping(entityBeanKey, mappingClasses, cacheClasses);
+        if (clazz != null) {
+            try {
+                return clazz.newInstance();
+            } catch (Exception exp) {
+                LOG.error("Unable to create instance for key = {}", entityBeanKey);
+                LOG.error(exp.getMessage(), exp);
+            }
+        }
+        return null;
+    }
+
+    private Class getClassFromMapping(final String entityBeanKey,
+                                      final Map<String, String> mapping,
+                                      final Map<String, Class> cache) {
+
+        if (cache.containsKey(entityBeanKey)) {
+            return cache.get(entityBeanKey);
+        }
         final String className = mapping.get(entityBeanKey);
         if (className != null) {
             try {
                 final Class clazz = Class.forName(className);
-                return clazz.newInstance();
+                cache.put(entityBeanKey, clazz);
+                return clazz;
             } catch (Exception exp) {
-                LOG.error("Unable to create instance for key = {}", entityBeanKey);
+                LOG.error("Unable to create class for key = {}", entityBeanKey);
                 LOG.error(exp.getMessage(), exp);
             }
         } else {

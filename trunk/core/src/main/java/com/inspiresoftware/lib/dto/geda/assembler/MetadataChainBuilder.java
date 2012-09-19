@@ -131,7 +131,8 @@ final class MetadataChainBuilder {
 				dtoCollAnn.entityCollectionClass(),
 				dtoCollAnn.entityCollectionClassKey(),
 				dtoCollAnn.entityGenericType(),
-				dtoCollAnn.dtoToEntityMatcher(),
+                dtoCollAnn.entityGenericTypeKey(),
+                dtoCollAnn.dtoToEntityMatcher(),
 				dtoCollAnn.dtoToEntityMatcherKey()
 			));
 		}
@@ -156,7 +157,8 @@ final class MetadataChainBuilder {
 				dtoMapAnn.entityMapOrCollectionClass(),
 				dtoMapAnn.entityMapOrCollectionClassKey(),
 				dtoMapAnn.entityGenericType(),
-				dtoMapAnn.entityCollectionMapKey(),
+                dtoMapAnn.entityGenericTypeKey(),
+                dtoMapAnn.entityCollectionMapKey(),
 				dtoMapAnn.useEntityMapKey(),
 				dtoMapAnn.dtoToEntityMatcher(),
 				dtoMapAnn.dtoToEntityMatcherKey()

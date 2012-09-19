@@ -13,10 +13,7 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
-import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.NotDtoToEntityMatcherException;
-import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+import com.inspiresoftware.lib.dto.geda.exception.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,10 +36,12 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements com.insp
     private final String entityCollectionClassKey;
 
     private final Class< ? > returnType;
+    private final String returnTypeKey;
     private final DtoToEntityMatcher dtoToEntityMatcher;
     private final String dtoToEntityMatcherKey;
 
 	/**
+     *
      * @param dtoFieldName key for accessing field on DTO object
      * @param entityFieldName key for accessing field on Entity bean
      * @param dtoBeanKey key for constructing DTO bean
@@ -52,28 +51,30 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements com.insp
      * @param dtoCollectionClassKey key for dto collection class fetched from beanFactory
      * @param entityCollectionClass the entity collection class for creating new collection instance
      * @param entityCollectionClassKey key for entity collection class fetched from beanFactory
-     * @param returnType the generic return time for entity collection
+     * @param returnType the generic type for entity collection item
+     * @param returnTypeKey bean factory key for generic type for entity collection item
      * @param dtoToEntityMatcherClass matcher for synchronising collections
      * @param dtoToEntityMatcherKey key of matcher in the converters map
-     * 
-	 * @throws UnableToCreateInstanceException if unable to create item matcher
+     *
+     * @throws UnableToCreateInstanceException if unable to create item matcher
 	 */
-	public CollectionPipeMetadata(final String dtoFieldName, 
-							 final String entityFieldName, 
-							 final String dtoBeanKey, 
-							 final String entityBeanKey,
-							 final boolean readOnly,
-							 final Class< ? extends Collection> dtoCollectionClass,
-							 final String dtoCollectionClassKey,
-							 final Class< ? extends Collection> entityCollectionClass, 
-							 final String entityCollectionClassKey, 
-							 final Class< ? > returnType,
-							 final Class< ? extends DtoToEntityMatcher> dtoToEntityMatcherClass,
-							 final String dtoToEntityMatcherKey) throws UnableToCreateInstanceException {
+	public CollectionPipeMetadata(final String dtoFieldName,
+                                  final String entityFieldName,
+                                  final String dtoBeanKey,
+                                  final String entityBeanKey,
+                                  final boolean readOnly,
+                                  final Class<? extends Collection> dtoCollectionClass,
+                                  final String dtoCollectionClassKey,
+                                  final Class<? extends Collection> entityCollectionClass,
+                                  final String entityCollectionClassKey,
+                                  final Class<?> returnType,
+                                  final String returnTypeKey, final Class<? extends DtoToEntityMatcher> dtoToEntityMatcherClass,
+                                  final String dtoToEntityMatcherKey) throws UnableToCreateInstanceException {
 		
 		super(dtoFieldName, entityFieldName, dtoBeanKey, entityBeanKey, readOnly);
 		this.dtoCollectionClass = dtoCollectionClass;
-		this.dtoCollectionClassKey = dtoCollectionClassKey != null && dtoCollectionClassKey.length() > 0 ? dtoCollectionClassKey : null;
+        this.returnTypeKey = returnTypeKey != null && returnTypeKey.length() > 0 ? returnTypeKey : null;
+        this.dtoCollectionClassKey = dtoCollectionClassKey != null && dtoCollectionClassKey.length() > 0 ? dtoCollectionClassKey : null;
 		this.entityCollectionClass = entityCollectionClass;
 		this.entityCollectionClassKey = entityCollectionClassKey != null && entityCollectionClassKey.length() > 0 ? entityCollectionClassKey : null;
 		this.returnType = returnType;
@@ -83,8 +84,8 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements com.insp
 				this.dtoToEntityMatcher = CACHE.get(dtoToEntityMatcherClass);
 			} else {
 				this.dtoToEntityMatcher = newBeanForClass(
-						dtoToEntityMatcherClass, "Unable to create matcher: " + dtoToEntityMatcherClass.getCanonicalName()
-		                + " for: " + this.getDtoBeanKey() + " - " + this.getEntityBeanKey());
+						dtoToEntityMatcherClass, "Unable to create matcher: {0} for: {1} - {2}",
+                        dtoToEntityMatcherClass, this.getDtoBeanKey(), this.getEntityBeanKey());
 				CACHE.put(dtoToEntityMatcherClass, this.dtoToEntityMatcher);
 			}
 			this.dtoToEntityMatcherKey = null;
@@ -100,7 +101,7 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements com.insp
 		if (this.dtoCollectionClassKey != null) {
 			return newCollection(this.dtoCollectionClassKey, beanFactory, true);
 		}
-		return newCollection(dtoCollectionClass, " Dto field: " + this.getDtoFieldName());
+		return newCollection(dtoCollectionClass, " Dto field: ", this.getDtoFieldName());
 	}
 
 	/** {@inheritDoc} */
@@ -108,12 +109,16 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements com.insp
 		if (this.entityCollectionClassKey != null) {
 			return newCollection(this.entityCollectionClassKey, beanFactory, false);
 		}
-		return newCollection(entityCollectionClass, " Entity field: " + this.getEntityFieldName());
+		return newCollection(entityCollectionClass, " Entity field: ", this.getEntityFieldName());
 	}
 
 	/** {@inheritDoc} */
-	public Class< ? > getReturnType() {
-		return returnType;
+	public Class< ? > getReturnType(BeanFactory beanFactory)
+            throws BeanFactoryUnableToLocateRepresentationException, BeanFactoryNotFoundException {
+        if (this.returnTypeKey == null) {
+		    return returnType;
+        }
+        return getRepresentation(this.returnTypeKey, beanFactory, false);
 	}
 
 	/** {@inheritDoc} */
@@ -151,15 +156,15 @@ public class CollectionPipeMetadata extends BasePipeMetadata implements com.insp
 
 	}
 
-    private Collection newCollection(final Class< ? extends Collection> clazz, final String type) throws UnableToCreateInstanceException {
-        return newBeanForClass(clazz, "Unable to create collection: " + clazz.getCanonicalName() + " for " + type);
+    private Collection newCollection(final Class< ? extends Collection> clazz, final String type, final String field) throws UnableToCreateInstanceException {
+        return newBeanForClass(clazz, "Unable to create collection: {0} for {1} {2}", clazz, type, field);
     }
 
-    private <T> T newBeanForClass(final Class<T> clazz, final String errMsg) throws UnableToCreateInstanceException {
+    private <T> T newBeanForClass(final Class<T> clazz, final String errMsg, final Object ... msgParams) throws UnableToCreateInstanceException {
         try {
             return clazz.newInstance();
         } catch (Exception iex) {
-            throw new UnableToCreateInstanceException(clazz.getCanonicalName(), errMsg, iex);
+            throw new UnableToCreateInstanceException(clazz.getCanonicalName(), String.format(errMsg, msgParams), iex);
         }
     }
 	

@@ -12,10 +12,7 @@ package com.inspiresoftware.lib.dto.geda.assembler.meta;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
-import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.DtoToEntityMatcherNotFoundException;
-import com.inspiresoftware.lib.dto.geda.exception.NotDtoToEntityMatcherException;
-import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
+import com.inspiresoftware.lib.dto.geda.exception.*;
 
 import java.util.Collection;
 import java.util.Map;
@@ -49,8 +46,11 @@ public interface CollectionPipeMetadata extends PipeMetadata {
 
 	/**
 	 * @return the entity's collection generic type to identity the type of items in entity collection.
-	 */
-	Class< ? > getReturnType();
+     *
+     * @throws BeanFactoryUnableToLocateRepresentationException if unable to locate representative class
+     * @throws BeanFactoryNotFoundException if no bean factory provided
+     */
+	Class< ? > getReturnType(BeanFactory beanFactory) throws BeanFactoryUnableToLocateRepresentationException, BeanFactoryNotFoundException;
 
 	/**
 	 * @param converters converters passed during runtime

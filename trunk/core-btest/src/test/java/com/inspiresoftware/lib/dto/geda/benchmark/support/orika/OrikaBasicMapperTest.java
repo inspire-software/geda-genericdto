@@ -7,7 +7,7 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda.benchmark.support.modelmapper;
+package com.inspiresoftware.lib.dto.geda.benchmark.support.orika;
 
 import com.inspiresoftware.lib.dto.geda.benchmark.Mapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Person;
@@ -22,9 +22,9 @@ import static org.junit.Assert.assertEquals;
  * <p/>
  * User: denispavlov
  * Date: Sep 17, 2012
- * Time: 11:43:54 AM
+ * Time: 12:07:57 PM
  */
-public class ModelMapperMapperTest extends AbstractMapperTest {
+public class OrikaBasicMapperTest extends AbstractMapperTest {
 
     @Test
     public void testMapper() throws Exception {
@@ -32,7 +32,7 @@ public class ModelMapperMapperTest extends AbstractMapperTest {
         final Person entity = getEntity();
         final PersonDTO dto = getDto();
 
-        final Mapper mapper = new ModelMapperMapper();
+        final Mapper mapper = new OrikaBasicMapper();
 
         assertEquals(entity, mapper.fromDto(dto));
         assertEquals(dto, mapper.fromEntity(entity));
