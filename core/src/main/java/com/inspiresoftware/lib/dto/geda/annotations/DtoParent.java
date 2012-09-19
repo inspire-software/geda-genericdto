@@ -29,7 +29,11 @@ import java.lang.annotation.RetentionPolicy;
 public @interface DtoParent {
 
 	/**
-	 * textual reference to field that will be binded as id for entity retrieval.
+     * field name on entity class that will be bound to this dto field
+     * (reflection notation e.g. myField.mySubfield).
+     *
+     * This fields value will be passed on to {@link com.inspiresoftware.lib.dto.geda.adapter.EntityRetriever}
+     * as primary key.
 	 */
 	String value() default "entityId";
 
