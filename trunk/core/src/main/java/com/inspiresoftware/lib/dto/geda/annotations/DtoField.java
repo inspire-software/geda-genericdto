@@ -16,7 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * Defines a field in a DTO. Provides a mapping between the target
- * entity and the {@link com.inspiresoftware.lib.dto.geda.annotations.Dto};
+ * entity and the {@link com.inspiresoftware.lib.dto.geda.annotations.Dto}
  *
  * @author Denis Pavlov
  * @since 1.0.0
@@ -26,14 +26,16 @@ import java.lang.annotation.RetentionPolicy;
 public @interface DtoField {
 
 	/**
-	 * textual reference to field that will be binded to this field (reflection notation).
-	 */
+     * field name on entity class that will be bound to this dto field
+     * (reflection notation e.g. myField.mySubfield).
+     */
 	String value() default "";
 	
 	/**
-	 * Textual reference to converter to use when assembling DTO's and Entities. This is passed in a
-	 * converter map an must implement {@link com.inspiresoftware.lib.dto.geda.adapter.ValueConverter}.
-	 */
+     * Textual reference to a converter to use when assembling DTO's and Entities. This reference is
+     * used to lookup converter in adapters map passed into assembleDto and assembleEntity methods.
+     * This converter must implement {@link com.inspiresoftware.lib.dto.geda.adapter.ValueConverter}.
+     */
 	String converter() default "";
 	
 	/**
@@ -48,14 +50,18 @@ public @interface DtoField {
      * Failure to supply this parameter will result in
 	 * {@link com.inspiresoftware.lib.dto.geda.exception.GeDAException}.
 	 *
-	 * Specifies entity bean key that will be used by injected to {@link com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler}
-	 * bean factory
-	 */
+     * Specifies entity bean key chain that will be used by bean factory injected to
+     * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler}
+     * assembleEntity methods.
+     */
 	String[] entityBeanKeys() default "";
 
     /**
      * This annotation is mandatory for nested objects that are used as fields within the top
      * level DTO.
+     *
+     * Specifies DTO bean key that will be used by bean factory injected to
+     * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleDto methods.
      */
     String dtoBeanKey() default "";
 		

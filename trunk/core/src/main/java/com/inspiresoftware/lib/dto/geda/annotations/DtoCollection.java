@@ -30,8 +30,9 @@ import java.util.ArrayList;
 public @interface DtoCollection {
 
     /**
-	 * textual reference to field that will be binded to this field (reflection notation).
-	 */
+     * field name on entity class that will be bound to this dto field
+     * (reflection notation e.g. myField.mySubfield).
+     */
 	String value() default "";
 
     /**
@@ -42,15 +43,24 @@ public @interface DtoCollection {
 
 	/**
 	 * Class that defines the type of class for creating new Domain object collection.
-	 * Default is {@link java.util.ArrayList}
-	 */
+	 * Default is {@link java.util.ArrayList}.
+     *
+     * Assembler will create an instance of this class and set it to entity property during #assembleEntity
+     * method call if that property was null.
+     */
 	Class entityCollectionClass() default ArrayList.class;
+
     /**
      * Key that defines the type of instance to be retrieved from beanFactory 
      * for creating new Domain object collection.
+     *
+     * Specifies bean key that will be used by bean factory injected to
+     * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleEntity methods.
+     *
      * This setting has priority over the {@link #entityCollectionClass()} setting.
      */
     String entityCollectionClassKey() default "";
+
     /**
      * Class that defines the type of class for creating new DTO object collection.
      * Default is {@link java.util.ArrayList}
@@ -59,38 +69,61 @@ public @interface DtoCollection {
     /**
      * Key that defines the type of instance to be retrieved from beanFactory 
      * for creating new DTO object collection.
+     *
+     * Specifies bean key that will be used by bean factory injected to
+     * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleDto methods.
+     *
      * This setting has priority over the {@link #dtoCollectionClass()} setting.
      */
     String dtoCollectionClassKey() default "";
 
     /**
-     * Domain object bean factory key for creating new domain object instance
-     * within collection. If the collection has deep nested mapping the the key
-     * for the Item bean will be the last in this chain.
+     * Specifies entity bean key chain that will be used by bean factory injected to
+     * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler}
+     * assembleEntity methods.
+     *
+     * If the collection has deep nested mapping (e.g. myField.myCollection) the key
+     * for the Item bean will be the last in this chain (e.g.
+     * { "beanWithMyCollectionProperty", "beanCollectionItem" }).
      */
     String[] entityBeanKeys() default "";
 
     /**
-     * DTO object bean factory key for creating new domain object instance 
-     * within collection. If the collection has deep nested mapping the the key
-     * for the Item bean will be the last in this chain.
+     * Specifies DTO bean key that will be used by bean factory injected to
+     * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleDto methods.
+     *
+     * DTO object bean factory key for creating new DTO collection item object instances.
+     * To specify the collection instance class use #dtoCollectionClass or #dtoCollectionClassKey.
      */
     String dtoBeanKey() default "";
 
     /**
-     * Entity generic type i.e. the type of collection for entities. This cannot be extracted 
-     * through reflection API since collection might be null.
+     * Entity generic type i.e. the type of collection item for entities. Can be either
+     * class or interface to be used for DTO collection items mapping.
+     *
+     * This property is mandatory since it cannot be extracted through reflection API
+     * when collection is null.
+     *
+     * Assembler will automatically generate an internal sub assembler to map DTO items
+     * to entity items and this is the class or interface that will be used for
+     * creating assembler instance.
      */
     Class entityGenericType() default Object.class;
 
     /**
      * Matcher used to synchronize collection of DTO's and Entities.
+     *
+     * There is no sensible default for this since we are matching incompatible (in theory)
+     * types (i.e. DTO with Entity) therefore there are no default implementations that can be
+     * used for this.
      */
 	Class< ? extends DtoToEntityMatcher> dtoToEntityMatcher() default DtoToEntityMatcher.class;
 	
 	/**
-	 * Key used on the converters map to retrieve matcher used to synchronize collection 
-	 * of DTO's and Entities.
+     * This reference is used to lookup a matcher in adapters map passed into
+     * assembleDto and assembleEntity methods. The matcher has to implement
+     * {@link DtoToEntityMatcher} interface.
+     *
 	 * This setting has priority over the {@link #dtoToEntityMatcher()} setting.
 	 */
 	String dtoToEntityMatcherKey() default "";

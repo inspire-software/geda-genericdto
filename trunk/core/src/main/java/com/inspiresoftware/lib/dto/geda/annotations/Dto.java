@@ -25,8 +25,9 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Dto {
 	
 	/**
-	 * textual reference to class that will be binded to dto.
-	 * E.g. com.inspiresoftware.lib.dto.geda.example.MyEntityClass or com.inspiresoftware.lib.dto.geda.example.MyEntityInterface
+	 * Full canonical class (or interface) name that this DTO bounds to.
+	 * (e.g. com.inspiresoftware.lib.dto.geda.example.MyEntityClass or
+     * com.inspiresoftware.lib.dto.geda.example.MyEntityInterface)
 	 */
 	String[] value() default "";
 	
