@@ -33,9 +33,9 @@ public interface AdviceConfigRepository extends GeDAInfrastructure {
 
     /**
      * @param targetClass target class
-     * @return all valid methods configurations.
+     * @return all valid methods configurations keyed by unique cache key.
      */
-    Map<String, Map<Occurrence, AdviceConfig>> getAdvisableMethodsConfigurations(final Class<?> targetClass);
+    Map<Integer, Map<Occurrence, AdviceConfig>> getAdvisableMethodsConfigurations(final Class<?> targetClass);
 
     /**
      * Allows to create a unique key that would identify current method invocation
@@ -45,6 +45,6 @@ public interface AdviceConfigRepository extends GeDAInfrastructure {
      * @param targetClass bean class on which it is invoked
      * @return unique cache key.
      */
-    String methodCacheKey(final Method method, final Class<?> targetClass);
+    Integer methodCacheKey(final Method method, final Class<?> targetClass);
 
 }

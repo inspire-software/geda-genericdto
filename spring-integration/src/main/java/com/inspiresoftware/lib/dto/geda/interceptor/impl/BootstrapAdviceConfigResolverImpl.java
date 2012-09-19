@@ -36,8 +36,8 @@ public class BootstrapAdviceConfigResolverImpl implements AdviceConfigResolver {
     /** {@inheritDoc} */
     public Map<Occurrence, AdviceConfig> resolve(final Method method, final Class<?> targetClass) {
 
-        final String methodCacheKey = this.repository.methodCacheKey(method, targetClass);
-        final Map<String, Map<Occurrence, AdviceConfig>> advisable = repository.getAdvisableMethodsConfigurations(targetClass);
+        final Integer methodCacheKey = this.repository.methodCacheKey(method, targetClass);
+        final Map<Integer, Map<Occurrence, AdviceConfig>> advisable = repository.getAdvisableMethodsConfigurations(targetClass);
 
         if (advisable.containsKey(methodCacheKey)) {
             return advisable.get(methodCacheKey);

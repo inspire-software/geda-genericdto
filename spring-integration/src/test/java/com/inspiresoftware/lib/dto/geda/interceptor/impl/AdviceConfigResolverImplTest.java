@@ -52,7 +52,7 @@ public class AdviceConfigResolverImplTest {
     }
 
     @Test
-    public void testResolve() throws Exception {
+    public void testResolveMethod() throws Exception {
 
         final IMocksControl ctrl = EasyMock.createControl();
 
@@ -105,8 +105,8 @@ public class AdviceConfigResolverImplTest {
 
         assertSame(map1, map1_2);
 
-        assertTrue(resolver.isCached(methAnn1.toString()));
-        assertFalse(resolver.isBlacklisted(methAnn1.toString()));
+        assertTrue(resolver.isCached(resolver.methodCacheKey(methAnn1, null)));
+        assertFalse(resolver.isBlacklisted(resolver.methodCacheKey(methAnn1, null)));
 
         final Map<Occurrence, AdviceConfig> map2 = resolver.resolve(methAnn2, null);
         assertNotNull(map2);
@@ -122,8 +122,8 @@ public class AdviceConfigResolverImplTest {
 
         assertSame(map2, map2_1);
 
-        assertTrue(resolver.isCached(methAnn2.toString()));
-        assertFalse(resolver.isBlacklisted(methAnn2.toString()));
+        assertTrue(resolver.isCached(resolver.methodCacheKey(methAnn2, null)));
+        assertFalse(resolver.isBlacklisted(resolver.methodCacheKey(methAnn2, null)));
 
 
         final Map<Occurrence, AdviceConfig> map3 = resolver.resolve(methBlack1, null);
@@ -136,8 +136,8 @@ public class AdviceConfigResolverImplTest {
 
         assertSame(map3, map3_1);
 
-        assertFalse(resolver.isCached(methBlack1.toString()));
-        assertTrue(resolver.isBlacklisted(methBlack1.toString()));
+        assertFalse(resolver.isCached(resolver.methodCacheKey(methBlack1, null)));
+        assertTrue(resolver.isBlacklisted(resolver.methodCacheKey(methBlack1, null)));
 
 
         final Map<Occurrence, AdviceConfig> map4 = resolver.resolve(methBlack2, null);
@@ -150,8 +150,92 @@ public class AdviceConfigResolverImplTest {
 
         assertSame(map4, map4_1);
 
-        assertFalse(resolver.isCached(methBlack2.toString()));
-        assertTrue(resolver.isBlacklisted(methBlack2.toString()));
+        assertFalse(resolver.isCached(resolver.methodCacheKey(methBlack2, null)));
+        assertTrue(resolver.isBlacklisted(resolver.methodCacheKey(methBlack2, null)));
+
+        ctrl.verify();
+
+    }
+
+    public static class TestMethodsProxy extends TestMethods {
+
+    }
+
+    @Test
+    public void testResolveMethodByClass() throws Exception {
+
+        final IMocksControl ctrl = EasyMock.createControl();
+
+        final Method methAnn1 = TestMethods.class.getMethod("methAnn1");
+        final Method methBlack1 = TestMethods.class.getMethod("methBlack1");
+
+        final Map cfg1 = ctrl.createMock("cfg1", Map.class);
+        final Map cfg2 = ctrl.createMock("cfg2", Map.class);
+
+        final RuntimeAdviceConfigResolverImpl resolver = new RuntimeAdviceConfigResolverImpl() {
+
+            private int count = 0;
+
+            @Override
+            Map<Occurrence, AdviceConfig> resolveConfiguration(final Method method,
+                                                              final Class<?> targetClass) {
+                assertTrue(count < 3);
+                if (method == methAnn1) {
+                    count++;
+                    return cfg1;
+                }
+                return Collections.emptyMap();
+            }
+
+        };
+
+        expect(cfg1.isEmpty()).andReturn(false).anyTimes();
+        expect(cfg2.isEmpty()).andReturn(false).anyTimes();
+
+        ctrl.replay();
+
+        final Map<Occurrence, AdviceConfig> map1 = resolver.resolve(methAnn1, null);
+        assertNotNull(map1);
+        assertSame(map1, cfg1);
+
+        final Map<Occurrence, AdviceConfig> map1_1 = resolver.resolve(methAnn1, TestMethods.class);
+        assertNotNull(map1_1);
+        assertSame(map1_1, cfg1);
+
+        assertSame(map1, map1_1);
+
+        final Map<Occurrence, AdviceConfig> map1_2 = resolver.resolve(methAnn1, TestMethodsProxy.class);
+        assertNotNull(map1_2);
+        assertSame(map1_2, cfg1);
+
+        assertSame(map1, map1_2);
+
+        assertTrue(resolver.isCached(resolver.methodCacheKey(methAnn1, null)));
+        assertTrue(resolver.isCached(resolver.methodCacheKey(methAnn1, TestMethods.class)));
+        assertTrue(resolver.isCached(resolver.methodCacheKey(methAnn1, TestMethodsProxy.class)));
+        assertFalse(resolver.isBlacklisted(resolver.methodCacheKey(methAnn1, null)));
+        assertFalse(resolver.isBlacklisted(resolver.methodCacheKey(methAnn1, TestMethods.class)));
+        assertFalse(resolver.isBlacklisted(resolver.methodCacheKey(methAnn1, TestMethodsProxy.class)));
+
+
+
+        final Map<Occurrence, AdviceConfig> map3 = resolver.resolve(methBlack1, null);
+        assertNotNull(map3);
+        assertTrue(map3.isEmpty());
+
+        final Map<Occurrence, AdviceConfig> map3_1 = resolver.resolve(methBlack1, TestMethodsProxy.class);
+        assertNotNull(map3_1);
+        assertTrue(map3_1.isEmpty());
+
+        assertSame(map3, map3_1);
+
+        assertFalse(resolver.isCached(resolver.methodCacheKey(methBlack1, null)));
+        assertFalse(resolver.isCached(resolver.methodCacheKey(methBlack1, TestMethods.class)));
+        assertFalse(resolver.isCached(resolver.methodCacheKey(methBlack1, TestMethodsProxy.class)));
+        assertTrue(resolver.isBlacklisted(resolver.methodCacheKey(methBlack1, null)));
+        assertTrue(resolver.isBlacklisted(resolver.methodCacheKey(methBlack1, TestMethods.class)));
+        assertTrue(resolver.isBlacklisted(resolver.methodCacheKey(methBlack1, TestMethodsProxy.class)));
+
 
         ctrl.verify();
 
