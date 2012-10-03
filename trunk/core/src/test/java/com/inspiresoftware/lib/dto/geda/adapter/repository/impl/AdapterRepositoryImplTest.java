@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 
 /**
- * ValueConverterRepository test.
+ * AdapterRepositoryImpl test.
  *
  * @author Denis Pavlov
  * @since 1.0.0
