@@ -11,6 +11,7 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
@@ -33,29 +34,18 @@ import java.util.Map;
  *
  */
 @SuppressWarnings("unchecked")
-final class DataPipeChainBuilder extends BasePipeBuilder {
+class DataPipeChainBuilder extends BasePipeBuilder<PipeMetadata> {
 
-    private DataPipeChainBuilder() {
-		// prevent instantiation
-	}
-	
 	/**
-	 * Builds the pipe.
-	 * 
-	 * @param synthesizer method synthesizer
-	 * @param dtoClass dto class
-	 * @param entityClass entity class
-	 * @param dtoPropertyDescriptors all DTO descriptors.
-	 * @param entityPropertyDescriptors all entity descriptors
-	 * @param meta pipe meta
-	 * @param pipe the pipe to wrap in chain
-	 * @return data pipe.
+	 * {@inheritDoc}
+     *
 	 * @throws InspectionBindingNotFoundException when fails to find descriptors for fields
 	 * @throws UnableToCreateInstanceException when fails to create a data reader/writer
 	 * @throws InspectionPropertyNotFoundException when fails to create a data reader/writer
 	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
-	public static Pipe build(
+	public Pipe build(
+            final Registry registry,
 			final MethodSynthesizer synthesizer,
 			final Class dtoClass, final Class entityClass,
 			final PropertyDescriptor[] dtoPropertyDescriptors,

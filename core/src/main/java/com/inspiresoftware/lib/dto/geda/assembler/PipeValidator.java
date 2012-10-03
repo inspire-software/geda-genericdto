@@ -11,6 +11,7 @@
 package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingBindingException;
@@ -113,16 +114,18 @@ final class PipeValidator {
     /**
      * Validates thate read and write pipes for dto to entity match types.
      *
-	 * @param dtoRead method for reading data from DTO field
-     * @param dtoWrite method for writting data to DTO field
+     * @param registry DSL registry
+     * @param dtoRead method for reading data from DTO field
+     * @param dtoWrite method for writing data to DTO field
      * @param dtoField dto field
      * @param entityRead method for reading data from Entity field
-     * @param entityWrite method for writting data to Entity field
+     * @param entityWrite method for writing data to Entity field
      * @param entityField entity field
      * @throws AnnotationValidatingBindingException if arguments do not match (exception is thrown with
      *         a bit more clarification then the generic one).
      */
-    static void validatePipeTypes(final DataReader dtoRead,
+    static void validatePipeTypes(final Registry registry,
+                                  final DataReader dtoRead,
                                   final DataWriter dtoWrite,
                                   final String dtoField,
                                   final DataReader entityRead,
@@ -130,8 +133,8 @@ final class PipeValidator {
                                   final String entityField) 
     		throws AnnotationValidatingBindingException {
 
-        validateReadPipeTypes(dtoWrite, dtoField, entityRead, entityField);
-        validateWritePipeTypes(dtoRead, dtoField, entityWrite, entityField);
+        validateReadPipeTypes(registry, dtoWrite, dtoField, entityRead, entityField);
+        validateWritePipeTypes(registry, dtoRead, dtoField, entityWrite, entityField);
     }
 
     private static boolean sameDataType(final Class< ? > data1, final Class< ? > data2) {
@@ -152,15 +155,17 @@ final class PipeValidator {
     /**
      * Validates that read and write pipes for dto to entity match types.
      *
-     * @param dtoWrite method for writting data to DTO field
+     * @param registry DSL registry
+     * @param dtoWrite method for writing data to DTO field
      * @param dtoField dto field
      * @param entityRead method for reading data from Entity field
      * @param entityField entity field
      * @throws AnnotationValidatingBindingException if arguments do not match (exception is thrown with
      *         a bit more clarification then the generic one).
      */
-    static void validateReadPipeTypes(final DataWriter dtoWrite,
-    								  final String dtoField,
+    static void validateReadPipeTypes(final Registry registry,
+                                      final DataWriter dtoWrite,
+                                      final String dtoField,
                                       final DataReader entityRead,
                                       final String entityField) 
     		throws AnnotationValidatingBindingException {
@@ -174,7 +179,9 @@ final class PipeValidator {
         		!dtoWriteClass.isInterface()
 
         		// check if it is a nested dto
-        		&& dtoWriteClass.getAnnotation(Dto.class) == null 
+        		&& dtoWriteClass.getAnnotation(Dto.class) == null
+                // check if it is a nested dto in DSL
+                && (registry == null || registry.has(dtoWriteClass) == null)
 
         		// Object checking is for generics - they are too much effort just let it go
         		&& !entityReadClass.equals(Object.class) && !dtoWriteClass.equals(Object.class) 
@@ -191,16 +198,18 @@ final class PipeValidator {
     /**
      * Validates that read and write pipes for dto to entity match types.
      *
-	 * @param dtoRead method for reading data from DTO field
-	 * @param dtoField dto field
-     * @param entityWrite method for writting data to Entity field
+     * @param registry DSL registry
+     * @param dtoRead method for reading data from DTO field
+     * @param dtoField dto field
+     * @param entityWrite method for writing data to Entity field
      * @param entityField entity field
      *
      * @throws AnnotationValidatingBindingException if arguments do not match (exception is thrown with
      *         a bit more clarification then the generic one).
      */
-    static void validateWritePipeTypes(final DataReader dtoRead,
-    								   final String dtoField,
+    static void validateWritePipeTypes(final Registry registry,
+                                       final DataReader dtoRead,
+                                       final String dtoField,
                                        final DataWriter entityWrite,
                                        final String entityField)
     		throws AnnotationValidatingBindingException {
@@ -208,15 +217,16 @@ final class PipeValidator {
         final Class< ? > dtoReadClass = dtoRead.getReturnType();
         final Class< ? > entityWriteClass = entityWrite.getParameterType();
 
-        // Object checking is for generics - they are too much effort just let it go
         if (
         		// if it is interface we cannot find out until we get an annotated class instance.
         		!dtoReadClass.isInterface()
         		
         		// check if it is a nested dto
-        		&& dtoReadClass.getAnnotation(Dto.class) == null 
-        		
-        		// Object checking is for generics - they are too much effort just let it go
+        		&& dtoReadClass.getAnnotation(Dto.class) == null
+                // check if it is a nested dto in DSL
+                && (registry == null || registry.has(dtoReadClass) == null)
+
+                // Object checking is for generics - they are too much effort just let it go
         		&& !entityWriteClass.equals(Object.class) && !dtoReadClass.equals(Object.class)
         		
         		// check the same types

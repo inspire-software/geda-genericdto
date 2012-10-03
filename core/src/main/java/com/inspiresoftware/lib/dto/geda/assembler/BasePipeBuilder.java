@@ -12,6 +12,7 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.JavaListMethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.JavaMapMethodSynthesizer;
+import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
 
 /**
  * Common class for Builders.
@@ -21,7 +22,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.JavaMapMethodSy
  * Date: 12-09-18
  * Time: 11:13 AM
  */
-public class BasePipeBuilder {
+public abstract class BasePipeBuilder<T extends PipeMetadata> implements PipeBuilder<T> {
 
     protected static final MethodSynthesizer mapSynthesizer = new JavaMapMethodSynthesizer();
     protected static final MethodSynthesizer listSynthesizer = new JavaListMethodSynthesizer();

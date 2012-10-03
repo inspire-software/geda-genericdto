@@ -11,6 +11,7 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.*;
@@ -26,22 +27,10 @@ import java.beans.PropertyDescriptor;
  *
  */
 @SuppressWarnings("unchecked")
-final class DataVirtualPipeBuilder extends BasePipeBuilder {
-	
-	private DataVirtualPipeBuilder() {
-		// prevent instatiation
-	}
-	
+class DataVirtualPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
+
 	/**
-	 * Builds the pipe.
-	 * 
-	 * @param synthesizer method synthesizer
-	 * @param dtoClass dto class
-	 * @param entityClass entity class
-	 * @param dtoPropertyDescriptors all DTO descriptors.
-	 * @param entityPropertyDescriptors all entity descriptors
-	 * @param meta meta data for this pipe
-	 * @return data pipe.
+	 * {@inheritDoc}
 	 * 
 	 * @throws InspectionPropertyNotFoundException when fails to find descriptors for fields
 	 * @throws InspectionBindingNotFoundException when fails to find property on entity
@@ -51,12 +40,13 @@ final class DataVirtualPipeBuilder extends BasePipeBuilder {
 	 * @throws AnnotationMissingBindingException when fails to bind the parent field
 	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
-	public static Pipe build(
+	public Pipe build(
+            final Registry registry,
 			final MethodSynthesizer synthesizer,
 			final Class dtoClass, final Class entityClass,
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
-			final FieldPipeMetadata meta) 
+			final FieldPipeMetadata meta, final Pipe pipe)
 		throws InspectionPropertyNotFoundException, InspectionBindingNotFoundException, InspectionScanningException, 
 		       UnableToCreateInstanceException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException {
 		

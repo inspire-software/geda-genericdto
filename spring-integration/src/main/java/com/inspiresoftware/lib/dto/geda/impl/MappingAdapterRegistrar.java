@@ -43,11 +43,11 @@ public class MappingAdapterRegistrar implements DTOAdaptersRegistrar {
     }
 
     public void registerAdapters(final DTOSupport dtoSupport) {
-        final Map<String, Object> converters = this.getAdapters();
-        if (CollectionUtils.isEmpty(converters)) {
+        final Map<String, Object> adapters = this.getAdapters();
+        if (CollectionUtils.isEmpty(adapters)) {
             return;
         }
-        for (Map.Entry<String, Object> adapterEntry : converters.entrySet()) {
+        for (Map.Entry<String, Object> adapterEntry : adapters.entrySet()) {
             if (adapterEntry.getValue() instanceof DTOSupportAwareAdapter) {
                 ((DTOSupportAwareAdapter) adapterEntry.getValue()).setDtoSupport(dtoSupport);
             }

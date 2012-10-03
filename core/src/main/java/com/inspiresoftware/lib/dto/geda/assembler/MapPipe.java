@@ -13,6 +13,7 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
@@ -36,38 +37,38 @@ class MapPipe implements Pipe {
     private final MapPipeMetadata meta;
     
     private final MethodSynthesizer synthesizer;
+    private final Registry dslRegistry;
 
-	private final DataReader dtoRead;
+    private final DataReader dtoRead;
 	private final DataWriter dtoWrite;
 
 	private final DataReader entityRead;
 	private final DataWriter entityWrite;
 
-	private DataReader entityCollectionKeyRead;
-    private final Object entityCollectionKeyReadMutex = new Object();
-
     /**
+     * @param registry DSL registry
      * @param synthesizer synthesizer
-	 * @param dtoRead method for reading data from DTO field
+     * @param dtoRead method for reading data from DTO field
      * @param dtoWrite method for writting data to DTO field
      * @param entityRead method for reading data from Entity field
      * @param entityWrite method for writting data to Entity field
      * @param meta collection pipe meta
-     * 
+     *
      * @throws AnnotationValidatingBindingException when missmaped binding
      */
-    MapPipe(
-    			   final MethodSynthesizer synthesizer,
-    			   final DataReader dtoRead,
-                   final DataWriter dtoWrite,
-                   final DataReader entityRead,
-                   final DataWriter entityWrite,
-                   final MapPipeMetadata meta) throws AnnotationValidatingBindingException {
+    MapPipe(final Registry registry,
+            final MethodSynthesizer synthesizer,
+            final DataReader dtoRead,
+            final DataWriter dtoWrite,
+            final DataReader entityRead,
+            final DataWriter entityWrite,
+            final MapPipeMetadata meta) throws AnnotationValidatingBindingException {
 
-    	this.meta = meta;
+        this.meta = meta;
 
     	this.synthesizer = synthesizer;
-    	
+        this.dslRegistry = registry;
+
         this.dtoWrite = dtoWrite;
         this.entityRead = entityRead;
 
@@ -75,12 +76,12 @@ class MapPipe implements Pipe {
 			this.dtoRead = null;
 			this.entityWrite = null;
             PipeValidator.validateReadPipeTypes(
-            		this.dtoWrite, this.meta.getDtoFieldName(), this.entityRead, this.meta.getEntityFieldName());
+                    registry, this.dtoWrite, this.meta.getDtoFieldName(), this.entityRead, this.meta.getEntityFieldName());
 		} else {
 			this.dtoRead = dtoRead;
 			this.entityWrite = entityWrite;
             PipeValidator.validatePipeTypes(
-            		this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(), this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
+                    registry, this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(), this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
 		}
 
     }
@@ -292,7 +293,10 @@ class MapPipe implements Pipe {
 							dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
                             representative.getCanonicalName());
 		    	}
-		        return DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, synthesizer);
+                if (dslRegistry == null) {
+                    return DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, synthesizer);
+                }
+                return DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, dslRegistry, synthesizer);
             } catch (InspectionInvalidDtoInstanceException invDto) {
 				throw new CollectionEntityGenericReturnTypeException(
 						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),

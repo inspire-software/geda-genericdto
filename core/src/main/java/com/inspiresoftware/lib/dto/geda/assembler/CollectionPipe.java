@@ -13,6 +13,7 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
@@ -37,6 +38,7 @@ class CollectionPipe implements Pipe {
     private final CollectionPipeMetadata meta;
     
     private final MethodSynthesizer synthesizer;
+    private final Registry dslRegistry;
 
 	private final DataReader dtoRead;
 	private final DataWriter dtoWrite;
@@ -45,24 +47,26 @@ class CollectionPipe implements Pipe {
 	private final DataWriter entityWrite;
 
     /**
+     * @param registry DSL registry
      * @param synthesizer synthesizer
-	 * @param dtoRead method for reading data from DTO field
+     * @param dtoRead method for reading data from DTO field
      * @param dtoWrite method for writting data to DTO field
      * @param entityRead method for reading data from Entity field
      * @param entityWrite method for writting data to Entity field
-     * @param meta collection pipe meta
-     * @throws AnnotationValidatingBindingException when pipe binding is invalid
+     * @param meta collection pipe meta      @throws AnnotationValidatingBindingException when pipe binding is invalid
      */
-    CollectionPipe(final MethodSynthesizer synthesizer,
-    			   final DataReader dtoRead,
+    CollectionPipe(final Registry registry,
+                   final MethodSynthesizer synthesizer,
+                   final DataReader dtoRead,
                    final DataWriter dtoWrite,
                    final DataReader entityRead,
                    final DataWriter entityWrite,
                    final CollectionPipeMetadata meta) throws AnnotationValidatingBindingException {
-    	
-    	this.meta = meta;
+
+        this.meta = meta;
     	
     	this.synthesizer = synthesizer;
+        this.dslRegistry = registry;
 
         this.dtoWrite = dtoWrite;
         this.entityRead = entityRead;
@@ -70,12 +74,12 @@ class CollectionPipe implements Pipe {
         if (this.meta.isReadOnly()) {
 			this.dtoRead = null;
 			this.entityWrite = null;
-            PipeValidator.validateReadPipeTypes(this.dtoWrite, this.meta.getDtoFieldName(), 
+            PipeValidator.validateReadPipeTypes(registry, this.dtoWrite, this.meta.getDtoFieldName(),
             		this.entityRead, this.meta.getEntityFieldName());
 		} else {
 			this.dtoRead = dtoRead;
 			this.entityWrite = entityWrite;
-            PipeValidator.validatePipeTypes(this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(), 
+            PipeValidator.validatePipeTypes(registry, this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(),
             		this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
 		}
     }
@@ -213,7 +217,10 @@ class CollectionPipe implements Pipe {
 							dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
                             representative.getCanonicalName());
 		    	}
-		        return DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, synthesizer);
+                if (dslRegistry == null) {
+		            return DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, synthesizer);
+                }
+                return  DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, dslRegistry, synthesizer);
 		    } catch (InspectionInvalidEntityInstanceException invEntity) {
 				throw new CollectionEntityGenericReturnTypeException(
 						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),

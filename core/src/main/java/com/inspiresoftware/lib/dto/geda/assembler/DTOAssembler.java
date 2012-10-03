@@ -12,6 +12,7 @@
 package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.Cache;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.SoftReferenceCache;
@@ -114,7 +115,6 @@ public final class DTOAssembler {
 	}
 
 	private static final MethodSynthesizer SYNTHESIZER = new MethodSynthesizerProxy();
-	
 
 	private static Class filterBlacklisted(final Class className) {
         final int hash = className.hashCode();
@@ -142,7 +142,10 @@ public final class DTOAssembler {
 		return match.find();
 	}
 
-	private static Assembler createNewAssembler(final Class< ? > dto, final Class< ? > entity, final Object synthesizer)
+	private static Assembler createNewAssembler(final Class< ? > dto,
+                                                final Class< ? > entity,
+                                                final Object synthesizer,
+                                                final Registry registry)
 			throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
 			       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
 			       GeDARuntimeException, AnnotationDuplicateBindingException {
@@ -163,13 +166,16 @@ public final class DTOAssembler {
             } else {
                 syn = new MethodSynthesizerProxy(synthesizer);
             }
-            assembler = new DTOtoEntityAssemblerImpl(dto, realEntity, syn);
+            assembler = new DTOtoEntityAssemblerImpl(dto, realEntity, syn, registry);
 	    	CACHE.put(key, assembler);
 		}
     	return assembler;
 	}
 
-	private static Assembler createNewAssembler(final Class< ? > dto, final Class< ? >[] entities, final Object synthesizer)
+	private static Assembler createNewAssembler(final Class< ? > dto,
+                                                final Class< ? >[] entities,
+                                                final Object synthesizer,
+                                                final Registry registry)
 			throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
 			       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
 			       GeDARuntimeException, AnnotationDuplicateBindingException {
@@ -194,15 +200,18 @@ public final class DTOAssembler {
             } else {
                 syn = new MethodSynthesizerProxy(synthesizer);
             }
-            assembler = new DTOtoEntitiesAssemblerDecoratorImpl(dto, realEntities, syn);
+            assembler = new DTOtoEntitiesAssemblerDecoratorImpl(dto, realEntities, syn, registry);
 	    	CACHE.put(key, assembler);
 		}
     	return assembler;
 	}
 
 	private static Dto getDtoAnnotation(final Class< ? > dto)
-			throws AnnotationMissingAutobindingException {
+			throws AnnotationMissingException, AnnotationMissingAutobindingException {
 		final Dto ann = dto.getAnnotation(Dto.class);
+        if (ann == null) {
+            throw new AnnotationMissingException(dto.getCanonicalName());
+        }
 		if (ann == null || ann.value() == null || ann.value().length == 0) {
 			throw new AnnotationMissingAutobindingException(dto.getCanonicalName());
 		}
@@ -274,7 +283,39 @@ public final class DTOAssembler {
 			throw new AnnotationMissingException(dto.getName());
 		}
 		
-		return createNewAssembler(dto, entity, synthesizer);
+		return createNewAssembler(dto, entity, synthesizer, null);
+	}
+
+	/**
+	 * @param dto Dto concrete class that is annotated.
+	 * @param entity the entity class or interface that has appropriate getters and setters
+     * @param registry DSL registry that contains all mappings
+     * @param synthesizer custom method synthesizer to use (see {@link com.inspiresoftware.lib.dto.geda.assembler.MethodSynthesizerProxy} )
+	 * @return assembler instance for this conversion.
+	 *
+	 * @throws InspectionInvalidDtoInstanceException if dto instance used for read/write operation is not valid
+	 * @throws InspectionInvalidEntityInstanceException if entity instance used for read/write operation is not valid
+	 * @throws AnnotationDuplicateBindingException if during mapping scan same dto field is mapped more than once
+	 * @throws GeDARuntimeException unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
+	 * @throws AnnotationValidatingBindingException in case binding create has a mismatching return type/parameters
+	 * @throws AnnotationMissingBindingException in case when no valid property on entity is specified to bind to
+	 * @throws InspectionBindingNotFoundException in case when no valid property on entity is found to bind to
+	 * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
+	 * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
+	 * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
+	 */
+	public static Assembler newCustomAssembler(
+			final Class< ? > dto, final Class< ? > entity, final Registry registry, final Object synthesizer)
+		throws AnnotationMissingException, InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException,
+			   InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
+			   InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
+			   GeDARuntimeException, AnnotationDuplicateBindingException {
+
+        if (registry == null) {
+            throw new GeDARuntimeException("Registry cannot be null");
+        }
+
+        return createNewAssembler(dto, entity, synthesizer, registry);
 	}
 
 	/**
@@ -302,11 +343,9 @@ public final class DTOAssembler {
 			   InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
 			   GeDARuntimeException, AnnotationDuplicateBindingException {
 
-		if (dto.getAnnotation(Dto.class) == null) {
-			throw new AnnotationMissingException(dto.getName());
-		}
+        getDtoAnnotation(dto);
 
-		return createNewAssembler(dto, entities, synthesizer);
+		return createNewAssembler(dto, entities, synthesizer, null);
 	}
 
     /**
@@ -332,12 +371,41 @@ public final class DTOAssembler {
     	       InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
     	       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
     	       GeDARuntimeException, AnnotationDuplicateBindingException {
-    	
-    	if (dto.getAnnotation(Dto.class) == null) {
-    		throw new AnnotationMissingException(dto.getName());
+
+        getDtoAnnotation(dto);
+
+    	return createNewAssembler(dto, entity, null, null);
+    }
+
+    /**
+     * @param dto Dto concrete class that is annotated.
+     * @param entity the entity class or interface that has appropriate getters and setters
+     * @param registry DSL registry that contains all mappings
+     * @return assembler instance for this conversion.
+     *
+     * @throws InspectionInvalidDtoInstanceException if dto instance used for read/write operation is not valid
+     * @throws InspectionInvalidEntityInstanceException if entity instance used for read/write operation is not valid
+     * @throws AnnotationDuplicateBindingException if during mapping scan same dto field is mapped more than once
+     * @throws GeDARuntimeException unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
+     * @throws AnnotationValidatingBindingException in case binding create has a mismatching return type/parameters
+     * @throws AnnotationMissingBindingException in case when no valid property on entity is specified to bind to
+     * @throws InspectionBindingNotFoundException in case when no valid property on entity is found to bind to
+     * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
+     * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
+     * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
+     */
+    public static Assembler newAssembler(
+    		final Class< ? > dto, final Class< ? > entity, final Registry registry)
+    	throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException,
+    	       InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
+    	       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
+    	       GeDARuntimeException, AnnotationDuplicateBindingException {
+
+    	if (registry == null) {
+    		throw new GeDARuntimeException("Registry cannot be null");
     	}
-    	
-    	return createNewAssembler(dto, entity, null);
+
+    	return createNewAssembler(dto, entity, null, registry);
     }
 
     /**
@@ -364,11 +432,9 @@ public final class DTOAssembler {
     	       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
     	       GeDARuntimeException, AnnotationDuplicateBindingException {
 
-    	if (dto.getAnnotation(Dto.class) == null) {
-    		throw new AnnotationMissingException(dto.getName());
-    	}
+        getDtoAnnotation(dto);
 
-    	return createNewAssembler(dto, entities, null);
+    	return createNewAssembler(dto, entities, null, null);
     }
 
     /**
@@ -396,12 +462,12 @@ public final class DTOAssembler {
 
         final Class[] classes = detectAutobinding(dto, getDtoAnnotation(dto));
         if (classes.length == 1) {
-            return createNewAssembler(dto, classes[0], synthesizer);
+            return createNewAssembler(dto, classes[0], synthesizer, null);
         }
-		return createNewAssembler(dto, classes, synthesizer);
+		return createNewAssembler(dto, classes, synthesizer, null);
 
     }
-    	
+
 	/**
 	 * @param dto Dto concrete class that is annotated and value attribute of Dto is supplied.
 	 * @return assembler instance for this conversion.
@@ -426,10 +492,10 @@ public final class DTOAssembler {
 
         final Class[] classes = detectAutobinding(dto, getDtoAnnotation(dto));
         if (classes.length == 1) {
-            return createNewAssembler(dto, classes[0], null);
+            return createNewAssembler(dto, classes[0], null, null);
         }
 
-		return createNewAssembler(dto, classes, null);
+		return createNewAssembler(dto, classes, null, null);
 	}
 
 }

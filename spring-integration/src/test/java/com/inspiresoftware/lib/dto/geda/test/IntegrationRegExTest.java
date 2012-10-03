@@ -9,8 +9,8 @@
 
 package com.inspiresoftware.lib.dto.geda.test;
 
+import com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedExtendedDataTransferObjectImpl;
 import com.inspiresoftware.lib.dto.geda.test.impl.DomainObjectImpl;
-import com.inspiresoftware.lib.dto.geda.test.impl.ExtendedDataTransferObjectImpl;
 import org.testng.annotations.Test;
 
 import java.util.Date;
@@ -31,12 +31,12 @@ public abstract class IntegrationRegExTest extends IntegrationTest {
     public void testDtoToEntityBeforeExactNoMatch() {
 
         final TestNoMatchService service =
-                this.applicationContext.getBean("simpleTransferableNoMatchService", TestNoMatchService.class);
+                this.applicationContext.getBean("annSimpleTransferableNoMatchService", TestNoMatchService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);

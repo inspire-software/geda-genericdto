@@ -42,6 +42,7 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
     private static final String XSD_ATTR__DTO_SUPPORT = "dto-support";
     private static final String XSD_ATTR__DTO_FACTORY = "dto-factory";
     private static final String XSD_ATTR__DTO_ADAPTERS_REGISTRAR = "dto-adapters-registrar";
+    private static final String XSD_ATTR__DTO_DSL_REGISTRAR = "dto-dsl-registrar";
     private static final String XSD_ATTR__ON_DTO_ASSEMBLY = "on-dto-assembly";
     private static final String XSD_ATTR__ON_DTO_ASSEMBLED = "on-dto-assembled";
     private static final String XSD_ATTR__ON_DTO_FAILED = "on-dto-failed";
@@ -81,9 +82,17 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
                     dtoVcrRef = null;
                 }
 
+                final String dtoDslBeanName = element.getAttribute(XSD_ATTR__DTO_DSL_REGISTRAR);
+                final RuntimeBeanReference dtoDslRef;
+                if (StringUtils.hasLength(dtoDslBeanName)) {
+                    dtoDslRef = new RuntimeBeanReference(dtoDslBeanName);
+                } else {
+                    dtoDslRef = null;
+                }
 
                 dtoSupportDef =
-                        this.setupDtoSupport(element, dtoSupportBeanName, registry, elementSource, dtoFactoryRef, dtoVcrRef);
+                        this.setupDtoSupport(element, dtoSupportBeanName, registry, elementSource,
+                                dtoFactoryRef, dtoVcrRef, dtoDslRef);
 
             } else {
 
@@ -136,7 +145,8 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
                                                    final BeanDefinitionRegistry registry,
                                                    final Object elementSource,
                                                    final RuntimeBeanReference dtoFactoryRef,
-                                                   final RuntimeBeanReference dtoVcrRef) {
+                                                   final RuntimeBeanReference dtoVcrRef,
+                                                   final RuntimeBeanReference dtoDslRef) {
 
         final RootBeanDefinition dtoSupportDef = new RootBeanDefinition(DTOSupportImpl.class);
         dtoSupportDef.setSource(elementSource);
@@ -145,7 +155,10 @@ public class AnnotationDrivenGeDABeanDefinitionParser implements BeanDefinitionP
         final MutablePropertyValues valuesArgs = dtoSupportDef.getPropertyValues();
         valuesArgs.addPropertyValue("beanFactory", dtoFactoryRef);
         if (dtoVcrRef != null) {
-            valuesArgs.addPropertyValue("registrator", dtoVcrRef);
+            valuesArgs.addPropertyValue("adaptersRegistrar", dtoVcrRef);
+        }
+        if (dtoDslRef != null) {
+            valuesArgs.addPropertyValue("dslRegistrar", dtoDslRef);
         }
         setupListenerProperty(valuesArgs, "onDtoAssembly", element.getAttribute(XSD_ATTR__ON_DTO_ASSEMBLY));
         setupListenerProperty(valuesArgs, "onDtoAssembled", element.getAttribute(XSD_ATTR__ON_DTO_ASSEMBLED));

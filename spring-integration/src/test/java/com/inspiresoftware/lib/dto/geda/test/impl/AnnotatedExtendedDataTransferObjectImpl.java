@@ -21,7 +21,7 @@ import com.inspiresoftware.lib.dto.geda.test.ExtendedDataTransferObject;
  * Time: 2:59:25 PM
  */
 @Dto
-public class ExtendedDataTransferObjectImpl extends DataTransferObjectImpl implements ExtendedDataTransferObject {
+public class AnnotatedExtendedDataTransferObjectImpl extends AnnotatedDataTransferObjectImpl implements ExtendedDataTransferObject {
 
     @DtoField
     private String value2;

@@ -14,8 +14,9 @@ import com.inspiresoftware.lib.dto.geda.DTOSupport;
 import com.inspiresoftware.lib.dto.geda.config.AnnotationDrivenGeDABeanDefinitionParser;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfigResolver;
 import com.inspiresoftware.lib.dto.geda.interceptor.GeDAInterceptor;
+import com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedExtendedDataTransferObjectImpl;
+import com.inspiresoftware.lib.dto.geda.test.impl.DSLExtendedDataTransferObjectImpl;
 import com.inspiresoftware.lib.dto.geda.test.impl.DomainObjectImpl;
-import com.inspiresoftware.lib.dto.geda.test.impl.ExtendedDataTransferObjectImpl;
 import org.springframework.aop.PointcutAdvisor;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
@@ -59,10 +60,10 @@ public abstract class IntegrationMinimalTest extends AbstractTestNGSpringContext
     public void testDtoToEntityBeforeExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
