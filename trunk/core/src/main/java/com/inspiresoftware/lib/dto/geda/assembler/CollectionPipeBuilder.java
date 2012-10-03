@@ -11,6 +11,7 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
@@ -30,22 +31,10 @@ import java.util.Map;
  *
  */
 @SuppressWarnings("unchecked")
-final class CollectionPipeBuilder extends BasePipeBuilder {
-	
-	private CollectionPipeBuilder() {
-		// prevent instatiation
-	}
+class CollectionPipeBuilder extends BasePipeBuilder<CollectionPipeMetadata> {
 
 	/**
-	 * Builds the pipe.
-	 * 
-	 * @param synthesizer method synthesizer
-	 * @param dtoClass dto class
-	 * @param entityClass entity class
-	 * @param dtoPropertyDescriptors all DTO descriptors.
-	 * @param entityPropertyDescriptors all entity descriptors
-	 * @param meta meta for this pipe
-	 * @return data pipe.
+	 * {@inheritDoc}
 	 * 
 	 * @throws InspectionBindingNotFoundException when inspecting entity
 	 * @throws UnableToCreateInstanceException if unable to create instance of data reader/writer
@@ -53,12 +42,13 @@ final class CollectionPipeBuilder extends BasePipeBuilder {
 	 * @throws AnnotationValidatingBindingException when data reader/writer have mismatching parameters/return types
 	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
-    public static Pipe build(
-    		final MethodSynthesizer synthesizer,
-    		final Class dtoClass, final Class entityClass,
+    public Pipe build(
+            final Registry dslRegistry,
+            final MethodSynthesizer synthesizer,
+            final Class dtoClass, final Class entityClass,
     		final PropertyDescriptor[] dtoPropertyDescriptors, 
     		final PropertyDescriptor[] entityPropertyDescriptors, 
-    		final CollectionPipeMetadata meta) 
+    		final CollectionPipeMetadata meta, final Pipe pipe)
     throws InspectionBindingNotFoundException, InspectionPropertyNotFoundException, UnableToCreateInstanceException, 
            AnnotationValidatingBindingException, GeDARuntimeException  {
 
@@ -90,7 +80,7 @@ final class CollectionPipeBuilder extends BasePipeBuilder {
 		final DataReader entityFieldRead = entitySynthesizer.synthesizeReader(entityFieldDesc);
 		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : entitySynthesizer.synthesizeWriter(entityFieldDesc);
 
-        return new CollectionPipe(synthesizer,
+        return new CollectionPipe(dslRegistry, synthesizer,
                 dtoFieldRead, dtoFieldWrite,
                 entityFieldRead, entityFieldWrite,
                 meta);

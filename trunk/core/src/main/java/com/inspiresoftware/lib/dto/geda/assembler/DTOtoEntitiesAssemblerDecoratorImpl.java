@@ -10,6 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
@@ -31,7 +32,8 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
 
     private final Class dtoClass;
 
-    DTOtoEntitiesAssemblerDecoratorImpl(final Class dto, final Class[] entities, final MethodSynthesizer synthesizer)
+    DTOtoEntitiesAssemblerDecoratorImpl(final Class dto, final Class[] entities,
+                                        final MethodSynthesizer synthesizer, final Registry registry)
         throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
                 InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
                GeDARuntimeException, AnnotationDuplicateBindingException {
@@ -40,7 +42,7 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
 
         for (final Class entity : entities) {
 
-            composite.put(entity, new DTOtoEntityAssemblerImpl(dto, entity, synthesizer, false));
+            composite.put(entity, new DTOtoEntityAssemblerImpl(dto, entity, synthesizer, registry, false));
 
         }
 

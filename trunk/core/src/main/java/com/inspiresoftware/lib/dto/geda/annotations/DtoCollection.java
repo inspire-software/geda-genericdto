@@ -66,6 +66,7 @@ public @interface DtoCollection {
      * Default is {@link java.util.ArrayList}
      */
     Class dtoCollectionClass() default ArrayList.class;
+
     /**
      * Key that defines the type of instance to be retrieved from beanFactory 
      * for creating new DTO object collection.

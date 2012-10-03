@@ -9,8 +9,6 @@
 
 package com.inspiresoftware.lib.dto.geda.test.impl;
 
-import com.inspiresoftware.lib.dto.geda.annotations.Dto;
-import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.inspiresoftware.lib.dto.geda.test.DataTransferObject;
 
 import java.util.Date;
@@ -22,12 +20,9 @@ import java.util.Date;
  * Date: Jan 26, 2012
  * Time: 2:59:25 PM
  */
-@Dto
-public class DataTransferObjectImpl implements DataTransferObject {
+public class DSLDataTransferObjectImpl implements DataTransferObject {
 
-    @DtoField
     private String value;
-    @DtoField(readOnly = true)
     private Date timestamp;
 
     public String getValue() {

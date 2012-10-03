@@ -17,7 +17,7 @@ import com.inspiresoftware.lib.dto.geda.adapter.ValueConverter;
 import com.inspiresoftware.lib.dto.geda.annotations.Direction;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
-import com.inspiresoftware.lib.dto.geda.test.impl.TestServiceImpl;
+import com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedTestServiceImpl;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -52,7 +52,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityBeforeExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityBeforeExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityBeforeExact"), AnnotatedTestServiceImpl.class);
 
         assertEquals(map.size(), 1);
         final AdviceConfig before = map.get(Occurrence.BEFORE_METHOD_INVOCATION);
@@ -74,7 +74,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityBefore() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityBefore"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityBefore"), AnnotatedTestServiceImpl.class);
 
         assertEquals(map.size(), 1);
         final AdviceConfig before = map.get(Occurrence.BEFORE_METHOD_INVOCATION);
@@ -96,7 +96,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityByFilterBeforeExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityByFilterBeforeExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityByFilterBeforeExact"), AnnotatedTestServiceImpl.class);
 
         assertEquals(map.size(), 1);
         final AdviceConfig before = map.get(Occurrence.BEFORE_METHOD_INVOCATION);
@@ -105,7 +105,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), 0);
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
@@ -118,7 +118,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityByFilterBefore() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityByFilterBefore"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityByFilterBefore"), AnnotatedTestServiceImpl.class);
 
         assertEquals(map.size(), 1);
         final AdviceConfig before = map.get(Occurrence.BEFORE_METHOD_INVOCATION);
@@ -127,7 +127,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), 0);
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
@@ -140,7 +140,7 @@ public class TransferableUtilsTest {
     public void testResolveDtosToEntitiesBeforeExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtosToEntitiesBeforeExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtosToEntitiesBeforeExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -163,7 +163,7 @@ public class TransferableUtilsTest {
     public void testResolveDtosToEntitiesBefore() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtosToEntitiesBefore"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtosToEntitiesBefore"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -186,7 +186,7 @@ public class TransferableUtilsTest {
     public void testResolveDtosToEntitiesByFilterBeforeExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtosToEntitiesByFilterBeforeExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtosToEntitiesByFilterBeforeExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -196,7 +196,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTOS_TO_ENTITIES_BY_FILTER);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "entityKey");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), 0);
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
@@ -209,7 +209,7 @@ public class TransferableUtilsTest {
     public void testResolveDtosToEntitiesByFilterBefore() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtosToEntitiesByFilterBefore"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtosToEntitiesByFilterBefore"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -219,7 +219,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTOS_TO_ENTITIES_BY_FILTER);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "entityKey");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), 0);
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
@@ -232,7 +232,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityKeyAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityKeyAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityKeyAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -255,7 +255,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityKeyAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityKeyAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityKeyAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -278,7 +278,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityKeyByFilterAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityKeyByFilterAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityKeyByFilterAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -288,7 +288,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY_KEY);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "entityKey");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), 0);
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
@@ -301,7 +301,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityKeyByFilterAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityKeyByFilterAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityKeyByFilterAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -311,7 +311,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY_KEY);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "entityKey");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), 0);
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
@@ -324,7 +324,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -347,7 +347,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -370,7 +370,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityByFilterAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityByFilterAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityByFilterAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -380,7 +380,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), 0);
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
@@ -393,7 +393,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityByFilterAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityByFilterAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityByFilterAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -403,7 +403,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), 0);
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
@@ -416,7 +416,7 @@ public class TransferableUtilsTest {
     public void testResolveDtosToEntitiesByFilterAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtosToEntitiesByFilterAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtosToEntitiesByFilterAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -426,7 +426,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTOS_TO_ENTITIES_BY_FILTER);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "entityKey");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), 0);
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
@@ -439,7 +439,7 @@ public class TransferableUtilsTest {
     public void testResolveDtosToEntitiesByFilterAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtosToEntitiesByFilterAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtosToEntitiesByFilterAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -449,7 +449,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTOS_TO_ENTITIES_BY_FILTER);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "entityKey");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), 0);
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
@@ -462,7 +462,7 @@ public class TransferableUtilsTest {
     public void testResolveDtosToEntitiesAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtosToEntitiesAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtosToEntitiesAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -485,7 +485,7 @@ public class TransferableUtilsTest {
     public void testResolveDtosToEntitiesAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtosToEntitiesAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtosToEntitiesAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -508,7 +508,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoBeforeExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoBeforeExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoBeforeExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -531,7 +531,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoBefore() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoBefore"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoBefore"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -554,7 +554,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoByFilterBeforeExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoByFilterBeforeExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoByFilterBeforeExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -564,7 +564,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), NO_INDEX);
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
@@ -577,7 +577,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoByFilterBefore() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoByFilterBefore"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoByFilterBefore"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -587,7 +587,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), NO_INDEX);
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
@@ -600,7 +600,7 @@ public class TransferableUtilsTest {
     public void testResolveEntitiesToDtosByFilterBefore() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entitiesToDtosByFilterBefore"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entitiesToDtosByFilterBefore"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -608,9 +608,9 @@ public class TransferableUtilsTest {
         assertEquals(before.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(before.getOccurrence(), Occurrence.BEFORE_METHOD_INVOCATION);
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS_BY_FILTER);
-        assertEquals(before.getDtoKey(), "dtoKey");
+        assertEquals(before.getDtoKey(), "annDtoKey");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), NO_INDEX);
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
@@ -623,7 +623,7 @@ public class TransferableUtilsTest {
     public void testResolveEntitiesToDtosByFilterBeforeExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entitiesToDtosByFilterBeforeExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entitiesToDtosByFilterBeforeExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -631,9 +631,9 @@ public class TransferableUtilsTest {
         assertEquals(before.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(before.getOccurrence(), Occurrence.BEFORE_METHOD_INVOCATION);
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS_BY_FILTER);
-        assertEquals(before.getDtoKey(), "dtoKey");
+        assertEquals(before.getDtoKey(), "annDtoKey");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), NO_INDEX);
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
@@ -646,7 +646,7 @@ public class TransferableUtilsTest {
     public void testResolveEntitiesToDtosBeforeExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entitiesToDtosBeforeExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entitiesToDtosBeforeExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -654,7 +654,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(before.getOccurrence(), Occurrence.BEFORE_METHOD_INVOCATION);
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS);
-        assertEquals(before.getDtoKey(), "dtoKey");
+        assertEquals(before.getDtoKey(), "annDtoKey");
         assertEquals(before.getEntityKey(), "");
         assertEquals(before.getDtoFilterKey(), "");
         assertEquals(before.getDtoSourceIndex(), NO_INDEX);
@@ -669,7 +669,7 @@ public class TransferableUtilsTest {
     public void testResolveEntitiesToDtosBefore() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entitiesToDtosBefore"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entitiesToDtosBefore"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -677,7 +677,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(before.getOccurrence(), Occurrence.BEFORE_METHOD_INVOCATION);
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS);
-        assertEquals(before.getDtoKey(), "dtoKey");
+        assertEquals(before.getDtoKey(), "annDtoKey");
         assertEquals(before.getEntityKey(), "");
         assertEquals(before.getDtoFilterKey(), "");
         assertEquals(before.getDtoSourceIndex(), NO_INDEX);
@@ -692,7 +692,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoKeyAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoKeyAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoKeyAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -700,7 +700,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
         assertEquals(after.getDtoFilterKey(), "");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
@@ -715,7 +715,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoKeyAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoKeyAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoKeyAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -723,7 +723,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
         assertEquals(after.getDtoFilterKey(), "");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
@@ -738,7 +738,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoKeyByFilterAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoKeyByFilterAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoKeyByFilterAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -746,9 +746,9 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY_BY_FILTER);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 0);
@@ -761,7 +761,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoKeyByFilterAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoKeyByFilterAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoKeyByFilterAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -769,9 +769,9 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY_BY_FILTER);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 0);
@@ -784,7 +784,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -807,7 +807,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -830,7 +830,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoByFilterAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoByFilterAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoByFilterAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -840,7 +840,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
@@ -853,7 +853,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoByFilterAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoByFilterAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoByFilterAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -863,7 +863,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
@@ -876,7 +876,7 @@ public class TransferableUtilsTest {
     public void testResolveEntitiesToDtosByFilterAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entitiesToDtosByFilterAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entitiesToDtosByFilterAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -884,9 +884,9 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS_BY_FILTER);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
@@ -899,7 +899,7 @@ public class TransferableUtilsTest {
     public void testResolveEntitiesToDtosByFilterAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entitiesToDtosByFilterAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entitiesToDtosByFilterAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -907,9 +907,9 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS_BY_FILTER);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
@@ -922,7 +922,7 @@ public class TransferableUtilsTest {
     public void testResolveEntitiesToDtosAfterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entitiesToDtosAfterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entitiesToDtosAfterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -930,7 +930,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
         assertEquals(after.getDtoFilterKey(), "");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
@@ -945,7 +945,7 @@ public class TransferableUtilsTest {
     public void testResolveEntitiesToDtosAfter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entitiesToDtosAfter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entitiesToDtosAfter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 1);
@@ -953,7 +953,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITIES_TO_DTOS);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
         assertEquals(after.getDtoFilterKey(), "");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
@@ -968,7 +968,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityAndBackToDtoExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityAndBackToDtoExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityAndBackToDtoExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -990,7 +990,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
         assertEquals(after.getDtoFilterKey(), "");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
@@ -1005,7 +1005,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityAndBackToDto() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityAndBackToDto"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityAndBackToDto"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1027,7 +1027,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
         assertEquals(after.getDtoFilterKey(), "");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
@@ -1042,7 +1042,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityAndBackToDtoByFilterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityAndBackToDtoByFilterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityAndBackToDtoByFilterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1053,7 +1053,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), 0);
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
@@ -1064,9 +1064,9 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY_BY_FILTER);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 1);
@@ -1079,7 +1079,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityAndBackToDtoByFilter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityAndBackToDtoByFilter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityAndBackToDtoByFilter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1090,7 +1090,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), 0);
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
@@ -1101,9 +1101,9 @@ public class TransferableUtilsTest {
         assertEquals(after.getDirection(), Direction.ENTITY_TO_DTO);
         assertEquals(after.getOccurrence(), Occurrence.AFTER_METHOD_INVOCATION);
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_KEY_BY_FILTER);
-        assertEquals(after.getDtoKey(), "dtoKey");
+        assertEquals(after.getDtoKey(), "annDtoKey");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
         assertEquals(after.getDtoTargetIndex(), RETURN_INDEX);
         assertEquals(after.getEntitySourceIndex(), 1);
@@ -1116,7 +1116,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityAndBackToDtoVoidExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityAndBackToDtoVoidExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityAndBackToDtoVoidExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1153,7 +1153,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityAndBackToDtoVoid() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityAndBackToDtoVoid"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityAndBackToDtoVoid"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1190,7 +1190,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityAndBackToDtoVoidByFilterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityAndBackToDtoVoidByFilterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityAndBackToDtoVoidByFilterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1201,7 +1201,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), 0);
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
@@ -1214,7 +1214,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
@@ -1228,7 +1228,7 @@ public class TransferableUtilsTest {
     public void testResolveDtoToEntityAndBackToDtoVoidByFilter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "dtoToEntityAndBackToDtoVoidByFilter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "dtoToEntityAndBackToDtoVoidByFilter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1239,7 +1239,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), 0);
         assertEquals(before.getDtoTargetIndex(), NO_INDEX);
         assertEquals(before.getEntitySourceIndex(), NO_INDEX);
@@ -1252,7 +1252,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), NO_INDEX);
         assertEquals(after.getDtoTargetIndex(), 0);
         assertEquals(after.getEntitySourceIndex(), 1);
@@ -1265,7 +1265,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoAndBackToEntityExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoAndBackToEntityExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoAndBackToEntityExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1302,7 +1302,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoAndBackToEntity() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoAndBackToEntity"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoAndBackToEntity"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1339,7 +1339,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoAndBackToEntityByFilterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoAndBackToEntityByFilterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoAndBackToEntityByFilterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1350,7 +1350,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), NO_INDEX);
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
@@ -1363,7 +1363,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY_KEY);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "entityKey");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), 0);
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
@@ -1376,7 +1376,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoAndBackToEntityByFilter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoAndBackToEntityByFilter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoAndBackToEntityByFilter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1387,7 +1387,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), NO_INDEX);
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
@@ -1400,7 +1400,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY_KEY);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "entityKey");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), 0);
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
@@ -1413,7 +1413,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoAndBackToEntityVoidExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoAndBackToEntityVoidExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoAndBackToEntityVoidExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1450,7 +1450,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoAndBackToEntityVoid() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoAndBackToEntityVoid"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoAndBackToEntityVoid"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1487,7 +1487,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoAndBackToEntityVoidByFilterExact() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoAndBackToEntityVoidByFilterExact"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoAndBackToEntityVoidByFilterExact"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1498,7 +1498,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), NO_INDEX);
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
@@ -1511,7 +1511,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), 0);
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);
@@ -1524,7 +1524,7 @@ public class TransferableUtilsTest {
     public void testResolveEntityToDtoAndBackToEntityVoidByFilter() throws Exception {
 
         final Map<Occurrence, AdviceConfig> map =
-                TransferableUtils.resolveConfiguration(getMethod(TestServiceImpl.class, "entityToDtoAndBackToEntityVoidByFilter"), TestServiceImpl.class);
+                TransferableUtils.resolveConfiguration(getMethod(AnnotatedTestServiceImpl.class, "entityToDtoAndBackToEntityVoidByFilter"), AnnotatedTestServiceImpl.class);
 
 
         assertEquals(map.size(), 2);
@@ -1535,7 +1535,7 @@ public class TransferableUtilsTest {
         assertEquals(before.getDtoSupportMode(), AdviceConfig.DTOSupportMode.ENTITY_TO_DTO_BY_FILTER);
         assertEquals(before.getDtoKey(), "");
         assertEquals(before.getEntityKey(), "");
-        assertEquals(before.getDtoFilterKey(), "filterKey");
+        assertEquals(before.getDtoFilterKey(), "annFilterKey");
         assertEquals(before.getDtoSourceIndex(), NO_INDEX);
         assertEquals(before.getDtoTargetIndex(), 0);
         assertEquals(before.getEntitySourceIndex(), 1);
@@ -1548,7 +1548,7 @@ public class TransferableUtilsTest {
         assertEquals(after.getDtoSupportMode(), AdviceConfig.DTOSupportMode.DTO_BY_FILTER_TO_ENTITY);
         assertEquals(after.getDtoKey(), "");
         assertEquals(after.getEntityKey(), "");
-        assertEquals(after.getDtoFilterKey(), "filterKey");
+        assertEquals(after.getDtoFilterKey(), "annFilterKey");
         assertEquals(after.getDtoSourceIndex(), 0);
         assertEquals(after.getDtoTargetIndex(), NO_INDEX);
         assertEquals(after.getEntitySourceIndex(), NO_INDEX);

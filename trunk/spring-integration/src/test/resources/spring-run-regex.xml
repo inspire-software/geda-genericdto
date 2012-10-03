@@ -25,14 +25,14 @@
                             on-entity-assembled="onEntitySuccess"
                             on-entity-failed="onEntityFailure"
                             use-bean-preprocessor="false"
-                            pointcut-match-regex="com.inspiresoftware.lib.dto.geda.test.impl.TestService.*"/>
+                            pointcut-match-regex="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedTestService.*"/>
 
     <bean id="dtoFactory" class="com.inspiresoftware.lib.dto.geda.impl.DTOFactoryImpl">
         <constructor-arg>
             <map>
                 <entry key="entityKey" value="com.inspiresoftware.lib.dto.geda.test.impl.DomainObjectImpl"/>
-                <entry key="dtoKey"    value="com.inspiresoftware.lib.dto.geda.test.impl.ExtendedDataTransferObjectImpl"/>
-                <entry key="filterKey" value="com.inspiresoftware.lib.dto.geda.test.impl.DataTransferObjectImpl"/>
+                <entry key="annDtoKey"    value="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedExtendedDataTransferObjectImpl"/>
+                <entry key="annFilterKey" value="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedDataTransferObjectImpl"/>
             </map>
         </constructor-arg>
     </bean>
@@ -44,11 +44,10 @@
     <bean id="onEntitySuccess" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
     <bean id="onEntityFailure" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
 
-    <bean id="simpleTransferableService"
-          class="com.inspiresoftware.lib.dto.geda.test.impl.TestServiceImpl"/>
-    <bean id="simpleTransferableNoMatchService"
-          class="com.inspiresoftware.lib.dto.geda.test.impl.TestNoMatchServiceImpl"/>
-    
+    <bean id="annSimpleTransferableService"
+          class="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedTestServiceImpl"/>
+    <bean id="annSimpleTransferableNoMatchService"
+          class="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedTestNoMatchServiceImpl"/>
 
     <bean id="adapterRegistrar" class="com.inspiresoftware.lib.dto.geda.test.impl.ExposedDTOAdaptersRegistrarImpl">
         <constructor-arg>

@@ -11,6 +11,7 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
@@ -30,23 +31,11 @@ import java.util.Map;
  *
  */
 @SuppressWarnings("unchecked")
-final class DataPipeBuilder extends BasePipeBuilder {
+class DataPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
 
-	private DataPipeBuilder() {
-		// prevent instatiation
-	}
-	
 	/**
-	 * Builds the pipe.
-	 * 
-	 * @param synthesizer method synthesizer
-	 * @param dtoClass dto class
-	 * @param entityClass entity class
-	 * @param dtoPropertyDescriptors all DTO descriptors.
-	 * @param entityPropertyDescriptors all entity descriptors
-	 * @param meta meta data for this pipe
-	 * @return data pipe.
-	 * 
+	 * {@inheritDoc}
+     *
 	 * @throws InspectionPropertyNotFoundException when fails to find descriptors for fields
 	 * @throws InspectionBindingNotFoundException when fails to find property on entity
 	 * @throws InspectionScanningException when fails to find parent entity properties
@@ -55,12 +44,13 @@ final class DataPipeBuilder extends BasePipeBuilder {
 	 * @throws AnnotationMissingBindingException when fails to bind the parent field
 	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
-	public static Pipe build(
-			final MethodSynthesizer synthesizer,
+	public Pipe build(
+            final Registry dslRegistry,
+            final MethodSynthesizer synthesizer,
 			final Class dtoClass, final Class entityClass,
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
-			final FieldPipeMetadata meta) 
+			final FieldPipeMetadata meta, final Pipe pipe)
 		throws InspectionPropertyNotFoundException, InspectionBindingNotFoundException, InspectionScanningException, 
 		       UnableToCreateInstanceException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException {
 
@@ -102,8 +92,8 @@ final class DataPipeBuilder extends BasePipeBuilder {
 			
 		}
 		
-		return new DataPipe(synthesizer,
-				synthesizer.synthesizeReader(dtoFieldDesc),
+		return new DataPipe(dslRegistry, synthesizer,
+                synthesizer.synthesizeReader(dtoFieldDesc),
 				synthesizer.synthesizeWriter(dtoFieldDesc),
 				dtoParentReadMethod,
                 entitySynthesizer.synthesizeReader(entityFieldDesc),

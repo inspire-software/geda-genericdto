@@ -41,5 +41,11 @@
     <test name="IntegrationRuntimeRegExNoMatchTest">
         <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeRegExNoMatchTest"/></classes>
     </test>
+    <test name="IntegrationBootDSLTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationBootDSLTest"/></classes>
+    </test>
+    <test name="IntegrationRuntimeDSLTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeDSLTest"/></classes>
+    </test>
 
 </suite>

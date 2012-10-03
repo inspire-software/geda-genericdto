@@ -14,8 +14,8 @@ import com.inspiresoftware.lib.dto.geda.DTOSupport;
 import com.inspiresoftware.lib.dto.geda.config.AnnotationDrivenGeDABeanDefinitionParser;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfigResolver;
 import com.inspiresoftware.lib.dto.geda.interceptor.GeDAInterceptor;
+import com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedExtendedDataTransferObjectImpl;
 import com.inspiresoftware.lib.dto.geda.test.impl.DomainObjectImpl;
-import com.inspiresoftware.lib.dto.geda.test.impl.ExtendedDataTransferObjectImpl;
 import org.springframework.aop.PointcutAdvisor;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
@@ -75,12 +75,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityBeforeExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -106,12 +106,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityBefore() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -137,12 +137,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityByFilterBeforeExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -168,12 +168,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityByFilterBefore() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -199,16 +199,16 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtosToEntitiesBeforeExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto1 = new AnnotatedExtendedDataTransferObjectImpl();
         dto1.setValue("dto1Val1");
         dto1.setValue2("dto1Val2");
         dto1.setTimestamp(time);
-        final ExtendedDataTransferObject dto2 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto2 = new AnnotatedExtendedDataTransferObjectImpl();
         dto2.setValue("dto2Val1");
         dto2.setValue2("dto2Val2");
         dto2.setTimestamp(time);
@@ -245,16 +245,16 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtosToEntitiesBefore() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto1 = new AnnotatedExtendedDataTransferObjectImpl();
         dto1.setValue("dto1Val1");
         dto1.setValue2("dto1Val2");
         dto1.setTimestamp(time);
-        final ExtendedDataTransferObject dto2 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto2 = new AnnotatedExtendedDataTransferObjectImpl();
         dto2.setValue("dto2Val1");
         dto2.setValue2("dto2Val2");
         dto2.setTimestamp(time);
@@ -291,16 +291,16 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtosToEntitiesByFilterBeforeExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto1 = new AnnotatedExtendedDataTransferObjectImpl();
         dto1.setValue("dto1Val1");
         dto1.setValue2("dto1Val2");
         dto1.setTimestamp(time);
-        final ExtendedDataTransferObject dto2 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto2 = new AnnotatedExtendedDataTransferObjectImpl();
         dto2.setValue("dto2Val1");
         dto2.setValue2("dto2Val2");
         dto2.setTimestamp(time);
@@ -337,16 +337,16 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtosToEntitiesByFilterBefore() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto1 = new AnnotatedExtendedDataTransferObjectImpl();
         dto1.setValue("dto1Val1");
         dto1.setValue2("dto1Val2");
         dto1.setTimestamp(time);
-        final ExtendedDataTransferObject dto2 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto2 = new AnnotatedExtendedDataTransferObjectImpl();
         dto2.setValue("dto2Val1");
         dto2.setValue2("dto2Val2");
         dto2.setTimestamp(time);
@@ -383,12 +383,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void dtoToEntityKeyAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dto1Val1");
         dto.setValue2("dto1Val2");
         dto.setTimestamp(time);
@@ -412,12 +412,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void dtoToEntityKeyAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dto1Val1");
         dto.setValue2("dto1Val2");
         dto.setTimestamp(time);
@@ -442,12 +442,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void dtoToEntityKeyByFilterAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dto1Val1");
         dto.setValue2("dto1Val2");
         dto.setTimestamp(time);
@@ -471,12 +471,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void dtoToEntityKeyByFilterAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dto1Val1");
         dto.setValue2("dto1Val2");
         dto.setTimestamp(time);
@@ -500,12 +500,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dto1Val1");
         dto.setValue2("dto1Val2");
         dto.setTimestamp(time);
@@ -536,12 +536,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         final DTOCountingEventListener onEntityFailure = this.applicationContext.getBean("onEntityFailure", DTOCountingEventListener.class);
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dto1Val1");
         dto.setValue2("dto1Val2");
         dto.setTimestamp(time);
@@ -567,12 +567,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityByFilterAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dto1Val1");
         dto.setValue2("dto1Val2");
         dto.setTimestamp(time);
@@ -598,12 +598,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityByFilterAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dto1Val1");
         dto.setValue2("dto1Val2");
         dto.setTimestamp(time);
@@ -629,16 +629,16 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtosToEntitiesByFilterAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto1 = new AnnotatedExtendedDataTransferObjectImpl();
         dto1.setValue("dto1Val1");
         dto1.setValue2("dto1Val2");
         dto1.setTimestamp(time);
-        final ExtendedDataTransferObject dto2 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto2 = new AnnotatedExtendedDataTransferObjectImpl();
         dto2.setValue("dto2Val1");
         dto2.setValue2("dto2Val2");
         dto2.setTimestamp(time);
@@ -675,16 +675,16 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtosToEntitiesByFilterAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto1 = new AnnotatedExtendedDataTransferObjectImpl();
         dto1.setValue("dto1Val1");
         dto1.setValue2("dto1Val2");
         dto1.setTimestamp(time);
-        final ExtendedDataTransferObject dto2 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto2 = new AnnotatedExtendedDataTransferObjectImpl();
         dto2.setValue("dto2Val1");
         dto2.setValue2("dto2Val2");
         dto2.setTimestamp(time);
@@ -721,16 +721,16 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtosToEntitiesAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto1 = new AnnotatedExtendedDataTransferObjectImpl();
         dto1.setValue("dto1Val1");
         dto1.setValue2("dto1Val2");
         dto1.setTimestamp(time);
-        final ExtendedDataTransferObject dto2 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto2 = new AnnotatedExtendedDataTransferObjectImpl();
         dto2.setValue("dto2Val1");
         dto2.setValue2("dto2Val2");
         dto2.setTimestamp(time);
@@ -767,16 +767,16 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtosToEntitiesAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto1 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto1 = new AnnotatedExtendedDataTransferObjectImpl();
         dto1.setValue("dto1Val1");
         dto1.setValue2("dto1Val2");
         dto1.setTimestamp(time);
-        final ExtendedDataTransferObject dto2 = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto2 = new AnnotatedExtendedDataTransferObjectImpl();
         dto2.setValue("dto2Val1");
         dto2.setValue2("dto2Val2");
         dto2.setTimestamp(time);
@@ -813,12 +813,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoBeforeExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         final DomainObject entity = new DomainObjectImpl();
         entity.setValue("entityVal1");
@@ -844,12 +844,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoBefore() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         final DomainObject entity = new DomainObjectImpl();
         entity.setValue("entityVal1");
@@ -874,12 +874,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoByFilterBeforeExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         final DomainObject entity = new DomainObjectImpl();
         entity.setValue("entityVal1");
@@ -905,12 +905,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoByFilterBefore() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         final DomainObject entity = new DomainObjectImpl();
         entity.setValue("entityVal1");
@@ -936,7 +936,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntitiesToDtosByFilterBeforeExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -982,7 +982,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntitiesToDtosByFilterBefore() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1028,7 +1028,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntitiesToDtosBeforeExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1074,7 +1074,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntitiesToDtosBefore() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1120,7 +1120,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoKeyAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1150,7 +1150,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoKeyAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1180,7 +1180,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoKeyByFilterAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1210,7 +1210,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoKeyByFilterAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1240,7 +1240,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1251,7 +1251,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         service.entityToDtoAfterExact(dto, entity);
 
@@ -1272,7 +1272,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1283,7 +1283,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         service.entityToDtoAfter(dto, entity, new Object());
 
@@ -1304,7 +1304,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoByFilterAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1315,7 +1315,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         service.entityToDtoByFilterAfterExact(dto, entity);
 
@@ -1336,7 +1336,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoByFilterAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1347,7 +1347,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         service.entityToDtoByFilterAfter(dto, entity, new Object());
 
@@ -1368,7 +1368,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntitiesToDtosByFilterAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1414,7 +1414,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntitiesToDtosByFilterAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1460,7 +1460,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntitiesToDtosAfterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1506,7 +1506,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntitiesToDtosAfter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1552,12 +1552,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityAndBackToDtoExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -1590,12 +1590,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityAndBackToDto() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -1628,12 +1628,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityAndBackToDtoByFilterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -1666,12 +1666,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityAndBackToDtoByFilter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -1704,12 +1704,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityAndBackToDtoVoidExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -1736,12 +1736,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityAndBackToDtoVoid() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -1768,12 +1768,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityAndBackToDtoVoidByFilterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -1800,12 +1800,12 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testDtoToEntityAndBackToDtoVoidByFilter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
         final Date time = new Date();
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
         dto.setValue("dtoVal1");
         dto.setValue2("dtoVal2");
         dto.setTimestamp(time);
@@ -1832,7 +1832,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoAndBackToEntityExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1843,7 +1843,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         final DomainObject res = (DomainObject) service.entityToDtoAndBackToEntityExact(dto, entity);
 
@@ -1871,7 +1871,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoAndBackToEntity() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1882,7 +1882,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         final DomainObject res = (DomainObject) service.entityToDtoAndBackToEntity(dto, entity, new Object());
 
@@ -1910,7 +1910,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoAndBackToEntityByFilterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1921,7 +1921,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         final DomainObject res = (DomainObject) service.entityToDtoAndBackToEntityByFilterExact(dto, entity);
 
@@ -1949,7 +1949,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoAndBackToEntityByFilter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1960,7 +1960,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         final DomainObject res = (DomainObject) service.entityToDtoAndBackToEntityByFilter(dto, entity, new Object());
 
@@ -1988,7 +1988,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoAndBackToEntityVoidExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -1999,7 +1999,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         service.entityToDtoAndBackToEntityVoidExact(dto, entity);
 
@@ -2022,7 +2022,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoAndBackToEntityVoid() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -2033,7 +2033,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         service.entityToDtoAndBackToEntityVoid(dto, entity, new Object());
 
@@ -2056,7 +2056,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoAndBackToEntityVoidByFilterExact() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -2067,7 +2067,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         service.entityToDtoAndBackToEntityVoidByFilterExact(dto, entity);
 
@@ -2090,7 +2090,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
     public void testEntityToDtoAndBackToEntityVoidByFilter() {
 
         final TestService service =
-                this.applicationContext.getBean("simpleTransferableService", TestService.class);
+                this.applicationContext.getBean("annSimpleTransferableService", TestService.class);
 
         assertCountersAreZero();
 
@@ -2101,7 +2101,7 @@ public abstract class IntegrationTest extends AbstractTestNGSpringContextTests {
         entity.setValue2("entityVal2");
         entity.setTimestamp(time);
 
-        final ExtendedDataTransferObject dto = new ExtendedDataTransferObjectImpl();
+        final ExtendedDataTransferObject dto = new AnnotatedExtendedDataTransferObjectImpl();
 
         service.entityToDtoAndBackToEntityVoidByFilter(dto, entity, new Object());
 

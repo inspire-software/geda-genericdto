@@ -22,13 +22,13 @@
         <constructor-arg>
             <map>
                 <entry key="entityKey" value="com.inspiresoftware.lib.dto.geda.test.impl.DomainObjectImpl"/>
-                <entry key="dtoKey"    value="com.inspiresoftware.lib.dto.geda.test.impl.ExtendedDataTransferObjectImpl"/>
-                <entry key="filterKey" value="com.inspiresoftware.lib.dto.geda.test.impl.DataTransferObjectImpl"/>
+                <entry key="annDtoKey"    value="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedExtendedDataTransferObjectImpl"/>
+                <entry key="annFilterKey" value="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedDataTransferObjectImpl"/>
             </map>
         </constructor-arg>
     </bean>
 
-    <bean id="simpleTransferableService"
-          class="com.inspiresoftware.lib.dto.geda.test.impl.TestServiceImpl"/>
+    <bean id="annSimpleTransferableService"
+          class="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedTestServiceImpl"/>
 
 </beans>

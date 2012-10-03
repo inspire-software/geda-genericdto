@@ -11,6 +11,7 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
@@ -23,29 +24,18 @@ import java.util.Map;
 
 
 /**
- * Assembles CollectionPipe.
+ * Assembles MapPipe.
  *
  * @author Denis Pavlov
  * @since 1.0.0
  *
  */
 @SuppressWarnings("unchecked")
-final class MapPipeBuilder extends BasePipeBuilder {
-	
-	private MapPipeBuilder() {
-		// prevent instatiation
-	}
+class MapPipeBuilder extends BasePipeBuilder<MapPipeMetadata> {
 
 	/**
-	 * Builds the pipe.
-	 * 
-	 * @param synthesizer method synthesizer
-	 * @param dtoClass dto class
-	 * @param entityClass entity class
-	 * @param dtoPropertyDescriptors all DTO descriptors.
-	 * @param entityPropertyDescriptors all entity descriptors
-	 * @param meta meta for this pipe
-	 * @return data pipe.
+	 * {@inheritDoc}
+     *
 	 * @throws InspectionBindingNotFoundException when fails to find descriptors for fields
 	 * @throws UnableToCreateInstanceException when data reader/writer cannot be created
 	 * @throws InspectionPropertyNotFoundException when data reader/writer cannot be created
@@ -53,12 +43,13 @@ final class MapPipeBuilder extends BasePipeBuilder {
 	 * @throws AnnotationValidatingBindingException when map property binding is invalid
 	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
-    public static Pipe build(
-    		final MethodSynthesizer synthesizer,
-    		final Class dtoClass, final Class entityClass,
+    public Pipe build(
+            final Registry dslRegistry,
+            final MethodSynthesizer synthesizer,
+            final Class dtoClass, final Class entityClass,
     		final PropertyDescriptor[] dtoPropertyDescriptors, 
     		final PropertyDescriptor[] entityPropertyDescriptors, 
-    		final MapPipeMetadata meta) 
+    		final MapPipeMetadata meta, Pipe pipe)
     	throws InspectionBindingNotFoundException, InspectionPropertyNotFoundException, UnableToCreateInstanceException, InspectionScanningException, 
     		   AnnotationValidatingBindingException, GeDARuntimeException  {
 
@@ -91,7 +82,7 @@ final class MapPipeBuilder extends BasePipeBuilder {
 		final DataReader entityFieldRead = entitySynthesizer.synthesizeReader(entityFieldDesc);
 		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : entitySynthesizer.synthesizeWriter(entityFieldDesc);
 
-        return new MapPipe(synthesizer,
+        return new MapPipe(dslRegistry, synthesizer,
                 dtoFieldRead, dtoFieldWrite,
                 entityFieldRead, entityFieldWrite,
                 meta);

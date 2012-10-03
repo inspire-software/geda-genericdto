@@ -10,12 +10,17 @@
 package com.inspiresoftware.lib.dto.geda.impl;
 
 import com.inspiresoftware.lib.dto.geda.DTOAdaptersRegistrar;
+import com.inspiresoftware.lib.dto.geda.DTODSLRegistrar;
 import com.inspiresoftware.lib.dto.geda.DTOSupport;
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.repository.AdaptersRepository;
 import com.inspiresoftware.lib.dto.geda.adapter.repository.impl.AdaptersRepositoryImpl;
+import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.assembler.Assembler;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.impl.DefaultDSLRegistry;
 import com.inspiresoftware.lib.dto.geda.event.DTOEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +28,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Basic implementation of the DTOSupport interface that provides the connection point
@@ -49,8 +56,12 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
     private static final Logger LOG = LoggerFactory.getLogger(DTOSupportImpl.class);
 
     private BeanFactory beanFactory;
-    private DTOAdaptersRegistrar registrator;
+
+    private DTOAdaptersRegistrar adaptersRegistrar;
+    private DTODSLRegistrar dslRegistrar;
+
     private final AdaptersRepository dtoValueConverters = new AdaptersRepositoryImpl();
+    private Registry dslRegistry = new DefaultDSLRegistry();
 
     private DTOEventListener onDtoAssembly;
     private DTOEventListener onEntityAssembly;
@@ -60,16 +71,34 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
     private DTOEventListener onEntityAssembled;
     private DTOEventListener onEntityFailed;
 
-    public void setBeanFactory(final BeanFactory beanFactory) {
+    private final Map<Integer, Boolean> isClassAnnotatedCache = new ConcurrentHashMap<Integer, Boolean>();
+
+    public void setBeanFactory(final ExtensibleBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
+        this.dslRegistry = new DefaultDSLRegistry(beanFactory);
     }
 
-    public void setRegistrator(final DTOAdaptersRegistrar registrator) {
-        this.registrator = registrator;
+    public void setAdaptersRegistrar(final DTOAdaptersRegistrar adaptersRegistrar) {
+        this.adaptersRegistrar = adaptersRegistrar;
+    }
+
+    public void setDslRegistrar(final DTODSLRegistrar dslRegistrar) {
+        this.dslRegistrar = dslRegistrar;
     }
 
     public void afterPropertiesSet() throws Exception {
         this.registerCoreAdapters();
+        this.registerDSLMappings();
+    }
+
+    /**
+     * Extension hook to register mappings via DSL registry immediately after
+     * bean construction.
+     */
+    protected void registerDSLMappings() {
+        if (this.dslRegistrar != null) {
+            this.dslRegistrar.registerMappings(this, this.dslRegistry);
+        }
     }
 
     /**
@@ -77,8 +106,8 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
      * bean construction.
      */
     protected void registerCoreAdapters() {
-        if (this.registrator != null) {
-            this.registrator.registerAdapters(this);
+        if (this.adaptersRegistrar != null) {
+            this.adaptersRegistrar.registerAdapters(this);
         }
     }
 
@@ -111,8 +140,15 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
             if (this.onDtoAssembly != null) {
                 this.onDtoAssembly.onEvent(context, dto, entity);
             }
-            DTOAssembler.newAssembler(dtoClassFilter, entity.getClass())
-                    .assembleDto(dto, entity, this.dtoValueConverters.getAll(), this.beanFactory);
+
+            if (isAnnotatedClass(dtoClassFilter)) {
+                DTOAssembler.newAssembler(dtoClassFilter, entity.getClass())
+                        .assembleDto(dto, entity, this.dtoValueConverters.getAll(), this.beanFactory);
+            } else {
+                DTOAssembler.newAssembler(dtoClassFilter, entity.getClass(), dslRegistry)
+                        .assembleDto(dto, entity, this.dtoValueConverters.getAll(), this.beanFactory);
+            }
+
             if (this.onDtoAssembled != null) {
                 this.onDtoAssembled.onEvent(context, dto, entity);
             }
@@ -128,7 +164,6 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
             throw re; // re-throw
         }
     }
-
 
     /** {@inheritDoc} */
     public <T> T assembleDtoByKey(final String dtoFilter, final String dtoKey, final Object entity, final String context) {
@@ -162,7 +197,13 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
             }
             final Class entityClass = entities.iterator().next().getClass();
 
-            final Assembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
+            final Assembler asm;
+            if (isAnnotatedClass(dtoClassFilter)) {
+                asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
+            } else {
+                asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass, dslRegistry);
+            }
+
             for (final Object entity : entities) {
                 final Object dto = this.beanFactory.get(keyDto);
                 if (dto == null) {
@@ -232,8 +273,15 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
             if (this.onEntityAssembly != null) {
                 this.onEntityAssembly.onEvent(context, dto, entity);
             }
-            DTOAssembler.newAssembler(dtoClassFilter, entity.getClass())
-                    .assembleEntity(dto, entity, this.dtoValueConverters.getAll(), this.beanFactory);
+
+            if (isAnnotatedClass(dtoClassFilter)) {
+                DTOAssembler.newAssembler(dtoClassFilter, entity.getClass())
+                        .assembleEntity(dto, entity, this.dtoValueConverters.getAll(), this.beanFactory);
+            } else {
+                DTOAssembler.newAssembler(dtoClassFilter, entity.getClass(), dslRegistry)
+                        .assembleEntity(dto, entity, this.dtoValueConverters.getAll(), this.beanFactory);
+            }
+
             if (this.onEntityAssembled != null) {
                 this.onEntityAssembled.onEvent(context, dto, entity);
             }
@@ -275,7 +323,13 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
                 throw new IllegalArgumentException("DTO factory has no class specified for key: " + entityKey);
             }
 
-            final Assembler asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
+            final Assembler asm;
+            if (isAnnotatedClass(dtoClassFilter)) {
+                asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass);
+            } else {
+                asm = DTOAssembler.newAssembler(dtoClassFilter, entityClass, dslRegistry);
+            }
+
             for (final Object dto : dtos) {
                 final Object entity = this.beanFactory.get(entityKey);
                 if (entity == null) {
@@ -353,4 +407,18 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
     public void setOnEntityAssembly(final DTOEventListener onEntityAssembly) {
         this.onEntityAssembly = onEntityAssembly;
     }
+
+
+    private Boolean isAnnotatedClass(final Class clazz) {
+        final Integer classHash = Integer.valueOf(clazz.hashCode());
+        Boolean isAnn;
+        if (isClassAnnotatedCache.containsKey(classHash)) {
+            isAnn = isClassAnnotatedCache.get(classHash);
+        } else {
+            isAnn = Boolean.valueOf(clazz.getAnnotation(Dto.class) != null);
+            isClassAnnotatedCache.put(classHash, isAnn);
+        }
+        return isAnn;
+    }
+
 }

@@ -12,9 +12,11 @@
 package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.Configurable;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
+import com.inspiresoftware.lib.dto.geda.assembler.meta.MapPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.*;
@@ -35,33 +37,54 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 
-	private final Class dtoClass;
+    private static final MetadataChainBuilder ANNOTATIONS = new MetadataChainAnnotationBuilder();
+
+    private static final PipeBuilder<FieldPipeMetadata> FIELD = new DataPipeBuilder();
+    private static final PipeBuilder<FieldPipeMetadata> VIRTUAL = new DataVirtualPipeBuilder();
+    private static final PipeBuilder<CollectionPipeMetadata> COLLECTION = new CollectionPipeBuilder();
+    private static final PipeBuilder<MapPipeMetadata> MAP = new MapPipeBuilder();
+    private static final PipeBuilder<PipeMetadata> CHAIN = new DataPipeChainBuilder();
+
+
+    private final Class dtoClass;
 	private final Class entityClass;
 	private final MethodSynthesizer synthesizer;
+    private final Registry dslRegistry;
 
     private Pipe[] pipes;
 
-	DTOtoEntityAssemblerImpl(final Class dto, final Class entity, final MethodSynthesizer synthesizer)
+	DTOtoEntityAssemblerImpl(final Class dto, final Class entity,
+                             final MethodSynthesizer synthesizer, final Registry registry)
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
 		       GeDARuntimeException, AnnotationDuplicateBindingException {
 
-        this(dto, entity, synthesizer, true);        
+        this(dto, entity, synthesizer, registry, true);
     }
 
-	DTOtoEntityAssemblerImpl(final Class dto, final Class entity, final MethodSynthesizer synthesizer, final boolean strict)
+	DTOtoEntityAssemblerImpl(final Class dto, final Class entity,
+                             final MethodSynthesizer synthesizer, final Registry registry,
+                             final boolean strict)
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
 		       GeDARuntimeException, AnnotationDuplicateBindingException {
 		dtoClass = dto;
 		entityClass = entity;
 		this.synthesizer = synthesizer;
+        dslRegistry = registry;
+
+        final MetadataChainBuilder metaBuilder;
+        if (registry == null) {
+            metaBuilder = ANNOTATIONS;
+        } else {
+            metaBuilder = new MetadataChainDSLBuilder(registry, dtoClass, entityClass);
+        }
 
 		Class dtoMap = dto;
         final LinkedList pipes = new LinkedList();
         while (dtoMap != null) { // when we reach Object.class this should be null
 
-			mapRelationMapping(dtoMap, entity, strict, pipes);
+			mapRelationMapping(dtoMap, entity, strict, pipes, metaBuilder);
 			Object supType = dtoMap.getGenericSuperclass();
 			if (supType instanceof ParameterizedType) {
 				dtoMap = (Class) ((ParameterizedType) supType).getRawType();
@@ -74,7 +97,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 
     }
 
-	private void mapRelationMapping(final Class dto, final Class entity, final boolean strict, final List<Pipe> pipes)
+	private void mapRelationMapping(final Class dto, final Class entity, final boolean strict, final List<Pipe> pipes, final MetadataChainBuilder metaBuilder)
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
 		       GeDARuntimeException, AnnotationDuplicateBindingException {
@@ -89,7 +112,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
         final Field[] dtoFields = dto.getDeclaredFields();
 		for (Field dtoField : dtoFields) {
 
-			final List<PipeMetadata> metas = MetadataChainBuilder.build(dtoField);
+			final List<PipeMetadata> metas = metaBuilder.build(dtoField);
 			if (metas == null || metas.isEmpty()) {
 				continue;
 			}
@@ -123,21 +146,25 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 			if (meta instanceof FieldPipeMetadata) {
 				if (meta.getEntityFieldName().startsWith("#this#")) {
 					// create virtual field pipe
-					return DataVirtualPipeBuilder.build(this.synthesizer,
-							dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
+					return VIRTUAL.build(this.dslRegistry, this.synthesizer,
+							dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors,
+                            (FieldPipeMetadata) meta, null);
 				} else {
 					// create field pipe
-					return DataPipeBuilder.build(this.synthesizer,
-							dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (FieldPipeMetadata) meta);
+					return FIELD.build(this.dslRegistry, this.synthesizer,
+							dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors,
+                            (FieldPipeMetadata) meta, null);
 				}
 			} else if (meta instanceof CollectionPipeMetadata) {
 				// create collection
-				return CollectionPipeBuilder.build(this.synthesizer,
-						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (CollectionPipeMetadata) meta);
+				return COLLECTION.build(this.dslRegistry, this.synthesizer,
+						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors,
+                        (CollectionPipeMetadata) meta, null);
 			} else if (meta instanceof MapPipeMetadata) {
 				// create map
-				return MapPipeBuilder.build(this.synthesizer,
-						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, (MapPipeMetadata) meta);
+				return MAP.build(this.dslRegistry, this.synthesizer,
+						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors,
+                        (MapPipeMetadata) meta, null);
 			} else {
 				throw new GeDARuntimeException("Unknown pipe meta: " + meta.getClass());
 			}
@@ -148,7 +175,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 		final PropertyDescriptor[] nestedEntityPropertyDescriptors = PropertyInspector.getPropertyDescriptorsForClassReturnedByGet(nested);
 
 		// build a chain pipe
-		return DataPipeChainBuilder.build(this.synthesizer, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, meta,
+		return CHAIN.build(this.dslRegistry, this.synthesizer, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, meta,
 				createPipeChain(dto, dtoPropertyDescriptors, entity, nestedEntityPropertyDescriptors, dtoField, metas, index + 1)
 			);
 
