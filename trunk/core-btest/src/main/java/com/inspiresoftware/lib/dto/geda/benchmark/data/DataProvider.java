@@ -32,7 +32,7 @@ public final class DataProvider {
         final Name name = new Name("Sherlock", "Holmes");
         final Country country = new Country("United Kingdom");
         final Address home = new Address("221B Baker Street", null, "London", country, "NW1 6XE");
-        final Person entity = new Person(name, home);
+        final Person entity = new Person(123456789012L, name, home);
 
         if (withHistory) {
             final Address baskervilleHall = new Address("Baskerville Hall", null, "Hay-on-Wye", country, "HR3 5LE");
@@ -56,6 +56,7 @@ public final class DataProvider {
             dto = new PersonDTO();
         }
 
+        dto.setId(1234567890123L);
         dto.setFirstName("Sherlock");
         dto.setLastName("Holmes");
 

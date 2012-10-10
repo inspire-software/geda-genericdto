@@ -57,7 +57,7 @@ public class CaliperGeDASynBenchmark extends SimpleBenchmark {
         final Name name = new Name("Sherlock", "Holmes");
         final Country country = new Country("United Kingdom");
         final Address address = new Address("221B Baker Street", null, "London", country, "NW1 6XE");
-        final Person entity = new Person(name, address);
+        final Person entity = new Person(1234567890123L, name, address);
 
         personLoaded = entity;
 

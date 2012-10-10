@@ -43,6 +43,7 @@ public class OrikaListMapper implements Mapper {
             toClassMap()
         );
         factory.registerClassMap(factory.classMap(Person.class, PersonWithHistoryDTO.class).
+            field("id", "id").
             field("name.firstname", "firstName").
             field("name.surname", "lastName").
             field("currentAddress", "currentAddress").

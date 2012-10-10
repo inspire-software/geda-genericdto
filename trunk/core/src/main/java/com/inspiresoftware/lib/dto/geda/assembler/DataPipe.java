@@ -174,22 +174,23 @@ class DataPipe implements Pipe {
     		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
     		       AnnotationDuplicateBindingException, NotValueConverterException, ValueConverterNotFoundException, 
     		       CollectionEntityGenericReturnTypeException {
-        final Object dtoDataDelegate = new NewDataProxy(
-                dtoBeanFactory,
-                this.meta,
-                true,
-                dto,
-                this.dtoWrite
-        ).create();
+
+        if (dtoBeanFactory == null) {
+            throw new BeanFactoryNotFoundException(meta.getDtoFieldName(), meta.getDtoBeanKey(), true);
+        }
+
+        final Object newDtoObject = this.meta.newDtoBean(dtoBeanFactory);
 
         final Assembler assembler;
         if (dslRegistry == null) {
-            assembler = DTOAssembler.newCustomAssembler(dtoDataDelegate.getClass(), entityData.getClass(), synthesizer);
+            assembler = DTOAssembler.newCustomAssembler(newDtoObject.getClass(), entityData.getClass(), synthesizer);
         } else {
-            assembler = DTOAssembler.newCustomAssembler(dtoDataDelegate.getClass(), entityData.getClass(), dslRegistry, synthesizer);
+            assembler = DTOAssembler.newCustomAssembler(newDtoObject.getClass(), entityData.getClass(), dslRegistry, synthesizer);
         }
         
-        assembler.assembleDto(dtoDataDelegate, entityData,  converters, dtoBeanFactory);
+        assembler.assembleDto(newDtoObject, entityData,  converters, dtoBeanFactory);
+
+        this.dtoWrite.write(dto, newDtoObject);
     }
 
     /** {@inheritDoc} */

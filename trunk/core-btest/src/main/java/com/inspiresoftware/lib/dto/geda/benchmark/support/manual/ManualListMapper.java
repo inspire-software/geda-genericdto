@@ -47,6 +47,7 @@ public class ManualListMapper implements Mapper {
             final AddressDTO addressDTO = fromAddress(address);
             dto.setCurrentAddress(addressDTO);
         }
+        dto.setId(person.getId());
         return dto;
     }
 
@@ -79,6 +80,7 @@ public class ManualListMapper implements Mapper {
         for (final AddressDTO addressDTO : personDTO.getPreviousAddresses()) {
             person.getPreviousAddresses().add(fromAddressDTO(addressDTO));
         }
+        person.setId(personDTO.getId());
         return person;
     }
 

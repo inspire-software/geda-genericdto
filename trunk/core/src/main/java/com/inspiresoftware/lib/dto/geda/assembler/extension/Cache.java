@@ -18,22 +18,21 @@ package com.inspiresoftware.lib.dto.geda.assembler.extension;
  * @author DPavlov
  * @since 1.1.0
  * 
- * @param <K> key
  * @param <V> value
  * 
  */
-public interface Cache<K, V> extends Configurable {
+public interface Cache<V> extends Configurable {
 
 	/**
 	 * @param key cache key
 	 * @return value or <code>null</code>
 	 */
-	V get(K key);
+	V get(int key);
 	
 	/**
 	 * @param key cache key
 	 * @param value cache value
 	 */
-	void put(K key, V value);
+	void put(int key, V value);
 	
 }

@@ -103,9 +103,9 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 
 	
 	/** DataReaders instances cache. */
-	private static final Cache<String, Object> READER_CACHE = new SoftReferenceCache<String, Object>(100);
+	private static final Cache<Object> READER_CACHE = new SoftReferenceCache<Object>(100);
 	/** DataWriters instances cache. */
-	private static final Cache<String, Object> WRITER_CACHE = new SoftReferenceCache<String, Object>(100);
+	private static final Cache<Object> WRITER_CACHE = new SoftReferenceCache<Object>(100);
 	
 	/**
 	 * Primitive to wrapper conversion map.
@@ -322,7 +322,7 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 					if (reader == null) {
 						reader = getFromCacheOrCreateFromClassLoader(readerClassName, READER_CACHE, getClassLoader());
 					} else {
-						READER_CACHE.put(readerClassName, reader);
+						READER_CACHE.put(readerClassName.hashCode(), reader);
 					}
 				} while (reader == null);
 			} finally {
@@ -333,18 +333,18 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T getFromCacheOrCreateFromClassLoader(final String readerClassName, 
-													  final Cache<String, Object> cache, 
+	private <T> T getFromCacheOrCreateFromClassLoader(final String className,
+													  final Cache<Object> cache,
 													  final ClassLoader classLoader) 
 			throws UnableToCreateInstanceException {
 		Object instance;
 
-		instance = cache.get(readerClassName);
+		instance = cache.get(className.hashCode());
 		if (instance != null) {
 			return (T) instance;
 		}
 		
-		instance = createInstanceFromClassLoader(classLoader, readerClassName);
+		instance = createInstanceFromClassLoader(classLoader, className);
 		if (instance != null) {
 			return (T) instance;
 		}
@@ -497,7 +497,7 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 					if (writer == null) {
 						writer = getFromCacheOrCreateFromClassLoader(writerClassName, WRITER_CACHE, getClassLoader());
 					} else {
-						WRITER_CACHE.put(writerClassName, writer);
+						WRITER_CACHE.put(writerClassName.hashCode(), writer);
 					}
 				} while (writer == null);
 			} finally {

@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class Person {
 
+    private long id;
     private Name name;
 
     private Address currentAddress;
@@ -28,15 +29,23 @@ public class Person {
     public Person() {
     }
 
-    public Person(final Name name, final Address currentAddress) {
+    public Person(final long id, final Name name, final Address currentAddress) {
         this.name = name;
         this.currentAddress = currentAddress;
     }
 
-    public Person(final Name name, final Address currentAddress, final List<Address> previousAddresses) {
+    public Person(final long id, final Name name, final Address currentAddress, final List<Address> previousAddresses) {
         this.name = name;
         this.currentAddress = currentAddress;
         this.previousAddresses = previousAddresses;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
     }
 
     public Name getName() {
@@ -86,7 +95,8 @@ public class Person {
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = Long.valueOf(id).hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (currentAddress != null ? currentAddress.hashCode() : 0);
         return result;
     }

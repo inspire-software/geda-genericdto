@@ -29,8 +29,8 @@ class NewDataProxy {
 	private final BeanFactory beanFactory;
 	private final PipeMetadata meta;
 	private final boolean dto;
-	private final Object parentEntity;
-	private final DataWriter entityWrite;
+	private final Object parentDataObject;
+	private final DataWriter parentDataWriter;
 	
 	/**
 	 * Constructor for proxy object that creates an entity only when it is needed.
@@ -38,28 +38,28 @@ class NewDataProxy {
 	 * @param beanFactory bean factory for creating new entities
 	 * @param meta meta data for field
 	 * @param dto true if this is proxy for dto and false if this is proxy for entity
-	 * @param parentEntity the parent of this bean (can be {@link NewDataProxy} to allow deep nesting)
-	 * @param entityWrite the method that allows to set new bean to parrent object.
+	 * @param parentDataObject the parent of this bean (can be {@link NewDataProxy} to allow deep nesting)
+	 * @param parentDataWriter the method that allows to set new bean to parent object.
 	 */
 	public NewDataProxy(final BeanFactory beanFactory,
 			final PipeMetadata meta,
 			final boolean dto,
-			final Object parentEntity,
-			final DataWriter entityWrite) {
+			final Object parentDataObject,
+			final DataWriter parentDataWriter) {
 
 		this.beanFactory = beanFactory;
 		this.meta = meta;
 		this.dto = dto;
-		this.parentEntity = parentEntity;
-		this.entityWrite = entityWrite;
+		this.parentDataObject = parentDataObject;
+		this.parentDataWriter = parentDataWriter;
 	}
-	
-	/**
-	 * @return newly created entity bean for working with deeply nested objects (sets itself 
-	 *         to parent object automatically).
-	 * @throws BeanFactoryNotFoundException if bean factory annotation is missing
-	 * @throws BeanFactoryUnableToCreateInstanceException if bean factory is unable to create dot/entity instance
-	 */
+
+    /**
+     * @return newly created entity bean for working with deeply nested objects (sets itself
+     *         to parent object automatically).
+     * @throws BeanFactoryNotFoundException if bean factory annotation is missing
+     * @throws BeanFactoryUnableToCreateInstanceException if bean factory is unable to create dot/entity instance
+     */
 	public Object create() 
 		throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException {
 		
@@ -72,11 +72,10 @@ class NewDataProxy {
 		}
 		
 		final Object parentObject;
-		if (parentEntity instanceof NewDataProxy) {
-			final NewDataProxy parentProxy = (NewDataProxy) parentEntity;
-			parentObject = parentProxy.create();
+		if (parentDataObject instanceof NewDataProxy) {
+			parentObject = ((NewDataProxy) parentDataObject).create();
 		} else {
-			parentObject = parentEntity;
+			parentObject = parentDataObject;
 		}
 		
 		final Object newObject;
@@ -86,7 +85,7 @@ class NewDataProxy {
 			newObject = this.meta.newEntityBean(this.beanFactory);
 		}
 
-		this.entityWrite.write(parentObject, newObject);
+		this.parentDataWriter.write(parentObject, newObject);
 		return newObject;
 	}
 	

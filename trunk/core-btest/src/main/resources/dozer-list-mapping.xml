@@ -17,6 +17,10 @@
         <class-a>com.inspiresoftware.lib.dto.geda.benchmark.domain.Person</class-a>
         <class-b>com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonWithHistoryDTO</class-b>
         <field>
+            <a>id</a>
+            <b>id</b>
+        </field>
+        <field>
             <a>name.firstname</a>
             <b>firstName</b>
         </field>
