@@ -393,7 +393,7 @@ public final class DTOAssembler {
 
         getDtoAnnotation(dto);
 
-    	return putAssemblerToCache(key, createNewAssembler(dto, entity, null, null));
+    	return putAssemblerToCache(key, createNewAssembler(dto, realEntity, null, null));
     }
 
     /**
@@ -432,7 +432,7 @@ public final class DTOAssembler {
     		throw new GeDARuntimeException("Registry cannot be null");
     	}
 
-    	return putAssemblerToCache(key, createNewAssembler(dto, entity, null, registry));
+    	return putAssemblerToCache(key, createNewAssembler(dto, realEntity, null, registry));
     }
 
     /**
