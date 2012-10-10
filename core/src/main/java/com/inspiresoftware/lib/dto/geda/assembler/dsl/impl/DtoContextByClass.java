@@ -53,7 +53,7 @@ public class DtoContextByClass implements DtoContext {
     /** {@inheritDoc} */
     public DtoEntityContext forEntity(final Class entityClass) {
         if (entityClass == null) {
-            throw new GeDARuntimeException("dtoClass must not be null");
+            throw new GeDARuntimeException("entityClass must not be null");
         }
         final int hash = entityClass.hashCode();
         if (contexts.containsKey(hash)) {
@@ -82,5 +82,76 @@ public class DtoContextByClass implements DtoContext {
             throw new BeanFactoryUnableToLocateRepresentationException(beanFactory.toString(), "top level", beanKey, false);
         }
         return forEntity(representative);
+    }
+
+    /** {@inheritDoc} */
+    public DtoEntityContext forEntityGeneric() {
+        return forEntity(Object.class);
+    }
+
+    /** {@inheritDoc} */
+    public DtoEntityContext has(final Class entityClass) {
+        if (entityClass == null) {
+            throw new GeDARuntimeException("entityClass must not be null");
+        }
+        int hash = entityClass.hashCode();
+        if (contexts.containsKey(hash)) {
+            return contexts.get(hash);
+        }
+
+        // try immediate interfaces
+        for (Class iFace : entityClass.getInterfaces()) {
+            hash = iFace.hashCode();
+            if (contexts.containsKey(hash)) {
+                return contexts.get(hash);
+            }
+        }
+
+        // try superclass for proxies and wrappers
+        if (entityClass.getSuperclass() != null) {
+            hash = entityClass.getSuperclass().hashCode();
+            if (contexts.containsKey(hash)) {
+                return contexts.get(hash);
+            }
+        }
+
+        // try generic context (if one was provided)
+        hash = Object.class.hashCode();
+        if (contexts.containsKey(hash)) {
+            return contexts.get(hash);
+        }
+
+        // no context for this entity
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    public DtoEntityContext useContextFor(final DtoEntityContext ctx, final Class entityClass) {
+
+        if (!contexts.containsValue(ctx)) {
+            throw new IllegalArgumentException("This dto does not have a mapping for context with entity: " + ctx.getEntityClass());
+        }
+
+        int hash = entityClass.hashCode();
+        contexts.put(hash, ctx);
+
+        return ctx;
+    }
+
+    /** {@inheritDoc} */
+    public DtoEntityContext useContextFor(final DtoEntityContext ctx, final String beanKey) {
+
+        if (!contexts.containsValue(ctx)) {
+            throw new IllegalArgumentException("This dto does not have a mapping for context with entity: " + ctx.getEntityClass());
+        }
+
+        if (beanFactory == null) {
+            throw new GeDARuntimeException("Bean factory must be specified. Use constructor DefaultDSLRegistry(BeanFactory)");
+        }
+        final Class representative = beanFactory.getClazz(beanKey);
+        if (representative == null) {
+            throw new BeanFactoryUnableToLocateRepresentationException(beanFactory.toString(), "top level", beanKey, false);
+        }
+        return useContextFor(ctx, representative);
     }
 }
