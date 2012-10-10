@@ -102,11 +102,16 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
 		       GeDARuntimeException, AnnotationDuplicateBindingException {
 
-		final PropertyDescriptor[] dtoPropertyDescriptors =
-			PropertyInspector.getPropertyDescriptorsForClass(dto);
-		final PropertyDescriptor[] entityPropertyDescriptors =
-			PropertyInspector.getPropertyDescriptorsForClass(entity);
+        final boolean isMapOrListEntity = Map.class.isAssignableFrom(entity) || List.class.isAssignableFrom(entity);
 
+        final PropertyDescriptor[] dtoPropertyDescriptors =
+			PropertyInspector.getPropertyDescriptorsForClass(dto);
+		final PropertyDescriptor[] entityPropertyDescriptors;
+        if (isMapOrListEntity) {
+            entityPropertyDescriptors = null;
+        } else {
+            entityPropertyDescriptors = PropertyInspector.getPropertyDescriptorsForClass(entity);
+        }
 
         final Set<String> bindings = new TreeSet<String>();
         final Field[] dtoFields = dto.getDeclaredFields();
@@ -117,7 +122,9 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 				continue;
 			}
             try {
-			    final Pipe pipe = createPipeChain(dtoClass, dtoPropertyDescriptors, entityClass, entityPropertyDescriptors, dtoField, metas, 0);
+			    final Pipe pipe = createPipeChain(dtoClass, dtoPropertyDescriptors,
+                                                  entityClass, entityPropertyDescriptors,
+                                                  dtoField, metas, 0, isMapOrListEntity);
                 final String binding = pipe.getBinding();
 
                 if (bindings.contains(binding)) {
@@ -134,15 +141,17 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 	}
 
 	private Pipe createPipeChain(
-			final Class dto, final PropertyDescriptor[] dtoPropertyDescriptors,
-			final Class entity, final PropertyDescriptor[] entityPropertyDescriptors,
-			final Field dtoField, final List<PipeMetadata> metas, final int index)
+            final Class dto, final PropertyDescriptor[] dtoPropertyDescriptors,
+            final Class entity, final PropertyDescriptor[] entityPropertyDescriptors,
+            final Field dtoField, final List<PipeMetadata> metas, final int index, final boolean isMapOrListEntity)
 		throws InspectionPropertyNotFoundException, InspectionBindingNotFoundException, InspectionScanningException,
 			   UnableToCreateInstanceException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException {
 
 		final PipeMetadata meta = metas.get(index);
 
-		if (index + 1 == metas.size()) {
+        if (index + 1 == metas.size() || isMapOrListEntity) {
+            // build actual pipe for last in chain, maps or lists
+            // (since maps and lists do not have any nested properties, maybe another feature?)
 			if (meta instanceof FieldPipeMetadata) {
 				if (meta.getEntityFieldName().startsWith("#this#")) {
 					// create virtual field pipe
@@ -176,7 +185,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 
 		// build a chain pipe
 		return CHAIN.build(this.dslRegistry, this.synthesizer, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, meta,
-				createPipeChain(dto, dtoPropertyDescriptors, entity, nestedEntityPropertyDescriptors, dtoField, metas, index + 1)
+				createPipeChain(dto, dtoPropertyDescriptors, entity, nestedEntityPropertyDescriptors, dtoField, metas, index + 1, isMapOrListEntity)
 			);
 
 	}
