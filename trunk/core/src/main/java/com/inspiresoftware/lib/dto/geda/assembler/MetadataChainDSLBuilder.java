@@ -29,7 +29,12 @@ class MetadataChainDSLBuilder implements MetadataChainBuilder {
     private final DtoEntityContext context;
 
 	MetadataChainDSLBuilder(final Registry registry, final Class dtoClass, final Class entityClass) {
-        this.context = registry.dto(dtoClass).forEntity(entityClass);
+        final DtoContext ctx = registry.has(dtoClass);
+        if (ctx != null) {
+            this.context = ctx.has(entityClass);
+        } else {
+            this.context = null;
+        }
     }
 
 	/**
@@ -39,6 +44,10 @@ class MetadataChainDSLBuilder implements MetadataChainBuilder {
 	 * @throws com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException when collections/map pipe cannot create data readers/writers
 	 */
 	public List<PipeMetadata> build(final Field dtoField) throws UnableToCreateInstanceException {
+
+        if (this.context == null) {
+            return null;
+        }
 
         final Object fieldContext = this.context.has(dtoField.getName());
 

@@ -21,11 +21,17 @@ package com.inspiresoftware.lib.dto.geda.assembler.dsl;
 public interface DtoEntityContext {
 
     /**
+     * This is just a reference and not to be used for creating Assembler instance
+     * configurations. Those parameter should come from DTOAssembler.new* methods.
+     *
      * @return DTO class for this context.
      */
     Class getDtoClass();
 
     /**
+     * This is just a reference and not to be used for creating Assembler instance
+     * configurations. Those parameter should come from DTOAssembler.new* methods.
+     *
      * @return entity class for this context.
      */
     Class getEntityClass();
