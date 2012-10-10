@@ -31,6 +31,7 @@ public class ManualBasicMapper implements Mapper {
         final Person person = (Person) entity;
         final PersonDTO dto = new PersonDTO();
 
+        dto.setId(person.getId());
         if (person.getName() != null) {
             dto.setFirstName(person.getName().getFirstname());
             dto.setLastName(person.getName().getSurname());
@@ -60,6 +61,7 @@ public class ManualBasicMapper implements Mapper {
         final Person person = new Person();
         final PersonDTO personDTO = (PersonDTO) dto;
 
+        person.setId(personDTO.getId());
         person.setName(new Name(personDTO.getFirstName(), personDTO.getLastName()));
 
         if (personDTO.getCurrentAddress() != null) {

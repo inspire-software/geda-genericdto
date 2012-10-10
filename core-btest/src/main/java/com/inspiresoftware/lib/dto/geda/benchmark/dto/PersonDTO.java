@@ -22,6 +22,9 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 @Dto
 public class PersonDTO {
 
+    @DtoField
+    private long id;
+
     @DtoField(value = "name.firstname",
               entityBeanKeys = "nameEntity")
     private String firstName;
@@ -34,6 +37,13 @@ public class PersonDTO {
               entityBeanKeys = "addressEntity")
     private AddressDTO currentAddress;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -85,7 +95,8 @@ public class PersonDTO {
 
     @Override
     public int hashCode() {
-        int result = firstName != null ? firstName.hashCode() : 0;
+        int result = Long.valueOf(id).hashCode();
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (currentAddress != null ? currentAddress.hashCode() : 0);
         return result;

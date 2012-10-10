@@ -15,12 +15,11 @@ import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.Cache;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.IntHashTable;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.SoftReferenceCache;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,9 +72,11 @@ public final class DTOAssembler {
 	private static Pattern entityClassNameBlacklistPatternValue = Pattern.compile(SETTING_ENTITY_CLASS_NAME_BLACKLIST_PATTERN_DEFAULT);
 	
 	
-	private static final Cache<Integer, Assembler> CACHE = new SoftReferenceCache<Integer, Assembler>(500);
+	private static final Cache<Assembler> CACHE = new SoftReferenceCache<Assembler>(500);
 
-    private static final Set<Integer> WHITELIST_ENTITIES = new HashSet<Integer>();
+    private static final IntHashTable<Boolean> WHITELIST_ENTITIES = new IntHashTable<Boolean>();
+
+    private static final IntHashTable<Class[]> AUTOBINDING = new IntHashTable<Class[]>();
 	
 	/**
 	 * Setup allows to configure some of the behaviour of GeDA. Currently it is used to tune the caching cleanup cycles.
@@ -118,14 +119,14 @@ public final class DTOAssembler {
 
 	private static Class filterBlacklisted(final Class className) {
         final int hash = className.hashCode();
-        if (!WHITELIST_ENTITIES.contains(hash)) {
+        if (!WHITELIST_ENTITIES.containsKey(hash)) {
             if (matches(className.getSimpleName())) {
                 if (!className.getSuperclass().equals(Object.class)) {
                     // some proxies are derived straight from Object.class - we do not want those
                     return filterBlacklisted(className.getSuperclass());
                 }
             } else {
-                WHITELIST_ENTITIES.add(hash);
+                WHITELIST_ENTITIES.put(hash, Boolean.TRUE);
             }
         }
 		return className;
@@ -142,6 +143,15 @@ public final class DTOAssembler {
 		return match.find();
 	}
 
+    private static Assembler getAssemblerFromCache(final int cacheKey) {
+        return CACHE.get(cacheKey);
+    }
+
+    private static Assembler putAssemblerToCache(final int cacheKey, final Assembler asm) {
+        CACHE.put(cacheKey, asm);
+        return asm;
+    }
+
 	private static Assembler createNewAssembler(final Class< ? > dto,
                                                 final Class< ? > entity,
                                                 final Object synthesizer,
@@ -150,26 +160,10 @@ public final class DTOAssembler {
 			       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
 			       GeDARuntimeException, AnnotationDuplicateBindingException {
 
-        final Class< ? > realEntity = filterBlacklisted(entity);
-		final Integer key;
         if (synthesizer == null) {
-            key = createAssemberKey(dto, realEntity, SYNTHESIZER);
-        } else {
-            key = createAssemberKey(dto, realEntity, synthesizer);
+            return new DTOtoEntityAssemblerImpl(dto, entity, SYNTHESIZER, registry);
         }
-    	
-		Assembler assembler = CACHE.get(key);
-		if (assembler == null) {
-            final MethodSynthesizer syn;
-            if (synthesizer == null) {
-                syn = SYNTHESIZER;
-            } else {
-                syn = new MethodSynthesizerProxy(synthesizer);
-            }
-            assembler = new DTOtoEntityAssemblerImpl(dto, realEntity, syn, registry);
-	    	CACHE.put(key, assembler);
-		}
-    	return assembler;
+        return new DTOtoEntityAssemblerImpl(dto, entity, new MethodSynthesizerProxy(synthesizer), registry);
 	}
 
 	private static Assembler createNewAssembler(final Class< ? > dto,
@@ -180,33 +174,22 @@ public final class DTOAssembler {
 			       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
 			       GeDARuntimeException, AnnotationDuplicateBindingException {
 
-        final Class< ? >[] realEntities = new Class< ? >[entities.length];
-        for (int i = 0; i < entities.length; i++) {
-            realEntities[i] = filterBlacklisted(entities[i]);
-        }
-
-        final Integer key;
         if (synthesizer == null) {
-            key = createAssemberKey(dto, realEntities, SYNTHESIZER);
-        } else {
-            key = createAssemberKey(dto, realEntities, synthesizer);
+            return new DTOtoEntitiesAssemblerDecoratorImpl(dto, entities, SYNTHESIZER, registry);
         }
-
-		Assembler assembler = CACHE.get(key);
-		if (assembler == null) {
-            final MethodSynthesizer syn;
-            if (synthesizer == null) {
-                syn = SYNTHESIZER;
-            } else {
-                syn = new MethodSynthesizerProxy(synthesizer);
-            }
-            assembler = new DTOtoEntitiesAssemblerDecoratorImpl(dto, realEntities, syn, registry);
-	    	CACHE.put(key, assembler);
-		}
-    	return assembler;
+        return new DTOtoEntitiesAssemblerDecoratorImpl(dto, entities, new MethodSynthesizerProxy(synthesizer), registry);
 	}
 
-	private static Dto getDtoAnnotation(final Class< ? > dto)
+    private static Dto getDtoAnnotation(final Class<?> dto) {
+        final Dto ann = dto.getAnnotation(Dto.class);
+        if (ann == null) {
+            throw new AnnotationMissingException(dto.getCanonicalName());
+        }
+        return ann;
+    }
+
+
+    private static Dto getDtoAnnotationAuto(final Class<?> dto)
 			throws AnnotationMissingException, AnnotationMissingAutobindingException {
 		final Dto ann = dto.getAnnotation(Dto.class);
         if (ann == null) {
@@ -218,8 +201,13 @@ public final class DTOAssembler {
 		return ann;
 	}
 
-	private static Class[] detectAutobinding(final Class< ? > dto, final Dto ann)
+	private static Class[] detectAutobinding(final Class< ? > dto)
 			throws AutobindingClassNotFoundException {
+        final int cacheKey = dto.hashCode();
+        if (AUTOBINDING.containsKey(cacheKey)) {
+            return AUTOBINDING.get(cacheKey);
+        }
+        final Dto ann = getDtoAnnotationAuto(dto);
         final Class[] classes = new Class[ann.value().length];
         for (int i = 0; i < ann.value().length; i++) {
             final String clazz = ann.value()[i];
@@ -232,26 +220,35 @@ public final class DTOAssembler {
                 throw new AutobindingClassNotFoundException(dto.getCanonicalName(), clazz);
             }
         }
+        AUTOBINDING.put(cacheKey, classes);
         return classes;
 	}
 
-	private static <DTO, Entity> Integer createAssemberKey(final Class<DTO> dto,
+	private static <DTO, Entity> int createAssemberKey(final Class<DTO> dto,
 			final Class<Entity> entity, final Object synthesizer) {
         int result = dto.hashCode();
         result = 31 * result + entity.hashCode();
-        result = 31 * result + synthesizer.hashCode();
-        return Integer.valueOf(result);
+        if (synthesizer == null) {
+            result = 31 * result + SYNTHESIZER.hashCode();
+        } else {
+            result = 31 * result + synthesizer.hashCode();
+        }
+        return result;
 	}
 
-	private static <DTO, Entity> Integer createAssemberKey(final Class<DTO> dto,
+	private static <DTO, Entity> int createAssemberKey(final Class<DTO> dto,
 			final Class<Entity>[] entities, final Object synthesizer) {
 
         int result = dto.hashCode();
         for (final Class entity : entities) {
             result = 31 * result + entity.hashCode();
         }
-        result = 31 * result + synthesizer.hashCode();
-        return Integer.valueOf(result);
+        if (synthesizer == null) {
+            result = 31 * result + SYNTHESIZER.hashCode();
+        } else {
+            result = 31 * result + synthesizer.hashCode();
+        }
+        return result;
 	}
 
 	/**
@@ -278,12 +275,18 @@ public final class DTOAssembler {
 			   InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException, 
 			   InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
 			   GeDARuntimeException, AnnotationDuplicateBindingException {
-		
-		if (dto.getAnnotation(Dto.class) == null) {
-			throw new AnnotationMissingException(dto.getName());
-		}
-		
-		return createNewAssembler(dto, entity, synthesizer, null);
+
+        final Class< ? > realEntity = filterBlacklisted(entity);
+        final int key = createAssemberKey(dto, realEntity, synthesizer);
+
+        final Assembler asm = getAssemblerFromCache(key);
+        if (asm != null) {
+            return asm;
+        }
+
+        getDtoAnnotation(dto);
+
+		return putAssemblerToCache(key, createNewAssembler(dto, realEntity, synthesizer, null));
 	}
 
 	/**
@@ -311,11 +314,19 @@ public final class DTOAssembler {
 			   InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
 			   GeDARuntimeException, AnnotationDuplicateBindingException {
 
+        final Class< ? > realEntity = filterBlacklisted(entity);
+        final int key = createAssemberKey(dto, realEntity, synthesizer);
+
+        final Assembler asm = getAssemblerFromCache(key);
+        if (asm != null) {
+            return asm;
+        }
+
         if (registry == null) {
             throw new GeDARuntimeException("Registry cannot be null");
         }
 
-        return createNewAssembler(dto, entity, synthesizer, registry);
+        return putAssemblerToCache(key, createNewAssembler(dto, realEntity, synthesizer, registry));
 	}
 
 	/**
@@ -372,9 +383,17 @@ public final class DTOAssembler {
     	       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, 
     	       GeDARuntimeException, AnnotationDuplicateBindingException {
 
+        final Class< ? > realEntity = filterBlacklisted(entity);
+        final int key = createAssemberKey(dto, realEntity, null);
+
+        final Assembler asm = getAssemblerFromCache(key);
+        if (asm != null) {
+            return asm;
+        }
+
         getDtoAnnotation(dto);
 
-    	return createNewAssembler(dto, entity, null, null);
+    	return putAssemblerToCache(key, createNewAssembler(dto, entity, null, null));
     }
 
     /**
@@ -401,11 +420,19 @@ public final class DTOAssembler {
     	       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
     	       GeDARuntimeException, AnnotationDuplicateBindingException {
 
-    	if (registry == null) {
+        final Class< ? > realEntity = filterBlacklisted(entity);
+        final int key = createAssemberKey(dto, realEntity, null);
+
+        final Assembler asm = getAssemblerFromCache(key);
+        if (asm != null) {
+            return asm;
+        }
+
+        if (registry == null) {
     		throw new GeDARuntimeException("Registry cannot be null");
     	}
 
-    	return createNewAssembler(dto, entity, null, registry);
+    	return putAssemblerToCache(key, createNewAssembler(dto, entity, null, registry));
     }
 
     /**
@@ -432,9 +459,16 @@ public final class DTOAssembler {
     	       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
     	       GeDARuntimeException, AnnotationDuplicateBindingException {
 
+        final int key = createAssemberKey(dto, entities, null);
+
+        final Assembler asm = getAssemblerFromCache(key);
+        if (asm != null) {
+            return asm;
+        }
+
         getDtoAnnotation(dto);
 
-    	return createNewAssembler(dto, entities, null, null);
+    	return putAssemblerToCache(key, createNewAssembler(dto, entities, null, null));
     }
 
     /**
@@ -460,11 +494,19 @@ public final class DTOAssembler {
 			   AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
 			   AnnotationDuplicateBindingException  {
 
-        final Class[] classes = detectAutobinding(dto, getDtoAnnotation(dto));
-        if (classes.length == 1) {
-            return createNewAssembler(dto, classes[0], synthesizer, null);
+        final Class[] classes = detectAutobinding(dto);
+
+        final int key = createAssemberKey(dto, classes, synthesizer);
+
+        final Assembler asm = getAssemblerFromCache(key);
+        if (asm != null) {
+            return asm;
         }
-		return createNewAssembler(dto, classes, synthesizer, null);
+
+        if (classes.length == 1) {
+            return putAssemblerToCache(key, createNewAssembler(dto, classes[0], synthesizer, null));
+        }
+		return putAssemblerToCache(key, createNewAssembler(dto, classes, synthesizer, null));
 
     }
 
@@ -490,12 +532,20 @@ public final class DTOAssembler {
 		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
 		       AnnotationDuplicateBindingException  {
 
-        final Class[] classes = detectAutobinding(dto, getDtoAnnotation(dto));
-        if (classes.length == 1) {
-            return createNewAssembler(dto, classes[0], null, null);
+        final Class[] classes = detectAutobinding(dto);
+
+        final int key = createAssemberKey(dto, classes, null);
+
+        final Assembler asm = getAssemblerFromCache(key);
+        if (asm != null) {
+            return asm;
         }
 
-		return createNewAssembler(dto, classes, null, null);
+        if (classes.length == 1) {
+            return putAssemblerToCache(key, createNewAssembler(dto, classes[0], null, null));
+        }
+
+		return putAssemblerToCache(key, createNewAssembler(dto, classes, null, null));
 	}
 
 }
