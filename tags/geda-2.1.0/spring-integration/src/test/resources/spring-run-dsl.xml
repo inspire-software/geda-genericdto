@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This code is distributed under The GNU Lesser General Public License (LGPLv3)
+  ~ Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+  ~
+  ~ Copyright Denis Pavlov 2009
+  ~ Web: http://www.inspire-software.com
+  ~ SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:geda="http://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema
+                           http://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema/geda-spring-integration-1.2.xsd">
+
+    <geda:annotation-driven dto-factory="dtoFactory"
+                            dto-adapters-registrar="adapterRegistrar"
+                            dto-dsl-registrar="dslRegistrar"
+                            on-dto-assembly="onDto"
+                            on-dto-assembled="onDtoSuccess"
+                            on-dto-failed="onDtoFailure"
+                            on-entity-assembly="onEntity"
+                            on-entity-assembled="onEntitySuccess"
+                            on-entity-failed="onEntityFailure"
+                            use-bean-preprocessor="false"
+                            pointcut-match-regex="com.inspiresoftware.lib.dto.geda.test.*"
+                            pointcut-nomatch-regex="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedTestNoMatch.*,com.inspiresoftware.lib.dto.geda.test.TestNoMatch.*"/>
+
+    <bean id="dtoFactory" class="com.inspiresoftware.lib.dto.geda.impl.DTOFactoryImpl">
+        <constructor-arg>
+            <map>
+                <entry key="entityKey" value="com.inspiresoftware.lib.dto.geda.test.impl.DomainObjectImpl"/>
+                <entry key="annDtoKey"    value="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedExtendedDataTransferObjectImpl"/>
+                <entry key="annFilterKey" value="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedDataTransferObjectImpl"/>
+                <entry key="dslDtoKey"    value="com.inspiresoftware.lib.dto.geda.test.impl.DSLExtendedDataTransferObjectImpl"/>
+                <entry key="dslFilterKey" value="com.inspiresoftware.lib.dto.geda.test.impl.DSLDataTransferObjectImpl"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="onDto" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
+    <bean id="onDtoSuccess" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
+    <bean id="onDtoFailure" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
+    <bean id="onEntity" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
+    <bean id="onEntitySuccess" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
+    <bean id="onEntityFailure" class="com.inspiresoftware.lib.dto.geda.test.impl.CountingEventListener"/>
+
+    <bean id="annSimpleTransferableService"
+          class="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedTestServiceImpl"/>
+    <bean id="annSimpleTransferableNoMatchService"
+          class="com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedTestNoMatchServiceImpl"/>
+
+    <bean id="dslSimpleTransferableService"
+          class="com.inspiresoftware.lib.dto.geda.test.impl.DSLTestServiceImpl"/>
+    <bean id="dslSimpleTransferableNoMatchService"
+          class="com.inspiresoftware.lib.dto.geda.test.impl.DSLTestNoMatchServiceImpl"/>
+
+    <bean id="adapterRegistrar" class="com.inspiresoftware.lib.dto.geda.test.impl.ExposedDTOAdaptersRegistrarImpl">
+        <constructor-arg>
+            <map>
+                <entry key="vc" value-ref="adapterValueConverter"/>
+                <entry key="er" value-ref="adapterEntityRetriever"/>
+                <entry key="ma" value-ref="adapterMatcher"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="adapterValueConverter" class="com.inspiresoftware.lib.dto.geda.test.impl.ValueConverterImpl"/>
+    <bean id="adapterEntityRetriever" class="com.inspiresoftware.lib.dto.geda.test.impl.EntityRetrieverImpl"/>
+    <bean id="adapterMatcher" class="com.inspiresoftware.lib.dto.geda.test.impl.DtoToEntityMatcherImpl"/>
+
+    <bean id="dslRegistrar" class="com.inspiresoftware.lib.dto.geda.test.impl.DSLRegistrar"/>
+
+</beans>
