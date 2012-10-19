@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * List class method synthesizer.
- * @since 2.0.4
+ * @since 2.1.0
  *
  * User: denispavlov
  * Date: 12-09-18

@@ -15,7 +15,7 @@ package com.inspiresoftware.lib.dto.geda.exception;
  * 
  * @author denispavlov
  *
- * @since 2.0.4
+ * @since 2.1.0
  */
 public class BeanFactoryUnableToLocateRepresentationException extends GeDAException {
 

@@ -21,7 +21,7 @@
 
     <xsd:annotation>
         <xsd:documentation><![CDATA[
-    Defines the elements used in the Spring integration module for GeDA 2.0.4+.
+    Defines the elements used in the Spring integration module for GeDA 2.1.0+.
         ]]></xsd:documentation>
     </xsd:annotation>
 

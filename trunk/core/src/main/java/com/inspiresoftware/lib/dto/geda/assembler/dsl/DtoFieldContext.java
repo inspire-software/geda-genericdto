@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.assembler.dsl;
 /**
  * DSL version of {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField}.
  *
- * @since 2.0.4
+ * @since 2.1.0
  *
  * User: denispavlov
  * Date: 12-09-20

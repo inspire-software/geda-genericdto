@@ -16,7 +16,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
 
 /**
  * Common class for Builders.
- * @since 2.0.4
+ * @since 2.1.0
  *
  * User: denispavlov
  * Date: 12-09-18
