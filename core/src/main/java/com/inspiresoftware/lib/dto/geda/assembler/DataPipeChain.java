@@ -34,18 +34,27 @@ class DataPipeChain implements Pipe {
 	private final DataReader entityRead;
 	private final DataWriter entityWrite;
 
-	private final Pipe pipe;
+    private final DataReader dtoRead;
+
+    private final Pipe pipe;
 	
 	/**
-	 * @param entityRead method for reading data from Entity field
+     * @param dtoRead method for reading data from DTO field
+     * @param entityRead method for reading data from Entity field
 	 * @param entityWrite method for writing data to Entity field
 	 * @param pipe the inner pipe.
 	 * @param meta meta data for this data delegate
 	 */
-	public DataPipeChain(final DataReader entityRead, 
+	public DataPipeChain(final DataReader dtoRead,
+                         final DataReader entityRead,
 					     final DataWriter entityWrite,
 						 final Pipe pipe,
 						 final PipeMetadata meta) {
+        if (meta.isReadOnly()) {
+            this.dtoRead = null;
+        } else {
+            this.dtoRead = dtoRead;
+        }
 		this.entityRead = entityRead;
 		this.entityWrite = entityWrite;
 		this.pipe = pipe;
@@ -68,22 +77,27 @@ class DataPipeChain implements Pipe {
 		       AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, 
 		       AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
 
-		Object entityDataDelegate = null;
-		if (!(entity instanceof NewDataProxy)) {
-			entityDataDelegate = this.entityRead.read(entity);
-		}
-		if (entityDataDelegate == null) {
-			
-			entityDataDelegate = new NewDataProxy(
-					entityBeanFactory,
-					this.meta,
-					false,
-					entity,
-					this.entityWrite
-			);
+        if (this.meta.isReadOnly()) {
+            return;
+        }
 
-		}
-		pipe.writeFromDtoToEntity(entityDataDelegate, dto, converters, entityBeanFactory);
+        final Object dtoData = this.dtoRead.read(dto);
+
+        Object entityData = this.entityRead.read(entity);
+        if (entityData == null) {
+            if (dtoData == null) {
+                return; // no data and nothing was there
+            } else {
+                if (entityBeanFactory == null) {
+                    throw new BeanFactoryNotFoundException(meta.getEntityFieldName(), meta.getEntityBeanKey(), false);
+                }
+
+                entityData = this.meta.newEntityBean(entityBeanFactory);
+                this.entityWrite.write(entity, entityData);
+            }
+        }
+
+		pipe.writeFromDtoToEntity(entityData, dto, converters, entityBeanFactory);
 		
 	}
 

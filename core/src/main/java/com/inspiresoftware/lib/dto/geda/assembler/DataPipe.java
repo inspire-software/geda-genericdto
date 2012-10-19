@@ -48,6 +48,7 @@ class DataPipe implements Pipe {
 	private final DataReader entityRead;
 	private final DataWriter entityWrite;
 
+    private final boolean readOnly;
     private final boolean usesConverter;
     private final boolean hasSubEntity;
 	
@@ -83,7 +84,9 @@ class DataPipe implements Pipe {
 
         this.dtoWrite = dtoWrite;
 		this.entityRead = entityRead;
-		if (meta.isReadOnly()) {
+
+        this.readOnly = meta.isReadOnly();
+		if (this.readOnly) {
 			
 			PipeValidator.validateReadPipeNonNull(this.dtoWrite, this.meta.getDtoFieldName(), 
 					this.entityRead, this.meta.getEntityFieldName());
@@ -207,7 +210,7 @@ class DataPipe implements Pipe {
 			   AnnotationDuplicateBindingException, CollectionEntityGenericReturnTypeException, DtoToEntityMatcherNotFoundException, 
 			   NotDtoToEntityMatcherException {
 
-		if (meta.isReadOnly()) {
+		if (this.readOnly) {
 			return;
 		}
 
@@ -215,8 +218,8 @@ class DataPipe implements Pipe {
         final Object dtoData = this.dtoRead.read(dto);
         
         if (this.meta.isChild()) {
-        	
-        	writeParentObject(dtoData, entity, converters, entityBeanFactory);
+
+            writeParentObject(dtoData, entity, converters, entityBeanFactory);
         	return;
         	
         }
@@ -225,16 +228,14 @@ class DataPipe implements Pipe {
 
         if (dtoValue != null) {
         	
-            final Object parentEntity = getOrCreateParentEntityForDtoValue(entity);
-            
             if (hasSubEntity) {
 
-                assembleSubEntity(dtoValue, parentEntity, converters, entityBeanFactory);
+                assembleSubEntity(dtoValue, entity, converters, entityBeanFactory);
                 
             } else {
-                this.entityWrite.write(parentEntity, dtoValue);
+                this.entityWrite.write(entity, dtoValue);
             }
-        } else if (entity != null && !(entity instanceof NewDataProxy)) {
+        } else if (entity != null) {
             // if the dtoValue is null the setting only makes sense if the entity bean existed.
             this.entityWrite.write(entity, NULL);
         }
@@ -245,9 +246,6 @@ class DataPipe implements Pipe {
 	private Object getDtoValue(final Object dtoData, final Object entity, final Map<String, Object> converters,
 			final BeanFactory entityBeanFactory) throws NotValueConverterException, ValueConverterNotFoundException {
         if (usesConverter) {
-            if (entity instanceof NewDataProxy) {
-                return getConverter(converters).convertToEntity(dtoData, null, entityBeanFactory);
-            }
             return getConverter(converters).convertToEntity(dtoData, entity, entityBeanFactory);
         }
         return dtoData;
@@ -283,14 +281,6 @@ class DataPipe implements Pipe {
         }
 
         assembler.assembleEntity(dtoValue, dataEntity, converters, entityBeanFactory);
-	}
-
-	private Object getOrCreateParentEntityForDtoValue(final Object entity) 
-			throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException  {
-		if (entity instanceof NewDataProxy) {
-		    return ((NewDataProxy) entity).create();
-		} 
-		return entity;
 	}
 
 	@SuppressWarnings("unchecked")

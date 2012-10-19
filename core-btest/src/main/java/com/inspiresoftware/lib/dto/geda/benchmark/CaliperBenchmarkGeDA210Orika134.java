@@ -13,20 +13,19 @@ import com.google.caliper.Param;
 import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
 import com.inspiresoftware.lib.dto.geda.benchmark.data.DataProvider;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.dozer.DozerBasicMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.geda.GeDABasicMapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.manual.ManualBasicMapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.modelmapper.ModelMapperBasicMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaBasicMapper;
 
 /**
  * Caliper powered benchmark.
+ *
+ * Had to rename the class since this is the only way to make cliper work.
  * <p/>
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 8:35:29 AM
  */
-public class CaliperBenchmark extends SimpleBenchmark {
+public class CaliperBenchmarkGeDA210Orika134 extends SimpleBenchmark {
 
 
     public enum Lib {
@@ -78,7 +77,7 @@ public class CaliperBenchmark extends SimpleBenchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        Runner.main(CaliperBenchmark.class, args);
+        Runner.main(CaliperBenchmarkGeDA210Orika134.class, args);
     }
 
 }

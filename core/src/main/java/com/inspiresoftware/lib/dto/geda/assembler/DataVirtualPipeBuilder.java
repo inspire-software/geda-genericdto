@@ -54,7 +54,7 @@ class DataVirtualPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
 				dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);
 		
 		return new DataVirtualPipe(
-				synthesizer.synthesizeReader(dtoFieldDesc),
+                meta.isReadOnly() ? null : synthesizer.synthesizeReader(dtoFieldDesc),
 				synthesizer.synthesizeWriter(dtoFieldDesc),
 				meta
 		);

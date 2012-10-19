@@ -15,6 +15,9 @@ import com.inspiresoftware.lib.dto.geda.benchmark.domain.Country;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Name;
 import com.inspiresoftware.lib.dto.geda.benchmark.dto.AddressDTO;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * .
  * <p/>
@@ -24,32 +27,56 @@ import com.inspiresoftware.lib.dto.geda.benchmark.dto.AddressDTO;
  */
 public class GeDABeanFactory implements BeanFactory {
 
+    private static interface Init {
+
+        Class getType();
+
+        Object newInstance();
+
+    }
+
+    private static final Map<String, Init> impl = new HashMap<String, Init>() {{
+        put("addressDto", new Init() {
+            public Class getType() {
+                return AddressDTO.class;
+            }
+            public Object newInstance() {
+                return new AddressDTO();
+            }
+        });
+        put("countryEntity", new Init() {
+            public Class getType() {
+                return Country.class;
+            }
+            public Object newInstance() {
+                return new Country();
+            }
+        });
+        put("nameEntity", new Init() {
+            public Class getType() {
+                return Name.class;
+            }
+            public Object newInstance() {
+                return new Name();
+            }
+        });
+        put("addressEntity", new Init() {
+            public Class getType() {
+                return Address.class;
+            }
+            public Object newInstance() {
+                return new Address();
+            }
+        });
+    }};
+
     /** {@inheritDoc} */
     public Class getClazz(final String entityBeanKey) {
-        if ("addressDto".equals(entityBeanKey)) {
-            return AddressDTO.class;
-        } else if ("countryEntity".equals(entityBeanKey)) {
-            return Country.class;
-        } else if ("nameEntity".equals(entityBeanKey)) {
-            return Name.class;
-        } else if ("addressEntity".equals(entityBeanKey)) {
-            return Address.class;
-        }
-        return null;
+        return impl.get(entityBeanKey).getType();
     }
 
     /** {@inheritDoc} */
     public Object get(final String entityBeanKey) {
-        if ("addressDto".equals(entityBeanKey)) {
-            return new AddressDTO();
-        } else if ("countryEntity".equals(entityBeanKey)) {
-            return new Country();
-        } else if ("nameEntity".equals(entityBeanKey)) {
-            return new Name();
-        } else if ("addressEntity".equals(entityBeanKey)) {
-            return new Address();
-        }
-
-        return null;
+        return impl.get(entityBeanKey).newInstance();
     }
 }

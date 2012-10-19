@@ -124,19 +124,10 @@ class DataVirtualPipe implements Pipe {
 
 		
         final Object dtoData = this.dtoRead.read(dto);
-        final Object parentEntity = getOrCreateParentEntityForDtoValue(entity);
-        getConverter(converters).convertToEntity(dtoData, parentEntity, entityBeanFactory);
+        getConverter(converters).convertToEntity(dtoData, entity, entityBeanFactory);
 
 	}
 
-	private Object getOrCreateParentEntityForDtoValue(final Object entity) 
-			throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException  {
-		if (entity instanceof NewDataProxy) {
-		    return ((NewDataProxy) entity).create();
-		} 
-		return entity;
-	}
-	
     private ValueConverter getConverter(final Map<String, Object> converters) 
     		throws NotValueConverterException, ValueConverterNotFoundException {
     	
