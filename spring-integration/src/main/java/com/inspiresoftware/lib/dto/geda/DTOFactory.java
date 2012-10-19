@@ -20,20 +20,4 @@ import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
  */
 public interface DTOFactory extends ExtensibleBeanFactory, GeDAInfrastructure {
 
-    /**
-     * Allows to enrich bean factory with new bean mappings
-     *
-     * @param key string key for this class (interface name preferred)
-     * @param className fully qualified string representation of java class.
-     *        No check is made regarding the validity of this class and if it is invalid
-     *        will cause exception during #get()
-     *
-     * @throws IllegalArgumentException if either parameters are null or empty, or if
-     *         this key is already used.
-     *
-     * @deprecated use #registerDto or #registerEntity instead. Scheduled for removal in 2.0.5
-     */
-    @Deprecated
-    void register(final String key, final String className) throws IllegalArgumentException;
-
 }
