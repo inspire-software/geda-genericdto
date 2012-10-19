@@ -56,6 +56,9 @@ class DataPipeChainBuilder extends BasePipeBuilder<PipeMetadata> {
         final boolean isMapEntity = Map.class.isAssignableFrom(entityClass);
         final boolean isListEntity = !isMapEntity && List.class.isAssignableFrom(entityClass);
 
+        final PropertyDescriptor dtoFieldDesc = PropertyInspector.getDtoPropertyDescriptorForField(
+                dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);
+
         final MethodSynthesizer entitySynthesizer;
         final PropertyDescriptor entityFieldDesc;
 
@@ -76,7 +79,10 @@ class DataPipeChainBuilder extends BasePipeBuilder<PipeMetadata> {
 		final DataReader entityFieldRead = entitySynthesizer.synthesizeReader(entityFieldDesc);
 		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : entitySynthesizer.synthesizeWriter(entityFieldDesc);
 		
-		return new DataPipeChain(entityFieldRead, entityFieldWrite, pipe, meta);
+		return new DataPipeChain(
+                meta.isReadOnly() ? null : synthesizer.synthesizeReader(dtoFieldDesc),
+                entityFieldRead,
+                entityFieldWrite, pipe, meta);
 		
 	}
 	

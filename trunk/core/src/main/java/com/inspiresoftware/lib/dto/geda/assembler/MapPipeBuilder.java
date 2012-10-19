@@ -56,7 +56,7 @@ class MapPipeBuilder extends BasePipeBuilder<MapPipeMetadata> {
         final PropertyDescriptor dtoFieldDesc = PropertyInspector.getDtoPropertyDescriptorForField(
                 dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);
 
-        final DataReader dtoFieldRead = synthesizer.synthesizeReader(dtoFieldDesc);
+        final DataReader dtoFieldRead = meta.isReadOnly() ? null : synthesizer.synthesizeReader(dtoFieldDesc);
         final DataWriter dtoFieldWrite = synthesizer.synthesizeWriter(dtoFieldDesc);
 
 

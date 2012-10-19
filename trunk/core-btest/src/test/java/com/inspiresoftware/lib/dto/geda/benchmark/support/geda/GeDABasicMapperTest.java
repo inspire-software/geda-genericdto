@@ -47,11 +47,17 @@ public class GeDABasicMapperTest extends AbstractMapperTest {
     private static final int PERFORMANCE_TEST_CYCLES = 1000000;
 
     @Test
-    @Ignore
+    //@Ignore
     public void testMapperPerformance() throws Exception {
 
         for (int i = 0; i < PERFORMANCE_TEST_CYCLES; i++) {
-            testMapper();
+
+            final PersonDTO dto = getDto();
+
+            final Mapper mapper = new GeDABasicMapper();
+
+            mapper.fromDto(dto);
+            //testMapper();
         }
     }
 

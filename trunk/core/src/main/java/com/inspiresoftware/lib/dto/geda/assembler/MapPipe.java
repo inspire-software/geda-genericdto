@@ -210,13 +210,8 @@ class MapPipe implements Pipe {
        if (dtoColl instanceof Map) {
            // need to synch
 
-    	   final Object entity;
-           if (entityObj instanceof NewDataProxy) {
-        	   entity = ((NewDataProxy) entityObj).create();
-           } else {
-        	   entity = entityObj;
-           }
-           
+    	   final Object entity = entityObj;
+
            final Object originalEntityColl = this.entityRead.read(entity);
 
     	   
@@ -238,7 +233,7 @@ class MapPipe implements Pipe {
 	           addOrUpdateItems(dto, converters, entityBeanFactory, (Map) original, dtos);
            }    
 
-       } else if (entityObj != null && !(entityObj instanceof NewDataProxy)) {
+       } else if (entityObj != null) {
     	   final Object originalEntityColl = this.entityRead.read(entityObj);
     	   if (originalEntityColl instanceof Collection) {
 	           // if there were items then clear it

@@ -93,7 +93,7 @@ class DataPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
 		}
 		
 		return new DataPipe(dslRegistry, synthesizer,
-                synthesizer.synthesizeReader(dtoFieldDesc),
+                meta.isReadOnly() ? null : synthesizer.synthesizeReader(dtoFieldDesc),
 				synthesizer.synthesizeWriter(dtoFieldDesc),
 				dtoParentReadMethod,
                 entitySynthesizer.synthesizeReader(entityFieldDesc),
