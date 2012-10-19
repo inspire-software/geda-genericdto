@@ -123,7 +123,7 @@ public @interface DtoMap {
      *
      * This setting has priority over the {@link #entityGenericType()} setting.
      *
-     * @since 2.0.4
+     * @since 2.1.0
      */
     String entityGenericTypeKey() default "";
 

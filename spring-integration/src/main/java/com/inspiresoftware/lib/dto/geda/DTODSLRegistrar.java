@@ -15,7 +15,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
  * DSL registrar allows to register all necessary mappings at the point of initialising
  * all infrastructure beans.
  *
- * @since 2.0.4
+ * @since 2.1.0
  *
  * User: denispavlov
  * Date: 12-10-03

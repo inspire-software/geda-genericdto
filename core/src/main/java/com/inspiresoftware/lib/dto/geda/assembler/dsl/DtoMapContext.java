@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * DSL version of {@link com.inspiresoftware.lib.dto.geda.annotations.DtoMap}.
  *
- * @since 2.0.4
+ * @since 2.1.0
  *
  * User: denispavlov
  * Date: 12-09-20

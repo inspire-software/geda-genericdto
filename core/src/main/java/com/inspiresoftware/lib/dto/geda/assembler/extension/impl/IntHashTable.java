@@ -19,7 +19,7 @@ package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
  *
  * @param <V> type of value
  *
- * @since 2.0.4
+ * @since 2.1.0
  */
 public class IntHashTable<V>{
 

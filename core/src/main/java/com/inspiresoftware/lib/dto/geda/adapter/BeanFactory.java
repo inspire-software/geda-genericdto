@@ -31,7 +31,7 @@ public interface BeanFactory {
      * @param entityBeanKey string key reference to the bean class or interface required
      * @return class or interface that best represent bean objects by given key
      *
-     * @since 2.0.4
+     * @since 2.1.0
      */
     Class getClazz(String entityBeanKey);
 

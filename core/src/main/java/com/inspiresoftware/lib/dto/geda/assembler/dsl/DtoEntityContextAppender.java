@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.assembler.dsl;
 /**
  * Interface to trace back from a specific field context to {@link DtoEntityContext}.
  *
- * @since 2.0.4
+ * @since 2.1.0
  *
  * User: denispavlov
  * Date: 12-09-20

@@ -14,7 +14,7 @@ package com.inspiresoftware.lib.dto.geda.assembler.dsl;
  * When methods are invoked all information is stored within
  * registry and kept for when it is used with assembler.
  *
- * @since 2.0.4
+ * @since 2.1.0
  *
  * User: denispavlov
  * Date: 12-09-20

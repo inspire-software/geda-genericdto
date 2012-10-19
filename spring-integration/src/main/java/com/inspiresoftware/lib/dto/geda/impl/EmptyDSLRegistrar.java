@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Empty implementation that does not register any mappings.
  *
- * @since 2.0.4
+ * @since 2.1.0
  *
  * User: denispavlov
  * Date: 12-10-03
