@@ -9,7 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor;
 
-import com.inspiresoftware.lib.dto.geda.GeDAInfrastructure;
+import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 
 import java.lang.reflect.Method;

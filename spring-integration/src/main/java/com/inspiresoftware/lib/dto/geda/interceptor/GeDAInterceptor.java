@@ -10,7 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.interceptor;
 
 import com.inspiresoftware.lib.dto.geda.DTOSupport;
-import com.inspiresoftware.lib.dto.geda.GeDAInfrastructure;
+import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

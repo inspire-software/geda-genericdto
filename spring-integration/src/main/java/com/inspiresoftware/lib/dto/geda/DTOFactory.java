@@ -10,6 +10,7 @@
 package com.inspiresoftware.lib.dto.geda;
 
 import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
+import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
 
 /**
  * Marker interface for GeDA Spring XML configurations.

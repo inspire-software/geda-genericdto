@@ -7,16 +7,15 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda;
+package com.inspiresoftware.lib.dto.geda.test;
 
 /**
- * Marker class to mark Beans that are part of the GeDA integration infrastructure
- * and hence do not need to be scanned for Advice.
- * <p/>
  * User: denispavlov
- * Date: Apr 30, 2012
- * Time: 6:45:31 PM
+ * Date: 12-11-14
+ * Time: 5:20 PM
  */
-public interface GeDAInfrastructure {
+public interface TestXmlService {
+
+    <T> T transfer(Object from);
 
 }
