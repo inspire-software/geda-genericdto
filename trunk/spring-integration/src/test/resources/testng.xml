@@ -47,5 +47,8 @@
     <test name="IntegrationRuntimeDSLTest">
         <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeDSLTest"/></classes>
     </test>
+    <test name="IntegrationXmlTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationXmlTest"/></classes>
+    </test>
 
 </suite>

@@ -9,6 +9,8 @@
 
 package com.inspiresoftware.lib.dto.geda;
 
+import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
+
 /**
  * Acts as a visitor for dto support instance in order to get its reference
  * for value converters that need it.

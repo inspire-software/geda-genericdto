@@ -9,6 +9,8 @@
 
 package com.inspiresoftware.lib.dto.geda;
 
+import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
+
 import java.util.Collection;
 
 /**

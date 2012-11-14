@@ -10,7 +10,8 @@
 package com.inspiresoftware.lib.dto.geda;
 
 /**
- * Marker interface used by .
+ * Marker interface used by {@link com.inspiresoftware.lib.dto.geda.impl.MappingAdapterRegistrar} to
+ * inject dto support bean to adapters that require it.
  * <p/>
  * User: denispavlov
  * Date: Feb 21, 2012
@@ -18,6 +19,9 @@ package com.inspiresoftware.lib.dto.geda;
  */
 public interface DTOSupportAwareAdapter {
 
+    /**
+     * @param dtoSupport dto support instance
+     */
     void setDtoSupport(DTOSupport dtoSupport);
 
 }

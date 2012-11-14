@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.config;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * .
+ * Spring XML parser handler.
  * <p/>
  * User: denispavlov
  * Date: Jan 25, 2012
@@ -22,6 +22,11 @@ public class GeDANamespaceHandler extends NamespaceHandlerSupport {
 
     /** {@inheritDoc} */
     public void init() {
-        this.registerBeanDefinitionParser("annotation-driven", new AnnotationDrivenGeDABeanDefinitionParser());
+        final AnnotationDrivenGeDABeanDefinitionParser bdpAnnotations = new AnnotationDrivenGeDABeanDefinitionParser();
+        this.registerBeanDefinitionParser("annotation-driven", bdpAnnotations);
+
+        final XmlDrivenGeDABeanDefinitionParser bdpInject = new XmlDrivenGeDABeanDefinitionParser();
+        this.registerBeanDefinitionParser("xml-driven", bdpInject);
+        this.registerBeanDefinitionDecorator("dtosupport", bdpInject);
     }
 }

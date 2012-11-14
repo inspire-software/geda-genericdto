@@ -9,7 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda.event;
 
-import com.inspiresoftware.lib.dto.geda.GeDAInfrastructure;
+import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
 
 /**
  * Simple event interface that allows to act upon events produced by the DTOSupport
