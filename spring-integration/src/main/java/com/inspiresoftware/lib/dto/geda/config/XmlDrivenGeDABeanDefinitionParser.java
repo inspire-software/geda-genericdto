@@ -90,14 +90,12 @@ public class XmlDrivenGeDABeanDefinitionParser implements BeanDefinitionParser, 
 
     public BeanDefinitionHolder decorate(final Node node, final BeanDefinitionHolder definition, final ParserContext parserContext) {
 
-
-        final BeanDefinitionRegistry registry = parserContext.getRegistry();
         final BeanDefinition beanDefinition = definition.getBeanDefinition();
 
         final String dtoSupportProperty = node.getAttributes().getNamedItem(XSD_ATTR__PROPERTY).getNodeValue();
 
         final MutablePropertyValues properties = beanDefinition.getPropertyValues();
-        properties.add(dtoSupportProperty, registry.getBeanDefinition(dtoSupportBeanName));
+        properties.add(dtoSupportProperty, new RuntimeBeanReference(dtoSupportBeanName));
 
         return definition;
     }
