@@ -45,12 +45,20 @@
     <!-- Test custom property -->
     <bean id="xmlTestServiceCustomProperty"
           class="com.inspiresoftware.lib.dto.geda.test.impl.TestXmlServiceImpl">
+        <!--
+            Be careful when putting this tag in a bean with proxy template
+            This tag should be placed inside the actual bean - NOT bean proxy template.
+        -->
         <geda:dtosupport property="dtoSupportBean"/>
     </bean>
 
     <!-- Test default property -->
     <bean id="xmlTestServiceDefaultProperty"
           class="com.inspiresoftware.lib.dto.geda.test.impl.TestXmlServiceImpl">
+        <!--
+            Be careful when putting this tag in a bean with proxy template
+            This tag should be placed inside the actual bean - NOT bean proxy template.
+        -->
         <geda:dtosupport/>
     </bean>
 
