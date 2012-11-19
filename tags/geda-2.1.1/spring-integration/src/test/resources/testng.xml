@@ -1,0 +1,54 @@
+<!--
+  ~ This code is distributed under The GNU Lesser General Public License (LGPLv3)
+  ~ Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+  ~
+  ~ Copyright Denis Pavlov 2009
+  ~ Web: http://www.inspire-software.com
+  ~ SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+  -->
+
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="SmokeTestSuite" verbose="3">
+
+    <test name="BasicTests">
+        <classes>
+            <class name="com.inspiresoftware.lib.dto.geda.interceptor.impl.TransferableUtilsTest"/>
+            <class name="com.inspiresoftware.lib.dto.geda.interceptor.impl.AdviceConfigResolverImplTest"/>
+        </classes>
+    </test>
+
+    <test name="IntegrationMinimalBootTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationMinimalBootTest"/></classes>
+    </test>
+    <test name="IntegrationMinimalRunTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationMinimalRuntimeTest"/></classes>
+    </test>
+    <test name="IntegrationBootTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationBootTest"/></classes>
+    </test>
+    <test name="IntegrationRunTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeTest"/></classes>
+    </test>
+    <test name="IntegrationBootRegExTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationBootRegExTest"/></classes>
+    </test>
+    <test name="IntegrationRuntimeRegExTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeRegExTest"/></classes>
+    </test>
+    <test name="IntegrationBootRegExNoMatchTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationBootRegExNoMatchTest"/></classes>
+    </test>
+    <test name="IntegrationRuntimeRegExNoMatchTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeRegExNoMatchTest"/></classes>
+    </test>
+    <test name="IntegrationBootDSLTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationBootDSLTest"/></classes>
+    </test>
+    <test name="IntegrationRuntimeDSLTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationRuntimeDSLTest"/></classes>
+    </test>
+    <test name="IntegrationXmlTest">
+        <classes><class name="com.inspiresoftware.lib.dto.geda.test.IntegrationXmlTest"/></classes>
+    </test>
+
+</suite>
