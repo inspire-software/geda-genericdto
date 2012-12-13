@@ -12,6 +12,12 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.autowire.*;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.complex.multidescriptors.dto.CustomerOrderDeliveryDetailDTO;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.complex.multidescriptors.dto.CustomerOrderDeliveryDetailDTOImpl;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.complex.multidescriptors.entity.CustomerOrderDeliveryDetEnrichWithSet;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.complex.multidescriptors.entity.CustomerOrderDeliveryDetEnrichWithSetEntity;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.complex.multidescriptors.entity.CustomerOrderDeliveryDetWithReadOverlap;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.complex.multidescriptors.entity.CustomerOrderDeliveryDetWithReadOverlapEntity;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestDto18Class;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestDto18aClass;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestEntity18Class;
@@ -25,6 +31,7 @@ import com.inspiresoftware.lib.dto.geda.utils.ParameterizedSynthesizer.Parameter
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -754,6 +761,51 @@ public class DTOAssemblerMappingTest {
 		DTOAssembler.newCustomAssembler(dto.getClass(), entity.getClass(), synthesizer);
 		
 	}
-	
-	
+
+
+    /**
+     * Test that two interfaces with one defining only getter and the other both getter and setter
+     * create a valid single full descriptor.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testComplexOverlappingInterfacesWithReadOverlap() throws Exception {
+
+        final CustomerOrderDeliveryDetailDTO dto = new CustomerOrderDeliveryDetailDTOImpl();
+        final CustomerOrderDeliveryDetWithReadOverlap entity = new CustomerOrderDeliveryDetWithReadOverlapEntity();
+
+        entity.setQty(BigDecimal.TEN);
+
+        final Assembler asm =
+                DTOAssembler.newCustomAssembler(dto.getClass(), CustomerOrderDeliveryDetWithReadOverlap.class, synthesizer);
+
+        asm.assembleDto(dto, entity, null, null);
+
+        assertEquals(BigDecimal.TEN, dto.getQty());
+
+    }
+
+    /**
+     * Test that two interfaces with one defining getter and the other setter create a valid
+     * single full descriptor.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testComplexOverlappingInterfacesWithSeparateGetSetOverlap() throws Exception {
+
+        final CustomerOrderDeliveryDetailDTO dto = new CustomerOrderDeliveryDetailDTOImpl();
+        final CustomerOrderDeliveryDetEnrichWithSet entity = new CustomerOrderDeliveryDetEnrichWithSetEntity();
+
+        entity.setQty(BigDecimal.TEN);
+
+        final Assembler asm =
+                DTOAssembler.newCustomAssembler(dto.getClass(), CustomerOrderDeliveryDetEnrichWithSet.class, synthesizer);
+
+        asm.assembleDto(dto, entity, null, null);
+
+        assertEquals(BigDecimal.TEN, dto.getQty());
+
+    }
 }

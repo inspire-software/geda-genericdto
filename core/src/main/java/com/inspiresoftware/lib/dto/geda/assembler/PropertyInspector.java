@@ -11,6 +11,7 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
+import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 import com.inspiresoftware.lib.dto.geda.exception.InspectionBindingNotFoundException;
 import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
 import com.inspiresoftware.lib.dto.geda.exception.InspectionScanningException;
@@ -111,12 +112,38 @@ final class PropertyInspector {
 			final Class dtoClass, final Class entityClass,
 			final String dtoFieldName, final String binding,
 			final PropertyDescriptor[] entityPropertyDescriptors) throws InspectionBindingNotFoundException {
-		
+
+        PropertyDescriptor candidateRead = null;
+        PropertyDescriptor candidateWrite = null;
+
 		for (PropertyDescriptor current : entityPropertyDescriptors) {
 			if (current.getName().equals(binding)) {
-				return current;
+                if (current.getReadMethod() != null && current.getWriteMethod() != null) {
+                    // this is full get/set - best match
+				    return current;
+                } else if (current.getReadMethod() != null)  {
+                    // has a get - good enough for readOnly
+                    candidateRead = current;
+                } else if (current.getWriteMethod() != null) {
+                    // has a get - save for later if we have a read candidate
+                    candidateWrite = current;
+                }
 			}
 		}
+
+        if (candidateRead != null) {
+            if (candidateWrite != null) {
+                try {
+                    return new PropertyDescriptor(candidateRead.getName(), candidateRead.getReadMethod(), candidateWrite.getWriteMethod());
+                } catch (IntrospectionException iexp) {
+                    throw new GeDARuntimeException(
+                            "Unable to combine get and set for [" + entityClass + "#" + binding
+                                    + "] from different interfaces into single property descriptor"
+                    );
+                }
+            }
+            return candidateRead;
+        }
 
 		throw new InspectionBindingNotFoundException(
 				dtoClass.getCanonicalName(), dtoFieldName, entityClass.getCanonicalName(), binding);
