@@ -156,18 +156,18 @@ class MapPipe implements Pipe {
             try {
                 Assembler assembler = null;
 
-                for (Object key : entities.keySet()) {
+                for (Map.Entry entry : (Set<Map.Entry>) entities.entrySet()) {
 
                 	if (useKey) {
-                		final Object value = entities.get(key);
-                        assembler = lazyCreateAssembler(assembler, newDto, key, dtoBeanFactory);
-                		assembler.assembleDto(newDto, key, converters, dtoBeanFactory);
+                		final Object value = entry.getValue();
+                        assembler = lazyCreateAssembler(assembler, newDto, entry.getKey(), dtoBeanFactory);
+                		assembler.assembleDto(newDto, entry.getKey(), converters, dtoBeanFactory);
                 		dtos.put(newDto, value);
                 	} else {
-	                	final Object object = entities.get(key);
+	                	final Object object = entry.getValue();
                         assembler = lazyCreateAssembler(assembler, newDto, object, dtoBeanFactory);
 	                    assembler.assembleDto(newDto, object, converters, dtoBeanFactory);
-	                    dtos.put(key, newDto);
+	                    dtos.put(entry.getKey(), newDto);
                 	}
                     newDto = this.meta.newDtoBean(dtoBeanFactory);
                 }
@@ -360,15 +360,15 @@ class MapPipe implements Pipe {
 
         	final Object dtoItem = dtos.get(dtoKey);
             boolean toAdd = true;
-            for (Object orKey : original.keySet()) {
+            for (Map.Entry orEntry : (Set<Map.Entry>) original.entrySet()) {
 
-                if (matcher.match(dtoKey, orKey)) {
+                if (matcher.match(dtoKey, orEntry.getKey())) {
                 	if (useKey) {
-	                	assembler = lazyCreateAssembler(assembler, dtoKey, orKey, entityBeanFactory);
-	                    assembler.assembleEntity(dtoKey, orKey, converters, entityBeanFactory);
-	                    original.put(orKey, dtoItem);
+	                	assembler = lazyCreateAssembler(assembler, dtoKey, orEntry.getKey(), entityBeanFactory);
+	                    assembler.assembleEntity(dtoKey, orEntry.getKey(), converters, entityBeanFactory);
+	                    original.put(orEntry.getKey(), dtoItem);
                 	} else {
-	                	final Object orItem = original.get(orKey);
+	                	final Object orItem = orEntry.getValue();
 	                	assembler = lazyCreateAssembler(assembler, dtoItem, orItem, entityBeanFactory);
 	                    assembler.assembleEntity(dtoItem, orItem, converters, entityBeanFactory);
                 	}

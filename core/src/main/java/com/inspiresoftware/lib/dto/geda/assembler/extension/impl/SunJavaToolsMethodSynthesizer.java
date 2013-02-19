@@ -67,12 +67,20 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 	 * compiled temporary files.
 	 */
 	public SunJavaToolsMethodSynthesizer() {
-		super();
-		
-		loader = new FileClassLoader(super.getClassLoader(), this);
+		loader = initialiseClassLoader();
 	}
-	
-	/** {@inheritDoc} */
+
+    /**
+     * Hook for providing alternative class loader for this synthesizer.
+     *
+     * @return byte class loader that allows to load class from byte array
+     */
+    protected ClassLoader initialiseClassLoader() {
+        return new FileClassLoader(super.getClassLoader(), this);
+    }
+
+
+    /** {@inheritDoc} */
 	public String getBaseDir() {
 		return baseDir;
 	}
