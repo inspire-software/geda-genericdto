@@ -39,8 +39,26 @@ public class JavassistMethodSynthesizer extends AbstractPlainTextMethodSynthesiz
 	 * Default constructor that adds GeDA path to pool for generating files.
 	 */
 	public JavassistMethodSynthesizer() {
-		pool.appendClassPath(new LoaderClassPath(super.getClassLoader()));
+        appendClassPath(pool);
 	}
+
+    /**
+     * Hook for javassist pool classpath alterations.
+     *
+     * @param pool this synthesizer's pool
+     */
+    protected void appendClassPath(final ClassPool pool) {
+        pool.appendClassPath(new LoaderClassPath(super.getClassLoader()));
+    }
+
+    /**
+     * Access to javassist pool for sub classes.
+     *
+     * @return this synthesizer's pool
+     */
+    protected ClassPool getClassPool() {
+        return pool;
+    }
 	
 	/** {@inheritDoc} */
 	@Override

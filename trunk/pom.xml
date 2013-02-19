@@ -51,6 +51,7 @@
 
     <modules>
         <module>core</module>
+        <module>osgi</module>
         <module>spring-integration</module>
         <module>examples</module>
     </modules>

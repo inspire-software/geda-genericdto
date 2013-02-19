@@ -71,8 +71,17 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 	 * Default constructor that adds GeDA path to pool for generating files.
 	 */
 	public BCELMethodSynthesizer() {
-		loader = new ByteClassLoader(super.getClassLoader());
+		loader = initialiseClassLoader();
 	}
+
+    /**
+     * Hook for providing alternative class loader for this synthesizer.
+     *
+     * @return byte class loader that allows to load class from byte array
+     */
+    protected ClassLoader initialiseClassLoader() {
+        return new ByteClassLoader(super.getClassLoader());
+    }
 	
 	/**
 	 * Manual constructor with baseDir specified.
