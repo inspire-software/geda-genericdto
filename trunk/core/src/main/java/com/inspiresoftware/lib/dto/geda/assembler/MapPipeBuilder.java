@@ -11,7 +11,6 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
@@ -44,8 +43,7 @@ class MapPipeBuilder extends BasePipeBuilder<MapPipeMetadata> {
 	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
     public Pipe build(
-            final Registry dslRegistry,
-            final MethodSynthesizer synthesizer,
+            final AssemblerContext context,
             final Class dtoClass, final Class entityClass,
     		final PropertyDescriptor[] dtoPropertyDescriptors, 
     		final PropertyDescriptor[] entityPropertyDescriptors, 
@@ -55,6 +53,8 @@ class MapPipeBuilder extends BasePipeBuilder<MapPipeMetadata> {
 
         final PropertyDescriptor dtoFieldDesc = PropertyInspector.getDtoPropertyDescriptorForField(
                 dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);
+
+        final MethodSynthesizer synthesizer = context.getMethodSynthesizer();
 
         final DataReader dtoFieldRead = meta.isReadOnly() ? null : synthesizer.synthesizeReader(dtoFieldDesc);
         final DataWriter dtoFieldWrite = synthesizer.synthesizeWriter(dtoFieldDesc);
@@ -82,7 +82,7 @@ class MapPipeBuilder extends BasePipeBuilder<MapPipeMetadata> {
 		final DataReader entityFieldRead = entitySynthesizer.synthesizeReader(entityFieldDesc);
 		final DataWriter entityFieldWrite = meta.isReadOnly() ? null : entitySynthesizer.synthesizeWriter(entityFieldDesc);
 
-        return new MapPipe(dslRegistry, synthesizer,
+        return new MapPipe(context,
                 dtoFieldRead, dtoFieldWrite,
                 entityFieldRead, entityFieldWrite,
                 meta);

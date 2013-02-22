@@ -7,19 +7,18 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda.assembler.dsl;
+package com.inspiresoftware.lib.dto.geda.dsl;
 
 /**
  * DSL version of {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField}.
  *
- * @since 2.1.0
+ * @since 3.0.0
  *
  * User: denispavlov
- * Date: 12-09-20
- * Time: 8:26 AM
+ * Date: 13-02-20
+ * Time: 8:44 AM
  */
 public interface DtoFieldContext extends DtoEntityContextAppender {
-
     /**
      * Map this DTO field to entity field.
      *
@@ -68,7 +67,7 @@ public interface DtoFieldContext extends DtoEntityContextAppender {
      * @param entityBeanKeys bean keys
      * @return dto field context
      */
-    DtoFieldContext entityBeanKeys(String ... entityBeanKeys);
+    DtoFieldContext entityBeanKeys(String... entityBeanKeys);
 
     /**
      * This annotation is mandatory for nested objects that are used as fields within the top

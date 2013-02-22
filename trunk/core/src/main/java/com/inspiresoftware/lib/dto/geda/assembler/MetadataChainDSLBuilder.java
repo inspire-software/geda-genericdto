@@ -10,8 +10,8 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.*;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
+import com.inspiresoftware.lib.dto.geda.dsl.*;
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 import java.lang.reflect.Field;

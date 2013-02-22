@@ -15,10 +15,8 @@ import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.ValueConverter;
 import com.inspiresoftware.lib.dto.geda.assembler.Assembler;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -41,7 +39,7 @@ public class DefaultDSLRegistryTest {
 
         final ExtensibleBeanFactory bf = ctrl.createMock("bf", ExtensibleBeanFactory.class);
 
-        final Registry registry = new DefaultDSLRegistry(bf);
+        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = new DefaultDSLRegistry(bf);
 
         expect(bf.getClazz("myDto")).andReturn(MyDtoClass.class);
         expect(bf.getClazz("myEntity")).andReturn(MyEntity.class);
@@ -208,7 +206,7 @@ public class DefaultDSLRegistryTest {
 
         final ExtensibleBeanFactory bf = ctrl.createMock("bf", ExtensibleBeanFactory.class);
 
-        final Registry registry = new DefaultDSLRegistry(bf);
+        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = new DefaultDSLRegistry(bf);
 
         expect(bf.getClazz("myDto")).andReturn(MyDtoClass.class);
         expect(bf.getClazz("myDtoField3Dto")).andReturn(MyDtoField3Class.class);
@@ -380,7 +378,7 @@ public class DefaultDSLRegistryTest {
 
         final ExtensibleBeanFactory bf = ctrl.createMock("bf", ExtensibleBeanFactory.class);
 
-        final Registry registry = new DefaultDSLRegistry(bf);
+        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = new DefaultDSLRegistry(bf);
 
         expect(bf.getClazz("myDto")).andReturn(MyDtoClass.class);
         expect(bf.getClazz("myDtoField3Dto")).andReturn(MyDtoField3Class.class);
@@ -551,7 +549,7 @@ public class DefaultDSLRegistryTest {
 
         final ExtensibleBeanFactory bf = ctrl.createMock("bf", ExtensibleBeanFactory.class);
 
-        final Registry registry = new DefaultDSLRegistry(bf);
+        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = new DefaultDSLRegistry(bf);
 
         expect(bf.getClazz("myDto")).andReturn(MyDtoClass.class).anyTimes();
 

@@ -7,19 +7,18 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda.assembler.dsl;
+package com.inspiresoftware.lib.dto.geda.dsl;
 
 /**
  * Binding DSL DTO context for specific entity.
  *
- * @since 2.1.0
+ * @since 3.0.0
  *
  * User: denispavlov
- * Date: 12-09-20
- * Time: 8:19 AM
+ * Date: 13-02-20
+ * Time: 9:13 AM
  */
 public interface DtoEntityContext {
-
     /**
      * This is just a reference and not to be used for creating Assembler instance
      * configurations. Those parameter should come from DTOAssembler.new* methods.
@@ -79,5 +78,4 @@ public interface DtoEntityContext {
      * @return dto field context or null.
      */
     Object has(String fieldName);
-
 }

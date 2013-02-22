@@ -14,11 +14,14 @@ import com.inspiresoftware.lib.dto.geda.adapter.repository.AdaptersRepository;
 import com.inspiresoftware.lib.dto.geda.adapter.repository.impl.AdaptersRepositoryImpl;
 import com.inspiresoftware.lib.dto.geda.assembler.Assembler;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.DisposableContainer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.OSGiJavassistMethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.event.DTOEventListener;
 import com.inspiresoftware.lib.dto.geda.osgi.DTOSupportAnnotationsService;
 
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
 import java.util.Collection;
 
 /**
@@ -41,11 +44,12 @@ import java.util.Collection;
  * Date: Sep 27, 2011
  * Time: 5:33:05 PM
  */
-public class DTOSupportAnnotationsServiceImpl implements DTOSupportAnnotationsService {
+public class DTOSupportAnnotationsServiceImpl implements DTOSupportAnnotationsService, DisposableContainer {
 
     private final AdaptersRepository adaptersRepository = new AdaptersRepositoryImpl();
 
-    private final MethodSynthesizer osgiJavassisstSynthesizer = new OSGiJavassistMethodSynthesizer();
+    private final MethodSynthesizer osgiJavassisstSynthesizer;
+    private final Reference<ClassLoader> classLoader;
 
     private DTOEventListener onDtoAssembly;
     private DTOEventListener onEntityAssembly;
@@ -54,6 +58,13 @@ public class DTOSupportAnnotationsServiceImpl implements DTOSupportAnnotationsSe
     private DTOEventListener onDtoFailed;
     private DTOEventListener onEntityAssembled;
     private DTOEventListener onEntityFailed;
+
+    public DTOSupportAnnotationsServiceImpl(final ClassLoader classLoader) {
+
+        this.classLoader = new SoftReference<ClassLoader>(classLoader);
+        osgiJavassisstSynthesizer = new OSGiJavassistMethodSynthesizer(classLoader);
+
+    }
 
     /** {@inheritDoc} */
     public <T> T assembleDto(final T dto, final Object entity, final BeanFactory beanFactory, final String context) {
@@ -92,7 +103,7 @@ public class DTOSupportAnnotationsServiceImpl implements DTOSupportAnnotationsSe
                 this.onDtoAssembly.onEvent(context, dto, entity);
             }
 
-            DTOAssembler.newCustomAssembler(dtoClassFilter, entity.getClass(), osgiJavassisstSynthesizer)
+            DTOAssembler.newCustomAssembler(dtoClassFilter, entity.getClass(), classLoader.get(), osgiJavassisstSynthesizer)
                     .assembleDto(dto, entity, this.adaptersRepository.getAll(), beanFactory);
 
             if (this.onDtoAssembled != null) {
@@ -153,7 +164,7 @@ public class DTOSupportAnnotationsServiceImpl implements DTOSupportAnnotationsSe
             }
             final Class entityClass = entities.iterator().next().getClass();
 
-            final Assembler asm = DTOAssembler.newCustomAssembler(dtoClassFilter, entityClass, osgiJavassisstSynthesizer);
+            final Assembler asm = DTOAssembler.newCustomAssembler(dtoClassFilter, entityClass, classLoader.get(), osgiJavassisstSynthesizer);
 
             for (final Object entity : entities) {
                 final Object dto = beanFactory.get(keyDto);
@@ -237,7 +248,7 @@ public class DTOSupportAnnotationsServiceImpl implements DTOSupportAnnotationsSe
                 this.onEntityAssembly.onEvent(context, dto, entity);
             }
 
-            DTOAssembler.newCustomAssembler(dtoClassFilter, entity.getClass(), osgiJavassisstSynthesizer)
+            DTOAssembler.newCustomAssembler(dtoClassFilter, entity.getClass(), classLoader.get(), osgiJavassisstSynthesizer)
                     .assembleEntity(dto, entity, this.adaptersRepository.getAll(), beanFactory);
 
             if (this.onEntityAssembled != null) {
@@ -287,7 +298,7 @@ public class DTOSupportAnnotationsServiceImpl implements DTOSupportAnnotationsSe
                 throw new IllegalArgumentException("DTO factory has no class specified for key: " + entityKey);
             }
 
-            final Assembler asm = DTOAssembler.newCustomAssembler(dtoClassFilter, entityClass, osgiJavassisstSynthesizer);
+            final Assembler asm = DTOAssembler.newCustomAssembler(dtoClassFilter, entityClass, classLoader.get(), osgiJavassisstSynthesizer);
 
             for (final Object dto : dtos) {
                 final Object entity = beanFactory.get(entityKey);
@@ -401,5 +412,22 @@ public class DTOSupportAnnotationsServiceImpl implements DTOSupportAnnotationsSe
         this.onEntityAssembly = onEntityAssembly;
     }
 
+    /** {@inheritDoc} */
+    public void releaseResources() {
 
+        osgiJavassisstSynthesizer.releaseResources();
+        adaptersRepository.releaseResources();
+
+        onDtoAssembly = null;
+        onEntityAssembly = null;
+        onDtoAssembled = null;
+        onDtoFailed = null;
+        onEntityAssembled = null;
+        onEntityFailed = null;
+
+        DTOAssembler.disposeOfDtoAssemblersBy(classLoader.get());
+
+        classLoader.clear();
+
+    }
 }

@@ -17,7 +17,6 @@ import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
-import ma.glasnost.orika.metadata.ClassMapBuilder;
 
 /**
  * .

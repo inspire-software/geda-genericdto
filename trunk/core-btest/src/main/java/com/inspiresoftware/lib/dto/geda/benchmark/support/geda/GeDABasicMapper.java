@@ -29,11 +29,11 @@ public class GeDABasicMapper implements Mapper {
     private final Assembler asm;
 
     public GeDABasicMapper() {
-        asm = DTOAssembler.newAssembler(PersonDTO.class, Person.class);
+        asm = DTOAssembler.newAssembler(PersonDTO.class, Person.class, this.getClass().getClassLoader());
     }
 
     public GeDABasicMapper(final String synthesizer) {
-        this.asm = DTOAssembler.newCustomAssembler(PersonDTO.class, Person.class, synthesizer);
+        this.asm = DTOAssembler.newCustomAssembler(PersonDTO.class, Person.class, this.getClass().getClassLoader(), synthesizer);
     }
 
     public Object fromEntity(final Object entity) {

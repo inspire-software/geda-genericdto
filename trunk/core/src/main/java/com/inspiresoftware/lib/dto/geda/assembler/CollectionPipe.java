@@ -13,10 +13,8 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
@@ -37,8 +35,7 @@ class CollectionPipe implements Pipe {
 
     private final CollectionPipeMetadata meta;
     
-    private final MethodSynthesizer synthesizer;
-    private final Registry dslRegistry;
+    private final AssemblerContext context;
 
 	private final DataReader dtoRead;
 	private final DataWriter dtoWrite;
@@ -47,16 +44,16 @@ class CollectionPipe implements Pipe {
 	private final DataWriter entityWrite;
 
     /**
-     * @param registry DSL registry
-     * @param synthesizer synthesizer
+     * @param context assembler context
      * @param dtoRead method for reading data from DTO field
-     * @param dtoWrite method for writting data to DTO field
+     * @param dtoWrite method for writing data to DTO field
      * @param entityRead method for reading data from Entity field
-     * @param entityWrite method for writting data to Entity field
-     * @param meta collection pipe meta      @throws AnnotationValidatingBindingException when pipe binding is invalid
+     * @param entityWrite method for writing data to Entity field
+     * @param meta collection pipe meta
+     *
+     * @throws AnnotationValidatingBindingException when pipe binding is invalid
      */
-    CollectionPipe(final Registry registry,
-                   final MethodSynthesizer synthesizer,
+    CollectionPipe(final AssemblerContext context,
                    final DataReader dtoRead,
                    final DataWriter dtoWrite,
                    final DataReader entityRead,
@@ -65,8 +62,7 @@ class CollectionPipe implements Pipe {
 
         this.meta = meta;
     	
-    	this.synthesizer = synthesizer;
-        this.dslRegistry = registry;
+    	this.context = context;
 
         this.dtoWrite = dtoWrite;
         this.entityRead = entityRead;
@@ -74,12 +70,12 @@ class CollectionPipe implements Pipe {
         if (this.meta.isReadOnly()) {
 			this.dtoRead = null;
 			this.entityWrite = null;
-            PipeValidator.validateReadPipeTypes(registry, this.dtoWrite, this.meta.getDtoFieldName(),
+            PipeValidator.validateReadPipeTypes(context.getDslRegistry(), this.dtoWrite, this.meta.getDtoFieldName(),
             		this.entityRead, this.meta.getEntityFieldName());
 		} else {
 			this.dtoRead = dtoRead;
 			this.entityWrite = entityWrite;
-            PipeValidator.validatePipeTypes(registry, this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(),
+            PipeValidator.validatePipeTypes(context.getDslRegistry(), this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(),
             		this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
 		}
     }
@@ -212,10 +208,7 @@ class CollectionPipe implements Pipe {
 							dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
                             representative.getCanonicalName());
 		    	}
-                if (dslRegistry == null) {
-		            return DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, synthesizer);
-                }
-                return  DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, dslRegistry, synthesizer);
+                return context.newAssembler(dtoItem.getClass(), representative);
 		    } catch (InspectionInvalidEntityInstanceException invEntity) {
 				throw new CollectionEntityGenericReturnTypeException(
 						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
@@ -289,5 +282,4 @@ class CollectionPipe implements Pipe {
 
         }
     }
-    
 }

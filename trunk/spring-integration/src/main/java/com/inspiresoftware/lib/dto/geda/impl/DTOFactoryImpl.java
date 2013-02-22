@@ -131,4 +131,12 @@ public class DTOFactoryImpl implements DTOFactory {
         }
         return null;
     }
+
+    /** {@inheritDoc} */
+    public void releaseResources() {
+        mappingClasses.clear();
+        mappingReps.clear();
+        cacheClasses.clear();
+        cacheReps.clear();
+    }
 }

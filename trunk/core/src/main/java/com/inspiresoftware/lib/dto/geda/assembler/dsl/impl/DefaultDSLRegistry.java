@@ -9,9 +9,11 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.dsl.impl;
 
+import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.adapter.BeanFactoryProvider;
 import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoContext;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoContext;
+import com.inspiresoftware.lib.dto.geda.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryUnableToLocateRepresentationException;
 import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 
@@ -19,11 +21,19 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Default DSL registry implementation. Keeps reference to extensible bean factory if
+ * one was supplied during construction of this registry.
+ *
+ * This is a throw away disposable container that should not be used once
+ * releaseResources had been invoked.
+ *
+ * @since 2.1.0
+ *
  * User: denispavlov
  * Date: 12-09-20
  * Time: 1:16 PM
  */
-public class DefaultDSLRegistry implements Registry {
+public class DefaultDSLRegistry implements Registry, BeanFactory, BeanFactoryProvider {
 
     private final ExtensibleBeanFactory beanFactory;
 
@@ -93,5 +103,39 @@ public class DefaultDSLRegistry implements Registry {
             throw new BeanFactoryUnableToLocateRepresentationException(beanFactory.toString(), "top level", beanKey, true);
         }
         return dto(representative);
+    }
+
+    /** {@inheritDoc} */
+    public Class getClazz(final String entityBeanKey) {
+        if (beanFactory == null) {
+            throw new GeDARuntimeException("Bean factory must be specified. Use constructor DefaultDSLRegistry(BeanFactory)");
+        }
+        return beanFactory.getClazz(entityBeanKey);
+    }
+
+    /** {@inheritDoc} */
+    public Object get(final String entityBeanKey) {
+        if (beanFactory == null) {
+            throw new GeDARuntimeException("Bean factory must be specified. Use constructor DefaultDSLRegistry(BeanFactory)");
+        }
+        return beanFactory.get(entityBeanKey);
+    }
+
+    /** {@inheritDoc} */
+    public BeanFactory getBeanFactory() {
+        if (beanFactory == null) {
+            throw new GeDARuntimeException("Bean factory must be specified. Use constructor DefaultDSLRegistry(BeanFactory)");
+        }
+        return beanFactory;
+    }
+
+    /** {@inheritDoc} */
+    public void releaseResources() {
+        synchronized (this) {
+            contexts.clear();
+            if (beanFactory != null) {
+                beanFactory.releaseResources();
+            }
+        }
     }
 }

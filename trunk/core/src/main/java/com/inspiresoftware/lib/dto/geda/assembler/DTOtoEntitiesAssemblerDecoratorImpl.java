@@ -10,12 +10,13 @@
 package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
+import com.inspiresoftware.lib.dto.geda.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -32,8 +33,11 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
 
     private final Class dtoClass;
 
-    DTOtoEntitiesAssemblerDecoratorImpl(final Class dto, final Class[] entities,
-                                        final MethodSynthesizer synthesizer, final Registry registry)
+    DTOtoEntitiesAssemblerDecoratorImpl(final Class dto,
+                                        final Class[] entities,
+                                        final ClassLoader classLoader,
+                                        final MethodSynthesizer synthesizer,
+                                        final Registry registry)
         throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
                 InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
                GeDARuntimeException, AnnotationDuplicateBindingException {
@@ -42,7 +46,7 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
 
         for (final Class entity : entities) {
 
-            composite.put(entity, new DTOtoEntityAssemblerImpl(dto, entity, synthesizer, registry, false));
+            composite.put(entity, new DTOtoEntityAssemblerImpl(dto, entity, classLoader, synthesizer, registry, false));
 
         }
 
@@ -162,4 +166,15 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
         throw new UnsupportedOperationException("Unsupported conversion of collection of composite DTO's to collection of entities");
     }
 
+    /** {@inheritDoc} */
+    public void releaseResources() {
+
+        final Iterator<Map.Entry<Class, Assembler>> it = composite.entrySet().iterator();
+        while (it.hasNext()) {
+            final Map.Entry<Class, Assembler> entry = it.next();
+            entry.getValue().releaseResources();
+            it.remove();
+        }
+
+    }
 }

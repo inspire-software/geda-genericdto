@@ -9,10 +9,8 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
-import com.inspiresoftware.lib.dto.geda.exception.*;
+import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
 
 import java.beans.PropertyDescriptor;
 
@@ -26,8 +24,7 @@ interface PipeBuilder<T extends PipeMetadata> {
     /**
      * Builds a pipe.
      *
-     * @param dslRegistry DSL registry
-     * @param synthesizer method synthesizer
+     * @param context Assembler context
      * @param dtoClass dto class
      * @param entityClass entity class
      * @param dtoPropertyDescriptors all DTO descriptors.
@@ -40,12 +37,13 @@ interface PipeBuilder<T extends PipeMetadata> {
      * @throws GeDAException in case of exceptions
      */
     Pipe build(
-            Registry dslRegistry,
-            MethodSynthesizer synthesizer,
-            Class dtoClass, Class entityClass,
+            AssemblerContext context,
+            Class dtoClass,
+            Class entityClass,
             PropertyDescriptor[] dtoPropertyDescriptors,
             PropertyDescriptor[] entityPropertyDescriptors,
-            T meta, Pipe pipe)
+            T meta,
+            Pipe pipe)
         throws GeDAException;
 
 }

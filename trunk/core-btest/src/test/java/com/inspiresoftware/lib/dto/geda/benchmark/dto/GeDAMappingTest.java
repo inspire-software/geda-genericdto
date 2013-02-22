@@ -38,7 +38,7 @@ public class GeDAMappingTest {
 
         final PersonDTO dto = new PersonDTO();
 
-        final Assembler asm = DTOAssembler.newAssembler(PersonDTO.class, Person.class);
+        final Assembler asm = DTOAssembler.newAssembler(PersonDTO.class, Person.class, this.getClass().getClassLoader());
 
         asm.assembleDto(dto, entity, null, bf);
 
@@ -66,7 +66,7 @@ public class GeDAMappingTest {
 
         final PersonWithHistoryDTO dto = new PersonWithHistoryDTO();
 
-        final Assembler asm = DTOAssembler.newAssembler(PersonWithHistoryDTO.class, Person.class);
+        final Assembler asm = DTOAssembler.newAssembler(PersonWithHistoryDTO.class, Person.class, this.getClass().getClassLoader());
 
         asm.assembleDto(dto, entity, null, bf);
 
@@ -112,7 +112,7 @@ public class GeDAMappingTest {
 
         final PersonWithHistoryByCityDTO dto = new PersonWithHistoryByCityDTO();
 
-        final Assembler asm = DTOAssembler.newAssembler(PersonWithHistoryByCityDTO.class, Person.class);
+        final Assembler asm = DTOAssembler.newAssembler(PersonWithHistoryByCityDTO.class, Person.class, this.getClass().getClassLoader());
 
         asm.assembleDto(dto, entity, null, bf);
 

@@ -9,10 +9,12 @@
 
 package com.inspiresoftware.lib.dto.geda.osgi.impl;
 
+import com.inspiresoftware.lib.dto.geda.assembler.extension.DisposableContainer;
 import com.inspiresoftware.lib.dto.geda.osgi.DTOSupportAnnotationsService;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
+import com.inspiresoftware.lib.dto.geda.osgi.GeDAFacade;
+import org.osgi.framework.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,30 +26,47 @@ import java.util.Collection;
  */
 public class Activator implements BundleActivator {
 
-    private final Collection<ServiceRegistration> serviceRegistrations = new ArrayList<ServiceRegistration>();
+    private static final Logger LOG = LoggerFactory.getLogger(Activator.class);
+
+    private ServiceRegistration serviceRegistration;
 
     /** {@inheritDoc} */
     public void start(final BundleContext bundleContext) throws Exception {
 
-        serviceRegistrations.add(
-                bundleContext.registerService(
-                        DTOSupportAnnotationsService.class.getCanonicalName(),
-                        new DTOSupportAnnotationsServiceImpl(),
-                        null)
-        );
+        LOG.info("Starting GeDA bundle");
 
-        System.out.println("GeDA bundle started");
+        LOG.info("GeDA registering OSGi service {}", DTOSupportAnnotationsService.class.getCanonicalName());
+
+        serviceRegistration =
+                bundleContext.registerService(
+                        GeDAFacade.class.getCanonicalName(),
+                        new GeDAFacadeImpl(bundleContext),
+                        null);
+
+        bundleContext.addServiceListener(new ServiceListener() {
+            public void serviceChanged(final ServiceEvent event) {
+                if (event.getType() == ServiceEvent.UNREGISTERING) {
+                    final ServiceReference ref = event.getServiceReference();
+                    if (ref == serviceRegistration.getReference()) {
+                        // Flush all resources that might have been missed
+                        final DisposableContainer facade =
+                                (DisposableContainer) bundleContext.getService(ref);
+                        facade.releaseResources();
+                    }
+                }
+            }
+        });
+
+        LOG.info("GeDA bundle started");
     }
 
     public void stop(final BundleContext bundleContext) throws Exception {
 
-        for (final ServiceRegistration registration : serviceRegistrations) {
-            registration.unregister();
-        }
+        LOG.info("GeDA bundle stopping");
 
-        // TODO: flush cache
+        serviceRegistration.unregister();
 
-        System.out.println("GeDA bundle stopped");
+        LOG.info("GeDA bundle stopped");
     }
 
 }

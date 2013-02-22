@@ -7,24 +7,22 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda.assembler.dsl;
+package com.inspiresoftware.lib.dto.geda.adapter;
 
 /**
- * Interface to trace back from a specific field context to {@link DtoEntityContext}.
- *
- * @since 2.1.0
+ * Marker interface for those classes containing bean factory reference.
  *
  * User: denispavlov
- * Date: 12-09-20
- * Time: 12:32 PM
+ * Date: 13-02-20
+ * Time: 7:04 PM
  */
-public interface DtoEntityContextAppender {
+public interface BeanFactoryProvider {
 
     /**
-     * Continue with adding more mappings to this context.
+     * Return bean factory reference.
      *
-     * @return dto entity context
+     * @return bean factory
      */
-    DtoEntityContext and();
+    BeanFactory getBeanFactory();
 
 }

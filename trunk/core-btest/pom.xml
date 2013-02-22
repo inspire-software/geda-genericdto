@@ -14,11 +14,11 @@
     <parent>
         <groupId>com.inspire-software.lib.dto.geda</groupId>
         <artifactId>geda</artifactId>
-        <version>2.1.3-SNAPSHOT</version>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>geda.core-btest</artifactId>
     <name>DTO utilities package core integration and benchmark tests</name>
-    <version>2.1.3-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <description>Provides several benchmark tests for core package</description>
     <packaging>jar</packaging>
     <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>com.inspire-software.lib.dto.geda</groupId>
             <artifactId>geda.core</artifactId>
-            <version>2.1.3-SNAPSHOT</version>
+            <version>3.0.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>javassist</groupId>
@@ -112,7 +112,7 @@
         <dependency>
             <groupId>ma.glasnost.orika</groupId>
             <artifactId>orika-core</artifactId>
-            <version>1.3.4</version>
+            <version>1.4.1</version>
         </dependency>
 
         <!-- latest javassist is needed for Orika -->

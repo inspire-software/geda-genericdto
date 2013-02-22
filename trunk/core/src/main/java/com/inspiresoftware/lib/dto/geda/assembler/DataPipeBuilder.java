@@ -11,7 +11,6 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
@@ -45,8 +44,7 @@ class DataPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
 	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
 	public Pipe build(
-            final Registry dslRegistry,
-            final MethodSynthesizer synthesizer,
+            final AssemblerContext context,
 			final Class dtoClass, final Class entityClass,
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
@@ -60,6 +58,7 @@ class DataPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
 		final PropertyDescriptor dtoFieldDesc = PropertyInspector.getDtoPropertyDescriptorForField(
 				dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);
 
+        final MethodSynthesizer synthesizer = context.getMethodSynthesizer();
         final MethodSynthesizer entitySynthesizer;
 		final PropertyDescriptor entityFieldDesc;
         if (isMapEntity || isListEntity) {
@@ -84,7 +83,7 @@ class DataPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
 			final PropertyDescriptor[] dtoSubPropertyDescriptors = PropertyInspector.getPropertyDescriptorsForClass(returnType);
 			final PropertyDescriptor dtoParentDesc = PropertyInspector.getDtoPropertyDescriptorForField(
 					dtoClass, meta.getParentEntityPrimaryKeyField(), dtoSubPropertyDescriptors);
-			dtoParentReadMethod = synthesizer.synthesizeReader(dtoParentDesc);
+			dtoParentReadMethod = context.getMethodSynthesizer().synthesizeReader(dtoParentDesc);
 
 		} else {
 			
@@ -92,7 +91,7 @@ class DataPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
 			
 		}
 		
-		return new DataPipe(dslRegistry, synthesizer,
+		return new DataPipe(context,
                 meta.isReadOnly() ? null : synthesizer.synthesizeReader(dtoFieldDesc),
 				synthesizer.synthesizeWriter(dtoFieldDesc),
 				dtoParentReadMethod,

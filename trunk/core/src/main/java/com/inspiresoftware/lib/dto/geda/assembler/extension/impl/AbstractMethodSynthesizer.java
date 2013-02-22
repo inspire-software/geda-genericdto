@@ -10,7 +10,6 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
 
-import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.Cache;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
@@ -23,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyDescriptor;
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -45,7 +46,10 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 	
 	private final Lock readLock = new ReentrantLock();
 	private final Lock writeLock = new ReentrantLock();
-	private static final int MAX_COMPILE_TRIES = 3; 
+	private static final int MAX_COMPILE_TRIES = 3;
+
+    private Reference<ClassLoader> loader;
+
 	
     /**
      * The <code>int</code> value representing the <code>public</code> 
@@ -103,9 +107,9 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 
 	
 	/** DataReaders instances cache. */
-	private static final Cache<Object> READER_CACHE = new SoftReferenceCache<Object>(100);
+	private static final Cache<Object> READER_CACHE = new SoftReferenceCache<Object>();
 	/** DataWriters instances cache. */
-	private static final Cache<Object> WRITER_CACHE = new SoftReferenceCache<Object>(100);
+	private static final Cache<Object> WRITER_CACHE = new SoftReferenceCache<Object>();
 	
 	/**
 	 * Primitive to wrapper conversion map.
@@ -154,29 +158,48 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 
 	
 	/**
-	 * Default constructor that adds GeDA path to pool for generating files.
+	 * Default constructor synthesizers. This set a template for auto
+     * class generation. It is a requirement to provide a valid class loader
+     * to which files will be loaded. This in effect like a visitor pattern
+     * whereby we generate required file and enhance the current class
+     * loader by providing new class. The reason for this is that newly
+     * generated files need access to graph of objects available to class
+     * loader. Also it allows us to separate our contributions to each class
+     * loader.
+     *
+     * @param classLoader class loader that will be used to load generated classes
 	 */
-	public AbstractMethodSynthesizer() {
+	public AbstractMethodSynthesizer(final ClassLoader classLoader) {
 		super();
+        this.loader = initialiseClassLoaderWeakReference(classLoader);
 	}
+
+    /**
+     * Hook for sub classes to assign correct class loader reference.
+     * We must maintain only weak reference to the class loader.
+     *
+     * @param classLoader class loader to contribute generated files to.
+     */
+    protected Reference<ClassLoader> initialiseClassLoaderWeakReference(final ClassLoader classLoader) {
+        return new SoftReference<ClassLoader>(classLoader);
+    }
+
+    /**
+     * Hook for changing class loader reference.
+     * Invokes #initialiseClassLoaderWeakReference(getClassLoader()).
+     */
+    protected final void enhanceClassLoader() {
+        this.loader = initialiseClassLoaderWeakReference(getClassLoader());
+    }
 	
 	
 	/**
 	 * @param configuration configuration name
-	 *            readerCleanUpCycle - allows to set clean up cycle for soft cache of readers
-	 *            writerCleanUpCycle - allows to set clean up cycle for soft cache of writers
 	 * @param value value to set
 	 * @return true if configuration was set, false if not set or invalid
 	 * @throws GeDAException any exceptions during configuration
 	 */
 	public boolean configure(final String configuration, final Object value) throws GeDAException {
-		if ("readerCleanUpCycle".equals(configuration)) {
-			LOG.info("Setting reader cleanup cycle to {}", value);
-			return this.setCleanUpReaderCycle(value);
-		} else if ("writerCleanUpCycle".equals(configuration)) {
-			LOG.info("Setting writer cleanup cycle to {}", value);
-			return this.setCleanUpWriterCycle(value);
-		}
 		return false;
 	}
 
@@ -533,14 +556,14 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 			final MakeContext ctx) throws UnableToCreateInstanceException;
 	
 	/**
-	 * Default class loader. This is very tricky since this is the class loader which will
-	 * load the auto generated classes. Hopefully the one that loaded GeDA is the less likely 
-	 * one to cause problems.
-	 * 
-	 * @return com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler.class.getClassLoader();
+	 * Class loader reference.
 	 */
 	protected ClassLoader getClassLoader() {
-		return DTOAssembler.class.getClassLoader();
+        ClassLoader cl = loader.get();
+        if (cl == null) { // Cl was garbage collected - something gone really wrong
+            throw new GeDARuntimeException("Class loader has been gc'ed");
+        }
+		return cl;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -585,7 +608,7 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 		}
 		
 		/**
-		 * To be used to attemp recovery through classloader instance creation.
+		 * To be used to attempt recovery through classloader instance creation.
 		 * If next counter exceed the number of tries and exception is thrown,
 		 * otherwise another cycle is attempted.
 		 * 
@@ -603,5 +626,10 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 			}
 		}
 	}
+
+    /** {@inheritDoc} */
+    public void releaseResources() {
+        loader.clear();
+    }
 
 }

@@ -13,10 +13,7 @@ import com.google.caliper.Param;
 import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
 import com.inspiresoftware.lib.dto.geda.benchmark.data.DataProvider;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.dozer.DozerBasicMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.geda.GeDABasicMapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.manual.ManualBasicMapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.support.modelmapper.ModelMapperBasicMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaBasicMapper;
 
 /**

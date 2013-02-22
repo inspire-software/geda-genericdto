@@ -11,6 +11,7 @@
 
 package com.inspiresoftware.lib.dto.geda.adapter.repository;
 
+import com.inspiresoftware.lib.dto.geda.assembler.extension.DisposableContainer;
 import com.inspiresoftware.lib.dto.geda.exception.DuplicateValueConverterKeyException;
 
 import java.io.Serializable;
@@ -25,7 +26,7 @@ import java.util.Map;
  * Date: Jan 26, 2010
  * Time: 4:11:13 PM
  */
-public interface AdaptersRepository extends Serializable {
+public interface AdaptersRepository extends DisposableContainer, Serializable {
 
     /**
      * @return all converters mapped for this repository.

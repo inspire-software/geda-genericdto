@@ -33,7 +33,7 @@ public @interface DtoMap {
 	 * field name on entity class that will be bound to this dto field
      * (reflection notation e.g. myField.mySubfield).
 	 */
-	String value();
+	String value() default "";
 
     /**
 	 * Marks Dto for read only state. When assembler assembles entity the data in Dto fields with

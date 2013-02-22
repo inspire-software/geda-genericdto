@@ -21,7 +21,7 @@ package com.inspiresoftware.lib.dto.geda.assembler.extension;
  * @param <V> value
  * 
  */
-public interface Cache<V> extends Configurable {
+public interface Cache<V> extends Configurable, DisposableContainer {
 
 	/**
 	 * @param key cache key

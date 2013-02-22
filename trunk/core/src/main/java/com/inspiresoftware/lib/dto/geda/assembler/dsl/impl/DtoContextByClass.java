@@ -10,8 +10,8 @@
 package com.inspiresoftware.lib.dto.geda.assembler.dsl.impl;
 
 import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoContext;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoEntityContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoEntityContext;
 import com.inspiresoftware.lib.dto.geda.exception.BeanFactoryUnableToLocateRepresentationException;
 import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 

@@ -9,6 +9,8 @@
 
 package com.inspiresoftware.lib.dto.geda.adapter;
 
+import com.inspiresoftware.lib.dto.geda.assembler.extension.DisposableContainer;
+
 /**
  * Bean factory with capabilities to add new mappings during runtime.
  *
@@ -18,7 +20,7 @@ package com.inspiresoftware.lib.dto.geda.adapter;
  * Date: 12-09-20
  * Time: 1:39 PM
  */
-public interface ExtensibleBeanFactory extends BeanFactory {
+public interface ExtensibleBeanFactory extends BeanFactory, DisposableContainer {
 
     /**
      * Allows to enrich bean factory with new bean mappings
