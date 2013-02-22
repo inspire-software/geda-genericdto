@@ -19,7 +19,6 @@ import com.inspiresoftware.lib.dto.geda.adapter.repository.impl.AdaptersReposito
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.assembler.Assembler;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.dsl.impl.DefaultDSLRegistry;
 import com.inspiresoftware.lib.dto.geda.event.DTOEventListener;
 import org.slf4j.Logger;
@@ -61,7 +60,7 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
     private DTODSLRegistrar dslRegistrar;
 
     private final AdaptersRepository dtoValueConverters = new AdaptersRepositoryImpl();
-    private Registry dslRegistry = new DefaultDSLRegistry();
+    private com.inspiresoftware.lib.dto.geda.dsl.Registry dslRegistry = new DefaultDSLRegistry();
 
     private DTOEventListener onDtoAssembly;
     private DTOEventListener onEntityAssembly;

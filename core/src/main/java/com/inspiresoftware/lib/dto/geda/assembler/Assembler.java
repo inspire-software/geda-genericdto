@@ -10,6 +10,7 @@
 package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.DisposableContainer;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
 import java.util.Collection;
@@ -26,7 +27,7 @@ import java.util.Map;
  * Date: Aug 30, 2012
  * Time: 8:30:16 AM
  */
-public interface Assembler {
+public interface Assembler extends DisposableContainer {
     
     /**
      * Assembles dto from current entity by using annotations of the dto.

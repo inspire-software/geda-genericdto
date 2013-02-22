@@ -7,7 +7,7 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda.assembler.dsl;
+package com.inspiresoftware.lib.dto.geda.dsl;
 
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
 
@@ -16,14 +16,13 @@ import java.util.Map;
 /**
  * DSL version of {@link com.inspiresoftware.lib.dto.geda.annotations.DtoMap}.
  *
- * @since 2.1.0
+ * @since 3.0.0
  *
  * User: denispavlov
- * Date: 12-09-20
- * Time: 12:39 PM
+ * Date: 13-02-20
+ * Time: 8:49 AM
  */
 public interface DtoMapContext extends DtoEntityContextAppender {
-
     /**
      * Map this DTO field to entity field.
      *
@@ -78,7 +77,7 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      * @param dtoMapClass dto map class
      * @return dto field context
      */
-    DtoMapContext dtoMapClass(Class< ? extends Map> dtoMapClass);
+    DtoMapContext dtoMapClass(Class<? extends Map> dtoMapClass);
 
     /**
      * Key that defines the type of instance to be retrieved from beanFactory
@@ -106,7 +105,7 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      * @param entityBeanKeys bean keys
      * @return dto field context
      */
-    DtoMapContext entityBeanKeys(String ... entityBeanKeys);
+    DtoMapContext entityBeanKeys(String... entityBeanKeys);
 
     /**
      * Specifies DTO bean key that will be used by bean factory injected to
@@ -203,12 +202,12 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      * @param dtoToEntityMatcher dto to entity matcher
      * @return dto field context
      */
-    DtoMapContext dtoToEntityMatcher(Class< ? extends DtoToEntityMatcher> dtoToEntityMatcher);
+    DtoMapContext dtoToEntityMatcher(Class<? extends DtoToEntityMatcher> dtoToEntityMatcher);
 
     /**
      * This reference is used to lookup a matcher in adapters map passed into
      * assembleDto and assembleEntity methods. The matcher has to implement
-     * {@link DtoToEntityMatcher} interface.
+     * {@link com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher} interface.
      *
      * This is different to {@link com.inspiresoftware.lib.dto.geda.annotations.DtoCollection#dtoToEntityMatcher()} since this
      * matcher matches a key from Dto Map to either key of Entity Map or item of entity
@@ -295,5 +294,4 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      * @return dto entity matcher key
      */
     String getValueOfDtoToEntityMatcherKey();
-
 }

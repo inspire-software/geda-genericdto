@@ -11,7 +11,6 @@ package com.inspiresoftware.lib.dto.geda.test.impl;
 
 import com.inspiresoftware.lib.dto.geda.DTODSLRegistrar;
 import com.inspiresoftware.lib.dto.geda.DTOSupport;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 
 /**
  * User: denispavlov
@@ -21,7 +20,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 public class DSLRegistrar implements DTODSLRegistrar {
 
     /** {@inheritDoc} */
-    public void registerMappings(final DTOSupport dtoSupport, final Registry dslRegistry) {
+    public void registerMappings(final DTOSupport dtoSupport, final com.inspiresoftware.lib.dto.geda.dsl.Registry dslRegistry) {
 
         dslRegistry.dto("dslFilterKey").forEntity("entityKey")
                 .withField("value")

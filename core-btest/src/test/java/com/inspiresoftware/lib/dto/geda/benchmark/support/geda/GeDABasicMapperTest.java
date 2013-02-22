@@ -10,16 +10,13 @@
 package com.inspiresoftware.lib.dto.geda.benchmark.support.geda;
 
 import com.inspiresoftware.lib.dto.geda.benchmark.Mapper;
-import com.inspiresoftware.lib.dto.geda.benchmark.domain.Address;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Person;
-import com.inspiresoftware.lib.dto.geda.benchmark.dto.AddressDTO;
 import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.AbstractMapperTest;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * Ignored tests are just loop versions of regular tests so that we have some
@@ -44,10 +41,10 @@ public class GeDABasicMapperTest extends AbstractMapperTest {
 
     }
 
-    private static final int PERFORMANCE_TEST_CYCLES = 1000000;
+    private static final int PERFORMANCE_TEST_CYCLES = 10000000;
 
     @Test
-    //@Ignore
+    @Ignore
     public void testMapperPerformance() throws Exception {
 
         for (int i = 0; i < PERFORMANCE_TEST_CYCLES; i++) {

@@ -36,9 +36,13 @@ import java.lang.reflect.TypeVariable;
 public class ReflectionMethodSynthesizer extends AbstractMethodSynthesizer
 		implements MethodSynthesizer {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ReflectionMethodSynthesizer.class); 
-	
-	/** {@inheritDoc} */
+	private static final Logger LOG = LoggerFactory.getLogger(ReflectionMethodSynthesizer.class);
+
+    public ReflectionMethodSynthesizer(final ClassLoader classLoader) {
+        super(classLoader);
+    }
+
+    /** {@inheritDoc} */
 	@Override
 	protected String getSynthesizerId() {
 		return "reflection";

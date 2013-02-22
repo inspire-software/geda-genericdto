@@ -27,8 +27,12 @@ import java.lang.reflect.Type;
 public abstract class AbstractPlainTextMethodSynthesizer extends AbstractMethodSynthesizer implements MethodSynthesizer {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractPlainTextMethodSynthesizer.class);
-	
-	/**
+
+    protected AbstractPlainTextMethodSynthesizer(final ClassLoader classLoader) {
+        super(classLoader);
+    }
+
+    /**
 	 * Generates plain text source code for data reader methods.
 	 * 
 	 * @param readMethodCode string builder that hold source for method

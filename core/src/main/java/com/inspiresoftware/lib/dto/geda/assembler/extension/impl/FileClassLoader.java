@@ -24,23 +24,11 @@ import java.io.IOException;
  * @author denispavlov
  *
  */
-public class FileClassLoader extends ClassLoader {
+public class FileClassLoader extends ByteClassLoader {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(FileClassLoader.class);
-	
-	/**
-	 * Directory provides allows runtime decision of base directory.
-	 * 
-	 * @author denispavlov
-	 *
-	 */
-	public static interface BaseDirectoryProvider {
-		/** @return base directory for file search */
-		String getBaseDir();
-		
-	}
-	
-	private final BaseDirectoryProvider directoryProvider;
+
+    private final BaseDirectoryProvider directoryProvider;
 	
 	/**
 	 * @param parent parent class loader
@@ -52,19 +40,17 @@ public class FileClassLoader extends ClassLoader {
 		this.directoryProvider = directoryProvider;
 	}
 
-
-
-	/** {@inheritDoc} */
+    /** {@inheritDoc} */
 	@Override
 	public Class< ? > loadClass(final String name) throws ClassNotFoundException {
 		
 		try {
-			return super.loadClass(name);
+			return getParent().loadClass(name);
 		} catch (ClassNotFoundException exp) {
 			// it's ok - need to load this one
 		}
 		
-		final String baseDir = this.directoryProvider.getBaseDir();
+		final String baseDir = this.directoryProvider.getBaseDir(name);
 		final String readerSimpleName = name.substring(name.lastIndexOf('.') + 1);
 		final String filename = baseDir + readerSimpleName + ".class";
 		try {
@@ -83,7 +69,7 @@ public class FileClassLoader extends ClassLoader {
 				LOG.debug("Successfully loaded class file: {}", file.getAbsolutePath());
 			}
 
-            return defineClass(name, clazz, 0, clazz.length);
+            return loadClass(name, clazz);
 		} catch (FileNotFoundException e) {
 			throw new ClassNotFoundException("No class: " + name + " located at " + filename, e);
 		} catch (IOException ioe) {

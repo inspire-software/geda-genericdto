@@ -20,7 +20,7 @@
     <groupId>com.inspire-software.lib.dto.geda</groupId>
     <artifactId>geda</artifactId>
     <name>DTO utilities package</name>
-    <version>2.1.3-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <description>Provides several utilities managing DTO's in n-tier applications</description>
     <packaging>pom</packaging>
     <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
@@ -106,6 +106,16 @@
         </profile>
 
         <!--
+            OSGi bundle testing
+         -->
+        <profile>
+            <id>with-itest</id>
+            <modules>
+                <module>osgi-itest</module>
+            </modules>
+        </profile>
+
+        <!--
             Full build with all modules
          -->
         <profile>
@@ -113,6 +123,7 @@
             <modules>
                 <module>core-ptest</module>
                 <module>core-btest</module>
+                <module>osgi-itest</module>
             </modules>
         </profile>
 

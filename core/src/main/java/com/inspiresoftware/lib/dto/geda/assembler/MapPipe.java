@@ -13,10 +13,8 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.MapPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
@@ -36,8 +34,7 @@ class MapPipe implements Pipe {
 
     private final MapPipeMetadata meta;
     
-    private final MethodSynthesizer synthesizer;
-    private final Registry dslRegistry;
+    private final AssemblerContext context;
 
     private final DataReader dtoRead;
 	private final DataWriter dtoWrite;
@@ -46,18 +43,16 @@ class MapPipe implements Pipe {
 	private final DataWriter entityWrite;
 
     /**
-     * @param registry DSL registry
-     * @param synthesizer synthesizer
+     * @param context assembler context
      * @param dtoRead method for reading data from DTO field
-     * @param dtoWrite method for writting data to DTO field
+     * @param dtoWrite method for writing data to DTO field
      * @param entityRead method for reading data from Entity field
-     * @param entityWrite method for writting data to Entity field
+     * @param entityWrite method for writing data to Entity field
      * @param meta collection pipe meta
      *
-     * @throws AnnotationValidatingBindingException when missmaped binding
+     * @throws AnnotationValidatingBindingException when miss-mapped binding
      */
-    MapPipe(final Registry registry,
-            final MethodSynthesizer synthesizer,
+    MapPipe(final AssemblerContext context,
             final DataReader dtoRead,
             final DataWriter dtoWrite,
             final DataReader entityRead,
@@ -66,8 +61,7 @@ class MapPipe implements Pipe {
 
         this.meta = meta;
 
-    	this.synthesizer = synthesizer;
-        this.dslRegistry = registry;
+    	this.context = context;
 
         this.dtoWrite = dtoWrite;
         this.entityRead = entityRead;
@@ -76,12 +70,12 @@ class MapPipe implements Pipe {
 			this.dtoRead = null;
 			this.entityWrite = null;
             PipeValidator.validateReadPipeTypes(
-                    registry, this.dtoWrite, this.meta.getDtoFieldName(), this.entityRead, this.meta.getEntityFieldName());
+                    context.getDslRegistry(), this.dtoWrite, this.meta.getDtoFieldName(), this.entityRead, this.meta.getEntityFieldName());
 		} else {
 			this.dtoRead = dtoRead;
 			this.entityWrite = entityWrite;
             PipeValidator.validatePipeTypes(
-                    registry, this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(), this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
+                    context.getDslRegistry(), this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(), this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
 		}
 
     }
@@ -257,7 +251,7 @@ class MapPipe implements Pipe {
                 final PropertyDescriptor[] itemDesc = PropertyInspector.getPropertyDescriptorsForClass(representative);
                 final PropertyDescriptor itemKeyDesc = PropertyInspector.getEntityPropertyDescriptorForField(
                         dtoItem.getClass(), representative, meta.getDtoFieldName(), meta.getMapKeyForCollection(), itemDesc);
-                reader = synthesizer.synthesizeReader(itemKeyDesc);
+                reader = context.getMethodSynthesizer().synthesizeReader(itemKeyDesc);
             } else {
                 throw new AnnotationValidatingBindingException(
                         meta.getDtoFieldName(),
@@ -288,10 +282,7 @@ class MapPipe implements Pipe {
 							dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),
                             representative.getCanonicalName());
 		    	}
-                if (dslRegistry == null) {
-                    return DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, synthesizer);
-                }
-                return DTOAssembler.newCustomAssembler(dtoItem.getClass(), representative, dslRegistry, synthesizer);
+                return context.newAssembler(dtoItem.getClass(), representative);
             } catch (InspectionInvalidDtoInstanceException invDto) {
 				throw new CollectionEntityGenericReturnTypeException(
 						dtoItem.getClass().getCanonicalName(), this.meta.getDtoFieldName(),

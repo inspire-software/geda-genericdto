@@ -11,7 +11,6 @@ package com.inspiresoftware.lib.dto.geda.benchmark.support.modelmapper;
 
 import com.inspiresoftware.lib.dto.geda.benchmark.Mapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Person;
-import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
 import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonWithHistoryDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;

@@ -9,11 +9,11 @@
 
 package com.inspiresoftware.lib.dto.geda.interceptor.impl;
 
-import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
 import com.inspiresoftware.lib.dto.geda.adapter.Adapter;
 import com.inspiresoftware.lib.dto.geda.annotations.Direction;
 import com.inspiresoftware.lib.dto.geda.annotations.Occurrence;
 import com.inspiresoftware.lib.dto.geda.annotations.Transferable;
+import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

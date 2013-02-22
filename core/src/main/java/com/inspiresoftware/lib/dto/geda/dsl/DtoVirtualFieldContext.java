@@ -7,19 +7,18 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda.assembler.dsl;
+package com.inspiresoftware.lib.dto.geda.dsl;
 
 /**
  * DSL version of {@link com.inspiresoftware.lib.dto.geda.annotations.DtoVirtualField}.
  *
- * @since 2.1.0
+ * @since 3.0.0
  *
  * User: denispavlov
- * Date: 12-09-20
- * Time: 12:23 PM
+ * Date: 13-02-20
+ * Time: 8:47 AM
  */
 public interface DtoVirtualFieldContext {
-
     /**
      * Textual reference to a converter to use when assembling DTO's and Entities. This reference is
      * used to lookup converter in adapters map passed into assembleDto and assembleEntity methods.
@@ -29,5 +28,4 @@ public interface DtoVirtualFieldContext {
      * @return dto field context
      */
     DtoFieldContext converter(String converter);
-
 }

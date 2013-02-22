@@ -12,16 +12,18 @@
 package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.Configurable;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
-import com.inspiresoftware.lib.dto.geda.assembler.meta.MapPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
+import com.inspiresoftware.lib.dto.geda.assembler.meta.MapPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
+import com.inspiresoftware.lib.dto.geda.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
 import java.beans.PropertyDescriptor;
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
@@ -35,7 +37,7 @@ import java.util.*;
  *
  */
 @SuppressWarnings("unchecked")
-public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
+public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerContext, Configurable {
 
     private static final MetadataChainBuilder ANNOTATIONS = new MetadataChainAnnotationBuilder();
 
@@ -51,19 +53,26 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 	private final MethodSynthesizer synthesizer;
     private final Registry dslRegistry;
 
+    private final Reference<ClassLoader> classLoader;
+
     private Pipe[] pipes;
 
-	DTOtoEntityAssemblerImpl(final Class dto, final Class entity,
-                             final MethodSynthesizer synthesizer, final Registry registry)
+	DTOtoEntityAssemblerImpl(final Class dto,
+                             final Class entity,
+                             final ClassLoader classLoader,
+                             final MethodSynthesizer synthesizer,
+                             final Registry registry)
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
 		       GeDARuntimeException, AnnotationDuplicateBindingException {
 
-        this(dto, entity, synthesizer, registry, true);
+        this(dto, entity, classLoader, synthesizer, registry, true);
     }
 
 	DTOtoEntityAssemblerImpl(final Class dto, final Class entity,
-                             final MethodSynthesizer synthesizer, final Registry registry,
+                             final ClassLoader classLoader,
+                             final MethodSynthesizer synthesizer,
+                             final Registry registry,
                              final boolean strict)
 		throws InspectionScanningException, UnableToCreateInstanceException, InspectionPropertyNotFoundException,
 		       InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
@@ -71,6 +80,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 		dtoClass = dto;
 		entityClass = entity;
 		this.synthesizer = synthesizer;
+        this.classLoader = new SoftReference<ClassLoader>(classLoader);
         dslRegistry = registry;
 
         final MetadataChainBuilder metaBuilder;
@@ -155,23 +165,23 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 			if (meta instanceof FieldPipeMetadata) {
 				if (meta.getEntityFieldName().startsWith("#this#")) {
 					// create virtual field pipe
-					return VIRTUAL.build(this.dslRegistry, this.synthesizer,
+					return VIRTUAL.build(this,
 							dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors,
                             (FieldPipeMetadata) meta, null);
 				} else {
 					// create field pipe
-					return FIELD.build(this.dslRegistry, this.synthesizer,
+					return FIELD.build(this,
 							dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors,
                             (FieldPipeMetadata) meta, null);
 				}
 			} else if (meta instanceof CollectionPipeMetadata) {
 				// create collection
-				return COLLECTION.build(this.dslRegistry, this.synthesizer,
+				return COLLECTION.build(this,
 						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors,
                         (CollectionPipeMetadata) meta, null);
 			} else if (meta instanceof MapPipeMetadata) {
 				// create map
-				return MAP.build(this.dslRegistry, this.synthesizer,
+				return MAP.build(this,
 						dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors,
                         (MapPipeMetadata) meta, null);
 			} else {
@@ -184,7 +194,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 		final PropertyDescriptor[] nestedEntityPropertyDescriptors = PropertyInspector.getPropertyDescriptorsForClassReturnedByGet(nested);
 
 		// build a chain pipe
-		return CHAIN.build(this.dslRegistry, this.synthesizer, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, meta,
+		return CHAIN.build(this, dto, entity, dtoPropertyDescriptors, entityPropertyDescriptors, meta,
 				createPipeChain(dto, dtoPropertyDescriptors, entity, nestedEntityPropertyDescriptors, dtoField, metas, index + 1, isMapOrListEntity)
 			);
 
@@ -319,4 +329,36 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, Configurable {
 		}
 	}
 
+    /** {@inheritDoc} */
+    public Assembler newAssembler(final Class<?> dto, final Class<?> entity) {
+        if (dslRegistry == null) {
+            return DTOAssembler.newCustomAssembler(dto, entity, getClassLoader(), synthesizer);
+        }
+        return  DTOAssembler.newCustomAssembler(dto, entity, getClassLoader(), dslRegistry, synthesizer);
+    }
+
+    /** {@inheritDoc} */
+    public MethodSynthesizer getMethodSynthesizer() {
+        return synthesizer;
+    }
+
+    /** {@inheritDoc} */
+    public Registry getDslRegistry() {
+        return dslRegistry;
+    }
+
+    /** {@inheritDoc} */
+    public ClassLoader getClassLoader() throws GeDARuntimeException {
+        ClassLoader cl = classLoader.get();
+        if (cl == null) { // Cl was garbage collected - something gone really wrong
+            throw new GeDARuntimeException("Class loader has been gc'ed");
+        }
+        return cl;
+    }
+
+    /** {@inheritDoc} */
+    public void releaseResources() {
+        synthesizer.releaseResources();
+        dslRegistry.releaseResources();
+    }
 }

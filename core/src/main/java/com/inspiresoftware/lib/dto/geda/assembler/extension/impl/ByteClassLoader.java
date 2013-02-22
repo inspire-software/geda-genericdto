@@ -25,12 +25,18 @@ public class ByteClassLoader extends ClassLoader {
 		super(parent);
 	}
 
-	/**
+    /** {@inheritDoc} */
+    public Class<?> loadClass(final String name) throws ClassNotFoundException {
+        return getParent().loadClass(name);
+    }
+
+    /**
 	 * @param name full name of class
 	 * @param clazz class as byte array
 	 * @return class object
 	 */
 	public Class< ? > loadClass(final String name, final byte[] clazz) {
-		return defineClass(name, clazz, 0, clazz.length);
+        return defineClass(name, clazz, 0, clazz.length);
 	}
+
 }

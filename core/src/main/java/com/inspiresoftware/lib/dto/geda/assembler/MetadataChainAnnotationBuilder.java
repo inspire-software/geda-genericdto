@@ -10,13 +10,15 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import com.inspiresoftware.lib.dto.geda.annotations.*;
+import com.inspiresoftware.lib.dto.geda.assembler.annotations.AnnotationProxy;
+import com.inspiresoftware.lib.dto.geda.assembler.annotations.impl.AnnotationProxies;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,39 +36,34 @@ class MetadataChainAnnotationBuilder implements MetadataChainBuilder {
 	 */
 	public List<PipeMetadata> build(final Field dtoField) throws UnableToCreateInstanceException {
 
-		final DtoField dtoFieldAnn =
-			(DtoField) dtoField.getAnnotation(DtoField.class);
-		if (dtoFieldAnn != null) {
+		final Map<String, AnnotationProxy> dtoFieldAnn = AnnotationProxies.getFieldAnnotationProxy(dtoField);
 
-			final DtoParent parentAnn = (DtoParent) dtoField.getAnnotation(DtoParent.class);
-			return buildFieldChain(dtoField, dtoFieldAnn, parentAnn);
+        if (dtoFieldAnn.isEmpty()) {
+            return null;
+        }
+
+		if (dtoFieldAnn.containsKey("DtoField")) {
+
+			return buildFieldChain(dtoField, dtoFieldAnn.get("DtoField"), dtoFieldAnn.get("DtoParent"));
 		}
 
-		final DtoVirtualField dtoVirtualFieldAnn =
-			(DtoVirtualField) dtoField.getAnnotation(DtoVirtualField.class);
-		if (dtoVirtualFieldAnn != null) {
-			return buildVirtualFieldChain(dtoField, dtoVirtualFieldAnn);
+		if (dtoFieldAnn.containsKey("DtoVirtualField")) {
+			return buildVirtualFieldChain(dtoField, dtoFieldAnn.get("DtoVirtualField"));
 		}
 
-		final DtoCollection dtoCollAnn =
-			(DtoCollection) dtoField.getAnnotation(DtoCollection.class);
-		if (dtoCollAnn != null) {
-
-			return buildCollectionChain(dtoField, dtoCollAnn);
+		if (dtoFieldAnn.containsKey("DtoCollection")) {
+			return buildCollectionChain(dtoField, dtoFieldAnn.get("DtoCollection"));
 		}
 
-	    final DtoMap dtoMapAnn =
-	         (DtoMap) dtoField.getAnnotation(DtoMap.class);
-	    if (dtoMapAnn != null) {
-
-	        return buildMapChain(dtoField, dtoMapAnn);
+	    if (dtoFieldAnn.containsKey("DtoMap")) {
+	        return buildMapChain(dtoField, dtoFieldAnn.get("DtoMap"));
 	    }
 
 	    return null;
 
 	}
 
-	private List<PipeMetadata> buildVirtualFieldChain(final Field dtoField, final DtoVirtualField dtoFieldAnn) {
+	private List<PipeMetadata> buildVirtualFieldChain(final Field dtoField, final AnnotationProxy dtoFieldAnn) {
 
 		final String[] bindings = { "#this#" + dtoField.getName() };
 
@@ -75,10 +72,10 @@ class MetadataChainAnnotationBuilder implements MetadataChainBuilder {
 			metas.add(new FieldPipeMetadata(
 					dtoField.getName(),
 					bindings[index],
-					dtoFieldAnn.dtoBeanKey(),
-					getStringFromArray(dtoFieldAnn.entityBeanKeys(), index),
-					dtoFieldAnn.readOnly(),
-					dtoFieldAnn.converter(),
+					(String) dtoFieldAnn.getValue("dtoBeanKey"),
+					getStringFromArray((String[]) dtoFieldAnn.getValue("entityBeanKeys"), index),
+					(Boolean) dtoFieldAnn.getValue("readOnly"),
+					(String) dtoFieldAnn.getValue("converter"),
 					false,
 					null,
 					null
@@ -87,77 +84,77 @@ class MetadataChainAnnotationBuilder implements MetadataChainBuilder {
 		return metas;
 	}
 
-	private List<PipeMetadata> buildFieldChain(final Field dtoField, final DtoField dtoFieldAnn, final DtoParent dtoParentAnn) {
+	private List<PipeMetadata> buildFieldChain(final Field dtoField, final AnnotationProxy dtoFieldAnn, final AnnotationProxy dtoParentAnn) {
 
-		final String[] bindings = createFieldBindingChain(getBindingFromAnnotationOrFieldName(dtoFieldAnn.value(), dtoField.getName()));
+		final String[] bindings = createFieldBindingChain(getBindingFromAnnotationOrFieldName((String) dtoFieldAnn.getValue("value"), dtoField.getName()));
 
 		final List<PipeMetadata> metas = new ArrayList<PipeMetadata>(bindings.length);
 		for (int index = 0; index < bindings.length; index++) {
 			metas.add(new FieldPipeMetadata(
 				dtoField.getName(),
 				bindings[index],
-				dtoFieldAnn.dtoBeanKey(),
-				getStringFromArray(dtoFieldAnn.entityBeanKeys(), index),
-				dtoFieldAnn.readOnly(),
-				dtoFieldAnn.converter(),
+				(String) dtoFieldAnn.getValue("dtoBeanKey"),
+				getStringFromArray((String[]) dtoFieldAnn.getValue("entityBeanKeys"), index),
+                (Boolean) dtoFieldAnn.getValue("readOnly"),
+                (String) dtoFieldAnn.getValue("converter"),
 				dtoParentAnn != null,
-				dtoParentAnn != null ? dtoParentAnn.value() : null,
-				dtoParentAnn != null ? dtoParentAnn.retriever() : null
+				dtoParentAnn != null ? (String) dtoParentAnn.getValue("value") : null,
+				dtoParentAnn != null ? (String) dtoParentAnn.getValue("retriever") : null
 			));
 		}
 		return metas;
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<PipeMetadata> buildCollectionChain(final Field dtoField, final DtoCollection dtoCollAnn)
+	private List<PipeMetadata> buildCollectionChain(final Field dtoField, final AnnotationProxy dtoCollAnn)
 		throws UnableToCreateInstanceException {
 
-		final String[] bindings = createFieldBindingChain(getBindingFromAnnotationOrFieldName(dtoCollAnn.value(), dtoField.getName()));
+		final String[] bindings = createFieldBindingChain(getBindingFromAnnotationOrFieldName((String) dtoCollAnn.getValue("value"), dtoField.getName()));
 
 		final List<PipeMetadata> metas = new ArrayList<PipeMetadata>(bindings.length);
 		for (int index = 0; index < bindings.length; index++) {
 			metas.add(new CollectionPipeMetadata(
 				dtoField.getName(),
 				bindings[index],
-				dtoCollAnn.dtoBeanKey(),
-				getStringFromArray(dtoCollAnn.entityBeanKeys(), index),
-				dtoCollAnn.readOnly(),
-				dtoCollAnn.dtoCollectionClass(),
-				dtoCollAnn.dtoCollectionClassKey(),
-				dtoCollAnn.entityCollectionClass(),
-				dtoCollAnn.entityCollectionClassKey(),
-				dtoCollAnn.entityGenericType(),
-                dtoCollAnn.entityGenericTypeKey(),
-                dtoCollAnn.dtoToEntityMatcher(),
-				dtoCollAnn.dtoToEntityMatcherKey()
+				(String) dtoCollAnn.getValue("dtoBeanKey"),
+				getStringFromArray((String[]) dtoCollAnn.getValue("entityBeanKeys"), index),
+				(Boolean) dtoCollAnn.getValue("readOnly"),
+				(Class) dtoCollAnn.getValue("dtoCollectionClass"),
+				(String) dtoCollAnn.getValue("dtoCollectionClassKey"),
+				(Class) dtoCollAnn.getValue("entityCollectionClass"),
+				(String) dtoCollAnn.getValue("entityCollectionClassKey"),
+				(Class) dtoCollAnn.getValue("entityGenericType"),
+                (String) dtoCollAnn.getValue("entityGenericTypeKey"),
+                (Class) dtoCollAnn.getValue("dtoToEntityMatcher"),
+				(String) dtoCollAnn.getValue("dtoToEntityMatcherKey")
 			));
 		}
 		return metas;
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<PipeMetadata> buildMapChain(final Field dtoField, final DtoMap dtoMapAnn) throws UnableToCreateInstanceException {
+	private List<PipeMetadata> buildMapChain(final Field dtoField, final AnnotationProxy dtoMapAnn) throws UnableToCreateInstanceException {
 
-		final String[] bindings = createFieldBindingChain(getBindingFromAnnotationOrFieldName(dtoMapAnn.value(), dtoField.getName()));
+		final String[] bindings = createFieldBindingChain(getBindingFromAnnotationOrFieldName((String) dtoMapAnn.getValue("value"), dtoField.getName()));
 
 		final List<PipeMetadata> metas = new ArrayList<PipeMetadata>(bindings.length);
 		for (int index = 0; index < bindings.length; index++) {
 			metas.add(new MapPipeMetadata(
 				dtoField.getName(),
 				bindings[index],
-				dtoMapAnn.dtoBeanKey(),
-				getStringFromArray(dtoMapAnn.entityBeanKeys(), index),
-				dtoMapAnn.readOnly(),
-				dtoMapAnn.dtoMapClass(),
-				dtoMapAnn.dtoMapClassKey(),
-				dtoMapAnn.entityMapOrCollectionClass(),
-				dtoMapAnn.entityMapOrCollectionClassKey(),
-				dtoMapAnn.entityGenericType(),
-                dtoMapAnn.entityGenericTypeKey(),
-                dtoMapAnn.entityCollectionMapKey(),
-				dtoMapAnn.useEntityMapKey(),
-				dtoMapAnn.dtoToEntityMatcher(),
-				dtoMapAnn.dtoToEntityMatcherKey()
+				(String) dtoMapAnn.getValue("dtoBeanKey"),
+				getStringFromArray((String[]) dtoMapAnn.getValue("entityBeanKeys"), index),
+				(Boolean) dtoMapAnn.getValue("readOnly"),
+				(Class) dtoMapAnn.getValue("dtoMapClass"),
+				(String) dtoMapAnn.getValue("dtoMapClassKey"),
+				(Class) dtoMapAnn.getValue("entityMapOrCollectionClass"),
+				(String) dtoMapAnn.getValue("entityMapOrCollectionClassKey"),
+				(Class) dtoMapAnn.getValue("entityGenericType"),
+                (String) dtoMapAnn.getValue("entityGenericTypeKey"),
+                (String) dtoMapAnn.getValue("entityCollectionMapKey"),
+				(Boolean) dtoMapAnn.getValue("useEntityMapKey"),
+				(Class) dtoMapAnn.getValue("dtoToEntityMatcher"),
+				(String) dtoMapAnn.getValue("dtoToEntityMatcherKey")
 			));
 		}
 		return metas;

@@ -15,6 +15,7 @@ import com.inspiresoftware.lib.dto.geda.exception.DuplicateValueConverterKeyExce
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -29,7 +30,7 @@ public class AdaptersRepositoryImpl implements AdaptersRepository {
 
     private static final long serialVersionUID = 20100126L;
 
-    private final Map<String, Object> repository = new HashMap<String, Object>();
+    private final Map<String, Object> repository = new ConcurrentHashMap<String, Object>();
 
     /**
      * Empty constructor.
@@ -97,5 +98,8 @@ public class AdaptersRepositoryImpl implements AdaptersRepository {
 		repository.remove(key);
 	}
 
-
+    /** {@inheritDoc} */
+    public void releaseResources() {
+        repository.clear();
+    }
 }

@@ -10,10 +10,10 @@
 package com.inspiresoftware.lib.dto.geda.assembler.dsl.impl;
 
 import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoCollectionContext;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoEntityContext;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoFieldContext;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoMapContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoCollectionContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoEntityContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoFieldContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoMapContext;
 import com.inspiresoftware.lib.dto.geda.exception.AnnotationDuplicateBindingException;
 import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 

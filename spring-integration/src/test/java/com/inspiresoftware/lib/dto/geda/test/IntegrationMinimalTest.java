@@ -15,7 +15,6 @@ import com.inspiresoftware.lib.dto.geda.config.AnnotationDrivenGeDABeanDefinitio
 import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfigResolver;
 import com.inspiresoftware.lib.dto.geda.interceptor.GeDAInterceptor;
 import com.inspiresoftware.lib.dto.geda.test.impl.AnnotatedExtendedDataTransferObjectImpl;
-import com.inspiresoftware.lib.dto.geda.test.impl.DSLExtendedDataTransferObjectImpl;
 import com.inspiresoftware.lib.dto.geda.test.impl.DomainObjectImpl;
 import org.springframework.aop.PointcutAdvisor;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;

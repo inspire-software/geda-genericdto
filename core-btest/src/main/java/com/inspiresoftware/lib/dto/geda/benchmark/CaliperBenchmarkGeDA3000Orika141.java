@@ -25,7 +25,7 @@ import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaBasicMapper
  * Date: Sep 17, 2012
  * Time: 8:35:29 AM
  */
-public class CaliperBenchmarkGeDA210Orika134 extends SimpleBenchmark {
+public class CaliperBenchmarkGeDA3000Orika141 extends SimpleBenchmark {
 
 
     public enum Lib {
@@ -77,7 +77,7 @@ public class CaliperBenchmarkGeDA210Orika134 extends SimpleBenchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        Runner.main(CaliperBenchmarkGeDA210Orika134.class, args);
+        Runner.main(CaliperBenchmarkGeDA3000Orika141.class, args);
     }
 
 }

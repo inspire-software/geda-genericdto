@@ -43,7 +43,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testUndefinedConfigCreatesDefaultInstance() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader());
 		proxy.configure(null, null);
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertEquals(syn.getClass().getCanonicalName(), MethodSynthesizerProxy.getDefaultImpl());
@@ -55,7 +55,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testJavassistConfig() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader());
 		proxy.configure("synthesizerImpl", "javassist");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof JavassistMethodSynthesizer);
@@ -67,7 +67,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testJavassistConfigConstructor() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy("javassist");
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader(), "javassist");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof JavassistMethodSynthesizer);
 	}
@@ -78,7 +78,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testSunToolsConfig() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader());
 		proxy.configure("synthesizerImpl", "suntools");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof SunJavaToolsMethodSynthesizer);
@@ -90,7 +90,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testSunToolsConfigConstructor() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy("suntools");
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader(), "suntools");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof SunJavaToolsMethodSynthesizer);
 	}
@@ -101,7 +101,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testReflectionConfig() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader());
 		proxy.configure("synthesizerImpl", "reflection");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof ReflectionMethodSynthesizer);
@@ -113,7 +113,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testReflectionConfigConstructor() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy("reflection");
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader(), "reflection");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof ReflectionMethodSynthesizer);
 	}
@@ -124,7 +124,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testCGLibConfig() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader());
 		proxy.configure("synthesizerImpl", "bcel");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof BCELMethodSynthesizer);
@@ -136,7 +136,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testCGLibConfigConstructor() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy("bcel");
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader(), "bcel");
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof BCELMethodSynthesizer);
 	}
@@ -147,7 +147,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testClassnameConfig() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader());
 		proxy.configure("synthesizerImpl", JavassistMethodSynthesizer.class.getCanonicalName());
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof JavassistMethodSynthesizer);
@@ -159,7 +159,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testClassnameConfigConstructor() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(JavassistMethodSynthesizer.class.getCanonicalName());
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader(), JavassistMethodSynthesizer.class.getCanonicalName());
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof JavassistMethodSynthesizer);
 	}
@@ -170,7 +170,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test
 	public void testInstanceConfig() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader());
 		final MethodSynthesizer mock = new MethodSynthesizer() {
 			public DataReader synthesizeReader(final PropertyDescriptor descriptor)
 					throws InspectionPropertyNotFoundException,
@@ -179,7 +179,8 @@ public class MethodSynthesizerProxyTest {
 					throws InspectionPropertyNotFoundException,
 					UnableToCreateInstanceException, GeDARuntimeException { return null; }
 			public boolean configure(final String configuration, final Object value) { return false; }
-		};
+            public void releaseResources() { }
+        };
 		proxy.configure("synthesizerImpl", mock);
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertSame(syn, mock);
@@ -199,8 +200,9 @@ public class MethodSynthesizerProxyTest {
 					throws InspectionPropertyNotFoundException,
 					UnableToCreateInstanceException, GeDARuntimeException { return null; }
 			public boolean configure(final String configuration, final Object value) { return false; }
-		};
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(mock);
+            public void releaseResources() { }
+        };
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader(), mock);
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertSame(syn, mock);
 	}
@@ -211,7 +213,7 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test(expected = UnableToCreateInstanceException.class)
 	public void testWrongConfigThrowsException() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy();
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader());
 		proxy.configure("synthesizerImpl", new Integer(1));
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof JavassistMethodSynthesizer);
@@ -223,9 +225,79 @@ public class MethodSynthesizerProxyTest {
 	 */
 	@Test(expected = UnableToCreateInstanceException.class)
 	public void testWrongConfigConstructorThrowsException() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(new Integer(1));
+		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader(), new Integer(1));
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof JavassistMethodSynthesizer);
 	}
-	
+
+    /**
+     * Test that hash code is based on inner synthesizer hash code
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testHashCodeAndEqualsOfInitialised() throws Exception {
+        final MethodSynthesizer mock = new MethodSynthesizer() {
+            public DataReader synthesizeReader(final PropertyDescriptor descriptor)
+                    throws InspectionPropertyNotFoundException,
+                    UnableToCreateInstanceException, GeDARuntimeException { return null; }
+            public DataWriter synthesizeWriter(final PropertyDescriptor descriptor)
+                    throws InspectionPropertyNotFoundException,
+                    UnableToCreateInstanceException, GeDARuntimeException { return null; }
+            public boolean configure(final String configuration, final Object value) { return false; }
+            public void releaseResources() { }
+        };
+
+        final MethodSynthesizerProxy proxy1 = new MethodSynthesizerProxy(this.getClass().getClassLoader(), mock);
+        final MethodSynthesizerProxy proxy2 = new MethodSynthesizerProxy(this.getClass().getClassLoader(), mock);
+
+        assertEquals(proxy1.hashCode(), proxy2.hashCode());
+        assertTrue(proxy1.equals(proxy2));
+        assertTrue(proxy2.equals(proxy1));
+
+    }
+
+    /**
+     * Test that hash code is based on inner synthesizer hash code
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testHashCodeAndEqualsOfBlank() throws Exception {
+
+        final MethodSynthesizerProxy proxy1 = new MethodSynthesizerProxy(this.getClass().getClassLoader());
+        final MethodSynthesizerProxy proxy2 = new MethodSynthesizerProxy(this.getClass().getClassLoader());
+
+        assertFalse(proxy1.hashCode() == proxy2.hashCode());
+        assertFalse(proxy1.equals(proxy2));
+        assertFalse(proxy2.equals(proxy1));
+
+    }
+
+    /**
+     * Test that hash code is based on inner synthesizer hash code
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testHashCodeAndEqualsOfProxyToReal() throws Exception {
+
+        final MethodSynthesizer mock = new MethodSynthesizer() {
+            public DataReader synthesizeReader(final PropertyDescriptor descriptor)
+                    throws InspectionPropertyNotFoundException,
+                    UnableToCreateInstanceException, GeDARuntimeException { return null; }
+            public DataWriter synthesizeWriter(final PropertyDescriptor descriptor)
+                    throws InspectionPropertyNotFoundException,
+                    UnableToCreateInstanceException, GeDARuntimeException { return null; }
+            public boolean configure(final String configuration, final Object value) { return false; }
+            public void releaseResources() { }
+        };
+
+        final MethodSynthesizerProxy proxy1 = new MethodSynthesizerProxy(this.getClass().getClassLoader(), mock);
+
+        assertEquals(proxy1.hashCode(), mock.hashCode());
+        assertTrue(proxy1.equals(mock));
+        assertFalse(mock.equals(proxy1)); // But not other way round!
+
+    }
 }

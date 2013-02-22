@@ -7,21 +7,22 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda.assembler.dsl;
+package com.inspiresoftware.lib.dto.geda.dsl;
+
+import com.inspiresoftware.lib.dto.geda.assembler.extension.DisposableContainer;
 
 /**
  * Registry allows user to use DSL style mapping for DTO objects.
  * When methods are invoked all information is stored within
  * registry and kept for when it is used with assembler.
  *
- * @since 2.1.0
+ * @since 3.0.0
  *
  * User: denispavlov
- * Date: 12-09-20
- * Time: 8:11 AM
+ * Date: 13-02-20
+ * Time: 9:15 AM
  */
-public interface Registry {
-
+public interface Registry extends DisposableContainer {
     /**
      * Check if this registry has this DTO.
      *

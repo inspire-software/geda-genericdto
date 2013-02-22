@@ -78,4 +78,9 @@ public class JavaMapMethodSynthesizer implements MethodSynthesizer {
     public boolean configure(final String configuration, final Object value) throws GeDAException {
         return false;
     }
+
+    /** {@inheritDoc} */
+    public void releaseResources() {
+        // none
+    }
 }

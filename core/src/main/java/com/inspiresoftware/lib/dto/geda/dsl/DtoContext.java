@@ -7,19 +7,18 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda.assembler.dsl;
+package com.inspiresoftware.lib.dto.geda.dsl;
 
 /**
  * DSL version of {@link com.inspiresoftware.lib.dto.geda.annotations.Dto}.
  *
- * @since 2.1.0
+ * @since 3.0.0
  *
  * User: denispavlov
- * Date: 12-09-20
- * Time: 8:12 AM
+ * Date: 13-02-20
+ * Time: 9:12 AM
  */
 public interface DtoContext {
-
     /**
      * @return DTO class for this context.
      */
@@ -101,5 +100,4 @@ public interface DtoContext {
      * @return ctx
      */
     DtoEntityContext useContextFor(DtoEntityContext ctx, String beanKey);
-
 }

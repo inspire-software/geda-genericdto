@@ -13,12 +13,10 @@ import com.inspiresoftware.lib.dto.geda.benchmark.Mapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Address;
 import com.inspiresoftware.lib.dto.geda.benchmark.domain.Person;
 import com.inspiresoftware.lib.dto.geda.benchmark.dto.AddressDTO;
-import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
 import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonWithHistoryDTO;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
-import ma.glasnost.orika.metadata.ClassMapBuilder;
 
 /**
  * .

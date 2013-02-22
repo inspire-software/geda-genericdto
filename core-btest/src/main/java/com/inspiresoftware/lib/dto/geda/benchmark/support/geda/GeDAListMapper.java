@@ -30,7 +30,7 @@ public class GeDAListMapper implements Mapper {
     private final Assembler asm;
 
     public GeDAListMapper() {
-        asm = DTOAssembler.newAssembler(PersonWithHistoryDTO.class, Person.class);
+        asm = DTOAssembler.newAssembler(PersonWithHistoryDTO.class, Person.class, this.getClass().getClassLoader());
     }
 
     public Object fromEntity(final Object entity) {

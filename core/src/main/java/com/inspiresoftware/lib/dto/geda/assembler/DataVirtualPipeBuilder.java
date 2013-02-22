@@ -11,7 +11,6 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler;
 
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.*;
@@ -41,8 +40,7 @@ class DataVirtualPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
 	 * @throws GeDARuntimeException  unhandled cases - this is (if GeDA was not tampered with) means library failure and should be reported
 	 */
 	public Pipe build(
-            final Registry registry,
-			final MethodSynthesizer synthesizer,
+            final AssemblerContext context,
 			final Class dtoClass, final Class entityClass,
 			final PropertyDescriptor[] dtoPropertyDescriptors,
 			final PropertyDescriptor[] entityPropertyDescriptors,
@@ -52,7 +50,9 @@ class DataVirtualPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
 		
 		final PropertyDescriptor dtoFieldDesc = PropertyInspector.getDtoPropertyDescriptorForField(
 				dtoClass, meta.getDtoFieldName(), dtoPropertyDescriptors);
-		
+
+        final MethodSynthesizer synthesizer = context.getMethodSynthesizer();
+
 		return new DataVirtualPipe(
                 meta.isReadOnly() ? null : synthesizer.synthesizeReader(dtoFieldDesc),
 				synthesizer.synthesizeWriter(dtoFieldDesc),

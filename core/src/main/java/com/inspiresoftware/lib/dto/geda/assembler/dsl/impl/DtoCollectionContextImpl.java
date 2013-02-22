@@ -10,8 +10,8 @@
 package com.inspiresoftware.lib.dto.geda.assembler.dsl.impl;
 
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoCollectionContext;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoEntityContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoCollectionContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoEntityContext;
 
 import java.util.ArrayList;
 import java.util.Collection;

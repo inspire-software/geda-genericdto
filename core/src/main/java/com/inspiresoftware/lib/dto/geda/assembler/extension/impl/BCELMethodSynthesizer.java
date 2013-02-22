@@ -13,7 +13,6 @@ package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.FileClassLoader.BaseDirectoryProvider;
 import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
 import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
@@ -26,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,8 +47,7 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 
 	private static final Logger LOG = LoggerFactory.getLogger(BCELMethodSynthesizer.class);
 	
-	private final ClassLoader loader;
-	private String baseDir = null; //"target/"; // null;
+	private String baseDir = null;
 	
 	
 	/**
@@ -69,31 +68,32 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 	
 	/**
 	 * Default constructor that adds GeDA path to pool for generating files.
+     *
+     * @param classLoader class loader
 	 */
-	public BCELMethodSynthesizer() {
-		loader = initialiseClassLoader();
+	public BCELMethodSynthesizer(ClassLoader classLoader) {
+		super(classLoader);
 	}
 
     /**
-     * Hook for providing alternative class loader for this synthesizer.
+     * Manual BCEL synthesizer constructor that enables generated file dumps.
      *
-     * @return byte class loader that allows to load class from byte array
+     * @param classLoader class loader
+     * @param baseDir base directory
      */
-    protected ClassLoader initialiseClassLoader() {
-        return new ByteClassLoader(super.getClassLoader());
+    public BCELMethodSynthesizer(final ClassLoader classLoader, final String baseDir) {
+        this(classLoader);
+        this.configure("baseDir", baseDir);
     }
-	
-	/**
-	 * Manual constructor with baseDir specified.
-	 * 
-	 * @param baseDir base dir for creating files
-	 * @throws GeDAException any exceptions during configuration
-	 */
-	public BCELMethodSynthesizer(final String baseDir) throws GeDAException {
-		this.configure("baseDir", baseDir);
-		loader = new FileClassLoader(super.getClassLoader(), this);
-	}
-	
+
+    /** {@inheritDoc} */
+    protected SoftReference<ClassLoader> initialiseClassLoaderWeakReference(final ClassLoader classLoader) {
+        if (baseDir == null) {
+            return new SoftReference<ClassLoader>(new ByteClassLoader(classLoader));
+        }
+        return new SoftReference<ClassLoader>(new FileClassLoader(classLoader, this));
+    }
+
 	/** {@inheritDoc} */
 	@Override
 	protected String getSynthesizerId() {
@@ -101,7 +101,7 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 	}
 	
 	/** {@inheritDoc} */
-	public String getBaseDir() {
+	public String getBaseDir(final String name) {
 		return baseDir;
 	}
 	
@@ -135,7 +135,7 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 			}
 		}
 
-        LOG.debug("Successfuly created source file: {}", clazz.getAbsolutePath());
+        LOG.debug("Successfully created source file: {}", clazz.getAbsolutePath());
 
 		try {
 			final Class< ? > clazzF = loader.loadClass(className);
@@ -364,14 +364,7 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 		}
 
 	}
-	
-	/** {@inheritDoc} */
-	@Override
-	protected ClassLoader getClassLoader() {
-		return loader;
-	}
-	
-	
+
 	/**
 	 * @param configuration configuration name
 	 * 			  baseDir - allows to set the directory where newly generated temp files for classes
@@ -392,6 +385,7 @@ public class BCELMethodSynthesizer extends AbstractMethodSynthesizer
 				this.baseDir = dir + "/";
 			}
 			LOG.info("Setting class loader base dir to: {}", this.baseDir);
+            enhanceClassLoader();
 			return true;
 		}
 		return super.configure(configuration, value);

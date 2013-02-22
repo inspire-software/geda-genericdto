@@ -25,7 +25,7 @@ import java.beans.PropertyDescriptor;
  * @since 1.1.0
  *
  */
-public interface MethodSynthesizer extends Configurable {
+public interface MethodSynthesizer extends Configurable, DisposableContainer {
 
 	/**
 	 * Create dynamic class.

@@ -7,7 +7,7 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda.assembler.dsl;
+package com.inspiresoftware.lib.dto.geda.dsl;
 
 import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
 
@@ -16,14 +16,13 @@ import java.util.Collection;
 /**
  * DSL version of {@link com.inspiresoftware.lib.dto.geda.annotations.DtoCollection}.
  *
- * @since 2.1.0
+ * @since 3.0.0
  *
  * User: denispavlov
- * Date: 12-09-20
- * Time: 12:38 PM
+ * Date: 13-02-20
+ * Time: 8:40 AM
  */
 public interface DtoCollectionContext extends DtoEntityContextAppender {
-
     /**
      * Map this DTO field to entity field.
      *
@@ -53,7 +52,7 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      * @param entityCollectionClass entity collection class
      * @return dto field context
      */
-    DtoCollectionContext entityCollectionClass(Class< ? extends Collection> entityCollectionClass);
+    DtoCollectionContext entityCollectionClass(Class<? extends Collection> entityCollectionClass);
 
     /**
      * Key that defines the type of instance to be retrieved from beanFactory
@@ -76,7 +75,7 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      * @param dtoCollectionClass dto collection class
      * @return  dto field context
      */
-    DtoCollectionContext dtoCollectionClass(Class< ? extends Collection> dtoCollectionClass);
+    DtoCollectionContext dtoCollectionClass(Class<? extends Collection> dtoCollectionClass);
 
     /**
      * Key that defines the type of instance to be retrieved from beanFactory
@@ -104,7 +103,7 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      * @param entityBeanKeys bean keys
      * @return dto field context
      */
-    DtoCollectionContext entityBeanKeys(String ... entityBeanKeys);
+    DtoCollectionContext entityBeanKeys(String... entityBeanKeys);
 
     /**
      * Specifies DTO bean key that will be used by bean factory injected to
@@ -159,12 +158,12 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      * @param dtoToEntityMatcher dto to entity matcher
      * @return dto field context
      */
-    DtoCollectionContext dtoToEntityMatcher(Class< ? extends DtoToEntityMatcher> dtoToEntityMatcher);
+    DtoCollectionContext dtoToEntityMatcher(Class<? extends DtoToEntityMatcher> dtoToEntityMatcher);
 
     /**
      * This reference is used to lookup a matcher in adapters map passed into
      * assembleDto and assembleEntity methods. The matcher has to implement
-     * {@link DtoToEntityMatcher} interface.
+     * {@link com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher} interface.
      *
      * This setting has priority over the {@link #dtoToEntityMatcher(Class)} setting.
      *
@@ -237,5 +236,4 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      * @return dto to entity matcher key
      */
     String getValueOfDtoToEntityMatcherKey();
-
 }

@@ -9,10 +9,10 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.dsl.impl;
 
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoEntityContext;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoFieldContext;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoParentContext;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.DtoVirtualFieldContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoEntityContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoFieldContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoParentContext;
+import com.inspiresoftware.lib.dto.geda.dsl.DtoVirtualFieldContext;
 
 /**
  * User: denispavlov

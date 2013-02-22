@@ -33,12 +33,15 @@ public class JavassistMethodSynthesizer extends AbstractPlainTextMethodSynthesiz
 	
 	private static final Logger LOG = LoggerFactory.getLogger(JavassistMethodSynthesizer.class);
 	
-	private final ClassPool pool = new ClassPool(true);
+	private ClassPool pool = new ClassPool(true);
 	
 	/**
 	 * Default constructor that adds GeDA path to pool for generating files.
+     *
+     * @param classLoader class loader
 	 */
-	public JavassistMethodSynthesizer() {
+	public JavassistMethodSynthesizer(final ClassLoader classLoader) {
+        super(classLoader);
         appendClassPath(pool);
 	}
 
@@ -48,7 +51,7 @@ public class JavassistMethodSynthesizer extends AbstractPlainTextMethodSynthesiz
      * @param pool this synthesizer's pool
      */
     protected void appendClassPath(final ClassPool pool) {
-        pool.appendClassPath(new LoaderClassPath(super.getClassLoader()));
+        pool.appendClassPath(new LoaderClassPath(getClassLoader()));
     }
 
     /**
@@ -151,5 +154,11 @@ public class JavassistMethodSynthesizer extends AbstractPlainTextMethodSynthesiz
 			throw new UnableToCreateInstanceException(writerClassName, "Unable to instantiate class: " + writerClassName, ite);
 		}
 	}
-	
+
+    /** {@inheritDoc} */
+    public void releaseResources() {
+        super.releaseResources();
+        pool = null;
+    }
+
 }

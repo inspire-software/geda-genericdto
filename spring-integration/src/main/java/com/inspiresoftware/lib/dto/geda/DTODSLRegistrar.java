@@ -9,8 +9,6 @@
 
 package com.inspiresoftware.lib.dto.geda;
 
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
-
 /**
  * DSL registrar allows to register all necessary mappings at the point of initialising
  * all infrastructure beans.
@@ -29,6 +27,6 @@ public interface DTODSLRegistrar {
      * @param dtoSupport dto support
      * @param dslRegistry DSL mapping registry
      */
-    void registerMappings(DTOSupport dtoSupport, Registry dslRegistry);
+    void registerMappings(DTOSupport dtoSupport, com.inspiresoftware.lib.dto.geda.dsl.Registry dslRegistry);
 
 }

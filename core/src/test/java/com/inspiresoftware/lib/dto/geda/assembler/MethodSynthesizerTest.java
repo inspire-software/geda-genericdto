@@ -97,7 +97,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setBool(BB_T);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "bool", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -118,7 +118,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "bool", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -141,7 +141,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setBool(BB_T);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "bool", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -162,7 +162,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "bool", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -185,7 +185,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setBoolo(BO_T);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "boolo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -206,7 +206,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "boolo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -229,7 +229,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setBoolo(BO_T);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "boolo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -250,7 +250,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "boolo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -273,7 +273,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setBy(YY_1);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "by", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -294,7 +294,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "by", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -317,7 +317,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setBy(YY_1);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "by", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -338,7 +338,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "by", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -361,7 +361,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setByo(YO_1);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "byo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -382,7 +382,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "byo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -405,7 +405,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setByo(YO_1);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "byo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -426,7 +426,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "byo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -449,7 +449,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setCh(CC_D);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ch", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -470,7 +470,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ch", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -493,7 +493,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setCh(CC_D);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ch", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -514,7 +514,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ch", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -537,7 +537,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setCho(CO_D);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "cho", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -558,7 +558,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "cho", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -581,7 +581,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setCho(CO_D);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "cho", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -602,7 +602,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "cho", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -625,7 +625,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setSh(SS_3);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "sh", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -646,7 +646,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "sh", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -669,7 +669,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setSh(SS_3);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "sh", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -690,7 +690,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "sh", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -713,7 +713,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setSho(SO_3);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "sho", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -734,7 +734,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "sho", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -757,7 +757,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setSho(SO_3);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "sho", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -778,7 +778,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "sho", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -801,7 +801,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setIn(II_5);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "in", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -822,7 +822,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "in", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -845,7 +845,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setIn(II_5);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "in", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -866,7 +866,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "in", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -889,7 +889,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setIno(IO_5);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ino", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -910,7 +910,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ino", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -933,7 +933,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setIno(IO_5);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ino", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -954,7 +954,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ino", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -977,7 +977,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setFl(FF_3);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "fl", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -998,7 +998,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "fl", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1021,7 +1021,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setFl(FF_3);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "fl", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1042,7 +1042,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "fl", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1065,7 +1065,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setFlo(FO_3);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "flo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1086,7 +1086,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "flo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1109,7 +1109,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setFlo(FO_3);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "flo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1130,7 +1130,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "flo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1153,7 +1153,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setLo(LL_4);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "lo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1174,7 +1174,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "lo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1197,7 +1197,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setLo(LL_4);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "lo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1218,7 +1218,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "lo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1241,7 +1241,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setLoo(LO_4);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "loo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1262,7 +1262,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "loo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1285,7 +1285,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setLoo(LO_4);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "loo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1306,7 +1306,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "loo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1329,7 +1329,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setDb(DD_4);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "db", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1350,7 +1350,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "db", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1373,7 +1373,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setDb(DD_4);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "db", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1394,7 +1394,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "db", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1417,7 +1417,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setDbo(DO_4);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "dbo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1438,7 +1438,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "dbo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1461,7 +1461,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setDbo(DD_4);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "dbo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1482,7 +1482,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "dbo", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1505,7 +1505,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setOb(OBJ);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ob", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1526,7 +1526,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ob", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1549,7 +1549,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setOb(OBJ);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ob", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1570,7 +1570,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "ob", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1593,7 +1593,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setStr(STR);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "str", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1614,7 +1614,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "str", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1637,7 +1637,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setStr(STR);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "str", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1658,7 +1658,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "str", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1681,7 +1681,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		dto.setEnum(EnumVal.Three);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "enum", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1702,7 +1702,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByClass dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "enum", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1725,7 +1725,7 @@ public class MethodSynthesizerTest {
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		dto.setEnum(EnumVal.Three);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "enum", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1746,7 +1746,7 @@ public class MethodSynthesizerTest {
 		
 		final TestSynthesizerByInterface dto = new TestSynthesizerByClass();
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "enum", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1771,7 +1771,7 @@ public class MethodSynthesizerTest {
 		};
 		dto.setStr(STR);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						dto.getClass(), "str", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1794,7 +1794,7 @@ public class MethodSynthesizerTest {
 			
 		};
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						dto.getClass(), "str", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByClass.class)		
@@ -1859,7 +1859,7 @@ public class MethodSynthesizerTest {
 		};
 		dto.setStr(STR);
 		
-		final DataReader reader = new MethodSynthesizerProxy(this.synthesizer).synthesizeReader(
+		final DataReader reader = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						dto.getClass(), "str", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		
@@ -1922,7 +1922,7 @@ public class MethodSynthesizerTest {
 			public void setStr(final String str) { dto.setStr(str); }
 		};
 		
-		final DataWriter writer = new MethodSynthesizerProxy(this.synthesizer).synthesizeWriter(
+		final DataWriter writer = new MethodSynthesizerProxy(this.getClass().getClassLoader(), this.synthesizer).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						dto.getClass(), "str", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestSynthesizerByInterface.class)		

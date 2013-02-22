@@ -351,4 +351,21 @@ public class IntHashTable<V>{
             resize(2 * table.length);
     }
 
+    /**
+     * Returns all keys for this map.
+     *
+     * @return key array
+     */
+    public int[] keysArray() {
+        int[] keys = new int[size];
+        int keyIndex = 0;
+        for (int bucketIndex = 0; bucketIndex < table.length && keyIndex < keys.length; bucketIndex++) {
+            Entry<V> e = table[bucketIndex];
+            do {
+                keys[keyIndex++] = e != null ? e.getKey() : 0;
+            } while (keyIndex < keys.length && e != null && ((e = e.next) != null));
+        }
+        return keys;
+    }
+
 }

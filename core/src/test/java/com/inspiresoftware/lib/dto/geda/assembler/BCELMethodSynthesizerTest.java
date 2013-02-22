@@ -45,7 +45,7 @@ public class BCELMethodSynthesizerTest {
 		final TestDto1Class dto = new TestDto1Class();
 		dto.setMyString("Hello");
 		
-		final DataReader readerMyString = new BCELMethodSynthesizer().synthesizeReader(
+		final DataReader readerMyString = new BCELMethodSynthesizer(this.getClass().getClassLoader()).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Class.class, "myString", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestDto1Class.class)		
@@ -67,7 +67,7 @@ public class BCELMethodSynthesizerTest {
 		final TestEntity3Class dto = new TestEntity3Class();
 		dto.setDecision(true);
 		
-		final DataReader readerMyString = new BCELMethodSynthesizer().synthesizeReader(
+		final DataReader readerMyString = new BCELMethodSynthesizer(this.getClass().getClassLoader()).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestEntity3Class.class, "decision", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestEntity3Class.class)		
@@ -89,7 +89,7 @@ public class BCELMethodSynthesizerTest {
 		final TestDto1Interface dto = new TestDto1Class();
 		dto.setMyString("Hello");
 		
-		final DataReader readerMyString = new BCELMethodSynthesizer().synthesizeReader(
+		final DataReader readerMyString = new BCELMethodSynthesizer(this.getClass().getClassLoader()).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "myString", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestDto1Interface.class)		
@@ -110,7 +110,7 @@ public class BCELMethodSynthesizerTest {
 		
 		final TestDto12CollectionClass dto = new TestDto12CollectionClass();
 		
-		final DataReader readerMyString = new BCELMethodSynthesizer().synthesizeReader(
+		final DataReader readerMyString = new BCELMethodSynthesizer(this.getClass().getClassLoader()).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto12CollectionClass.class, "items", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestDto12CollectionClass.class)		
@@ -131,7 +131,7 @@ public class BCELMethodSynthesizerTest {
 		
 		final TestDto12MapToMapClass dto = new TestDto12MapToMapClass();
 		
-		final DataReader readerMyString = new BCELMethodSynthesizer().synthesizeReader(
+		final DataReader readerMyString = new BCELMethodSynthesizer(this.getClass().getClassLoader()).synthesizeReader(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto12MapToMapClass.class, "items", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestDto12MapToMapClass.class)		
@@ -153,7 +153,7 @@ public class BCELMethodSynthesizerTest {
 		final TestDto1Class dto = new TestDto1Class();
 		dto.setMyString("Hello");
 		
-		final DataWriter writerMyString = new BCELMethodSynthesizer().synthesizeWriter(
+		final DataWriter writerMyString = new BCELMethodSynthesizer(this.getClass().getClassLoader()).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Class.class, "myString", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestDto1Class.class)		
@@ -176,7 +176,7 @@ public class BCELMethodSynthesizerTest {
 		final TestDto1Interface dto = new TestDto1Class();
 		dto.setMyString("Hello");
 		
-		final DataWriter writerMyString = new BCELMethodSynthesizer().synthesizeWriter(
+		final DataWriter writerMyString = new BCELMethodSynthesizer(this.getClass().getClassLoader()).synthesizeWriter(
 				PropertyInspector.getDtoPropertyDescriptorForField(
 						TestDto1Interface.class, "myString", 
 						PropertyInspector.getPropertyDescriptorsForClass(TestDto1Interface.class)		

@@ -14,10 +14,8 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.EntityRetriever;
 import com.inspiresoftware.lib.dto.geda.adapter.ValueConverter;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingBindingException.MissingBindingType;
@@ -39,8 +37,7 @@ class DataPipe implements Pipe {
     
     private final DataReader dtoParentKeyRead;
     
-    private final MethodSynthesizer synthesizer;
-    private final Registry dslRegistry;
+    private final AssemblerContext context;
 
     private final DataReader dtoRead;
 	private final DataWriter dtoWrite;
@@ -55,18 +52,18 @@ class DataPipe implements Pipe {
 	private static final Object NULL = null;
 	
 	/**
-     * @param registry DSL registry
-     * @param synthesizer synthesizer
+     * @param context assembler context
      * @param dtoRead method for reading data from DTO field
-     * @param dtoWrite method for writting data to DTO field
+     * @param dtoWrite method for writing data to DTO field
      * @param dtoParentKeyRead method for reading Parent key data from DTO field
      * @param entityRead method for reading data from Entity field
-     * @param entityWrite method for writting data to Entity field
-     * @param meta meta data for this pipe.       @throws AnnotationMissingBindingException if some of the parameter missing from the annotation
+     * @param entityWrite method for writing data to Entity field
+     * @param meta meta data for this pipe.
+     *
+     * @throws AnnotationMissingBindingException if some of the parameter missing from the annotation
 	 * @throws AnnotationValidatingBindingException if binding pipes are invalid
 	 */
-	public DataPipe(final Registry registry,
-                    final MethodSynthesizer synthesizer,
+	public DataPipe(final AssemblerContext context,
                     final DataReader dtoRead,
                     final DataWriter dtoWrite,
                     final DataReader dtoParentKeyRead,
@@ -79,8 +76,7 @@ class DataPipe implements Pipe {
         this.usesConverter = meta.getConverterKey() != null && meta.getConverterKey().length() > 0;
         this.hasSubEntity = meta.getDtoBeanKey() != null && meta.getDtoBeanKey().length() > 0;
 
-		this.synthesizer = synthesizer;
-        this.dslRegistry = registry;
+		this.context = context;
 
         this.dtoWrite = dtoWrite;
 		this.entityRead = entityRead;
@@ -94,7 +90,7 @@ class DataPipe implements Pipe {
 			this.dtoRead = null;
 			this.entityWrite = null;
             if (!usesConverter) {
-                PipeValidator.validateReadPipeTypes(registry, this.dtoWrite, this.meta.getDtoFieldName(),
+                PipeValidator.validateReadPipeTypes(context.getDslRegistry(), this.dtoWrite, this.meta.getDtoFieldName(),
                 		this.entityRead, this.meta.getEntityFieldName());
             }
 		} else {
@@ -106,7 +102,7 @@ class DataPipe implements Pipe {
 					this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
 			
 			if (!usesConverter) {
-                PipeValidator.validatePipeTypes(registry, this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(),
+                PipeValidator.validatePipeTypes(context.getDslRegistry(), this.dtoRead, this.dtoWrite, this.meta.getDtoFieldName(),
                 		this.entityRead, this.entityWrite, this.meta.getEntityFieldName());
             }
 		}
@@ -184,13 +180,8 @@ class DataPipe implements Pipe {
 
         final Object newDtoObject = this.meta.newDtoBean(dtoBeanFactory);
 
-        final Assembler assembler;
-        if (dslRegistry == null) {
-            assembler = DTOAssembler.newCustomAssembler(newDtoObject.getClass(), entityData.getClass(), synthesizer);
-        } else {
-            assembler = DTOAssembler.newCustomAssembler(newDtoObject.getClass(), entityData.getClass(), dslRegistry, synthesizer);
-        }
-        
+        final Assembler assembler = context.newAssembler(newDtoObject.getClass(), entityData.getClass());
+
         assembler.assembleDto(newDtoObject, entityData,  converters, dtoBeanFactory);
 
         this.dtoWrite.write(dto, newDtoObject);
@@ -273,12 +264,7 @@ class DataPipe implements Pipe {
 		    this.entityWrite.write(parentEntity, dataEntity);
 		}
 
-        final Assembler assembler;
-        if (dslRegistry == null) {
-            assembler = DTOAssembler.newCustomAssembler(dtoValue.getClass(), dataEntity.getClass(), synthesizer);
-        } else {
-            assembler = DTOAssembler.newCustomAssembler(dtoValue.getClass(), dataEntity.getClass(), dslRegistry, synthesizer);
-        }
+        final Assembler assembler = context.newAssembler(dtoValue.getClass(), dataEntity.getClass());
 
         assembler.assembleEntity(dtoValue, dataEntity, converters, entityBeanFactory);
 	}
@@ -337,5 +323,5 @@ class DataPipe implements Pipe {
 		throw new EntityRetrieverNotFoundException(
 				this.meta.getEntityFieldName(), this.meta.getDtoFieldName(), this.meta.getEntityRetrieverKey());
 	}
-	
+
 }

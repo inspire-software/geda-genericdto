@@ -13,7 +13,6 @@ package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.FileClassLoader.BaseDirectoryProvider;
 import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
 import com.inspiresoftware.lib.dto.geda.exception.UnableToCreateInstanceException;
 import com.sun.tools.javac.Main;
@@ -23,12 +22,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 
 /**
- * Sun Java tools implmentation of mwthod synthesizer. 
+ * Sun Java tools implementation of method synthesizer.
  * 
  * @author denispavlov
  * @since 1.1.2
@@ -41,47 +41,42 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 	
 	private static final String JAVA_SOURCE_VERSION = "1.5";
 	
-	private ClassLoader loader;
 	private String baseDir = "";
-	
-	/**
+
+    /**
+     * Sun Java Tools method synthesizer constructor.
+     * Initializes a class loader able to define classes from auto generated
+     * compiled temporary files.
+     *
+     * @param classLoader class loader
+     */
+    public SunJavaToolsMethodSynthesizer(final ClassLoader classLoader) {
+        super(classLoader);
+    }
+
+    /**
 	 * Manual constructor with baseDir specified.
 	 * 
 	 * @param baseDir base dir for creating files
 	 * @throws GeDAException any exceptions during configuration
 	 */
-	public SunJavaToolsMethodSynthesizer(final String baseDir) throws GeDAException {
-		this();
+	public SunJavaToolsMethodSynthesizer(final ClassLoader classLoader, final String baseDir) throws GeDAException {
+		this(classLoader);
 		this.configure("baseDir", baseDir);
 	}
 	
 	/** {@inheritDoc} */
-	@Override
 	protected String getSynthesizerId() {
 		return "suntools";
 	}
-	
-	/**
-	 * Sun Java Tools method synthesizer constructor.
-	 * Initializes a class loader able to define classes from auto generated
-	 * compiled temporary files.
-	 */
-	public SunJavaToolsMethodSynthesizer() {
-		loader = initialiseClassLoader();
-	}
-
-    /**
-     * Hook for providing alternative class loader for this synthesizer.
-     *
-     * @return byte class loader that allows to load class from byte array
-     */
-    protected ClassLoader initialiseClassLoader() {
-        return new FileClassLoader(super.getClassLoader(), this);
-    }
-
 
     /** {@inheritDoc} */
-	public String getBaseDir() {
+    protected SoftReference<ClassLoader> initialiseClassLoaderWeakReference(final ClassLoader classLoader) {
+        return new SoftReference<ClassLoader>(new FileClassLoader(classLoader, this));
+    }
+
+    /** {@inheritDoc} */
+	public String getBaseDir(final String name) {
 		return baseDir;
 	}
 
@@ -104,9 +99,7 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 			} else {
 				this.baseDir = dir + "/";
 			}
-
             LOG.info("Setting class loader base dir to: {}", this.baseDir);
-
             return true;
 		}
 		return super.configure(configuration, value);
@@ -213,14 +206,16 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 			throws UnableToCreateInstanceException {
 		final String readerSimpleName = className.substring(className.lastIndexOf('.') + 1); 
 		final File clazz = new File(this.baseDir + readerSimpleName + ".java");
-		clazz.deleteOnExit();
 		try {
 
             if (LOG.isDebugEnabled()) {
 				LOG.debug("Attempt to create source file: {}", clazz.getAbsolutePath());
 			}
 
-            clazz.createNewFile();
+            if (!clazz.exists()) {
+                clazz.deleteOnExit();
+                clazz.createNewFile();
+            }
 			
             LOG.debug("Source: \n{}\n", source);
 			
@@ -242,7 +237,7 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 		} catch (IOException ioe) {
 			throw new UnableToCreateInstanceException("DataReader", 
 					"Unable to create temporary file for reader source: " 
-					+ this.baseDir + className + ".java", ioe);
+					+ clazz.getAbsolutePath(), ioe);
 		}
 	}
 	
@@ -255,11 +250,5 @@ public class SunJavaToolsMethodSynthesizer extends AbstractPlainTextMethodSynthe
 			});		
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	protected ClassLoader getClassLoader() {
-		return this.loader;
-	}
-	
 	
 }

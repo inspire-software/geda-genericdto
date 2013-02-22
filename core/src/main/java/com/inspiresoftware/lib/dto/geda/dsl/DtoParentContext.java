@@ -7,19 +7,18 @@
  * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
  */
 
-package com.inspiresoftware.lib.dto.geda.assembler.dsl;
+package com.inspiresoftware.lib.dto.geda.dsl;
 
 /**
  * DSL version of {@link com.inspiresoftware.lib.dto.geda.annotations.DtoParent}.
  *
- * @since 2.1.0
+ * @since 3.0.0
  *
  * User: denispavlov
- * Date: 12-09-20
- * Time: 11:08 AM
+ * Date: 13-02-20
+ * Time: 8:46 AM
  */
 public interface DtoParentContext {
-
     /**
      * textual reference to {@link com.inspiresoftware.lib.dto.geda.adapter.EntityRetriever} within
      * converters map that will do the entity retrieval.
@@ -28,5 +27,4 @@ public interface DtoParentContext {
      * @return dto field context
      */
     DtoFieldContext retriever(String retriever);
-
 }
