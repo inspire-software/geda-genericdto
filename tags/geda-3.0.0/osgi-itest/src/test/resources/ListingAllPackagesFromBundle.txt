@@ -1,0 +1,33 @@
+
+    @Test
+    public void test1() throws Exception {
+        assertNotNull(bundleContext);
+        assertNotNull(bundleContext.getBundles());
+        for (final Bundle bundle : bundleContext.getBundles()) {
+            System.out.println("\n\nBUNDLE: " + bundle.getLocation());
+            final ServiceReference ref = bundleContext.getServiceReference(PackageAdmin.class.getName());
+            if (ref != null) {
+                final PackageAdmin pa = (PackageAdmin) bundleContext.getService(ref);
+                final ExportedPackage[] packs = pa.getExportedPackages(bundle);
+                if (packs != null) {
+                    for (final ExportedPackage pack : packs) {
+                        System.out.println("Exporting: " + pack.getName());
+                    }
+                } else {
+                    System.out.println("Exporting: nothing");
+                }
+                final RequiredBundle[] reqs = pa.getRequiredBundles(bundle.getSymbolicName());
+                if (reqs != null) {
+                    for (final RequiredBundle pack : reqs) {
+                        System.out.println("Requires: " + pack.getSymbolicName());
+                    }
+                } else {
+                    System.out.println("Requires: nothing");
+                }
+            }
+            System.out.println("\n\n");
+        }
+        //assertEquals(3, bundleContext.getBundles().length);
+
+        //assertNotNull(service);
+    }

@@ -1,0 +1,103 @@
+/*
+ * This code is distributed under The GNU Lesser General Public License (LGPLv3)
+ * Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright Denis Pavlov 2009
+ * Web: http://www.inspire-software.com
+ * SVN: https://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto
+ */
+
+package com.inspiresoftware.lib.dto.geda.osgi;
+
+import org.apache.felix.framework.Felix;
+import org.apache.felix.framework.util.FelixConstants;
+import org.osgi.framework.*;
+
+import java.io.InputStream;
+import java.util.*;
+
+import static org.ops4j.pax.tinybundles.core.TinyBundles.*;
+
+/**
+ * User: denispavlov
+ * Date: 13-02-19
+ * Time: 12:05 PM
+ */
+public class FelixRunner {
+
+
+    private static InputStream createSLF4JDependencyBundle() {
+        return bundle()
+                .add(TinyBundlesActivator.class)
+                .set( Constants.BUNDLE_SYMBOLICNAME, "geda.slf4j.bundle" )
+                .set( Constants.EXPORT_PACKAGE, "org.slf4j,org.slf4j.*" )
+                .set( "Private-Package", "org.slf4j,org.slf4j.*" )
+                .set( Constants.IMPORT_PACKAGE, "org.osgi.framework" )
+                .set(Constants.BUNDLE_ACTIVATOR, TinyBundlesActivator.class.getName())
+                .build(withBnd());
+    }
+
+    private static InputStream createJavassistDependencyBundles() {
+        return bundle()
+                .add(TinyBundlesActivator.class)
+                .set( Constants.BUNDLE_SYMBOLICNAME, "geda.javassist.bundle" )
+                .set( Constants.EXPORT_PACKAGE, "javassist.*" )
+                .set( "Private-Package", "javassist.*" )
+                .set( Constants.IMPORT_PACKAGE, "org.osgi.framework,org.slf4j;resolution:=optional" )
+                .set(Constants.BUNDLE_ACTIVATOR, TinyBundlesActivator.class.getName())
+                .build(withBnd());
+    }
+
+    public static void main(String[] args)
+            throws Exception {
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
+                "some.module.i.dont.know; version=1.0.0");
+
+        TinyBundlesActivator activator = new TinyBundlesActivator();
+
+        List<Object> list = new LinkedList<Object>();
+        list.add(activator);
+        map.put(FelixConstants.SYSTEMBUNDLE_ACTIVATORS_PROP, list);
+        map.put(FelixConstants.FRAMEWORK_STORAGE_CLEAN, FelixConstants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+
+        Felix felix = new Felix(map);
+
+        System.out.println("starting OSGI...");
+        felix.start();
+
+        Bundle slf4j = felix.getBundleContext().installBundle("file:./geda.slf4j.bundle.jar", createSLF4JDependencyBundle());
+        System.out.println("starting bundle " + slf4j.getLocation());
+        slf4j.start();
+
+        Bundle javassist = felix.getBundleContext().installBundle("file:./geda.javassist.bundle.jar", createJavassistDependencyBundles());
+        System.out.println("starting bundle " + javassist.getLocation());
+        javassist.start();
+
+        Set<String> inUse = new HashSet<String>();
+        for (ServiceReference sr : felix.getServicesInUse()) {
+            inUse.add(sr.toString());
+        }
+        for (ServiceReference sr : felix.getRegisteredServices()) {
+            String flag = (inUse.contains(sr.toString()) ? "[in use]" : "[      ]");
+            System.out.println("+ registered service: " + flag + " " + sr.toString());
+        }
+
+
+        System.out.println("uninstalling bundle " + javassist.getLocation());
+        javassist.stop();
+        javassist.uninstall();
+
+        System.out.println("uninstalling bundle " + javassist.getLocation());
+        slf4j.stop();
+        slf4j.uninstall();
+
+        System.out.println("stopping...");
+        felix.stop();
+        felix.waitForStop(1000);
+    }
+
+
+}
