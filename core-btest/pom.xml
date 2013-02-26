@@ -18,7 +18,7 @@
     </parent>
     <artifactId>geda.core-btest</artifactId>
     <name>DTO utilities package core integration and benchmark tests</name>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.1-SNAPSHOT</version>
     <description>Provides several benchmark tests for core package</description>
     <packaging>jar</packaging>
     <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
