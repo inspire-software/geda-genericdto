@@ -267,10 +267,7 @@ public final class DTOAssembler {
      * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
      * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
      * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
-     *
-     * @deprecated use version with classloader argument
      */
-    @Deprecated
     public static Assembler newCustomAssembler(
             final Class< ? > dto,
             final Class< ? > entity,
@@ -342,10 +339,7 @@ public final class DTOAssembler {
      * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
      * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
      * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
-     *
-     * @deprecated use version with classloader argument
      */
-    @Deprecated
     public static Assembler newCustomAssembler(
                 final Class< ? > dto,
                 final Class< ? > entity,
@@ -421,10 +415,7 @@ public final class DTOAssembler {
      * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
      * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
      * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
-     *
-     * @deprecated use version with classloader argument
      */
-    @Deprecated
     public static Assembler newCustomCompositeAssembler(
                 final Class< ? > dto,
                 final Class< ? >[] entities,
@@ -487,10 +478,7 @@ public final class DTOAssembler {
      * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
      * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
      * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
-     *
-     * @deprecated use version with classloader argument
      */
-    @Deprecated
     public static Assembler newAssembler(
                 final Class< ? > dto,
                 final Class< ? > entity)
@@ -559,10 +547,7 @@ public final class DTOAssembler {
      * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
      * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
      * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
-     *
-     * @deprecated use version with classloader argument
      */
-    @Deprecated
     public static Assembler newAssembler(
                 final Class< ? > dto,
                 final Class< ? > entity,
@@ -635,10 +620,7 @@ public final class DTOAssembler {
      * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
      * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
      * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
-     *
-     * @deprecated use version with classloader argument
      */
-    @Deprecated
     public static Assembler newCompositeAssembler(
                 final Class< ? > dto,
                 final Class< ? >[] entities)
@@ -706,10 +688,7 @@ public final class DTOAssembler {
      * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
      * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
      * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
-     *
-     * @deprecated use version with classloader argument
      */
-    @Deprecated
     public static Assembler newCustomAssembler(
                 final Class< ? > dto,
                 final Object synthesizer)
@@ -778,10 +757,7 @@ public final class DTOAssembler {
      * @throws InspectionPropertyNotFoundException in case a binding field cannot be found
      * @throws UnableToCreateInstanceException if an instance of an auto created class (one that is directly created by GeDA) cannot be instantiated
      * @throws InspectionScanningException general error that may occur during scanning a class for fields and method descriptors
-     *
-     * @deprecated use version with classloader argument
      */
-    @Deprecated
     public static Assembler newAssembler(
                 final Class< ? > dto)
             throws AnnotationMissingAutobindingException, AutobindingClassNotFoundException, InspectionScanningException,
