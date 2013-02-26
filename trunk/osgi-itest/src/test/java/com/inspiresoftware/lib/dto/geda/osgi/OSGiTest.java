@@ -17,11 +17,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
+import org.ops4j.pax.exam.ProbeBuilder;
+import org.ops4j.pax.exam.TestProbeBuilder;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerMethod;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
@@ -46,7 +51,7 @@ public class OSGiTest {
     private BundleContext bundleContext;
 
     @Configuration
-    public Option[] config() throws Exception{
+    public Option[] configFelix() throws Exception{
 
         return options(
                 cleanCaches(),
@@ -57,8 +62,22 @@ public class OSGiTest {
         );
     }
 
+    @ProbeBuilder
+    public TestProbeBuilder probeConfiguration(TestProbeBuilder probe) {
+        return probe;
+    }
+
     @Test
     public void testServicesAreSetup() throws Exception {
+
+        final Logger log = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+
+        String vendor = bundleContext.getBundle(0).getHeaders().get(Constants.BUNDLE_VENDOR);
+        if (vendor == null) {
+            vendor = bundleContext.getBundle(0).getHeaders().get(Constants.BUNDLE_SYMBOLICNAME);
+        }
+        String version = bundleContext.getBundle(0).getHeaders().get(Constants.BUNDLE_VERSION);
+        log.info("\n\nOSGi Framework : {} - {} \n\n", vendor, version);
 
         final ServiceReference<GeDAFacade> facadeReference =
                 bundleContext.getServiceReference(GeDAFacade.class);

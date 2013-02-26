@@ -359,6 +359,8 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
     /** {@inheritDoc} */
     public void releaseResources() {
         synthesizer.releaseResources();
-        dslRegistry.releaseResources();
+        if (dslRegistry != null) {
+            dslRegistry.releaseResources();
+        }
     }
 }
