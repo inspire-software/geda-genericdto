@@ -36,7 +36,7 @@ public interface DisposableContainer {
      * Call this method just before you plan to dispose of the container object
      * itself.
      *
-     * Note that this is a cascading method, meaning that it this container
+     * Note that this is a cascading method, meaning that if this container
      * contains other disposable containers within then releaseResources()
      * method should be called for those elements as well.
      */

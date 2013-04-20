@@ -186,10 +186,16 @@ public class OSGiTest {
         final ExtensibleBeanFactory beanFactory = facade.createBeanFactory(this.getClass().getClassLoader());
         final DTOSupportAnnotationsService annotationsService = facade.getAnnService(this.getClass().getClassLoader());
 
-        beanFactory.registerDto("SimpleDTO", "com.inspiresoftware.lib.dto.geda.osgi.test.SimpleDTOClass");
-        beanFactory.registerDto("SimpleEntity", "com.inspiresoftware.lib.dto.geda.osgi.test.SimpleEntityClass");
-        beanFactory.registerDto("ComplexDTO", "com.inspiresoftware.lib.dto.geda.osgi.test.ComplexDTOClass");
-        beanFactory.registerDto("ComplexEntity", "com.inspiresoftware.lib.dto.geda.osgi.test.ComplexEntityClass");
+        beanFactory.registerDto("SimpleDTO",
+                "com.inspiresoftware.lib.dto.geda.osgi.test.SimpleDTOClass");
+        beanFactory.registerEntity("SimpleEntity",
+                "com.inspiresoftware.lib.dto.geda.osgi.test.SimpleEntityClass",
+                "com.inspiresoftware.lib.dto.geda.osgi.test.SimpleEntity");
+        beanFactory.registerDto("ComplexDTO",
+                "com.inspiresoftware.lib.dto.geda.osgi.test.ComplexDTOClass");
+        beanFactory.registerEntity("ComplexEntity",
+                "com.inspiresoftware.lib.dto.geda.osgi.test.ComplexEntityClass",
+                "com.inspiresoftware.lib.dto.geda.osgi.test.ComplexEntity");
         annotationsService.registerAdapter("EqualsByString", new EqualsByStringMatcher());
 
         final SimpleEntity inner = (SimpleEntity) beanFactory.get("SimpleEntity");
