@@ -39,9 +39,10 @@ public interface DtoEntityContext {
      * Register bean key alias for Entity factory.
      *
      * @param beanKey associate a bean key with this Entity.
+     * @param representative interface that best describes entity class (or set to null if no interface)
      * @return mapping context
      */
-    DtoEntityContext alias(String beanKey);
+    DtoEntityContext alias(String beanKey, Class representative);
 
     /**
      * Add DTO field mapping on DTO object. Only single field

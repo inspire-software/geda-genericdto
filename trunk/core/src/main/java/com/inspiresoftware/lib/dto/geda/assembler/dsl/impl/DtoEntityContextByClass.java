@@ -52,11 +52,20 @@ public class DtoEntityContextByClass implements DtoEntityContext {
     }
 
     /** {@inheritDoc} */
-    public DtoEntityContext alias(final String beanKey) {
+    public DtoEntityContext alias(final String beanKey, final Class representative) {
         if (beanFactory == null) {
             throw new GeDARuntimeException("Alias for " + beanKey + " cannot be registered. Bean factory must be specified. Use constructor DefaultDSLRegistry(BeanFactory)");
         }
-        this.beanFactory.registerDto(beanKey, dtoClass.getCanonicalName());
+        if (entityClass.isInterface()) {
+            throw new GeDARuntimeException("No alias for " + beanKey + " as it is mapped to entity interface");
+        }
+        if (representative == null) {
+            this.beanFactory.registerEntity(beanKey, entityClass.getCanonicalName(), entityClass.getCanonicalName());
+        } else if (representative.isInterface() && representative.isAssignableFrom(entityClass)) {
+            this.beanFactory.registerEntity(beanKey, entityClass.getCanonicalName(), representative.getCanonicalName());
+        } else {
+            throw new GeDARuntimeException("Alias for " + beanKey + " has invalid interface for given entity class");
+        }
         return this;
     }
 
