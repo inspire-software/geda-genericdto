@@ -10,6 +10,7 @@
 
 package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
 
+import com.inspiresoftware.lib.dto.geda.assembler.SynthesizerUtils;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.Cache;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataReader;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DataWriter;
@@ -40,7 +41,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author DPavlov
  * @since 1.1.2
  */
-public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
+public abstract class AbstractMethodSynthesizer extends SynthesizerUtils implements MethodSynthesizer {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractMethodSynthesizer.class);
 	
@@ -302,21 +303,16 @@ public abstract class AbstractMethodSynthesizer implements MethodSynthesizer {
 	protected final ReturnTypeContext getReturnTypeContext(final String readerClassName, final Type sourceClassGetterMethodReturnType)
 			throws GeDARuntimeException {
 
-		if (sourceClassGetterMethodReturnType instanceof Class) {
-			final Class< ? > rcl = ((Class< ? >) sourceClassGetterMethodReturnType);
-			if (rcl.isPrimitive()) {
-				return new ReturnTypeContext(rcl,
-						PRIMITIVE_TO_WRAPPER.get(rcl.getCanonicalName()), rcl.getCanonicalName());
-			} 
-			return new ReturnTypeContext(rcl, rcl.getCanonicalName(), null);
-		} else if (sourceClassGetterMethodReturnType instanceof ParameterizedType) {
-			return new ReturnTypeContext((Class< ? >) ((ParameterizedType) sourceClassGetterMethodReturnType).getRawType(),
-					((Class< ? >) ((ParameterizedType) sourceClassGetterMethodReturnType).getRawType()).getCanonicalName(),
-					null);
-		} else if (sourceClassGetterMethodReturnType instanceof TypeVariable) {
-			return new ReturnTypeContext(Object.class, Object.class.getCanonicalName(), null); // generics
-		}
-		throw new GeDARuntimeException("Unable to determine correct return type from getter method in class: " + readerClassName);
+        try {
+            final Class rcl = getClassForType(sourceClassGetterMethodReturnType);
+            if (rcl.isPrimitive()) {
+                return new ReturnTypeContext(rcl,
+                        PRIMITIVE_TO_WRAPPER.get(rcl.getCanonicalName()), rcl.getCanonicalName());
+            }
+            return new ReturnTypeContext(rcl, rcl.getCanonicalName(), null);
+        } catch (GeDARuntimeException gre) {
+            throw new GeDARuntimeException("Unable to determine correct return type from getter method in class: " + readerClassName, gre);
+        }
 	}
 	
 	/** {@inheritDoc} */

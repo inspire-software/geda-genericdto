@@ -79,8 +79,17 @@ class DataPipeBuilder extends BasePipeBuilder<FieldPipeMetadata> {
 
 		if (meta.isChild()) {
 			final Method parentGet = dtoFieldDesc.getReadMethod();
-			final Class returnType = (Class) parentGet.getGenericReturnType();
-			final PropertyDescriptor[] dtoSubPropertyDescriptors = PropertyInspector.getPropertyDescriptorsForClass(returnType);
+
+            Class returnTypeClass;
+            try {
+                returnTypeClass = PropertyInspector.getClassForType(parentGet.getGenericReturnType());
+            } catch (GeDARuntimeException gre) {
+                throw new GeDARuntimeException(
+                        "Generics tree is too complex only rawTypes are supported class: " + dtoClass.getSimpleName()
+                                + ", method: " + parentGet.getName(), gre);
+            }
+
+            final PropertyDescriptor[] dtoSubPropertyDescriptors = PropertyInspector.getPropertyDescriptorsForClass(returnTypeClass);
 			final PropertyDescriptor dtoParentDesc = PropertyInspector.getDtoPropertyDescriptorForField(
 					dtoClass, meta.getParentEntityPrimaryKeyField(), dtoSubPropertyDescriptors);
 			dtoParentReadMethod = context.getMethodSynthesizer().synthesizeReader(dtoParentDesc);

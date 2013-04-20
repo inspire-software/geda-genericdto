@@ -22,6 +22,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestDto18Cla
 import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestDto18aClass;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestEntity18Class;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.TestEntity18aClass;
+import com.inspiresoftware.lib.dto.geda.assembler.examples.generics.extend.*;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.nested.*;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.simple.*;
 import com.inspiresoftware.lib.dto.geda.assembler.examples.virtual.*;
@@ -714,8 +715,145 @@ public class DTOAssemblerMappingTest {
 		
 		
 	}
-	
-	/**
+
+    /**
+     * Test that assembler copes with generic DTO and Entity types that
+     * are extending other generic types.
+     *
+     * @throws GeDAException exception
+     */
+    @Test
+    public void testDtoEntityClassGenericExtendMapping() throws Exception {
+
+        final TestDtoCatalogClass<TestDtoCodeClass> dto = new TestDtoCatalogClass<TestDtoCodeClass>();
+        final TestEntityCatalog<TestEntityCatalogCode> entity = new TestEntityCatalogClass<TestEntityCatalogCode>();
+        final TestEntityCatalogCode entityCodePrime = new TestEntityCatalogCodeClass();
+        final TestEntityCatalogCode entityCodeAdditional = new TestEntityCatalogCodeClass();
+
+
+        entity.setId("ID-ABC");
+        entityCodePrime.setCatalog(entity);
+        entityCodePrime.setSectionName("AdvancedGenerics");
+        entityCodePrime.setCode("CODE-AG1");
+        entityCodePrime.setId("ID-123");
+        entityCodeAdditional.setCatalog(entity);
+        entityCodeAdditional.setSectionName("DtoTrandformations");
+        entityCodeAdditional.setCode("CODE-DT1");
+        entityCodeAdditional.setId("ID-235");
+        entity.setType(entityCodePrime);
+        entity.setCodes(new ArrayList<TestEntityCatalogCode>(Arrays.asList(entityCodePrime, entityCodeAdditional)));
+
+        final Assembler assembler = DTOAssembler.newCustomAssembler(dto.getClass(), entity.getClass(), synthesizer);
+
+        final Map<String, Object> adapters = new HashMap<String, Object>();
+        adapters.put("CatalogCodeMatcher", new CatalogCodeMatcher());
+
+        assembler.assembleDto(dto, entity, adapters, new BeanFactory() {
+            public Class getClazz(final String entityBeanKey) {
+                if ("DtoCatalogCode".equals(entityBeanKey)) {
+                    return TestDtoCatalogCodeClass.class;
+                } else if ("DtoCode".equals(entityBeanKey)) {
+                    return TestDtoCodeClass.class;
+                } else if ("DtoCatalog".equals(entityBeanKey)) {
+                    return TestDtoCatalogClass.class;
+                }
+                fail("Unknown DTO key: " + entityBeanKey);
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
+                if ("DtoCatalogCode".equals(entityBeanKey)) {
+                    return new TestDtoCatalogCodeClass();
+                } else if ("DtoCode".equals(entityBeanKey)) {
+                    return new TestDtoCodeClass();
+                } else if ("DtoCatalog".equals(entityBeanKey)) {
+                    return new TestDtoCatalogClass();
+                }
+                fail("Unknown DTO key: " + entityBeanKey);
+                return null;
+            }
+        });
+
+        assertEquals("ID-ABC", dto.getId());
+
+        final TestDtoCodeClass dtoType = dto.getType();
+        assertNotNull(dtoType);
+        assertEquals("ID-123", dtoType.getId());
+        assertEquals("CODE-AG1", dtoType.getCode());
+
+        final Collection<TestDtoCodeClass> dtoCodes = dto.getCodes();
+        assertNotNull(dtoCodes);
+        assertFalse(dtoCodes.isEmpty());
+        // The collection is actually an ArrayList, so we will cheat a little
+        final List<TestDtoCodeClass> dtoCodesAsList = (List) dtoCodes;
+        assertEquals(2, dtoCodesAsList.size());
+
+        final TestDtoCodeClass dtoCode1 = dtoCodesAsList.get(0);
+        assertNotNull(dtoCode1);
+        assertEquals("ID-123", dtoCode1.getId());
+        assertEquals("CODE-AG1", dtoCode1.getCode());
+
+        final TestDtoCodeClass dtoCode2 = dtoCodesAsList.get(1);
+        assertNotNull(dtoCode2);
+        assertEquals("ID-235", dtoCode2.getId());
+        assertEquals("CODE-DT1", dtoCode2.getCode());
+
+        final TestEntityCatalog<TestEntityCatalogCode> entityCopy = new TestEntityCatalogClass<TestEntityCatalogCode>();
+
+        assembler.assembleEntity(dto, entityCopy, adapters, new BeanFactory() {
+            public Class getClazz(final String entityBeanKey) {
+                if ("CatalogCode".equals(entityBeanKey)) {
+                    return TestEntityCatalogCodeClass.class;
+                } else if ("Catalog".equals(entityBeanKey)) {
+                    return TestEntityCatalogClass.class;
+                }
+                fail("Unknown Entity key: " + entityBeanKey);
+                return null;
+            }
+
+            public Object get(final String entityBeanKey) {
+                if ("CatalogCode".equals(entityBeanKey)) {
+                    return new TestEntityCatalogCodeClass();
+                } else if ("Catalog".equals(entityBeanKey)) {
+                    return new TestEntityCatalogClass();
+                }
+                fail("Unknown Entity key: " + entityBeanKey);
+                return null;
+            }
+        });
+
+        assertEquals("ID-ABC", entityCopy.getId());
+
+        final TestEntityCatalogCode entityCopyType = entityCopy.getType();
+        assertNotNull(entityCopyType);
+
+        assertEquals("ID-123", entityCopyType.getId());
+        assertEquals("CODE-AG1", entityCopyType.getCode());
+        assertNull(entityCopyType.getSectionName()); // This property is not part of mapping to prevent recursion
+        assertNull(entityCopyType.getCatalog()); // This property is not part of mapping to prevent recursion
+
+        final Collection<TestEntityCatalogCode> entityCopyCodes = entityCopy.getCodes();
+        assertNotNull(entityCopyCodes);
+        assertFalse(entityCopyCodes.isEmpty());
+        // The collection is actually an ArrayList, so we will cheat a little
+        final List<TestEntityCatalogCode> entityCopyCodesAsList = (List) entityCopyCodes;
+        assertEquals(2, entityCopyCodesAsList.size());
+
+        final TestEntityCatalogCode entityCopyCode1 = entityCopyCodesAsList.get(0);
+        assertEquals("ID-123", entityCopyCode1.getId());
+        assertEquals("CODE-AG1", entityCopyCode1.getCode());
+        assertNull(entityCopyCode1.getSectionName()); // This property is not part of mapping to prevent recursion
+        assertNull(entityCopyCode1.getCatalog()); // This property is not part of mapping to prevent recursion
+
+        final TestEntityCatalogCode entityCopyCode2 = entityCopyCodesAsList.get(1);
+        assertEquals("ID-235", entityCopyCode2.getId());
+        assertEquals("CODE-DT1", entityCopyCode2.getCode());
+        assertNull(entityCopyCode2.getSectionName()); // This property is not part of mapping to prevent recursion
+        assertNull(entityCopyCode2.getCatalog()); // This property is not part of mapping to prevent recursion
+
+    }
+
+    /**
 	 * Test that assembler copes with virtual field mapping.
 	 * 
 	 * @throws GeDAException exception

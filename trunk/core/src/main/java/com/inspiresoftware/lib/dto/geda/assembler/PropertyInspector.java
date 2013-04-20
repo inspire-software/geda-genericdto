@@ -22,6 +22,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +52,7 @@ final class PropertyInspector {
 		throws InspectionScanningException {
 		
 		final Method entityFieldRead = descriptor.getReadMethod();
-		final Class returnType = (Class) entityFieldRead.getGenericReturnType();
+		final Class returnType = getClassForType(entityFieldRead.getGenericReturnType());
 		return getPropertyDescriptorsForClass(returnType);
 		
 	}
@@ -169,6 +170,31 @@ final class PropertyInspector {
 		
 		throw new InspectionPropertyNotFoundException(dtoClass.getCanonicalName(), dtoFieldName);
 	}
+
+    /**
+     * Determine the actual class for this type.
+     *
+     * @param type generic type
+     * @return class for this generic type
+     *
+     * @throws GeDARuntimeException if generics tree is too complex
+     */
+    public static Class getClassForType(Type type) throws GeDARuntimeException {
+        if (type instanceof Class) {
+            return (Class) type;
+        } else if (type instanceof ParameterizedType) {
+            final Object rawType = ((ParameterizedType) type).getRawType();
+            if (rawType instanceof Class) {
+                return (Class) rawType; // typed generic (e.g. MyClass<T> getMyClass())
+            }
+        } else if (type instanceof TypeVariable) {
+            final Object[] bounds = ((TypeVariable) type).getBounds();
+            if (bounds != null && bounds.length > 0 && bounds[0] instanceof Class) {
+                return (Class) bounds[0]; // variable generics  (e.g. T getMyClass())
+            }
+        }
+        throw new GeDARuntimeException("Unable to determine correct class for type: " + type);
+    }
 
 	
 }
