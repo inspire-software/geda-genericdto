@@ -14,7 +14,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                            http://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema
-                           http://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema/geda-spring-integration-1.0.xsd">
+                           http://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema/geda-spring-integration-annotation-3.0.0.xsd">
 
     <geda:annotation-driven dto-factory="dtoFactory"
                             dto-adapters-registrar="adapterRegistrar"
