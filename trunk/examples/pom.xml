@@ -67,10 +67,13 @@
             <version>3.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <!--
+                Need to use this as compile to use asserts in Run.main(args)
+            -->
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.6</version>
-            <scope>test</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -82,7 +85,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.5.8</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

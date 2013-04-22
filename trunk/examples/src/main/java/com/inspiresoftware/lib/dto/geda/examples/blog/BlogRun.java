@@ -22,30 +22,65 @@ import com.inspiresoftware.lib.dto.geda.examples.blog.service.UserService;
 import com.inspiresoftware.lib.dto.geda.examples.blog.service.impl.BlogBeanFactory;
 import com.inspiresoftware.lib.dto.geda.examples.blog.service.impl.UserDAOImpl;
 import com.inspiresoftware.lib.dto.geda.examples.blog.service.impl.UserServiceImpl;
-import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
- * .
- * <p/>
  * User: denispavlov
- * Date: Jul 1, 2012
- * Time: 1:01:07 PM
+ * Date: 13-04-22
+ * Time: 3:30 PM
  */
-public class BlogExampleRun {
+public class BlogRun {
 
-    private final UserDAO dao = new UserDAOImpl();
-    private final BeanFactory bf = new BlogBeanFactory();
-    private final UserService srv = new UserServiceImpl(dao, bf);
+    private final UserDAO dao;
+    private final UserService srv;
 
-    @Test
-    public void testBlogExample() {
+    public BlogRun(final UserDAO dao, final UserService srv) {
+        this.dao = dao;
+        this.srv = srv;
+    }
 
-        this.setupUsers();
+    /*
+     * Select user Bob.
+     */
+    public BaseUserDTO selectBob(final List<BaseUserDTO> list) {
+        for (final BaseUserDTO user : list) {
+            if ("Bob".equals(user.getUsername())) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    /*
+     * Setup some dummy users with interlinked data.
+     */
+    public void setupUsers() {
+
+        final User bob = dao.create("Bob");
+
+        final UserEntry entry = bob.createEntry();
+        entry.setTitle("GeDA");
+        entry.setBody("Hey all, This GeDA stuff really works!!!");
+
+        final User john = dao.create("John");
+        final UserEntryReply reply = entry.createReply(john);
+        reply.getReplyEntry().setBody("Awesome!");
+
+    }
+
+    /**
+     * Running example of services that use GeDA behind the scenes to transfer data
+     * between DTO and Entities.
+     *
+     * This example demonstrates some of the issues with recursive object references and
+     * how to get around them by limiting your DTO data size.
+     */
+    public void assembleUsersAndBlogEntries() {
+
+        setupUsers();
 
         final List<BaseUserDTO> list = srv.list();
         assertNotNull(list);
@@ -91,39 +126,46 @@ public class BlogExampleRun {
 
     }
 
-    private BaseUserDTO selectBob(final List<BaseUserDTO> list) {
-        for (final BaseUserDTO user : list) {
-            if ("Bob".equals(user.getUsername())) {
-                return user;
-            }
-        }
-        return null;
-    }
+    /**
+     * Running example of services that use GeDA behind the scenes to transfer data
+     * between DTO and Entities.
+     *
+     * This example demonstrates how you can filter out some of the data by providing
+     * parent DTO class as a filter.
+     */
+    public void assembleUsersAndBlogEntriesWithFilter() {
 
-    private void setupUsers() {
-
-        final User bob = dao.create("Bob");
-
-        final UserEntry entry = bob.createEntry();
-        entry.setTitle("GeDA");
-        entry.setBody("Hey all, This GeDA stuff really works!!!");
-
-        final User john = dao.create("John");
-        final UserEntryReply reply = entry.createReply(john);
-        reply.getReplyEntry().setBody("Awesome!");
-
-    }
-
-    @Test
-    public void testBlogExampleListFilter() {
-
-        this.setupUsers();
+        setupUsers();
 
         // Here we load UserDTO but we will be using BaseUserDTO as
         // assembler class so we do not populate the object fully
         final List<UserDTO> list = srv.list("BaseUserDTO");
         assertNotNull(list);
         assertEquals(list.size(), 2);
+        assertNull(list.get(0).getEntries());
+
+        // Here we load UserDTO but we will be using BaseUserDTO as
+        // assembler class so we do not populate the object fully
+        final List<UserDTO> listFull = srv.list("UserDTO");
+        assertNotNull(listFull);
+        assertEquals(listFull.size(), 2);
+        assertNotNull(listFull.get(0).getEntries());
+        assertEquals(listFull.get(0).getEntries().size(), 1);
+
+
+    }
+
+    public static void main(String[] args) {
+
+        final UserDAO dao = new UserDAOImpl();
+        final BeanFactory bf = new BlogBeanFactory();
+        final UserService srv = new UserServiceImpl(dao, bf);
+
+        final BlogRun run = new BlogRun(dao, srv);
+
+        run.setupUsers();
+        run.assembleUsersAndBlogEntries();
+        run.assembleUsersAndBlogEntriesWithFilter();
 
     }
 }
