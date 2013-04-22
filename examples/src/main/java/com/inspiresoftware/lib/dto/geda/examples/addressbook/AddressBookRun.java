@@ -15,33 +15,31 @@ import com.inspiresoftware.lib.dto.geda.examples.addressbook.service.AddressBook
 import com.inspiresoftware.lib.dto.geda.examples.addressbook.service.PersonDAO;
 import com.inspiresoftware.lib.dto.geda.examples.addressbook.service.impl.AddressBookServiceImpl;
 import com.inspiresoftware.lib.dto.geda.examples.addressbook.service.impl.PersonDAOImpl;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 /**
- * .
- * <p/>
  * User: denispavlov
- * Date: Aug 30, 2012
- * Time: 12:49:58 PM
+ * Date: 13-04-22
+ * Time: 3:24 PM
  */
-public class AddressBookExampleRun {
+public class AddressBookRun {
 
     private PersonDAO personDAO;
     private AddressBookService service;
 
+    public AddressBookRun(final PersonDAO personDAO, final AddressBookService service) {
+        this.personDAO = personDAO;
+        this.service = service;
+    }
 
-    @Before
-    public void setupPeopleAndAddresses() {
-
-        personDAO = new PersonDAOImpl();
-        service = new AddressBookServiceImpl(personDAO);
-
-
+    /**
+     * Running example of services that use GeDA behind the scenes to transfer data
+     * between DTO and Entities.
+     */
+    public void runSetupData() {
         final Person irene = personDAO.addPerson("Irene", "Adler");
 
         final Person mycroft = personDAO.addPerson("Mycroft", "Holmes");
@@ -53,11 +51,9 @@ public class AddressBookExampleRun {
         final Person john = personDAO.addPerson("John H.", "Watson");
 
         personDAO.addAddress(john, "221B Baker str", "London", "NW1 6XE", "GB");
-
     }
 
-    @Test
-    public void testAssembleContactsWithAddress() {
+    public void assembleContactsWithAddress() {
 
         final List<ContactDTO> contacts = service.getContactsByName("John H.");
         assertNotNull(contacts);
@@ -75,8 +71,7 @@ public class AddressBookExampleRun {
 
     }
 
-    @Test
-    public void testAssembleContactsWithoutAddress() {
+    public void assembleContactsWithoutAddress() {
 
         final List<ContactDTO> contacts = service.getContactsByName("Irene");
         assertNotNull(contacts);
@@ -92,6 +87,20 @@ public class AddressBookExampleRun {
         assertNull(irene.getCountry());
 
 
+    }
+
+
+
+    public static void main(String[] args) {
+
+        final PersonDAO personDAO = new PersonDAOImpl();
+        final AddressBookService service = new AddressBookServiceImpl(personDAO);
+
+        final AddressBookRun run = new AddressBookRun(personDAO, service);
+
+        run.runSetupData();
+        run.assembleContactsWithAddress();
+        run.assembleContactsWithoutAddress();
     }
 
 }

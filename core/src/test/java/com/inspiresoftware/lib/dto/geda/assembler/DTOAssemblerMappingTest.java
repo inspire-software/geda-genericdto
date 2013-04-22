@@ -144,7 +144,7 @@ public class DTOAssemblerMappingTest {
 	}
 	
 	/**
-	 * Test that Dto that has less fields that entity corretly maps them.
+	 * Test that Dto that has less fields that entity correctly maps them.
 	 * 
 	 * @throws GeDAException exception
 	 */
