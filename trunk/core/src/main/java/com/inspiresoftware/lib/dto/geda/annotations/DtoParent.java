@@ -40,6 +40,8 @@ public @interface DtoParent {
 	/**
 	 * textual reference to {@link com.inspiresoftware.lib.dto.geda.adapter.EntityRetriever} within 
 	 * converters map that will do the entity retrieval.
+     *
+     * Requires adapters parameter during assembly.
 	 */
 	String retriever() default "retriever";
 		

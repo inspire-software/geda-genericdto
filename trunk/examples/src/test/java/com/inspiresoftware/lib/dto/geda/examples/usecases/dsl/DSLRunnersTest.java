@@ -54,5 +54,17 @@ public class DSLRunnersTest {
 
     }
 
+    @Test
+    public void testWithFieldsAuto() throws Exception {
 
+        new RunDSLWithSameFields().withSameFieldsByKey();
+
+    }
+
+    @Test
+    public void testWithFieldsAutoAndExclusions() throws Exception {
+
+        new RunDSLWithSameFields().withSameFieldsByKeyExcluding();
+
+    }
 }

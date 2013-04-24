@@ -27,7 +27,7 @@ public interface DtoContext {
     /**
      * Register bean key alias for Dto factory.
      *
-     * @param beanKey associate a bean key with this DTO.
+     * @param beanKey associate a bean key with this DTO. (requires BeanFactory for DSL registry).
      * @return mapping context
      */
     DtoContext alias(String beanKey);
@@ -51,7 +51,7 @@ public interface DtoContext {
     /**
      * Create DTO to Entity relation context.
      *
-     * @param beanKey bean key for entity.
+     * @param beanKey bean key for entity. (requires BeanFactory for DSL registry).
      * @return mapping context
      */
     DtoEntityContext forEntity(String beanKey);
@@ -96,7 +96,7 @@ public interface DtoContext {
      *      dtoCtx.forEntity("myEntity") == dtoCtx.forEntity(MyAnotherEntity.class)
      *
      * @param ctx already existing context for this DTO
-     * @param beanKey bean key for another class to use ctx for
+     * @param beanKey bean key for another class to use ctx for. (requires BeanFactory for DSL registry).
      * @return ctx
      */
     DtoEntityContext useContextFor(DtoEntityContext ctx, String beanKey);

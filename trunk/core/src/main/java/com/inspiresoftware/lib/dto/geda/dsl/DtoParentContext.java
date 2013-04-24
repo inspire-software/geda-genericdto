@@ -23,7 +23,7 @@ public interface DtoParentContext {
      * textual reference to {@link com.inspiresoftware.lib.dto.geda.adapter.EntityRetriever} within
      * converters map that will do the entity retrieval.
      *
-     * @param retriever retriever key
+     * @param retriever retriever key (requires adapters parameter during assembly)
      * @return dto field context
      */
     DtoFieldContext retriever(String retriever);

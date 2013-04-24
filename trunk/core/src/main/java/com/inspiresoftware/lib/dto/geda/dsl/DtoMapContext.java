@@ -64,7 +64,7 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      *
      * This setting has priority over the {@link #entityMapOrCollectionClass(Class)} setting.
      *
-     * @param entityMapOrCollectionClassKey  entity map or collection key
+     * @param entityMapOrCollectionClassKey  entity map or collection key ((requires BeanFactory parameter during assembly))
      * @return dto field context
      */
     DtoMapContext entityMapOrCollectionClassKey(String entityMapOrCollectionClassKey);
@@ -88,7 +88,7 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      *
      * This setting has priority over the {@link #dtoMapClass(Class)} setting.
      *
-     * @param dtoMapClassKey dto map class key
+     * @param dtoMapClassKey dto map class key ((requires BeanFactory parameter during assembly))
      * @return dto field context
      */
     DtoMapContext dtoMapClassKey(String dtoMapClassKey);
@@ -102,7 +102,7 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      * for the Item bean will be the last in this chain (e.g.
      * { "beanWithMyMapProperty", "beanMapItem" }).
      *
-     * @param entityBeanKeys bean keys
+     * @param entityBeanKeys bean keys ((requires BeanFactory parameter during assembly))
      * @return dto field context
      */
     DtoMapContext entityBeanKeys(String... entityBeanKeys);
@@ -114,7 +114,7 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      * DTO object bean factory key for creating new DTO map item object instances.
      * To specify the collection instance class use #dtoMapClass or #dtoMapClassKey.
      *
-     * @param dtoBeanKey bean key
+     * @param dtoBeanKey bean key ((requires BeanFactory parameter during assembly))
      * @return dto field context
      */
     DtoMapContext dtoBeanKey(String dtoBeanKey);
@@ -145,7 +145,7 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      *
      * This setting has priority over the {@link #entityGenericType(Class)} setting.
      *
-     * @param entityGenericTypeKey entity generic type key
+     * @param entityGenericTypeKey entity generic type key ((requires BeanFactory parameter during assembly))
      * @return dto field context
      */
     DtoMapContext entityGenericTypeKey(String entityGenericTypeKey);
@@ -162,7 +162,7 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      *      this with transform to (pseudo code):
      *          myDtoMap[ mapEntry { key: 1, value: subItem1Dto }, ... ]
      *
-     * @param entityCollectionMapKey entity collection map key
+     * @param entityCollectionMapKey entity collection map key ((requires BeanFactory parameter during assembly))
      * @return dto field context
      */
     DtoMapContext entityCollectionMapKey(String entityCollectionMapKey);
@@ -215,7 +215,7 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      *
      * This setting has priority over the {@link #dtoToEntityMatcher(Class)} setting.
      *
-     * @param dtoToEntityMatcherKey dto to entity matcher key
+     * @param dtoToEntityMatcherKey dto to entity matcher key (requires adapters parameter during assembly)
      * @return  dto field context
      */
     DtoMapContext dtoToEntityMatcherKey(String dtoToEntityMatcherKey);

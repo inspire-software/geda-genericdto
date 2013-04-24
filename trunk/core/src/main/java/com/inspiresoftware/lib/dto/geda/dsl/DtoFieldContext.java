@@ -31,9 +31,9 @@ public interface DtoFieldContext extends DtoEntityContextAppender {
     DtoFieldContext forField(String fieldName);
 
     /**
-     * Map this DTO field as vitual.
+     * Map this DTO field as virtual.
      *
-     * @return dto field context
+     * @return dto field context (need to specify converter)
      */
     DtoVirtualFieldContext forVirtual();
 
@@ -50,7 +50,7 @@ public interface DtoFieldContext extends DtoEntityContextAppender {
      * used to lookup converter in adapters map passed into assembleDto and assembleEntity methods.
      * This converter must implement {@link com.inspiresoftware.lib.dto.geda.adapter.ValueConverter}.
      *
-     * @param converter converter key
+     * @param converter converter key (requires adapters parameter during assembly)
      * @return dto field context
      */
     DtoFieldContext converter(String converter);
@@ -64,7 +64,7 @@ public interface DtoFieldContext extends DtoEntityContextAppender {
      * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler}
      * assembleEntity methods.
      *
-     * @param entityBeanKeys bean keys
+     * @param entityBeanKeys bean keys ((requires BeanFactory parameter during assembly)).
      * @return dto field context
      */
     DtoFieldContext entityBeanKeys(String... entityBeanKeys);
@@ -76,7 +76,7 @@ public interface DtoFieldContext extends DtoEntityContextAppender {
      * Specifies DTO bean key that will be used by bean factory injected to
      * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleDto methods.
      *
-     * @param dtoBeanKey bean key
+     * @param dtoBeanKey bean key ((requires BeanFactory parameter during assembly))
      * @return dto field context
      */
     DtoFieldContext dtoBeanKey(String dtoBeanKey);

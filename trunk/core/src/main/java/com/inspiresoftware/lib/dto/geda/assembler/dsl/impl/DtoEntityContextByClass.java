@@ -10,10 +10,8 @@
 package com.inspiresoftware.lib.dto.geda.assembler.dsl.impl;
 
 import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
-import com.inspiresoftware.lib.dto.geda.dsl.DtoCollectionContext;
-import com.inspiresoftware.lib.dto.geda.dsl.DtoEntityContext;
-import com.inspiresoftware.lib.dto.geda.dsl.DtoFieldContext;
-import com.inspiresoftware.lib.dto.geda.dsl.DtoMapContext;
+import com.inspiresoftware.lib.dto.geda.assembler.DSLUtils;
+import com.inspiresoftware.lib.dto.geda.dsl.*;
 import com.inspiresoftware.lib.dto.geda.exception.AnnotationDuplicateBindingException;
 import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 
@@ -25,11 +23,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 12-09-20
  * Time: 1:56 PM
  */
-public class DtoEntityContextByClass implements DtoEntityContext {
+public class DtoEntityContextByClass extends DSLUtils implements DtoEntityContext {
 
     private final Class dtoClass;
     private final Class entityClass;
     private final ExtensibleBeanFactory beanFactory;
+
+    private final DtoEntityContextAppender self = new DtoEntityContextAppender() {
+        /** {@inheritDoc} */
+        public DtoEntityContext and() {
+            return DtoEntityContextByClass.this;
+        }
+    };
 
     private final Map<Integer, Object> fields = new ConcurrentHashMap<Integer, Object>();
 
@@ -82,6 +87,42 @@ public class DtoEntityContextByClass implements DtoEntityContext {
         final DtoFieldContext field = new DtoFieldContextImpl(this, fieldName);
         fields.put(hash, field);
         return field;
+    }
+
+    /** {@inheritDoc} */
+    public DtoEntityContextAppender withFieldsSameAsIn(final String beanKey, final String... excluding) {
+        if (beanFactory == null) {
+            throw new GeDARuntimeException("Bean for key " + beanKey + " cannot be looked up. Bean factory must be specified. Use constructor DefaultDSLRegistry(BeanFactory)");
+        }
+        final Class clazz = beanFactory.getClazz(beanKey);
+        if (clazz == null) {
+            throw new GeDARuntimeException("Bean for key " + beanKey + " is not in the bean factory");
+        }
+        return withFieldsSameAsIn(clazz, excluding);
+    }
+
+    /** {@inheritDoc} */
+    public DtoEntityContextAppender withFieldsSameAsIn(final Class clazz, final String... excluding) {
+        final Map<String, String> dtoFields = scanFieldNamesOnClass(getDtoClass());
+        if (excluding != null && excluding.length > 0) {
+            for (final String exclude : excluding) {
+                dtoFields.remove(exclude);
+            }
+        }
+        final Map<String, String> entityFields;
+        if (clazz.isInterface()) {
+            entityFields = scanGetterNamesOnClass(clazz);
+        } else {
+            entityFields = scanFieldNamesOnClass(clazz);
+        }
+        for (final Map.Entry<String, String> dtoField : dtoFields.entrySet()) {
+            final String entityFieldType = entityFields.get(dtoField.getKey());
+            if (entityFieldType != null && entityFieldType.equals(dtoField.getValue())) {
+                // same name, same type - just map it with all defaults
+                withField(dtoField.getKey());
+            }
+        }
+        return self;
     }
 
     /** {@inheritDoc} */
