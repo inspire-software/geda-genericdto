@@ -24,7 +24,7 @@ public interface DtoVirtualFieldContext {
      * used to lookup converter in adapters map passed into assembleDto and assembleEntity methods.
      * This converter must implement {@link com.inspiresoftware.lib.dto.geda.adapter.ValueConverter}.
      *
-     * @param converter converter key
+     * @param converter converter key (requires adapters parameter during assembly).
      * @return dto field context
      */
     DtoFieldContext converter(String converter);

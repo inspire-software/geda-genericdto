@@ -32,6 +32,8 @@ public @interface DtoVirtualField {
 	 * Textual reference to a converter to use when assembling DTO's and Entities. This reference is
      * used to lookup converter in adapters map passed into assembleDto and assembleEntity methods.
      * This converter must implement {@link com.inspiresoftware.lib.dto.geda.adapter.ValueConverter}.
+     *
+     * Requires adapters parameter during assembly.
 	 */
 	String converter() default "";
 	

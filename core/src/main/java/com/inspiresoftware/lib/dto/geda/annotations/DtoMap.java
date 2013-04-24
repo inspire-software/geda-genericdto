@@ -186,6 +186,8 @@ public @interface DtoMap {
      * collection depending on whether entity's property is a collection or a map.
      *
      * This setting has priority over the {@link #dtoToEntityMatcher()} setting.
+     *
+     * Requires adapters parameter during assembly.
 	 */
 	String dtoToEntityMatcherKey() default "";
 

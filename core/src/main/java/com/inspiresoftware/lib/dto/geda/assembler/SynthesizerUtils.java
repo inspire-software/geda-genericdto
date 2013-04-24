@@ -22,6 +22,10 @@ import java.lang.reflect.Type;
  */
 public class SynthesizerUtils {
 
+    protected SynthesizerUtils() {
+        // only extension
+    }
+
     /**
      * Determine the actual class for this type.
      *

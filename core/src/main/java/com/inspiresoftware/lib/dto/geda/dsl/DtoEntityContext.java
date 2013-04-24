@@ -38,7 +38,7 @@ public interface DtoEntityContext {
     /**
      * Register bean key alias for Entity factory.
      *
-     * @param beanKey associate a bean key with this Entity.
+     * @param beanKey associate a bean key with this Entity (requires BeanFactory for DSL registry).
      * @param representative interface that best describes entity class (or set to null if no interface)
      * @return mapping context
      */
@@ -52,6 +52,35 @@ public interface DtoEntityContext {
      * @return dto field context
      */
     DtoFieldContext withField(String fieldName);
+
+    /**
+     * Add all DTO fields mappings on DTO object that are same as on
+     * entity class. The fields are regarded same if their name and
+     * type are the same. If field name or type is different then
+     * those fields are ignored.
+     *
+     * @param beanKey bean key to look up entity class for checking
+     *                applicable fields. (requires BeanFactory for DSL registry).
+     * @param excluding field names that are blacklisted manually and will ignored
+     *
+     * @return context appender to continue DSL chain
+     */
+    DtoEntityContextAppender withFieldsSameAsIn(String beanKey, String ... excluding);
+
+    /**
+     * Add all DTO fields mappings on DTO object that are same as on
+     * entity class. The fields are regarded same if their name and
+     * type are the same. If field name or type is different then
+     * those fields are ignored.
+     *
+     * @param clazz class or interface for checking applicable fields.
+     *              If an interface is specified DTO fields will be matched against
+     *              getters on this interface only. There is no inheritance look up.
+     * @param excluding field names that are blacklisted manually and will ignored
+     *
+     * @return context appender to continue DSL chain
+     */
+    DtoEntityContextAppender withFieldsSameAsIn(Class clazz, String ... excluding);
 
     /**
      * Add DTO collection mapping on DTO object. Only single field

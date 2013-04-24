@@ -140,6 +140,8 @@ public @interface DtoCollection {
      * {@link DtoToEntityMatcher} interface.
      *
 	 * This setting has priority over the {@link #dtoToEntityMatcher()} setting.
+     *
+     * Requires adapters parameter during assembly.
 	 */
 	String dtoToEntityMatcherKey() default "";
 

@@ -63,7 +63,7 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      *
      * This setting has priority over the {@link #entityCollectionClass(Class)} setting.
      *
-     * @param entityCollectionClassKey entity collection class key
+     * @param entityCollectionClassKey entity collection class key (requires BeanFactory parameter during assembly)
      * @return dto field context
      */
     DtoCollectionContext entityCollectionClassKey(String entityCollectionClassKey);
@@ -86,7 +86,7 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      *
      * This setting has priority over the {@link #dtoCollectionClass(Class)} setting.
      *
-     * @param dtoCollectionClassKey dto collection class key
+     * @param dtoCollectionClassKey dto collection class key (requires BeanFactory parameter during assembly)
      * @return  dto field context
      */
     DtoCollectionContext dtoCollectionClassKey(String dtoCollectionClassKey);
@@ -100,7 +100,7 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      * for the Item bean will be the last in this chain (e.g.
      * { "beanWithMyCollectionProperty", "beanCollectionItem" }).
      *
-     * @param entityBeanKeys bean keys
+     * @param entityBeanKeys bean keys (requires BeanFactory parameter during assembly)
      * @return dto field context
      */
     DtoCollectionContext entityBeanKeys(String... entityBeanKeys);
@@ -112,7 +112,7 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      * DTO object bean factory key for creating new DTO collection item object instances.
      * To specify the collection instance class use #dtoCollectionClass or #dtoCollectionClassKey.
      *
-     * @param dtoBeanKey bean key
+     * @param dtoBeanKey bean key (requires BeanFactory parameter during assembly)
      * @return dto field context
      */
     DtoCollectionContext dtoBeanKey(String dtoBeanKey);
@@ -143,7 +143,7 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      *
      * This setting has priority over the {@link #entityGenericType(Class)} setting.
      *
-     * @param entityGenericTypeKey entity generic type key
+     * @param entityGenericTypeKey entity generic type key (requires BeanFactory parameter during assembly)
      * @return dto field context
      */
     DtoCollectionContext entityGenericTypeKey(String entityGenericTypeKey);
@@ -167,7 +167,7 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      *
      * This setting has priority over the {@link #dtoToEntityMatcher(Class)} setting.
      *
-     * @param dtoToEntityMatcherKey dto to entity matcher key
+     * @param dtoToEntityMatcherKey dto to entity matcher key (requires adapters parameter during assembly).
      * @return  dto field context
      */
     DtoCollectionContext dtoToEntityMatcherKey(String dtoToEntityMatcherKey);
