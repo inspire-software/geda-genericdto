@@ -102,12 +102,12 @@
         <dependency>
             <groupId>net.sf.dozer</groupId>
             <artifactId>dozer</artifactId>
-            <version>5.3.2</version>
+            <version>5.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
-            <version>0.5.0</version>
+            <version>0.5.6</version>
         </dependency>
         <dependency>
             <groupId>ma.glasnost.orika</groupId>
