@@ -11,6 +11,7 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,14 +36,25 @@ public class DSLUtils {
      */
     protected Map<String, String> scanFieldNamesOnClass(final Class clazz) {
         final Map<String, String> map = new HashMap<String, String>();
-        for (final Field field : clazz.getDeclaredFields()) {
-            final Class fieldType = PropertyInspector.getClassForType(field.getGenericType());
-            map.put(field.getName(), fieldType.getCanonicalName());
+
+        Class clazzMap = clazz;
+        while (clazzMap != null) { // when we reach Object.class this should be null
+            for (final Field field : clazz.getDeclaredFields()) {
+                final Class fieldType = PropertyInspector.getClassForType(field.getGenericType());
+                map.put(field.getName(), fieldType.getCanonicalName());
+            }
+            final Type type = clazzMap.getGenericSuperclass();
+            if (type != null) {
+                clazzMap = PropertyInspector.getClassForType(type);
+            } else {
+                clazzMap = null;
+            }
         }
         return map;
     }
 
     /**
+     * Return map of field inferred from getters on interface.
      *
      * @param clazz class to scan for fields getters.
      * @return field map

@@ -59,6 +59,11 @@ public interface DtoEntityContext {
      * type are the same. If field name or type is different then
      * those fields are ignored.
      *
+     * If beanKey reference a class then all fields of this class (including
+     * super classes fields will be scanned). For beanKey that references an interface
+     * only getters on that interface will be counted towards fields mapping. There are
+     * no "extends" scanning for interfaces.
+     *
      * @param beanKey bean key to look up entity class for checking
      *                applicable fields. (requires BeanFactory for DSL registry).
      * @param excluding field names that are blacklisted manually and will ignored
@@ -72,6 +77,11 @@ public interface DtoEntityContext {
      * entity class. The fields are regarded same if their name and
      * type are the same. If field name or type is different then
      * those fields are ignored.
+     *
+     * If clazz is a class then all fields of this class (including
+     * super classes fields will be scanned). For clazz that is an interface
+     * only getters on that interface will be counted towards fields mapping. There are
+     * no "extends" scanning for interfaces.
      *
      * @param clazz class or interface for checking applicable fields.
      *              If an interface is specified DTO fields will be matched against
