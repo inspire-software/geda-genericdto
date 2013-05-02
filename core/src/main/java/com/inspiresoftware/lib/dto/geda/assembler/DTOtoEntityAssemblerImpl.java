@@ -25,7 +25,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 
@@ -95,12 +95,12 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
         while (dtoMap != null) { // when we reach Object.class this should be null
 
 			mapRelationMapping(dtoMap, entity, strict, pipes, metaBuilder);
-			Object supType = dtoMap.getGenericSuperclass();
-			if (supType instanceof ParameterizedType) {
-				dtoMap = (Class) ((ParameterizedType) supType).getRawType();
-			} else {
-				dtoMap = (Class) supType;
-			}
+            final Type type = dtoMap.getGenericSuperclass();
+            if (type != null) {
+                dtoMap = PropertyInspector.getClassForType(type);
+            } else {
+                dtoMap = null;
+            }
 
 		}
         this.pipes = (Pipe[]) pipes.toArray(new Pipe[pipes.size()]);
