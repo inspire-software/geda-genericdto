@@ -13,8 +13,13 @@ import com.google.caliper.Param;
 import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
 import com.inspiresoftware.lib.dto.geda.benchmark.data.DataProvider;
+import com.inspiresoftware.lib.dto.geda.benchmark.support.dozer.DozerBasicMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.geda.GeDABasicMapper;
+import com.inspiresoftware.lib.dto.geda.benchmark.support.manual.ManualBasicMapper;
+import com.inspiresoftware.lib.dto.geda.benchmark.support.modelmapper.ModelMapperBasicMapper;
 import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaBasicMapper;
+
+import java.util.Locale;
 
 /**
  * Caliper powered benchmark.
@@ -28,11 +33,11 @@ public class CaliperBenchmark extends SimpleBenchmark {
 
     public enum Lib {
 
-        //JAVA_MANUAL(new ManualBasicMapper()),
+        JAVA_MANUAL(new ManualBasicMapper()),
         GEDA(new GeDABasicMapper()),
-        ORIKA(new OrikaBasicMapper()); //,
-        //MODELMAPPER(new ModelMapperBasicMapper()),
-        //DOZER(new DozerBasicMapper());
+        ORIKA(new OrikaBasicMapper()),
+        MODELMAPPER(new ModelMapperBasicMapper()),
+        DOZER(new DozerBasicMapper());
 
         private Mapper mapper;
 
@@ -75,6 +80,7 @@ public class CaliperBenchmark extends SimpleBenchmark {
     }
 
     public static void main(String[] args) throws Exception {
+        Locale.setDefault(Locale.US);
         Runner.main(CaliperBenchmark.class, args);
     }
 
