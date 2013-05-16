@@ -1020,7 +1020,7 @@ public class DefaultDSLRegistryTest {
         registry
                 // main mapping
                 .dto(MyDtoWithSameFieldsClass.class).forEntity(MyEntityWithSameFieldsInterface.class)
-                // map all same name same type fields by key
+                // map all same name same type fields by interface
                 .withFieldsSameAsIn(MyEntityWithSameFieldsInterface.class);
 
 
@@ -1102,7 +1102,7 @@ public class DefaultDSLRegistryTest {
         registry
                 // main mapping
                 .dto(MyDtoWithSameFieldsClass.class).forEntity(MyEntityWithSameFieldsInterface.class)
-                // map all same name same type fields by key but not field4, field5, field6, field7
+                // map all same name same type fields by interface but not field4, field5, field6, field7
                 .withFieldsSameAsIn(MyEntityWithSameFieldsInterface.class, "field4", "field5", "field6", "field7");
 
 
@@ -1190,7 +1190,7 @@ public class DefaultDSLRegistryTest {
         registry
                 // main mapping
                 .dto(MyDtoWithSameFieldsClass.class).forEntity(MyEntityWithSameFieldsInterface.class)
-                // map all same name same type fields by key
+                // map all same name same type fields by class
                 .withFieldsSameAsIn(MyEntityWithSameFieldsClass.class);
 
 
@@ -1346,6 +1346,88 @@ public class DefaultDSLRegistryTest {
         ctrl.verify();
     }
 
+
+    @Test
+    public void testWithSameFieldsByClassInheritance() throws Exception {
+
+        final IMocksControl ctrl = EasyMock.createControl();
+
+        final ExtensibleBeanFactory bf = ctrl.createMock("bf", ExtensibleBeanFactory.class);
+
+        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = new DefaultDSLRegistry(bf);
+
+        ctrl.replay();
+
+        registry
+                // main mapping
+                .dto(MyDtoWithSameFieldsClass.class).forEntity(MyEntityWithSameFieldsInterface.class)
+                // map all same name same type fields by class that inherits the class with fields
+                .withFieldsSameAsIn(MyEntityWithSameFieldsClassInherited.class);
+
+
+        final Assembler asm = DTOAssembler.newAssembler(MyDtoWithSameFieldsClass.class, MyEntityWithSameFieldsInterface.class, registry);
+
+        final MyEntityWithSameFieldsInterface fromEntity = new MyEntityWithSameFieldsClassInherited();
+
+        fromEntity.setField1("field1");
+        fromEntity.setField2(Boolean.TRUE);
+        fromEntity.setField3(true);
+        fromEntity.setField4(Integer.valueOf(4));
+        fromEntity.setField5(5);
+        fromEntity.setField6(Long.valueOf(6L));
+        fromEntity.setField7(7L);
+        fromEntity.setField8(Double.valueOf(8D));
+        fromEntity.setField9(9D);
+        fromEntity.setField10(BigDecimal.TEN);
+        final Object field11Obj = new Object();
+        fromEntity.setField11(field11Obj);
+        fromEntity.setWrongNameOnEntity("wrongNameOnEntity");
+        fromEntity.setWrongType(Double.valueOf(20D));
+
+        final MyDtoWithSameFieldsClass dto = new MyDtoWithSameFieldsClass();
+
+        asm.assembleDto(dto, fromEntity, null, bf);
+
+        assertEquals(dto.getField1(), "field1");
+        assertTrue(dto.getField2());
+        assertTrue(dto.getField3());
+        assertEquals(dto.getField4(), Integer.valueOf(4));
+        assertEquals(dto.getField5(), 5);
+        assertEquals(dto.getField6(), Long.valueOf(6L));
+        assertEquals(dto.getField7(), 7L);
+        assertEquals(dto.getField8(), Double.valueOf(8D));
+        assertEquals(dto.getField9(), 9D, 0);
+        assertEquals(BigDecimal.TEN.compareTo(dto.getField10()), 0);
+        assertSame(dto.getField11(), field11Obj);
+        assertNull(dto.getWrongName());
+        assertNull(dto.getWrongType());
+
+        ctrl.verify();
+
+        ctrl.reset();
+
+        ctrl.replay();
+
+        final MyEntityWithSameFieldsInterface toEntity = new MyEntityWithSameFieldsClass();
+
+        asm.assembleEntity(dto, toEntity, null, bf);
+
+        assertEquals(toEntity.getField1(), "field1");
+        assertTrue(toEntity.getField2());
+        assertTrue(toEntity.getField3());
+        assertEquals(toEntity.getField4(), Integer.valueOf(4));
+        assertEquals(toEntity.getField5(), 5);
+        assertEquals(toEntity.getField6(), Long.valueOf(6L));
+        assertEquals(toEntity.getField7(), 7L);
+        assertEquals(toEntity.getField8(), Double.valueOf(8D));
+        assertEquals(toEntity.getField9(), 9D, 0);
+        assertEquals(BigDecimal.TEN.compareTo(toEntity.getField10()), 0);
+        assertSame(toEntity.getField11(), field11Obj);
+        assertNull(toEntity.getWrongNameOnEntity());
+        assertNull(toEntity.getWrongType());
+
+        ctrl.verify();
+    }
 
 
 }

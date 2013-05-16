@@ -39,7 +39,7 @@ public class DSLUtils {
 
         Class clazzMap = clazz;
         while (clazzMap != null) { // when we reach Object.class this should be null
-            for (final Field field : clazz.getDeclaredFields()) {
+            for (final Field field : clazzMap.getDeclaredFields()) {
                 final Class fieldType = PropertyInspector.getClassForType(field.getGenericType());
                 map.put(field.getName(), fieldType.getCanonicalName());
             }
