@@ -218,9 +218,9 @@ public final class DTOAssembler {
         return syn;
     }
 
-    private static <DTO, Entity> int createAssemberKey(
+    private static <DTO, Entity> int createAssemblerKey(
             final Class<DTO> dto,
-			final Class<Entity> entity,
+            final Class<Entity> entity,
             final Object synthesizer,
             final Registry registry) {
         int result = dto.hashCode();
@@ -232,9 +232,9 @@ public final class DTOAssembler {
         return result;
 	}
 
-	private static <DTO, Entity> int createAssemberKey(
+	private static <DTO, Entity> int createAssemblerKey(
             final Class<DTO> dto,
-			final Class<Entity>[] entities,
+            final Class<Entity>[] entities,
             final Object synthesizer,
             final Registry registry) {
 
@@ -310,7 +310,7 @@ public final class DTOAssembler {
 			   GeDARuntimeException, AnnotationDuplicateBindingException {
 
         final Class< ? > realEntity = filterBlacklisted(entity);
-        final int key = createAssemberKey(dto, realEntity, synthesizer, null);
+        final int key = createAssemblerKey(dto, realEntity, synthesizer, null);
 
         final Assembler asm = getAssemblerFromCache(classLoader, key);
         if (asm != null) {
@@ -384,7 +384,7 @@ public final class DTOAssembler {
 			   GeDARuntimeException, AnnotationDuplicateBindingException {
 
         final Class< ? > realEntity = filterBlacklisted(entity);
-        final int key = createAssemberKey(dto, realEntity, synthesizer, registry);
+        final int key = createAssemblerKey(dto, realEntity, synthesizer, registry);
 
         final Assembler asm = getAssemblerFromCache(classLoader, key);
         if (asm != null) {
@@ -519,7 +519,7 @@ public final class DTOAssembler {
 
         final Class< ? > realEntity = filterBlacklisted(entity);
         final MethodSynthesizer synthesizer = getDefaultSynthesizer(classLoader);
-        final int key = createAssemberKey(dto, realEntity, synthesizer, null);
+        final int key = createAssemblerKey(dto, realEntity, synthesizer, null);
 
         final Assembler asm = getAssemblerFromCache(classLoader, key);
         if (asm != null) {
@@ -590,7 +590,7 @@ public final class DTOAssembler {
 
         final Class< ? > realEntity = filterBlacklisted(entity);
         final MethodSynthesizer synthesizer = getDefaultSynthesizer(classLoader);
-        final int key = createAssemberKey(dto, realEntity, synthesizer, registry);
+        final int key = createAssemblerKey(dto, realEntity, synthesizer, registry);
 
         final Assembler asm = getAssemblerFromCache(classLoader, key);
         if (asm != null) {
@@ -661,7 +661,7 @@ public final class DTOAssembler {
                    GeDARuntimeException, AnnotationDuplicateBindingException {
 
         final MethodSynthesizer synthesizer = getDefaultSynthesizer(classLoader);
-        final int key = createAssemberKey(dto, entities, synthesizer, null);
+        final int key = createAssemblerKey(dto, entities, synthesizer, null);
 
         final Assembler asm = getAssemblerFromCache(classLoader, key);
         if (asm != null) {
@@ -729,7 +729,7 @@ public final class DTOAssembler {
 
         final Class[] classes = detectAutobinding(dto);
 
-        final int key = createAssemberKey(dto, classes, synthesizer, null);
+        final int key = createAssemblerKey(dto, classes, synthesizer, null);
 
         final Assembler asm = getAssemblerFromCache(classLoader, key);
         if (asm != null) {
@@ -795,7 +795,7 @@ public final class DTOAssembler {
         final Class[] classes = detectAutobinding(dto);
 
         final MethodSynthesizer synthesizer = getDefaultSynthesizer(classLoader);
-        final int key = createAssemberKey(dto, classes, synthesizer, null);
+        final int key = createAssemblerKey(dto, classes, synthesizer, null);
 
         final Assembler asm = getAssemblerFromCache(classLoader, key);
         if (asm != null) {
