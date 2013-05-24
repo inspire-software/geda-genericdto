@@ -12,14 +12,13 @@ package com.inspiresoftware.lib.dto.geda.impl;
 import com.inspiresoftware.lib.dto.geda.DTOAdaptersRegistrar;
 import com.inspiresoftware.lib.dto.geda.DTODSLRegistrar;
 import com.inspiresoftware.lib.dto.geda.DTOSupport;
-import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.adapter.Adapters;
 import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.repository.AdaptersRepository;
-import com.inspiresoftware.lib.dto.geda.adapter.repository.impl.AdaptersRepositoryImpl;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.assembler.Assembler;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.impl.DefaultDSLRegistry;
+import com.inspiresoftware.lib.dto.geda.dsl.Registries;
 import com.inspiresoftware.lib.dto.geda.event.DTOEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,13 +53,13 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(DTOSupportImpl.class);
 
-    private BeanFactory beanFactory;
+    private ExtensibleBeanFactory beanFactory = Adapters.beanFactory();
 
     private DTOAdaptersRegistrar adaptersRegistrar;
     private DTODSLRegistrar dslRegistrar;
 
-    private final AdaptersRepository dtoValueConverters = new AdaptersRepositoryImpl();
-    private com.inspiresoftware.lib.dto.geda.dsl.Registry dslRegistry = new DefaultDSLRegistry();
+    private final AdaptersRepository dtoValueConverters = Adapters.adaptersRepository();
+    private com.inspiresoftware.lib.dto.geda.dsl.Registry dslRegistry = Registries.registry(beanFactory);
 
     private DTOEventListener onDtoAssembly;
     private DTOEventListener onEntityAssembly;
@@ -74,7 +73,7 @@ public class DTOSupportImpl implements DTOSupport, InitializingBean {
 
     public void setBeanFactory(final ExtensibleBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
-        this.dslRegistry = new DefaultDSLRegistry(beanFactory);
+        this.dslRegistry = Registries.registry(beanFactory);
     }
 
     public void setAdaptersRegistrar(final DTOAdaptersRegistrar adaptersRegistrar) {
