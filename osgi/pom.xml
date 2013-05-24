@@ -14,14 +14,14 @@
     <parent>
         <groupId>com.inspire-software.lib.dto.geda</groupId>
         <artifactId>geda</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>com.inspire-software.lib.dto.geda</groupId>
     <artifactId>geda.osgi</artifactId>
     <name>GeDA OSGi bundle</name>
     <description>GeDA (Generic DTO Assembler) OSGi bundle</description>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
     <licenses>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>com.inspire-software.lib.dto.geda</groupId>
             <artifactId>geda.core</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
+            <version>3.1.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.bcel</groupId>
