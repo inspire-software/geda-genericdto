@@ -43,25 +43,4 @@ public @interface DtoVirtualField {
 	 */
 	boolean readOnly() default false;
 
-    /**
-	 * This annotation is mandatory for {@link DtoVirtualField} with
-     * deeply nested entity object i.e. when a '.' syntax is used.
-     * Failure to supply this parameter will result in
-	 * {@link com.inspiresoftware.lib.dto.geda.exception.GeDAException}.
-	 *
-	 * Specifies entity bean key chain that will be used by bean factory injected to
-     * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler}
-     * assembleEntity methods.
-	 */
-	String[] entityBeanKeys() default "";
-
-    /**
-     * This annotation is mandatory for nested objects that are used as fields within the top
-     * level DTO.
-     *
-     * Specifies DTO bean key that will be used by bean factory injected to
-     * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleDto methods.
-     */
-    String dtoBeanKey() default "";
-		
 }

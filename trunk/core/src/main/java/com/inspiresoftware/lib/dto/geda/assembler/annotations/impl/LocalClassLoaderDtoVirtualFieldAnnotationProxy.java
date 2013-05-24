@@ -42,9 +42,9 @@ public class LocalClassLoaderDtoVirtualFieldAnnotationProxy implements Annotatio
         } else if ("readOnly".equals(property)) {
             return (T) Boolean.valueOf(annotation.readOnly());
         } else if ("entityBeanKeys".equals(property)) {
-            return (T) annotation.entityBeanKeys();
+            return null;
         } else if ("dtoBeanKey".equals(property)) {
-            return (T) annotation.dtoBeanKey();
+            return null;
         }
         throw new GeDARuntimeException("Invalid @DtoVirtualField annotation proxy access via property: " + property);
     }
