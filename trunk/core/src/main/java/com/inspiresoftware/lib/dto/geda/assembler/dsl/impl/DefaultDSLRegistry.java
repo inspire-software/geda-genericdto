@@ -41,7 +41,10 @@ public class DefaultDSLRegistry implements Registry, BeanFactory, BeanFactoryPro
 
     /**
      * Default registry instance without bean factory support.
+     *
+     * @deprecated DSL registry must always be bound to a bean factory to avoid some mapping features errors
      */
+    @Deprecated
     public DefaultDSLRegistry() {
 
         this(null);
