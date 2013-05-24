@@ -14,7 +14,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.extension.DisposableContainer;
 /**
  * Bean factory with capabilities to add new mappings during runtime.
  *
- * @since 2.1.0
+ * @since 3.0.0
  *
  * User: denispavlov
  * Date: 12-09-20
