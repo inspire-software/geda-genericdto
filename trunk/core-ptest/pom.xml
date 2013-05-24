@@ -18,7 +18,7 @@
     </parent>
     <artifactId>geda.core-ptest</artifactId>
     <name>DTO utilities package core integration and performance tests</name>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.1.0-SNAPSHOT</version>
     <description>Provides several integrations tests for core package</description>
     <packaging>jar</packaging>
     <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>com.inspire-software.lib.dto.geda</groupId>
             <artifactId>geda.core</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
