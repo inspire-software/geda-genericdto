@@ -18,6 +18,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.MapPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.PipeMetadata;
+import com.inspiresoftware.lib.dto.geda.dsl.Registries;
 import com.inspiresoftware.lib.dto.geda.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
@@ -212,6 +213,14 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
 		return this.synthesizer.configure(configuration, value);
 	}
 
+    private BeanFactory resolveBeanFactory(BeanFactory beanFactory) {
+        if (beanFactory == null) {
+            if (dslRegistry != null) {
+                return Registries.beanFactory(dslRegistry);
+            }
+        }
+        return beanFactory;
+    }
 
 	/** {@inheritDoc} */
 	public void assembleDto(final Object dto, final Object entity,
@@ -227,7 +236,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
 		validateDtoAndEntity(dto, entity);
 
 		for (Pipe pipe : pipes) {
-			pipe.writeFromEntityToDto(entity, dto, converters, dtoBeanFactory);
+			pipe.writeFromEntityToDto(entity, dto, converters, resolveBeanFactory(dtoBeanFactory));
 		}
 
 	}
@@ -245,10 +254,11 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
 
 		if (dtos instanceof Collection && dtos.isEmpty() && entities instanceof Collection) {
 
+            final BeanFactory beanFactory = resolveBeanFactory(dtoBeanFactory);
 			for (Object entity : entities) {
 				try {
 					final Object dto = this.dtoClass.newInstance();
-					assembleDto(dto, entity, converters, dtoBeanFactory);
+					assembleDto(dto, entity, converters, beanFactory);
 					dtos.add(dto);
 				} catch (InstantiationException exp) {
 					throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
@@ -279,7 +289,7 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
 		validateDtoAndEntity(dto, entity);
 
 		for (Pipe pipe : pipes) {
-			pipe.writeFromDtoToEntity(entity, dto, converters, entityBeanFactory);
+			pipe.writeFromDtoToEntity(entity, dto, converters, resolveBeanFactory(entityBeanFactory));
 		}
 
 	}
@@ -298,10 +308,11 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
 
 		if (dtos instanceof Collection && entities instanceof Collection && entities.isEmpty()) {
 
+            final BeanFactory beanFactory = resolveBeanFactory(entityBeanFactory);
 			for (Object dto : dtos) {
 				try {
 					final Object entity = this.entityClass.newInstance();
-					assembleEntity(dto, entity, converters, entityBeanFactory);
+					assembleEntity(dto, entity, converters, beanFactory);
 					entities.add(entity);
 				} catch (InstantiationException exp) {
 					throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
