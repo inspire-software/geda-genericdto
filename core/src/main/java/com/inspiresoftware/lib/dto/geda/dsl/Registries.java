@@ -9,6 +9,7 @@
 
 package com.inspiresoftware.lib.dto.geda.dsl;
 
+import com.inspiresoftware.lib.dto.geda.adapter.Adapters;
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactoryProvider;
 import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
@@ -30,12 +31,23 @@ public final class Registries {
     }
 
     /**
-     * Create a new registry instance.
+     * Create a new registry instance with new default bean factory.
      *
      * @return new registry instance
      */
     public static Registry registry() {
-        return new DefaultDSLRegistry();
+        return new DefaultDSLRegistry(Adapters.beanFactory());
+    }
+
+    /**
+     * Create a new registry instance with new default bean factory.
+     *
+     * @param classLoader class loader to use for bean factory
+     *
+     * @return new registry instance
+     */
+    public static Registry registry(ClassLoader classLoader) {
+        return new DefaultDSLRegistry(Adapters.beanFactory(classLoader));
     }
 
     /**
