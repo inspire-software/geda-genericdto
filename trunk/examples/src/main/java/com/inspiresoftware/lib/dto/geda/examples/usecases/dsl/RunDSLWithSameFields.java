@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.examples.usecases.dsl;
 import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
 import com.inspiresoftware.lib.dto.geda.assembler.Assembler;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.impl.DefaultDSLRegistry;
+import com.inspiresoftware.lib.dto.geda.dsl.Registries;
 import com.inspiresoftware.lib.dto.geda.examples.usecases.SimpleMapExtensibleBeanFactory;
 
 import java.math.BigDecimal;
@@ -36,7 +36,7 @@ public class RunDSLWithSameFields {
 
         final ExtensibleBeanFactory bf = new SimpleMapExtensibleBeanFactory();
 
-        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = new DefaultDSLRegistry(bf);
+        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = Registries.registry(bf);
 
         bf.registerEntity("myEntityWithSameFields",
                 MyEntityWithSameFieldsClass.class.getCanonicalName(),
@@ -114,7 +114,7 @@ public class RunDSLWithSameFields {
 
         final ExtensibleBeanFactory bf = new SimpleMapExtensibleBeanFactory();
 
-        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = new DefaultDSLRegistry(bf);
+        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = Registries.registry(bf);
 
         bf.registerEntity("myEntityWithSameFields",
                 MyEntityWithSameFieldsClass.class.getCanonicalName(),

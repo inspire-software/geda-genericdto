@@ -14,7 +14,7 @@ import com.inspiresoftware.lib.dto.geda.adapter.EntityRetriever;
 import com.inspiresoftware.lib.dto.geda.adapter.ExtensibleBeanFactory;
 import com.inspiresoftware.lib.dto.geda.adapter.ValueConverter;
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
-import com.inspiresoftware.lib.dto.geda.assembler.dsl.impl.DefaultDSLRegistry;
+import com.inspiresoftware.lib.dto.geda.dsl.Registries;
 import com.inspiresoftware.lib.dto.geda.examples.usecases.SimpleMapExtensibleBeanFactory;
 
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public class RunDSLReuseMapping {
 
         final ExtensibleBeanFactory bf = new SimpleMapExtensibleBeanFactory();
 
-        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = new DefaultDSLRegistry(bf);
+        final com.inspiresoftware.lib.dto.geda.dsl.Registry registry = Registries.registry(bf);
 
         bf.registerDto("myDto", MyDtoClass.class.getCanonicalName());
         bf.registerDto("myDtoField3Dto", MyDtoField3Class.class.getCanonicalName());
