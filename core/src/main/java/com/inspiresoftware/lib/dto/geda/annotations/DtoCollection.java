@@ -126,7 +126,8 @@ public @interface DtoCollection {
     String entityGenericTypeKey() default "";
 
     /**
-     * Matcher used to synchronize collection of DTO's and Entities.
+     * Matcher used to synchronize collection of DTO's and Entities. The matcher is used for
+     * writing to entity, so read only collection mapping do not require this.
      *
      * There is no sensible default for this since we are matching incompatible (in theory)
      * types (i.e. DTO with Entity) therefore there are no default implementations that can be
@@ -140,6 +141,9 @@ public @interface DtoCollection {
      * {@link DtoToEntityMatcher} interface.
      *
 	 * This setting has priority over the {@link #dtoToEntityMatcher()} setting.
+     *
+     * The matcher is used for writing to entity, so read only collection mapping do
+     * not require this.
      *
      * Requires adapters parameter during assembly.
 	 */

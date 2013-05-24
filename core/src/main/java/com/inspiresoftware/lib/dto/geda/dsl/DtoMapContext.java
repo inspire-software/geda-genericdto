@@ -195,6 +195,7 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      * This is different to {@link com.inspiresoftware.lib.dto.geda.annotations.DtoCollection#dtoToEntityMatcher()} since this
      * matcher matches a key from Dto Map to either key of Entity Map or item of entity
      * collection depending on whether entity's property is a collection or a map.
+     * The matcher is used for writing to entity, so read only map mapping do not require this.
      *
      * There is no sensible default for this since we are matching incompatible (in theory)
      * types therefore there are no default implementations that can be used for this.
@@ -214,6 +215,8 @@ public interface DtoMapContext extends DtoEntityContextAppender {
      * collection depending on whether entity's property is a collection or a map.
      *
      * This setting has priority over the {@link #dtoToEntityMatcher(Class)} setting.
+     *
+     * The matcher is used for writing to entity, so read only map mapping do not require this.
      *
      * @param dtoToEntityMatcherKey dto to entity matcher key (requires adapters parameter during assembly)
      * @return  dto field context

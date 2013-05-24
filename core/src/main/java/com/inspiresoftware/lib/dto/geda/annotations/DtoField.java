@@ -27,7 +27,7 @@ public @interface DtoField {
 
 	/**
      * field name on entity class that will be bound to this dto field
-     * (reflection notation e.g. myField.mySubfield).
+     * (use "dot" notation for graph path e.g. myField.mySubfield)).
      */
 	String value() default "";
 	
@@ -59,6 +59,9 @@ public @interface DtoField {
 	String[] entityBeanKeys() default "";
 
     /**
+     * Specifying this value tells assembler that a "sub" assembler is needed to create
+     * sub DTO for this field.
+     *
      * This annotation is mandatory for nested objects that are used as fields within the top
      * level DTO.
      *

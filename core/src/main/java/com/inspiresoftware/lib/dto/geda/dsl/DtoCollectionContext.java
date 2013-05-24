@@ -149,7 +149,8 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
     DtoCollectionContext entityGenericTypeKey(String entityGenericTypeKey);
 
     /**
-     * Matcher used to synchronize collection of DTO's and Entities.
+     * Matcher used to synchronize collection of DTO's and Entities. The matcher is used for
+     * writing to entity, so read only collection mapping do not require this.
      *
      * There is no sensible default for this since we are matching incompatible (in theory)
      * types (i.e. DTO with Entity) therefore there are no default implementations that can be
@@ -166,6 +167,8 @@ public interface DtoCollectionContext extends DtoEntityContextAppender {
      * {@link com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher} interface.
      *
      * This setting has priority over the {@link #dtoToEntityMatcher(Class)} setting.
+     *
+     * The matcher is used for writing to entity, so read only collection mapping do not require this.
      *
      * @param dtoToEntityMatcherKey dto to entity matcher key (requires adapters parameter during assembly).
      * @return  dto field context
