@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!--
+  ~ This code is distributed under The GNU Lesser General Public License (LGPLv3)
+  ~ Please visit GNU site for LGPLv3 http://www.gnu.org/copyleft/lesser.html
+  ~
+  ~ Copyright Denis Pavlov 2009
+  ~ Web: http://www.genericdtoassembler.org
+  ~ SVN: https://svn.code.sf.net/p/geda-genericdto/code/trunk/
+  ~ SVN (mirror): http://geda-genericdto.googlecode.com/svn/trunk/
+  -->
+
+<xsd:schema xmlns="http://www.genericdtoassembler.org/schema"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:tool="http://www.springframework.org/schema/tool"
+            targetNamespace="http://www.genericdtoassembler.org/schema"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.springframework.org/schema/tool" schemaLocation="http://www.springframework.org/schema/tool/spring-tool-3.0.xsd"/>
+    <xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"/>
+
+    <xsd:annotation>
+        <xsd:documentation><![CDATA[
+    Defines the elements used in the Spring integration module for GeDA 2.1.1+.
+        ]]></xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:element name="xml-driven">
+        <xsd:complexType>
+            <xsd:attribute name="dto-support" type="xsd:string" default="dtoSupport" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation source="java:com.inspiresoftware.lib.dto.geda.DTOSupport"><![CDATA[
+    The bean name of the DTOSupport that represents the facade for the GeDA
+    integration.
+
+    This attribute is not required, and only needs to be specified
+    explicitly if the bean name of the desired DtoSupport
+    is not 'dtoSupport'.
+                    ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.DTOSupport"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="dto-adapters-registrar" type="xsd:string" default="" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation source="java:com.inspiresoftware.lib.dto.geda.DTOAdaptersRegistrar"><![CDATA[
+    The bean name of the Adapters Registrar that acts as a repository for registering
+    value converters, retriever and matchers definitions.
+
+    This attribute is not required.
+                    ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.DTOAdaptersRegistrar"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="dto-dsl-registrar" type="xsd:string" default="" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation source="java:com.inspiresoftware.lib.dto.geda.DTODSLRegistrar"><![CDATA[
+    The bean name of the DSL Registrar that acts as a DSL builder for registering
+    dto to entity mappings.
+
+    This attribute is not required.
+                    ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.DTODSLRegistrar"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="on-dto-assembly" type="xsd:string" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+    Even listener that will be notified just before assembly of the DTO
+    object from the DO.
+                        ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.event.DTOEventListener"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="on-dto-assembled" type="xsd:string" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+    Even listener that will be notified upon successful assembly of the DTO
+    object from the DO.
+                        ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.event.DTOEventListener"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="on-dto-failed" type="xsd:string" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+    Even listener that will be notified upon failed assembly of the DTO
+    object from the DO. This listener should handle the exception or re-throw it.
+                        ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.event.DTOEventListener"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="on-entity-assembly" type="xsd:string" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+    Even listener that will be notified just before assembly of the DO
+    object from the DTO.
+                        ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.event.DTOEventListener"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="on-entity-assembled" type="xsd:string" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+    Even listener that will be notified upon successful assembly of the DO
+    object from the DTO.
+                        ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.event.DTOEventListener"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="on-entity-failed" type="xsd:string" use="optional">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[
+    Even listener that will be notified upon failed assembly of the DO
+    object from the DTO. This listener should handle the exception or re-throw it.
+                        ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.event.DTOEventListener"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="dto-factory" type="xsd:string" default="dtoFactory">
+                <xsd:annotation>
+                    <xsd:documentation source="java:com.inspiresoftware.lib.dto.geda.DTOFactory"><![CDATA[
+    The bean name of the DTOFactory that represents the bean factory that
+    will be used in GeDA assembly calls.
+
+    This attribute is not required, and only needs to be specified
+    explicitly if the bean name of the desired DTOFactory
+    is not 'dtoFactory'.
+                    ]]></xsd:documentation>
+                    <xsd:appinfo>
+                        <tool:annotation kind="ref">
+                            <tool:expected-type type="com.inspiresoftware.lib.dto.geda.DTOFactory"/>
+                        </tool:annotation>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="dtosupport">
+        <xsd:annotation>
+            <xsd:documentation>
+                Tag to be placed inside bean definitions in order to denote the beans where 'dtoSupport' bean
+                should be injected.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:attribute name="property" type="xsd:string" default="dtoSupport"/>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

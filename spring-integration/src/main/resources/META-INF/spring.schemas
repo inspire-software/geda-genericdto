@@ -1,3 +1,5 @@
+http\://www.genericdtoassembler.org/schema/geda-spring-integration-annotation-3.1.0.xsd=com/inspiresoftware/lib/dto/geda/config/geda-spring-integration-annotation-3.1.0.xsd
+http\://www.genericdtoassembler.org/schema/geda-spring-integration-xml-3.1.0.xsd=com/inspiresoftware/lib/dto/geda/config/geda-spring-integration-xml-3.1.0.xsd
 http\://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema/geda-spring-integration-annotation-3.0.0.xsd=com/inspiresoftware/lib/dto/geda/config/geda-spring-integration-annotation-3.0.0.xsd
 http\://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema/geda-spring-integration-xml-3.0.0.xsd=com/inspiresoftware/lib/dto/geda/config/geda-spring-integration-xml-3.0.0.xsd
 http\://geda-genericdto.svn.sourceforge.net/svnroot/geda-genericdto/schema/geda-spring-integration-annotation-2.1.1.xsd=com/inspiresoftware/lib/dto/geda/config/geda-spring-integration-annotation-2.1.1.xsd
