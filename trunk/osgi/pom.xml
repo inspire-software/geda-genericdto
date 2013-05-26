@@ -15,14 +15,14 @@
     <parent>
         <groupId>com.inspire-software.lib.dto.geda</groupId>
         <artifactId>geda</artifactId>
-        <version>3.1.0</version>
+        <version>3.1.1-SNAPSHOT</version>
     </parent>
 
     <groupId>com.inspire-software.lib.dto.geda</groupId>
     <artifactId>geda.osgi</artifactId>
     <name>GeDA OSGi bundle</name>
     <description>GeDA (Generic DTO Assembler) OSGi bundle</description>
-    <version>3.1.0</version>
+    <version>3.1.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
     <licenses>
@@ -33,9 +33,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://svn.code.sf.net/p/geda-genericdto/code/tags/geda-3.1.0/code</url>
-        <connection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/tags/geda-3.1.0/code</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/tags/geda-3.1.0/trunk</developerConnection>
+        <url>https://svn.code.sf.net/p/geda-genericdto/code/</url>
+        <connection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/</connection>
+        <developerConnection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/trunk</developerConnection>
     </scm>
     <issueManagement>
         <system>JIRA</system>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>com.inspire-software.lib.dto.geda</groupId>
             <artifactId>geda.core</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.bcel</groupId>
