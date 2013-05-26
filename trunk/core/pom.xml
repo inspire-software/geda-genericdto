@@ -15,11 +15,11 @@
     <parent>
         <groupId>com.inspire-software.lib.dto.geda</groupId>
         <artifactId>geda</artifactId>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.0</version>
     </parent>
     <artifactId>geda.core</artifactId>
     <name>DTO utilities package core</name>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.1.0</version>
     <description>Provides several utilities managing DTO's in n-tier applications</description>
     <packaging>jar</packaging>
     <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
@@ -31,9 +31,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://svn.code.sf.net/p/geda-genericdto/code/</url>
-        <connection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/trunk</developerConnection>
+        <url>https://svn.code.sf.net/p/geda-genericdto/code/tags/geda-3.1.0/code</url>
+        <connection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/tags/geda-3.1.0/code</connection>
+        <developerConnection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/tags/geda-3.1.0/trunk</developerConnection>
     </scm>
     <issueManagement>
         <system>JIRA</system>
