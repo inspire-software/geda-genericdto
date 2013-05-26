@@ -15,11 +15,11 @@
     <parent>
         <groupId>com.inspire-software.lib.dto.geda</groupId>
         <artifactId>geda</artifactId>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.1-SNAPSHOT</version>
     </parent>
     <artifactId>geda.core-btest</artifactId>
     <name>DTO utilities package core integration and benchmark tests</name>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.1.1-SNAPSHOT</version>
     <description>Provides several benchmark tests for core package</description>
     <packaging>jar</packaging>
     <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
@@ -65,7 +65,7 @@
         <dependency>
             <groupId>com.inspire-software.lib.dto.geda</groupId>
             <artifactId>geda.core</artifactId>
-            <version>3.1.0-SNAPSHOT</version>
+            <version>3.1.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>javassist</groupId>
