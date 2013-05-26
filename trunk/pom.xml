@@ -35,7 +35,7 @@
     <scm>
         <url>https://svn.code.sf.net/p/geda-genericdto/code/</url>
         <connection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code//trunk</developerConnection>
+        <developerConnection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/trunk</developerConnection>
     </scm>
     <issueManagement>
         <system>JIRA</system>
