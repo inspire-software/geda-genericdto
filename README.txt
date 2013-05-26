@@ -1,3 +1,6 @@
+Official site is:
+http://www.genericdtoassembler.org/
+
 Please refer to examples module to see how to use the Assembler.
 All documentation is here: http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler
 
@@ -15,3 +18,6 @@ mvn install -Pall
 
 Also see how to setup GeDA in IDE guide:
 http://www.inspire-software.com/confluence/display/GeDA/Setting+up+GeDA+project
+
+Spring integration schemas can be found:
+http://www.genericdtoassembler.org/schema/[schema name]
