@@ -33,9 +33,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://svn.code.sf.net/p/geda-genericdto/code/</url>
-        <connection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/trunk</developerConnection>
+        <url>https://github.com/inspire-software/geda-genericdto</url>
+        <connection>scm:git:git://github.com/inspire-software/geda-genericdto.git</connection>
+        <developerConnection>scm:git:git@github.com:inspire-software/geda-genericdto.git</developerConnection>
     </scm>
     <issueManagement>
         <system>JIRA</system>
