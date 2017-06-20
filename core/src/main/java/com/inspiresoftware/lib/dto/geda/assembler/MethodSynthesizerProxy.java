@@ -49,9 +49,7 @@ class MethodSynthesizerProxy implements MethodSynthesizer {
 	static {
 		FACTORY.put("javassist", 
 				"com.inspiresoftware.lib.dto.geda.assembler.extension.impl.JavassistMethodSynthesizer");
-		FACTORY.put("suntools", 
-				"com.inspiresoftware.lib.dto.geda.assembler.extension.impl.SunJavaToolsMethodSynthesizer");
-		FACTORY.put("reflection", 
+		FACTORY.put("reflection",
 				"com.inspiresoftware.lib.dto.geda.assembler.extension.impl.ReflectionMethodSynthesizer");
 		FACTORY.put("bcel", 
 				"com.inspiresoftware.lib.dto.geda.assembler.extension.impl.BCELMethodSynthesizer");

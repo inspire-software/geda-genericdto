@@ -662,7 +662,7 @@ public final class DTOAssembler {
                    GeDARuntimeException, AnnotationDuplicateBindingException {
 
         final MethodSynthesizer synthesizer = getDefaultSynthesizer(classLoader);
-        final int key = createAssemblerKey(dto, entities, synthesizer, null);
+        final int key = createAssemblerKey((Class) dto, (Class[]) entities, synthesizer, (Registry) null);
 
         final Assembler asm = getAssemblerFromCache(classLoader, key);
         if (asm != null) {

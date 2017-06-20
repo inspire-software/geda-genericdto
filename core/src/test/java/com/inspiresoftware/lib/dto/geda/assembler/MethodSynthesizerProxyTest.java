@@ -18,7 +18,6 @@ import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.BCELMethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.JavassistMethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.ReflectionMethodSynthesizer;
-import com.inspiresoftware.lib.dto.geda.assembler.extension.impl.SunJavaToolsMethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.exception.GeDAException;
 import com.inspiresoftware.lib.dto.geda.exception.GeDARuntimeException;
 import com.inspiresoftware.lib.dto.geda.exception.InspectionPropertyNotFoundException;
@@ -72,30 +71,7 @@ public class MethodSynthesizerProxyTest {
 		final MethodSynthesizer syn = proxy.getSynthesizer();
 		assertTrue(syn instanceof JavassistMethodSynthesizer);
 	}
-	
-	/**
-	 * Test sun tools setup.
-	 * @throws GeDAException exception
-	 */
-	@Test
-	public void testSunToolsConfig() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader());
-		proxy.configure("synthesizerImpl", "suntools");
-		final MethodSynthesizer syn = proxy.getSynthesizer();
-		assertTrue(syn instanceof SunJavaToolsMethodSynthesizer);
-	}
-	
-	/**
-	 * Test sun tools setup.
-	 * @throws GeDAException exception
-	 */
-	@Test
-	public void testSunToolsConfigConstructor() throws GeDAException {
-		final MethodSynthesizerProxy proxy = new MethodSynthesizerProxy(this.getClass().getClassLoader(), "suntools");
-		final MethodSynthesizer syn = proxy.getSynthesizer();
-		assertTrue(syn instanceof SunJavaToolsMethodSynthesizer);
-	}
-	
+
 	/**
 	 * Test sun tools setup.
 	 * @throws GeDAException exception
