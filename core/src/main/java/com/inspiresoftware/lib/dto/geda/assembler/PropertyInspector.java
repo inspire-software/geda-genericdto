@@ -83,15 +83,40 @@ final class PropertyInspector {
 						
 					}
 					addToList(descs, basic);
-					return descs.toArray(new PropertyDescriptor[descs.size()]);
+					return checkPossibleSetters(descs.toArray(new PropertyDescriptor[descs.size()]));
 				}
 				
 			}
-			return basic;
+			return checkPossibleSetters(basic);
 		} catch (IntrospectionException itex) {
 			throw new InspectionScanningException(clazz.getCanonicalName(), itex);
 		}
 		
+	}
+
+	private static PropertyDescriptor[] checkPossibleSetters(PropertyDescriptor[] basic) {
+		ArrayList<PropertyDescriptor> descs = null;
+		for (final PropertyDescriptor descriptor : basic) {
+			if (descriptor.getWriteMethod() == null) {
+				try {
+					final Class clazz = descriptor.getReadMethod().getDeclaringClass();
+					final String prop = descriptor.getName();
+					final Method method = clazz.getMethod("set" + Character.toUpperCase(prop.charAt(0)) + prop.substring(1), descriptor.getReadMethod().getReturnType());
+					if (method != null) {
+						if (descs == null) {
+							descs = new ArrayList<PropertyDescriptor>(Arrays.asList(basic));
+						}
+						descs.add(new PropertyDescriptor(prop, null, method));
+					}
+				} catch (Exception exp) {
+					// just skip
+				}
+			}
+		}
+		if (descs == null) {
+			return basic;
+		}
+		return descs.toArray(new PropertyDescriptor[descs.size()]);
 	}
 	
 	private static void addToList(final List<PropertyDescriptor> list, final PropertyDescriptor[] descs) {
