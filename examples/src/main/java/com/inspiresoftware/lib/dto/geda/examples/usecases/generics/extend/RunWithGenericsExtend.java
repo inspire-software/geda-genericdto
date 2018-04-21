@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 public class RunWithGenericsExtend {
 
     /**
-     * Example showing complex extends generic i.e. &lt? extends MyClass&gt.
+     * Example showing complex extends generic i.e. &lt;? extends MyClass&gt.
      * 
      * EntityCode is extended by EntityCatalogCode
      * EntityCatalog includes a primary code and a set of codes

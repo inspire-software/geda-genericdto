@@ -31,6 +31,7 @@ public interface UserService {
     List<BaseUserDTO> list();
 
     /**
+     * @param filter filter
      * @return list of user object with filtering example so we do not load everything
      */
     List<UserDTO> list(String filter);
