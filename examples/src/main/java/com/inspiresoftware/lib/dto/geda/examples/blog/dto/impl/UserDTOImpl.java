@@ -22,7 +22,7 @@ import java.util.List;
  * Full user object + entries - prossible use is CRUD.
  * Note that entries are BaseUserEntryDTO to prevent loading of
  * user and replies info until we really need it.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jul 1, 2012
  * Time: 1:29:34 PM

@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 /**
  * Defines a map to map or a map to collection mapping in DTO.
- * <p/>
+ *
  * User: Denis Pavlov
  * Date: Jan 25, 2010
  * Time: 11:42:59 AM
@@ -33,12 +33,16 @@ public @interface DtoMap {
     /**
 	 * field name on entity class that will be bound to this dto field
      * (reflection notation e.g. myField.mySubfield).
-	 */
+     *
+     * @return field name
+     */
 	String value() default "";
 
     /**
 	 * Marks Dto for read only state. When assembler assembles entity the data in Dto fields with
 	 * readOnly set to true will be ignored.
+	 *
+	 * @return read only flag
 	 */
 	boolean readOnly() default false;
 
@@ -49,6 +53,8 @@ public @interface DtoMap {
      *
      * Assembler will create an instance of this class and set it to entity property during #assembleEntity
      * method call if that property was null.
+     *
+     * @return class for map or collection
 	 */
 	Class entityMapOrCollectionClass() default HashMap.class;
 
@@ -60,6 +66,8 @@ public @interface DtoMap {
      * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleEntity methods.
      *
      * This setting has priority over the {@link #entityMapOrCollectionClass()} setting.
+     *
+     * @return class key for map or collection
      */
     String entityMapOrCollectionClassKey() default "";
 
@@ -67,6 +75,8 @@ public @interface DtoMap {
      * Class that defines the type of class for creating new DTO object map.
      *
      * Default is {@link java.util.HashMap}
+     *
+     * @return class for map
      */
     Class dtoMapClass() default HashMap.class;
 
@@ -78,6 +88,8 @@ public @interface DtoMap {
      * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleDto methods.
      *
      * This setting has priority over the {@link #dtoMapClass()} setting.
+     *
+     * @return class key for map
      */
     String dtoMapClassKey() default "";
 
@@ -89,6 +101,8 @@ public @interface DtoMap {
      * If the map has deep nested mapping (e.g. myField.myMap) the key
      * for the Item bean will be the last in this chain (e.g.
      * { "beanWithMyMapProperty", "beanMapItem" }).
+     *
+     * @return bean keys chain
      */
     String[] entityBeanKeys() default "";
 
@@ -98,6 +112,8 @@ public @interface DtoMap {
      *
      * DTO object bean factory key for creating new DTO map item object instances.
      * To specify the collection instance class use #dtoMapClass or #dtoMapClassKey.
+     *
+     * @return DTO bean key
      */
     String dtoBeanKey() default "";
 
@@ -114,6 +130,8 @@ public @interface DtoMap {
      * Assembler will automatically generate an internal sub assembler to map DTO items
      * to entity items and this is the class or interface that will be used for
      * creating assembler instance.
+     *
+     * @return entity generic type
      */
     Class entityGenericType() default Object.class;
 
@@ -125,6 +143,8 @@ public @interface DtoMap {
      * This setting has priority over the {@link #entityGenericType()} setting.
      *
      * @since 2.1.0
+     *
+     * @return entity generic type key
      */
     String entityGenericTypeKey() default "";
 
@@ -140,6 +160,7 @@ public @interface DtoMap {
      *      this with transform to (pseudo code):
      *          myDtoMap[ mapEntry { key: 1, value: subItem1Dto }, ... ]
      *
+     * @return entity collection map key
      */
     String entityCollectionMapKey() default "";
     
@@ -162,6 +183,7 @@ public @interface DtoMap {
      *         this with transform to (pseudo code):
      *              myDtoMap[ mapEntry { key: subItem1Dto, value: "some value" }, ... ]
      *
+     * @return use entity map key flag
      */
     boolean useEntityMapKey() default false;
 
@@ -174,10 +196,11 @@ public @interface DtoMap {
      *
      * There is no sensible default for this since we are matching incompatible (in theory)
      * types therefore there are no default implementations that can be used for this.
+     *
+     * @return DTO to entity matcher
      */
 	Class< ? extends DtoToEntityMatcher> dtoToEntityMatcher() default DtoToEntityMatcher.class;
-	
-	
+
 	/**
      * This reference is used to lookup a matcher in adapters map passed into
      * assembleDto and assembleEntity methods. The matcher has to implement
@@ -192,6 +215,8 @@ public @interface DtoMap {
      * The matcher is used for writing to entity, so read only map mapping do not require this.
      *
      * Requires adapters parameter during assembly.
+     *
+     * @return DTO to entity matcher key
 	 */
 	String dtoToEntityMatcherKey() default "";
 

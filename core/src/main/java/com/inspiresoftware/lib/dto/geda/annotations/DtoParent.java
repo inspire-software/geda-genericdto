@@ -34,6 +34,8 @@ public @interface DtoParent {
      *
      * This fields value will be passed on to {@link com.inspiresoftware.lib.dto.geda.adapter.EntityRetriever}
      * as primary key.
+	 *
+	 * @return PK field name
 	 */
 	String value() default "entityId";
 
@@ -42,6 +44,8 @@ public @interface DtoParent {
 	 * converters map that will do the entity retrieval.
      *
      * Requires adapters parameter during assembly.
+	 *
+	 * @return retriever key
 	 */
 	String retriever() default "retriever";
 		

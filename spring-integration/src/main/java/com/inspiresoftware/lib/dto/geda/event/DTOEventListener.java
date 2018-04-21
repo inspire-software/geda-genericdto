@@ -15,7 +15,7 @@ import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
 /**
  * Simple event interface that allows to act upon events produced by the DTOSupport
  * implementor.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 25, 2012
  * Time: 3:07:55 PM

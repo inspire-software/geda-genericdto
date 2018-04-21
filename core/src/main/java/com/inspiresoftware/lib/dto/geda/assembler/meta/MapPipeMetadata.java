@@ -45,6 +45,7 @@ public interface MapPipeMetadata extends PipeMetadata {
 	Object newEntityMapOrCollection(BeanFactory beanFactory) throws UnableToCreateInstanceException, BeanFactoryNotFoundException;
 
 	/**
+	 * @param beanFactory bean factory used during assembly runtime
 	 * @return the entity's collection/ map item generic type to identity the type of items in entity collection.
      *
      * @throws BeanFactoryUnableToLocateRepresentationException if unable to locate representative class

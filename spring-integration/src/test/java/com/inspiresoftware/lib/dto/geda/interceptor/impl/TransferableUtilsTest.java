@@ -32,7 +32,7 @@ import static org.testng.Assert.assertSame;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 29, 2012
  * Time: 7:52:54 PM

@@ -16,7 +16,7 @@ import com.inspiresoftware.lib.dto.geda.adapter.EntityRetriever;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Feb 21, 2012
  * Time: 9:47:23 AM

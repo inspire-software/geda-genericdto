@@ -16,7 +16,7 @@ import com.inspiresoftware.lib.dto.geda.examples.blog.dto.BaseUserEntryDTO;
 
 /**
  * Lightweight object to generate list of entries.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jul 1, 2012
  * Time: 1:26:18 PM

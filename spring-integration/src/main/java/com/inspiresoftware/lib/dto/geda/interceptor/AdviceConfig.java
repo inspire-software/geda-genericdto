@@ -19,7 +19,7 @@ import java.io.Serializable;
 /**
  * Advice config is a basic storate for the annotation data
  * so that we do not keep reference of it.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 26, 2012
  * Time: 7:54:26 AM

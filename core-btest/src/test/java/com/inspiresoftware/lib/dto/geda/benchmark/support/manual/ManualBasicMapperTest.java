@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 10:56:27 AM

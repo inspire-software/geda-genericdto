@@ -29,6 +29,8 @@ public @interface DtoField {
 	/**
      * field name on entity class that will be bound to this dto field
      * (use "dot" notation for graph path e.g. myField.mySubfield)).
+	 *
+	 * @return field name
      */
 	String value() default "";
 	
@@ -38,12 +40,16 @@ public @interface DtoField {
      * This converter must implement {@link com.inspiresoftware.lib.dto.geda.adapter.ValueConverter}.
      *
      * Requires adapters parameter during assembly.
+	 *
+	 * @return converter key
      */
 	String converter() default "";
 	
 	/**
 	 * Marks Dto for read only state. When assembler assembles entity the data in Dto fields with
 	 * readOnly set to true will be ignored.
+	 *
+	 * @return read only flag
 	 */
 	boolean readOnly() default false;
 
@@ -56,6 +62,8 @@ public @interface DtoField {
      * Specifies entity bean key chain that will be used by bean factory injected to
      * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler}
      * assembleEntity methods.
+	 *
+	 * @return bean keys chain
      */
 	String[] entityBeanKeys() default "";
 
@@ -68,6 +76,8 @@ public @interface DtoField {
      *
      * Specifies DTO bean key that will be used by bean factory injected to
      * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleDto methods.
+	 *
+	 * @return  DTO bean key
      */
     String dtoBeanKey() default "";
 		

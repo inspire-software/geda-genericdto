@@ -14,7 +14,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
  * Spring XML parser handler.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 25, 2012
  * Time: 4:08:07 PM

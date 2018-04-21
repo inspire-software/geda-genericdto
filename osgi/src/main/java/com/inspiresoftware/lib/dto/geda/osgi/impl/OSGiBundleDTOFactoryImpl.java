@@ -20,7 +20,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.extension.DisposableContainer;
  *
  * This is disposable throw away container - once it had been disposed
  * it is no longer should be used as we loose class loader reference.
- * <p/>
+ *
  * User: denispavlov
  * Date: May 25, 2011
  * Time: 6:33:52 PM

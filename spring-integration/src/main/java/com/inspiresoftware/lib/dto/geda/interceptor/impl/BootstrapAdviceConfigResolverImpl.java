@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * This implementation works in pair with {@link GeDABootstrapAdvicePostProcessor}
  * bean post processor.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 26, 2012
  * Time: 1:03:36 PM

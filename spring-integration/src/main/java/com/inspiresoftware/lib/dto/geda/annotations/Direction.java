@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.annotations;
 
 /**
  * Defines the direction of data transfer.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 25, 2012
  * Time: 7:54:10 PM

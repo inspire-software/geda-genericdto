@@ -15,7 +15,7 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 8:46:17 AM

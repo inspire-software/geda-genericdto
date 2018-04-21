@@ -16,7 +16,7 @@ import com.inspiresoftware.lib.dto.geda.examples.addressbook.dto.ContactDTO;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Aug 30, 2012
  * Time: 11:54:07 AM

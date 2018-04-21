@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.annotations;
 
 /**
  * When should the transfer of data from/to dto/entity should occur.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 25, 2012
  * Time: 7:58:36 PM

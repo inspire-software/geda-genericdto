@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Repository for all adapters.
  * Rationale - default implementation to provide basic support for value transfer.
- * <p/>
+ *
  * User: Denis Pavlov
  * Date: Jan 26, 2010
  * Time: 4:13:40 PM

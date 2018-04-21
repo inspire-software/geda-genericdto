@@ -18,7 +18,7 @@ import org.springframework.core.Ordered;
 /**
  * This post processor will scan the methods annotated with {@link com.inspiresoftware.lib.dto.geda.annotations.Transferable}
  * on beans in order to white-list methods to be used for advice.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 27, 2012
  * Time: 4:00:01 PM

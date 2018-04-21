@@ -179,6 +179,8 @@ public abstract class AbstractMethodSynthesizer extends SynthesizerUtils impleme
      * We must maintain only weak reference to the class loader.
      *
      * @param classLoader class loader to contribute generated files to.
+	 *
+	 * @return reference to class loader
      */
     protected Reference<ClassLoader> initialiseClassLoaderWeakReference(final ClassLoader classLoader) {
         return new SoftReference<ClassLoader>(classLoader);
@@ -552,6 +554,8 @@ public abstract class AbstractMethodSynthesizer extends SynthesizerUtils impleme
 	
 	/**
 	 * Class loader reference.
+	 *
+	 * @return class loader reference
 	 */
 	protected ClassLoader getClassLoader() {
         ClassLoader cl = loader.get();

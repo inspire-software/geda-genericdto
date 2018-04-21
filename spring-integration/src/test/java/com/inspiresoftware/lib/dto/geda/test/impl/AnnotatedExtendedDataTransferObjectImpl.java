@@ -16,7 +16,7 @@ import com.inspiresoftware.lib.dto.geda.test.ExtendedDataTransferObject;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 26, 2012
  * Time: 2:59:25 PM

@@ -19,7 +19,7 @@ import org.junit.Test;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Aug 30, 2012
  * Time: 12:49:58 PM

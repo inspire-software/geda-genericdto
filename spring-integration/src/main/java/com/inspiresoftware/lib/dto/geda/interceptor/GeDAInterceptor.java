@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * The workhorse of the whole enterprise - interceptor that will use dto support facade
  * in order to enrich DTO/Entities whist method invocation takes place.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 25, 2012
  * Time: 8:03:32 PM

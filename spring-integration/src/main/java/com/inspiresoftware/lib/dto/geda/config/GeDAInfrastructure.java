@@ -13,7 +13,7 @@ package com.inspiresoftware.lib.dto.geda.config;
 /**
  * Marker class to mark Beans that are part of the GeDA integration infrastructure
  * and hence do not need to be scanned for Advice (AOP enrichment).
- * <p/>
+ *
  * User: denispavlov
  * Date: Apr 30, 2012
  * Time: 6:45:31 PM

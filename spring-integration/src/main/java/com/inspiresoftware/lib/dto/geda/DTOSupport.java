@@ -17,7 +17,7 @@ import java.util.Collection;
 /**
  * Facade for working with DTO to entity conversion that is application aware and
  * uses the GeDA assembler.
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 27, 2011
  * Time: 8:29:02 AM

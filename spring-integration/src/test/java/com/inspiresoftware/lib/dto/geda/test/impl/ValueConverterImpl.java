@@ -16,7 +16,7 @@ import com.inspiresoftware.lib.dto.geda.test.ExposedValueConverter;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Feb 21, 2012
  * Time: 9:37:29 AM

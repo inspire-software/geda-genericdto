@@ -14,7 +14,7 @@ import com.inspiresoftware.lib.dto.geda.examples.addressbook.domain.Address;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Aug 30, 2012
  * Time: 11:52:02 AM

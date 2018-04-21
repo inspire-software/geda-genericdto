@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 30, 2012
  * Time: 6:35:10 PM

@@ -18,7 +18,7 @@ import com.inspiresoftware.lib.dto.geda.examples.blog.dto.BaseUserEntryDTO;
  * The reply DTO object is in essence the same as base user entry,
  * so we can reuse the interface but provide a "carry over" mapping
  * for replyEntry property of domain entity.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jul 1, 2012
  * Time: 1:35:10 PM

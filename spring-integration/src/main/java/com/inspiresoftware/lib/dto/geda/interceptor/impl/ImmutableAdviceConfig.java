@@ -16,7 +16,7 @@ import com.inspiresoftware.lib.dto.geda.interceptor.AdviceConfig;
 
 /**
  * Basic immutable config.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 26, 2012
  * Time: 12:38:09 PM

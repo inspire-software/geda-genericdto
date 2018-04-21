@@ -24,7 +24,7 @@ import java.util.Locale;
 
 /**
  * Caliper powered benchmark.
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 8:35:29 AM

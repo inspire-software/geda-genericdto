@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * Advisable methods repository that is populated through {@link org.springframework.beans.factory.config.BeanPostProcessor}.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 27, 2012
  * Time: 4:39:47 PM

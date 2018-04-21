@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * Additionally this resolver keeps track of the methods that are not applicable and
  * thus are blacklisted.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 26, 2012
  * Time: 1:03:36 PM

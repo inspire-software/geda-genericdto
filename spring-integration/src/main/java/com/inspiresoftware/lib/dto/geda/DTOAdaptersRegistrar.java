@@ -15,7 +15,7 @@ import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
 /**
  * Acts as a visitor for dto support instance in order to get its reference
  * for value converters that need it.
- * <p/>
+ *
  * User: denispavlov
  * Date: Feb 20, 2012
  * Time: 10:21:52 PM

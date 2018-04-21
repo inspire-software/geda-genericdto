@@ -16,7 +16,7 @@ import com.inspiresoftware.lib.dto.geda.benchmark.dto.AddressDTO;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 9:38:38 AM

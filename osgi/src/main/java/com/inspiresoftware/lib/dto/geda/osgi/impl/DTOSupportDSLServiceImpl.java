@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * All event listeners provided with the following context:
  * listener.onEvent(context, DTO, Entity [, Throwable])
  *
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 27, 2011
  * Time: 5:33:05 PM

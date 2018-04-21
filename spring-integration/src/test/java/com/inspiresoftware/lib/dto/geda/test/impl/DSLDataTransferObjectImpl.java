@@ -16,7 +16,7 @@ import java.util.Date;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 26, 2012
  * Time: 2:59:25 PM

@@ -63,7 +63,7 @@ import java.lang.annotation.*;
  *  public Entity toDtoAndBackToEntity(DTO target, Entity source, ... )
  *  public void toDtoAndBackToEntity(DTO target, Entity source, ... )
  *
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 25, 2012
  * Time: 7:50:53 PM

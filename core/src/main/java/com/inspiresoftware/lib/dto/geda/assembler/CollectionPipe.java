@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * Object that handles read and write streams between Dto and Entity objects.
- * <p/>
+ *
  * User: Denis Pavlov
  * Date: Jan 25, 2010
  * Time: 12:10:02 PM

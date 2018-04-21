@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * Helps test the binding mechanism.
- * <p/>
+ *
  * User: denispavlov
  * Date: Feb 21, 2012
  * Time: 8:57:14 AM

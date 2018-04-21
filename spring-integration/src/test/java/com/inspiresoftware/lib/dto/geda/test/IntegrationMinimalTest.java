@@ -27,7 +27,7 @@ import static org.testng.Assert.*;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 25, 2012
  * Time: 5:30:53 PM

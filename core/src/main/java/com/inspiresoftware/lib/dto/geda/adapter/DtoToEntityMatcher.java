@@ -16,7 +16,7 @@ package com.inspiresoftware.lib.dto.geda.adapter;
  * Matcher is used with Collection pipe to synchronize the DTO and Entities collection.
  * match true will allow {@link com.inspiresoftware.lib.dto.geda.assembler.Pipe} to determine whether
  * the entity has been removed, updated or DTO is to be added as new entity.
- * <p/>
+ *
  * 
  * @param <DTO> dto class
  * @param <Entity> entity class

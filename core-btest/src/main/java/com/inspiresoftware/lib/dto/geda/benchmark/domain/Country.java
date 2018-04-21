@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.benchmark.domain;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 8:40:50 AM

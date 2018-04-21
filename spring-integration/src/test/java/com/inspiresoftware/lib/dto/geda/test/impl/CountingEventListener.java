@@ -17,7 +17,7 @@ import org.springframework.beans.factory.BeanNameAware;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 26, 2012
  * Time: 5:12:43 PM

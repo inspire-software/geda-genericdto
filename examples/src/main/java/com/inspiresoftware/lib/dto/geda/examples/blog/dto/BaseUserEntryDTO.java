@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.examples.blog.dto;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jul 1, 2012
  * Time: 1:28:52 PM

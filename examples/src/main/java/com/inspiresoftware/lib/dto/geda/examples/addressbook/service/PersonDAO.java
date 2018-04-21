@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Aug 30, 2012
  * Time: 11:56:22 AM

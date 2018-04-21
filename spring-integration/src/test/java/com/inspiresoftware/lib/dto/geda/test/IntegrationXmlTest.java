@@ -24,7 +24,7 @@ import static org.testng.Assert.assertNotNull;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 30, 2012
  * Time: 6:35:10 PM

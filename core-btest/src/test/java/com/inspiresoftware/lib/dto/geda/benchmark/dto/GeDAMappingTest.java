@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 8:50:03 AM

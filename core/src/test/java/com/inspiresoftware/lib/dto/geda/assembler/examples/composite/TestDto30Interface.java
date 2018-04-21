@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.assembler.examples.composite;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Aug 30, 2012
  * Time: 2:51:14 PM

@@ -21,7 +21,7 @@ import com.inspiresoftware.lib.dto.geda.exception.AnnotationValidatingBindingExc
 
 /**
  * Small utility class that validates pipes.
- * <p/>
+ *
  * User: Denis Pavlov
  * Date: Jan 26, 2010
  * Time: 3:43:30 PM

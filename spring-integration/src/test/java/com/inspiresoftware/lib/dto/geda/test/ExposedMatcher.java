@@ -16,7 +16,7 @@ import com.inspiresoftware.lib.dto.geda.adapter.DtoToEntityMatcher;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Feb 21, 2012
  * Time: 9:48:10 AM

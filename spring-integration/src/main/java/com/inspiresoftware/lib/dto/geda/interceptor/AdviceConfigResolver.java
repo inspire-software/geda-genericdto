@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * Examined the method being invoked for {@link com.inspiresoftware.lib.dto.geda.annotations.Transferable}.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 26, 2012
  * Time: 8:03:21 AM

@@ -34,10 +34,11 @@ public interface AnnotationProxy {
     /**
      * Return value of the annotation property.
      *
+     * @param <T> type of value
      * @param property property of a GeDA annotation.
      *
      * @return value
      */
-    public <T> T getValue(String property);
+    <T> T getValue(String property);
 
 }

@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Simple string key for class mapping with basic constructor reflection
  * instance creation.
- * <p/>
+ *
  * User: denispavlov
  * Date: May 25, 2011
  * Time: 6:33:52 PM

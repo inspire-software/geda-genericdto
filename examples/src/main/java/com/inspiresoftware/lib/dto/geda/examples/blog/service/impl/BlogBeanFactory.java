@@ -21,7 +21,7 @@ import com.inspiresoftware.lib.dto.geda.examples.blog.dto.impl.*;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jul 1, 2012
  * Time: 2:03:19 PM

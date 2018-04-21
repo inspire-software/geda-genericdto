@@ -31,7 +31,8 @@ public class AnnotationMissingBindingException extends GeDAException {
 	private final String fieldName;
 	
 	/**
-	 * @param type missing bindig type
+	 * @param type missing binding type
+	 * @param fieldName field name
 	 */
 	public AnnotationMissingBindingException(
 			final MissingBindingType type,

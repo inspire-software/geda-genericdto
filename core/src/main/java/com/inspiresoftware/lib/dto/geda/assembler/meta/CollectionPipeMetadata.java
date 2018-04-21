@@ -46,6 +46,7 @@ public interface CollectionPipeMetadata extends PipeMetadata {
 	Collection newEntityCollection(BeanFactory beanFactory) throws UnableToCreateInstanceException, BeanFactoryNotFoundException;
 
 	/**
+	 * @param beanFactory bean factory used during assembly runtime
 	 * @return the entity's collection generic type to identity the type of items in entity collection.
      *
      * @throws BeanFactoryUnableToLocateRepresentationException if unable to locate representative class

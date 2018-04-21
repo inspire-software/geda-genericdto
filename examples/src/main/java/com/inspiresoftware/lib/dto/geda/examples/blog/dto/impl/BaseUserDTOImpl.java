@@ -16,7 +16,7 @@ import com.inspiresoftware.lib.dto.geda.examples.blog.dto.BaseUserDTO;
 
 /**
  * Lightweight object to be used in lists.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jul 1, 2012
  * Time: 1:08:11 PM

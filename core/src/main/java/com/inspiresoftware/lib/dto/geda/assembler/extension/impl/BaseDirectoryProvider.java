@@ -17,7 +17,12 @@ package com.inspiresoftware.lib.dto.geda.assembler.extension.impl;
  *
  */
 public interface BaseDirectoryProvider {
-    /** @return base directory for file search */
+
+    /**
+     * @param name provider name
+     *
+     * @return base directory for file search
+     */
     String getBaseDir(final String name);
 
 }

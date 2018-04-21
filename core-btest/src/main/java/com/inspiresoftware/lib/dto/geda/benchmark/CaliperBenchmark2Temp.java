@@ -22,7 +22,7 @@ import com.inspiresoftware.lib.dto.geda.benchmark.support.orika.OrikaListMapper;
 
 /**
  * Caliper powered benchmark.
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 8:35:29 AM

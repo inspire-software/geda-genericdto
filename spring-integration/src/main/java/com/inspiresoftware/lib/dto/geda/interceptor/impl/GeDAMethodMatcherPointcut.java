@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * Basic method matcher pointcut.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 26, 2012
  * Time: 2:15:41 PM

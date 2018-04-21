@@ -14,7 +14,7 @@ import com.inspiresoftware.lib.dto.geda.event.DTOEventListener;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 31, 2012
  * Time: 5:13:36 PM

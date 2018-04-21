@@ -23,7 +23,7 @@ import java.util.Map;
  * @author Denis Pavlov
  * @since 2.0.2
  *
- * <p/>
+ *
  * User: denispavlov
  * Date: Aug 30, 2012
  * Time: 8:30:16 AM

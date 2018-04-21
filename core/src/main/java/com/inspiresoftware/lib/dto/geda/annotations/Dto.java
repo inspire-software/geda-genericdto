@@ -29,6 +29,8 @@ public @interface Dto {
 	 * Full canonical class (or interface) name that this DTO bounds to.
 	 * (e.g. com.inspiresoftware.lib.dto.geda.example.MyEntityClass or
      * com.inspiresoftware.lib.dto.geda.example.MyEntityInterface)
+	 *
+	 * @return full canonical class
 	 */
 	String[] value() default "";
 	

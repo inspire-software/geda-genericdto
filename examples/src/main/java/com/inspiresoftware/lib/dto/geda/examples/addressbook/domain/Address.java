@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.examples.addressbook.domain;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Aug 30, 2012
  * Time: 11:47:49 AM

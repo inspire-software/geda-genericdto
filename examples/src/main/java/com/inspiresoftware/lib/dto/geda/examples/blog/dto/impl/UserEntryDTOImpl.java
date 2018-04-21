@@ -25,7 +25,7 @@ import java.util.List;
  * This one contains BaseUserDTO (so we know who this entry belongs to if we
  * need to look up used record) and replies as BaseUserEntryDTO as we do not want
  * to load replies of replies until we need them.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jul 1, 2012
  * Time: 1:39:15 PM

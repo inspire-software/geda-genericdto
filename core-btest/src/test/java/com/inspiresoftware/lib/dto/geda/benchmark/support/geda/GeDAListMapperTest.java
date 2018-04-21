@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Ignored tests are just loop versions of regular tests so that we have some
  * time to exhibit what is going on using profiling tools.
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 10:53:37 AM

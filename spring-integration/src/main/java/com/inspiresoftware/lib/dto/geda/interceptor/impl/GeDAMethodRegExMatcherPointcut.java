@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
  * Please note that {@link org.springframework.aop.support.AbstractRegexpMethodPointcut} matches on union (OR)
  * of targetClass.getName() and method.getDeclaringClass().getName(), so both implementation and interfaces must
  * conform to match exclusions (if you have any).
- * <p/>
+ *
  * User: denispavlov
  * Date: May 1, 2012
  * Time: 10:00:00 AM

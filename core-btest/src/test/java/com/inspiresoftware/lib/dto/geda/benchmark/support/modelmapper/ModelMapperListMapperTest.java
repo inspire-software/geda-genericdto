@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 11:43:54 AM

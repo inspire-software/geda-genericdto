@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 /**
  * Defines a collection in DTO.
- * <p/>
+ *
  * User: Denis Pavlov
  * Date: Jan 25, 2010
  * Time: 11:42:59 AM
@@ -33,12 +33,16 @@ public @interface DtoCollection {
     /**
      * field name on entity class that will be bound to this dto field
      * (reflection notation e.g. myField.mySubfield).
+     *
+     * @return field name
      */
 	String value() default "";
 
     /**
 	 * Marks Dto for read only state. When assembler assembles entity the data in Dto fields with
 	 * readOnly set to true will be ignored.
+     *
+     * @return read only flag
 	 */
 	boolean readOnly() default false;
 
@@ -48,6 +52,8 @@ public @interface DtoCollection {
      *
      * Assembler will create an instance of this class and set it to entity property during #assembleEntity
      * method call if that property was null.
+     *
+     * @return class for collection
      */
 	Class entityCollectionClass() default ArrayList.class;
 
@@ -59,12 +65,16 @@ public @interface DtoCollection {
      * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleEntity methods.
      *
      * This setting has priority over the {@link #entityCollectionClass()} setting.
+     *
+     * @return class key for collection
      */
     String entityCollectionClassKey() default "";
 
     /**
      * Class that defines the type of class for creating new DTO object collection.
      * Default is {@link java.util.ArrayList}
+     *
+     * @return class for collection
      */
     Class dtoCollectionClass() default ArrayList.class;
 
@@ -76,6 +86,8 @@ public @interface DtoCollection {
      * {@link com.inspiresoftware.lib.dto.geda.assembler.Assembler} assembleDto methods.
      *
      * This setting has priority over the {@link #dtoCollectionClass()} setting.
+     *
+     * @return class key for collection
      */
     String dtoCollectionClassKey() default "";
 
@@ -87,6 +99,8 @@ public @interface DtoCollection {
      * If the collection has deep nested mapping (e.g. myField.myCollection) the key
      * for the Item bean will be the last in this chain (e.g.
      * { "beanWithMyCollectionProperty", "beanCollectionItem" }).
+     *
+     * @return bean keys chain
      */
     String[] entityBeanKeys() default "";
 
@@ -96,6 +110,8 @@ public @interface DtoCollection {
      *
      * DTO object bean factory key for creating new DTO collection item object instances.
      * To specify the collection instance class use #dtoCollectionClass or #dtoCollectionClassKey.
+     *
+     * @return DTO bean key
      */
     String dtoBeanKey() default "";
 
@@ -112,6 +128,8 @@ public @interface DtoCollection {
      * Assembler will automatically generate an internal sub assembler to map DTO items
      * to entity items and this is the class or interface that will be used for
      * creating assembler instance.
+     *
+     * @return entity generic type
      */
     Class entityGenericType() default Object.class;
 
@@ -123,6 +141,8 @@ public @interface DtoCollection {
      * This setting has priority over the {@link #entityGenericType()} setting.
      *
      * @since 2.1.0
+     *
+     * @return entity generic type key
      */
     String entityGenericTypeKey() default "";
 
@@ -133,6 +153,8 @@ public @interface DtoCollection {
      * There is no sensible default for this since we are matching incompatible (in theory)
      * types (i.e. DTO with Entity) therefore there are no default implementations that can be
      * used for this.
+     *
+     * @return DTO to entity matcher
      */
 	Class< ? extends DtoToEntityMatcher> dtoToEntityMatcher() default DtoToEntityMatcher.class;
 	
@@ -147,6 +169,8 @@ public @interface DtoCollection {
      * not require this.
      *
      * Requires adapters parameter during assembly.
+     *
+     * @return DTO to entity matcher key
 	 */
 	String dtoToEntityMatcherKey() default "";
 

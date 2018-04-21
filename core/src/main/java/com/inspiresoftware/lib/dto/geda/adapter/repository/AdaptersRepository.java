@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * A convenience repository that can be mapped into IoC container.
  *
- * <p/>
+ *
  * User: Denis Pavlov
  * Date: Jan 26, 2010
  * Time: 4:11:13 PM

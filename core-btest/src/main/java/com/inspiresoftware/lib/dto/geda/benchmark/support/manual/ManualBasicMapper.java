@@ -20,7 +20,7 @@ import com.inspiresoftware.lib.dto.geda.benchmark.dto.PersonDTO;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 10:29:18 AM

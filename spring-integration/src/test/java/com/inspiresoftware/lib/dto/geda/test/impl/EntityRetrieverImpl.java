@@ -15,7 +15,7 @@ import com.inspiresoftware.lib.dto.geda.test.ExposedEntityRetriever;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Feb 21, 2012
  * Time: 9:38:08 AM

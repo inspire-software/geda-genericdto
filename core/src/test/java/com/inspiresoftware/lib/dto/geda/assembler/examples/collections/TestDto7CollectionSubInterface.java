@@ -15,7 +15,7 @@ import org.junit.Ignore;
 
 /**
  * .
- * <p/>
+ *
  * User: Denis Pavlov
  * Date: Jan 26, 2010
  * Time: 11:31:24 AM

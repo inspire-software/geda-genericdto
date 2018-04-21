@@ -21,7 +21,7 @@ import java.util.Map;
  * Basic registrar that calls {@link com.inspiresoftware.lib.dto.geda.DTOSupport}#registerValueConverter()
  * for each entry in map. All bean instances with {@link com.inspiresoftware.lib.dto.geda.DTOSupportAwareAdapter}
  * will be enriched.
- * <p/>
+ *
  * User: denispavlov
  * Date: Feb 21, 2012
  * Time: 8:42:37 AM

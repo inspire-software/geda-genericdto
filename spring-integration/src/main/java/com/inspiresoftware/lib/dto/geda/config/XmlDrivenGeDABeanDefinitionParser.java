@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 25, 2012
  * Time: 4:12:57 PM

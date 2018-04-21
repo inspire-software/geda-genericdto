@@ -35,12 +35,16 @@ public @interface DtoVirtualField {
      * This converter must implement {@link com.inspiresoftware.lib.dto.geda.adapter.ValueConverter}.
      *
      * Requires adapters parameter during assembly.
+	 *
+	 * @return converter key
 	 */
 	String converter() default "";
 	
 	/**
 	 * Marks Dto for read only state. When assembler assembles entity the data in Dto fields with
 	 * readOnly set to true will be ignored.
+	 *
+	 * @return read only flag
 	 */
 	boolean readOnly() default false;
 

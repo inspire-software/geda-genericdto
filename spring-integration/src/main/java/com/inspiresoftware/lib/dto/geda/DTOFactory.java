@@ -15,7 +15,7 @@ import com.inspiresoftware.lib.dto.geda.config.GeDAInfrastructure;
 
 /**
  * Marker interface for GeDA Spring XML configurations.
- * <p/>
+ *
  * User: denispavlov
  * Date: Jan 25, 2012
  * Time: 2:49:11 PM

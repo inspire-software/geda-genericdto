@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNull;
 
 /**
  * .
- * <p/>
+ *
  * User: denispavlov
  * Date: Jul 10, 2012
  * Time: 11:36:11 AM

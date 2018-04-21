@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.benchmark;
 
 /**
  * Simple adapter to unify transfer process.
- * <p/>
+ *
  * User: denispavlov
  * Date: Sep 17, 2012
  * Time: 10:22:37 AM

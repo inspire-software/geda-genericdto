@@ -12,7 +12,7 @@ package com.inspiresoftware.lib.dto.geda.adapter;
 
 /**
  * Marker interface for all supported adapters.
- * <p/>
+ *
  * User: denispavlov
  * Date: Apr 30, 2012
  * Time: 6:56:01 PM

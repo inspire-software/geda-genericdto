@@ -18,7 +18,7 @@ import org.junit.Ignore;
 
 /**
  * Test matches that matches the Strings.
- * <p/>
+ *
  * User: Denis Pavlov
  * Date: Jan 25, 2010
  * Time: 3:34:16 PM
