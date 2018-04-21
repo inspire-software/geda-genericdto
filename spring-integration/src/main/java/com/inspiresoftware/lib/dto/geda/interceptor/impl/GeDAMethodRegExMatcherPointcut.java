@@ -47,6 +47,8 @@ public class GeDAMethodRegExMatcherPointcut extends GeDAMethodMatcherPointcut {
 	 * Set the regular expressions defining methods to match.
 	 * Matching will be the union of all these; if any match,
 	 * the pointcut matches.
+     *
+     * @param patterns patterns
 	 */
 	public void setPatterns(String[] patterns) {
         regexPointcut.setPatterns(patterns);
@@ -56,6 +58,8 @@ public class GeDAMethodRegExMatcherPointcut extends GeDAMethodMatcherPointcut {
 	 * Set the regular expressions defining methods to match for exclusion.
 	 * Matching will be the union of all these; if any match,
 	 * the pointcut matches.
+     *
+     * @param excludedPatterns excluded patterns
 	 */
 	public void setExcludedPatterns(String[] excludedPatterns) {
         regexPointcut.setExcludedPatterns(excludedPatterns);

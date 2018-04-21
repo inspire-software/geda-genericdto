@@ -34,31 +34,31 @@ import java.lang.annotation.*;
  * before = DTO_TO_ENTITY:
  *
  *  public void toEntity(DTO dto, Entity entity, ... )
- *  public void toEntity(Collection<DTO> dto, Collection<Entity> blankCollection, ... )
+ *  public void toEntity(Collection&lt;DTO&gt; dto, Collection&lt;Entity&gt; blankCollection, ... )
  *
  * before = ENTITY_TO_DTO:
  *
  *  public void toDto(DTO dto, Entity entity, ... )
- *  public void toDto(Collection<DTO> dto, Collection<Entity> blankCollection, ... )
+ *  public void toDto(Collection&lt;DTO&gt; dto, Collection&lt;Entity&gt; blankCollection, ... )
  *
  * after = DTO_TO_ENTITY:
  *
  *  public Entity toEntity(DTO dto, ... )
  *  public void toEntity(DTO dto, Entity entity, ... )
- *  public void toEntity(Collection<DTO> dto, Collection<Entity> blankCollection, ... )
+ *  public void toEntity(Collection&lt;DTO&gt; dto, Collection&lt;Entity&gt; blankCollection, ... )
  *
  * after = ENTITY_TO_DTO:
  *  
  *  public DTO toDto(Entity entity, ... )
  *  public void toDto(DTO dto, Entity entity, ... )
- *  public void toDto(Collection<DTO> dto, Collection<Entity> blankCollection, ... )
+ *  public void toDto(Collection&lt;DTO&gt; dto, Collection&lt;Entity&gt; blankCollection, ... )
  *
- * before = DTO_TO_ENTITY, after = ENTITY_TO_DTO (for method with return patterns is source->target->return):
+ * before = DTO_TO_ENTITY, after = ENTITY_TO_DTO (for method with return patterns is source-&gt;target-&gt;return):
  *
  *  public DTO toEntityAndBackToDto(DTO source, Entity target, ... )
  *  public void toEntityAndBackToDto(DTO source, Entity target, ... )
  *
- * before = ENTITY_TO_DTO, after = DTO_TO_ENTITY (for method with return patterns is source->target->return):
+ * before = ENTITY_TO_DTO, after = DTO_TO_ENTITY (for method with return patterns is source-&gt;target-&gt;return):
  *
  *  public Entity toDtoAndBackToEntity(DTO target, Entity source, ... )
  *  public void toDtoAndBackToEntity(DTO target, Entity source, ... )

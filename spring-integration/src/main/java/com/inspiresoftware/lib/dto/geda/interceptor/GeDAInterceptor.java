@@ -170,6 +170,8 @@ public class GeDAInterceptor implements MethodInterceptor, GeDAInfrastructure {
      * @param args current invocation arguments
      * @param result result of the method invocation
      * @param cfg configuration mode
+     *
+     * @return result of the transfer
      */
     protected Object invokeTransferAfter(final Object[] args,
                                        final Object result,

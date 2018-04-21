@@ -25,6 +25,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> dto type
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
      * @param beanFactory bean factory
@@ -38,6 +39,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble new dto from entity object
      *
+     * @param <T> dto type
      * @param dtoKey dto key (must not be null)
      * @param entity entity (must not be null)
      * @param beanFactory bean factory
@@ -50,6 +52,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> dto type
      * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
@@ -64,6 +67,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> dto type
      * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dtoKey dto key (must not be null)
      * @param entity entity (must not be null)
@@ -77,6 +81,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> dto type
      * @param dtoKey dto object key
      * @param dtos dto collection (must not be null)
      * @param entities entities collection (must not be null)
@@ -88,6 +93,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> dto type
      * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dtoKey dto object key
      * @param dtos dto collection (must not be null)
@@ -100,6 +106,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> entity type
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
      * @param beanFactory bean factory
@@ -113,6 +120,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> entity type
      * @param dto dto (must not be null)
      * @param entityKey entity key (must not be null)
      * @param beanFactory bean factory
@@ -125,6 +133,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> entity type
      * @param dtoFilter specify the class level
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
@@ -139,6 +148,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> entity type
      * @param dtoFilter specify the class level
      * @param dto dto (must not be null)
      * @param entityKey entity key (must not be null)
@@ -152,6 +162,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble entities from dto objects
      *
+     * @param <T> entity type
      * @param entityKey entity object key
      * @param dtos dto collection (must not be null)
      * @param entities entities collection (must not be null)
@@ -163,6 +174,7 @@ public interface DTOSupportAnnotationsService {
     /**
      * Assemble entities from dto objects
      *
+     * @param <T> entity type
      * @param dtoFilter specify the class level
      * @param entityKey entity object key
      * @param dtos dto collection (must not be null)

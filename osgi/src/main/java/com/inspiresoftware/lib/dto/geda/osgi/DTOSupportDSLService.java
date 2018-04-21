@@ -26,6 +26,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> dto type
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
      * @param registry registry
@@ -39,6 +40,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble new dto from entity object
      *
+     * @param <T> dto type
      * @param dtoKey dto key (must not be null)
      * @param entity entity (must not be null)
      * @param registry registry
@@ -51,6 +53,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> dto type
      * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
@@ -65,6 +68,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> dto type
      * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dtoKey dto key (must not be null)
      * @param entity entity (must not be null)
@@ -78,6 +82,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> dto type
      * @param dtoKey dto object key
      * @param dtos dto collection (must not be null)
      * @param entities entities collection (must not be null)
@@ -89,6 +94,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> dto type
      * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dtoKey dto object key
      * @param dtos dto collection (must not be null)
@@ -101,6 +107,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> entity type
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
      * @param registry registry
@@ -114,6 +121,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> entity type
      * @param dto dto (must not be null)
      * @param entityKey entity key (must not be null)
      * @param registry registry
@@ -126,6 +134,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> entity type
      * @param dtoFilter specify the class level
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
@@ -140,6 +149,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> entity type
      * @param dtoFilter specify the class level
      * @param dto dto (must not be null)
      * @param entityKey entity key (must not be null)
@@ -153,6 +163,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble entities from dto objects
      *
+     * @param <T> entity type
      * @param entityKey entity object key
      * @param dtos dto collection (must not be null)
      * @param entities entities collection (must not be null)
@@ -164,6 +175,7 @@ public interface DTOSupportDSLService {
     /**
      * Assemble entities from dto objects
      *
+     * @param <T> entity type
      * @param dtoFilter specify the class level
      * @param entityKey entity object key
      * @param dtos dto collection (must not be null)

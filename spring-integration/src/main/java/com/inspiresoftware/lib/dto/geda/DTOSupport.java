@@ -27,6 +27,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> DTO class
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
      * @param context transfer context
@@ -39,6 +40,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble new dto from entity object
      *
+     * @param <T> DTO class
      * @param dtoKey dto key (must not be null)
      * @param entity entity (must not be null)
      * @param context transfer context
@@ -50,6 +52,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> DTO class
      * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
@@ -63,6 +66,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> DTO class
      * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dtoKey dto key (must not be null)
      * @param entity entity (must not be null)
@@ -75,6 +79,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> DTO class
      * @param dtoKey dto object key
      * @param dtos dto collection (must not be null)
      * @param entities entities collection (must not be null)
@@ -85,6 +90,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble dto from entity object
      *
+     * @param <T> DTO class
      * @param dtoFilter specify the class level (can be used as a filter if there are DTO hierarchies)
      * @param dtoKey dto object key
      * @param dtos dto collection (must not be null)
@@ -96,6 +102,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> Entity class
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
      * @param context transfer context
@@ -108,6 +115,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> Entity class
      * @param dto dto (must not be null)
      * @param entityKey entity key (must not be null)
      * @param context transfer context
@@ -119,6 +127,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> Entity class
      * @param dtoFilter specify the class level
      * @param dto dto (must not be null)
      * @param entity entity (must not be null)
@@ -132,6 +141,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble entity from dto object
      *
+     * @param <T> Entity class
      * @param dtoFilter specify the class level
      * @param dto dto (must not be null)
      * @param entityKey entity key (must not be null)
@@ -144,6 +154,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble entities from dto objects
      *
+     * @param <T> Entity class
      * @param entityKey entity object key
      * @param dtos dto collection (must not be null)
      * @param entities entities collection (must not be null)
@@ -154,6 +165,7 @@ public interface DTOSupport extends GeDAInfrastructure {
     /**
      * Assemble entities from dto objects
      *
+     * @param <T> Entity class
      * @param dtoFilter specify the class level
      * @param entityKey entity object key
      * @param dtos dto collection (must not be null)
