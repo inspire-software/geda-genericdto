@@ -11,6 +11,7 @@
 package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.PipeDataFlowRule;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.DisposableContainer;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 
@@ -66,6 +67,26 @@ public interface Assembler extends DisposableContainer {
                AnnotationDuplicateBindingException;
 
     /**
+     * Assembles dto using additional rules.
+     * @param dto the dto to insert data to
+     * @param entity the entity to get data from
+     * @param converters the converters to be used during conversion. The rationale for injecting the converters
+     *        during conversion is to enforce them being stateless and unattached to assembler.
+     * @param dtoBeanFactory bean factory for creating new instances of nested DTO objects mapped by
+     *        {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField#dtoBeanKey()} key.
+     * @param rule additional processing rules
+     */
+    void assembleDto(final Object dto, final Object entity,
+                     final Map<String, Object> converters,
+                     final BeanFactory dtoBeanFactory,
+                     PipeDataFlowRule rule) throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException,
+            BeanFactoryUnableToCreateInstanceException, AnnotationMissingException, NotValueConverterException,
+            ValueConverterNotFoundException, UnableToCreateInstanceException, CollectionEntityGenericReturnTypeException,
+            InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException,
+            AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException,
+            AnnotationDuplicateBindingException;
+
+    /**
      * Assembles dtos from current entities by using annotations of the dto.
      * @param dtos the non-null and empty dtos collection to insert data to
      * @param entities the the non-null entity collection to get data from
@@ -100,6 +121,20 @@ public interface Assembler extends DisposableContainer {
                CollectionEntityGenericReturnTypeException, InspectionScanningException, InspectionPropertyNotFoundException,
                InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
                GeDARuntimeException, AnnotationDuplicateBindingException;
+
+    /**
+     * Assembles dtos using additional rules.
+     * @param dtos the non-null and empty dtos collection to insert data to
+     * @param entities the the non-null entity collection to get data from
+     * @param converters the converters to be used during conversion. The rationale for injecting the converters
+     *        during conversion is to enforce them being stateless and unattached to assembler.
+     * @param dtoBeanFactory bean factory for creating new instances of nested DTO objects mapped by
+     *        {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField#dtoBeanKey()} key.
+     * @param rule additional processing rules
+     */
+    void assembleDtos(Collection dtos, Collection entities,
+                      Map<String, Object> converters, BeanFactory dtoBeanFactory, PipeDataFlowRule rule);
+
 
     /**
      * Assembles entity from current dto by using annotations of the dto.
@@ -146,6 +181,29 @@ public interface Assembler extends DisposableContainer {
                AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException;
 
     /**
+     * Assembles entity using additional rules.
+     * @param dto the dto to get data from
+     * @param entity the entity to copy data to
+     * @param converters the converters to be used during conversion. Optional parameter that provides map with
+
+     *        during conversion is to enforce them being stateless and unattached to assembler.
+     * @param entityBeanFactory bean factory for creating new instances of nested domain objects mapped to DTO by
+     *        {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField#entityBeanKeys()} key.
+     * @param rule additional processing rules
+     */
+    void assembleEntity(Object dto, Object entity,
+                        Map<String, Object> converters,
+                        BeanFactory entityBeanFactory,
+                        PipeDataFlowRule rule)
+            throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException,
+            BeanFactoryUnableToCreateInstanceException, NotEntityRetrieverException, EntityRetrieverNotFoundException,
+            NotValueConverterException, ValueConverterNotFoundException, AnnotationMissingBeanKeyException,
+            AnnotationMissingException, UnableToCreateInstanceException, CollectionEntityGenericReturnTypeException,
+            InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException,
+            AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException,
+            AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException;
+
+    /**
      * Assembles entities from current dtos by using annotations of the dto.
      * @param dtos the dto to get data from
      * @param entities the entity to copy data to
@@ -190,4 +248,19 @@ public interface Assembler extends DisposableContainer {
                InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
                GeDARuntimeException, AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException,
                NotDtoToEntityMatcherException;
+
+    /**
+     * Assembles entities using additional rules.
+     * @param dtos the dto to get data from
+     * @param entities the entity to copy data to
+     * @param converters the converters to be used during conversion. Optional parameter that provides map with
+     *        value converters mapped by {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField#converter()}. If no converters
+     *        are required for this DTO then a <code>null</code> can be passed in. The rationale for injecting the converters
+     *        during conversion is to enforce them being stateless and unattached to assembler.
+     * @param entityBeanFactory bean factory for creating new instances of nested domain objects mapped to DTO by
+     *        {@link com.inspiresoftware.lib.dto.geda.annotations.DtoField#entityBeanKeys()} key.
+     * @param rule rule for fields to be processed
+     */
+    void assembleEntities(Collection dtos, Collection entities,
+                          Map<String, Object> converters, BeanFactory entityBeanFactory, PipeDataFlowRule rule);
 }
