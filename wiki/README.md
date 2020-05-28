@@ -9,8 +9,8 @@
 
 ## OSGi API
 
-* [OSGi](CoreAPIOSGi.md) - OSGi support
+* [OSGi](OSGiAPI.md) - OSGi support
 
 ## Spring API
 
-* [Spring](CoreAPISpring.md) - Spring integration
+* [Spring](SpringAPI.md) - Spring integration
