@@ -125,6 +125,8 @@ If you would like to contact us please use GitHub.
 
 Please refer to [examples module](https://github.com/inspire-software/geda-genericdto/tree/master/examples) to see how to use the Assembler.
 
+And also have a look at our coprehensive [guide on the APIs and their use](https://github.com/inspire-software/geda-genericdto/tree/master/wiki) - click on md files for relevant API spec
+
 Module [core-btest](https://github.com/inspire-software/geda-genericdto/tree/master/core-btest) contains Performance benchmarks. To run those use -Pwith-btest option in maven:
 ```
 mvn install -Pwith-btest
