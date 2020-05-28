@@ -148,3 +148,25 @@ mvn install -Pall
 Also see how to setup GeDA in [IDE guide](https://github.com/inspire-software/geda-genericdto/blob/master/SetupGuide.md)
 
 Spring integration schemas can be found [here](https://github.com/inspire-software/geda-genericdto/tree/master/spring-integration/src/main/resources/com/inspiresoftware/lib/dto/geda/config)
+
+# Thanks!
+
+This is a special thanks page to people who helped me with this project:
+
+Igor Azarnyi
+
+Johannes Smunty
+
+Marcos Suarez
+
+Arun Jamwal
+
+Radouane
+
+Gregory Slonim
+
+Simon Watson
+
+Alexander Kley
+
+Daniel Lupu
