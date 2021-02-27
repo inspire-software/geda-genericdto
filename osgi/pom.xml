@@ -15,16 +15,16 @@
     <parent>
         <groupId>com.inspire-software.lib.dto.geda</groupId>
         <artifactId>geda</artifactId>
-        <version>3.1.3-SNAPSHOT</version>
+        <version>3.2.0-SNAPSHOT</version>
     </parent>
 
     <groupId>com.inspire-software.lib.dto.geda</groupId>
     <artifactId>geda.osgi</artifactId>
     <name>GeDA OSGi bundle</name>
     <description>GeDA (Generic DTO Assembler) OSGi bundle</description>
-    <version>3.1.3-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
+    <url>https://github.com/inspire-software/geda-genericdto/tree/master/wiki</url>
     <licenses>
         <license>
             <name>GNU Lesser General Public License (LGPLv3)</name>
@@ -33,13 +33,13 @@
         </license>
     </licenses>
     <scm>
-        <url>https://svn.code.sf.net/p/geda-genericdto/code/</url>
-        <connection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/trunk</developerConnection>
+        <url>https://github.com/inspire-software/geda-genericdto</url>
+        <connection>scm:git:git://github.com/inspire-software/geda-genericdto.git</connection>
+        <developerConnection>scm:git:git@github.com:inspire-software/geda-genericdto.git</developerConnection>
     </scm>
     <issueManagement>
-        <system>JIRA</system>
-        <url>http://inspire-software.com/jira/browse/GEDA</url>
+        <system>GitHUB</system>
+        <url>https://github.com/inspire-software/geda-genericdto/issues</url>
     </issueManagement>
     <developers>
         <developer>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>com.inspire-software.lib.dto.geda</groupId>
             <artifactId>geda.core</artifactId>
-            <version>3.1.3-SNAPSHOT</version>
+            <version>3.2.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.bcel</groupId>

@@ -13,21 +13,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <properties>
-        <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+        <org.springframework.version>5.2.9.RELEASE</org.springframework.version>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.inspire-software.lib.dto.geda</groupId>
         <artifactId>geda</artifactId>
-        <version>3.1.3-SNAPSHOT</version>
+        <version>3.2.0-SNAPSHOT</version>
     </parent>
     <artifactId>geda.spring-integration</artifactId>
     <name>DTO utilities package spring integration</name>
-    <version>3.1.3-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
     <description>Provides GeDA core integration for Spring framework</description>
     <packaging>jar</packaging>
-    <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
+    <url>https://github.com/inspire-software/geda-genericdto/tree/master/wiki</url>
     <licenses>
         <license>
             <name>GNU Lesser General Public License (LGPLv3)</name>
@@ -36,13 +36,13 @@
         </license>
     </licenses>
     <scm>
-        <url>https://svn.code.sf.net/p/geda-genericdto/code/</url>
-        <connection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/trunk</developerConnection>
+        <url>https://github.com/inspire-software/geda-genericdto</url>
+        <connection>scm:git:git://github.com/inspire-software/geda-genericdto.git</connection>
+        <developerConnection>scm:git:git@github.com:inspire-software/geda-genericdto.git</developerConnection>
     </scm>
     <issueManagement>
-        <system>JIRA</system>
-        <url>http://inspire-software.com/jira/browse/GEDA</url>
+        <system>GitHUB</system>
+        <url>https://github.com/inspire-software/geda-genericdto/issues</url>
     </issueManagement>
     <developers>
         <developer>
@@ -73,19 +73,13 @@
         <dependency>
             <groupId>com.inspire-software.lib.dto.geda</groupId>
             <artifactId>geda.core</artifactId>
-            <version>3.1.3-SNAPSHOT</version>
+            <version>3.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.8</version>
+            <version>1.7.26</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.5.8</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Spring -->

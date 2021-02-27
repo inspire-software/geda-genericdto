@@ -15,14 +15,14 @@
     <parent>
         <groupId>com.inspire-software.lib.dto.geda</groupId>
         <artifactId>geda</artifactId>
-        <version>3.1.3-SNAPSHOT</version>
+        <version>3.2.0-SNAPSHOT</version>
     </parent>
     <artifactId>geda.core</artifactId>
     <name>DTO utilities package core</name>
-    <version>3.1.3-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
     <description>Provides several utilities managing DTO's in n-tier applications</description>
     <packaging>jar</packaging>
-    <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
+    <url>https://github.com/inspire-software/geda-genericdto/tree/master/wiki</url>
     <licenses>
         <license>
             <name>GNU Lesser General Public License (LGPLv3)</name>
@@ -31,13 +31,13 @@
         </license>
     </licenses>
     <scm>
-        <url>https://svn.code.sf.net/p/geda-genericdto/code/</url>
-        <connection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/</connection>
-        <developerConnection>scm:svn:https://svn.code.sf.net/p/geda-genericdto/code/trunk</developerConnection>
+        <url>https://github.com/inspire-software/geda-genericdto</url>
+        <connection>scm:git:git://github.com/inspire-software/geda-genericdto.git</connection>
+        <developerConnection>scm:git:git@github.com:inspire-software/geda-genericdto.git</developerConnection>
     </scm>
     <issueManagement>
-        <system>JIRA</system>
-        <url>http://inspire-software.com/jira/browse/GEDA</url>
+        <system>GitHUB</system>
+        <url>https://github.com/inspire-software/geda-genericdto.git</url>
     </issueManagement>
     <developers>
         <developer>
@@ -99,16 +99,10 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.8</version>
+            <version>1.7.26</version>
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.5.8</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
 </project>

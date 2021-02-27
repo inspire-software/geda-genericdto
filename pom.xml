@@ -21,10 +21,10 @@
     <groupId>com.inspire-software.lib.dto.geda</groupId>
     <artifactId>geda</artifactId>
     <name>DTO utilities package</name>
-    <version>3.1.3-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
     <description>Provides several utilities managing DTO's in n-tier applications</description>
     <packaging>pom</packaging>
-    <url>http://www.inspire-software.com/confluence/display/GeDA/GeDA+-+Generic+DTO+Assembler</url>
+    <url>https://github.com/inspire-software/geda-genericdto/tree/master/wiki</url>
     <licenses>
         <license>
             <name>GNU Lesser General Public License (LGPLv3)</name>
@@ -38,8 +38,8 @@
         <developerConnection>scm:git:git@github.com:inspire-software/geda-genericdto.git</developerConnection>
     </scm>
     <issueManagement>
-        <system>JIRA</system>
-        <url>http://inspire-software.com/jira/browse/GEDA</url>
+        <system>GitHUB</system>
+        <url>https://github.com/inspire-software/geda-genericdto/issues</url>
     </issueManagement>
     <developers>
         <developer>
@@ -129,6 +129,49 @@
         </profile>
 
     </profiles>
+
+    <repositories>
+
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>maven-central</id>
+            <url>https://repo1.maven.org/maven2</url>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>spring-release</id>
+            <url>https://maven.springframework.org/release</url>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>spring-release-external</id>
+            <url>https://repo.spring.io/ext-release-local</url>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>sonatype-public</id>
+            <url>https://repository.sonatype.org/content/groups/public</url>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>maven-central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>sonatype-public</id>
+            <url>https://repository.sonatype.org/content/groups/public</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 
 </project>
