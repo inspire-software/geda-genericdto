@@ -21,6 +21,7 @@ import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.exception.*;
 import com.inspiresoftware.lib.dto.geda.exception.AnnotationMissingBindingException.MissingBindingType;
 
+import java.util.Date;
 import java.util.Map;
 
 
@@ -164,6 +165,39 @@ class DataPipe implements Pipe {
 		}
 	}
 
+    public void writeDefaultValueToDto(final Object defaultValue,
+                                       final Object entity,
+                                       final Object dto,
+                                       final Map<String, Object> converters,
+                                       final BeanFactory dtoBeanFactory)
+            throws BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException,
+            AnnotationMissingException, NotValueConverterException, ValueConverterNotFoundException,
+            InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, InspectionScanningException,
+            UnableToCreateInstanceException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException,
+            AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException,
+            AnnotationDuplicateBindingException, CollectionEntityGenericReturnTypeException {
+
+        if (entity == null) {
+            return;
+        }
+
+        if (this.entityRead.read(entity) != null) {
+            return;
+        }
+
+        if (hasSubEntity) {
+            createDtoAndWriteFromEntityToDto(dto, converters, dtoBeanFactory, defaultValue);
+        } else {
+
+            if (usesConverter) {
+                this.dtoWrite.write(dto, getConverter(converters).convertToDto(defaultValue, dtoBeanFactory));
+            } else {
+                this.dtoWrite.write(dto, defaultValue);
+            }
+
+        }
+    }
+
     private void createDtoAndWriteFromEntityToDto(final Object dto,
                                                   final Map<String, Object> converters,
                                                   final BeanFactory dtoBeanFactory,
@@ -232,8 +266,50 @@ class DataPipe implements Pipe {
             this.entityWrite.write(entity, NULL);
         }
 
-
 	}
+
+    public void writeDefaultValueToEntity(final Object defaultValue,
+                                          final Object entity,
+                                          final Object dto,
+                                          final Map<String, Object> converters,
+                                          final BeanFactory entityBeanFactory) {
+        if (this.readOnly) {
+            return;
+        }
+        if (defaultValue == null) {
+            return;
+        }
+
+        final Object dtoData = this.dtoRead.read(dto);
+        if (this.meta.isChild()) {
+            writeParentObject(dtoData, entity, converters, entityBeanFactory);
+            return;
+        }
+
+        if (usesConverter) {
+            Object castedDefaultValue =	convertToDataType(this.dtoWrite.getParameterType(), defaultValue);
+            Object convertedDefaultValue = getConverter(converters).convertToEntity(castedDefaultValue, entity, entityBeanFactory);
+            this.entityWrite.write(entity, convertedDefaultValue);
+        } else {
+            Object castedDefaultValue =	convertToDataType(this.entityWrite.getParameterType(), defaultValue);
+            this.entityWrite.write(entity, castedDefaultValue);
+        }
+    }
+
+    private Object convertToDataType(Class<?> type, Object value) {
+        try {
+            if (type == Boolean.class && value != null && (
+                    ((String)value).equalsIgnoreCase("T") || ((String)value).equalsIgnoreCase("J") || ((String)value).equalsIgnoreCase("Y"))) {
+                return Boolean.TRUE;
+            }
+            if (type == Date.class && ((String)value).equalsIgnoreCase("sysdate")) {
+                return new Date();
+            }
+            return type.getConstructor(String.class).newInstance((String) value);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 	private Object getDtoValue(final Object dtoData, final Object entity, final Map<String, Object> converters,
 			final BeanFactory entityBeanFactory) throws NotValueConverterException, ValueConverterNotFoundException {
@@ -297,32 +373,35 @@ class DataPipe implements Pipe {
 
     private ValueConverter getConverter(final Map<String, Object> converters) 
     		throws NotValueConverterException, ValueConverterNotFoundException {
-    	
-    	if (converters != null && !converters.isEmpty() && converters.containsKey(this.meta.getConverterKey())) {
-    		final Object conv = converters.get(this.meta.getConverterKey());
+
+    	if (converters != null && !converters.isEmpty() && converters.containsKey(meta.getConverterKey())) {
+    		final Object conv = converters.get(meta.getConverterKey());
     		if (conv instanceof ValueConverter) {
     			return (ValueConverter) conv;
     		}
     		throw new NotValueConverterException(
-        			this.meta.getDtoFieldName(), this.meta.getEntityFieldName(), this.meta.getConverterKey());
+        			meta.getDtoFieldName(), meta.getEntityFieldName(), meta.getConverterKey());
     	}
     	throw new ValueConverterNotFoundException(
-    			this.meta.getDtoFieldName(), this.meta.getEntityFieldName(), this.meta.getConverterKey());
+    			meta.getDtoFieldName(), meta.getEntityFieldName(), meta.getConverterKey());
     }
     
 	private EntityRetriever getRetriever(final Map<String, Object> converters) 
 			throws NotEntityRetrieverException, EntityRetrieverNotFoundException {
-		
-		if (converters != null && !converters.isEmpty() && converters.containsKey(this.meta.getEntityRetrieverKey())) {
-			final Object conv = converters.get(this.meta.getEntityRetrieverKey());
+
+		if (converters != null && !converters.isEmpty() && converters.containsKey(meta.getEntityRetrieverKey())) {
+			final Object conv = converters.get(meta.getEntityRetrieverKey());
 			if (conv instanceof EntityRetriever) {
 				return (EntityRetriever) conv;
 			}
 			throw new NotEntityRetrieverException(
-					this.meta.getEntityFieldName(), this.meta.getDtoFieldName(), this.meta.getConverterKey());
+					meta.getEntityFieldName(), meta.getDtoFieldName(), meta.getConverterKey());
 		}
 		throw new EntityRetrieverNotFoundException(
-				this.meta.getEntityFieldName(), this.meta.getDtoFieldName(), this.meta.getEntityRetrieverKey());
+				meta.getEntityFieldName(), meta.getDtoFieldName(), meta.getEntityRetrieverKey());
 	}
 
+	public String getDtoFieldName() {
+		return meta.getDtoFieldName();
+	}
 }

@@ -11,6 +11,7 @@
 package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.PipeDataFlowRule;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.dsl.Registry;
 import com.inspiresoftware.lib.dto.geda.exception.*;
@@ -54,7 +55,6 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
 
     }
 
-
     /** {@inheritDoc} */
     public void assembleDto(final Object dto, final Object entity,
             final Map<String, Object> converters,
@@ -87,6 +87,28 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
 
     }
 
+    @Override
+    public void assembleDto(Object dto, Object entity, Map<String, Object> converters, BeanFactory dtoBeanFactory, PipeDataFlowRule rule) throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, AnnotationMissingException, NotValueConverterException, ValueConverterNotFoundException, UnableToCreateInstanceException, CollectionEntityGenericReturnTypeException, InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, AnnotationDuplicateBindingException {
+        final Object[] values;
+        if (entity instanceof Object[]) {
+            values = (Object[]) entity;
+        } else {
+            values = new Object[] { entity };
+        }
+
+        for (final Object value : values) {
+            if (value != null) {
+                for (final Class type : composite.keySet()) {
+                    if (type.isAssignableFrom(value.getClass())) {
+                        final Assembler asm = composite.get(type);
+                        asm.assembleDto(dto, value, converters, dtoBeanFactory, rule);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     /** {@inheritDoc} */
     public void assembleDtos(final Collection dtos, final Collection entities,
                             final Map<String, Object> converters,
@@ -105,10 +127,7 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
                     final Object dto = this.dtoClass.newInstance();
                     assembleDto(dto, entity, converters, dtoBeanFactory);
                     dtos.add(dto);
-                } catch (InstantiationException exp) {
-                    throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
-                            "Unable to create dto instance for: " + this.dtoClass.getName(), exp);
-                } catch (IllegalAccessException exp) {
+                } catch (InstantiationException | IllegalAccessException exp) {
                     throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
                             "Unable to create dto instance for: " + this.dtoClass.getName(), exp);
                 }
@@ -118,6 +137,26 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
             throw new InvalidDtoCollectionException();
         }
 
+    }
+
+    @Override
+    public void assembleDtos(Collection dtos, Collection entities, Map<String, Object> converters, BeanFactory dtoBeanFactory, PipeDataFlowRule rule) throws InvalidDtoCollectionException, UnableToCreateInstanceException, InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, AnnotationMissingException, NotValueConverterException, ValueConverterNotFoundException, CollectionEntityGenericReturnTypeException, InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, AnnotationDuplicateBindingException {
+        if (dtos instanceof Collection && dtos.isEmpty() && entities instanceof Collection) {
+
+            for (Object entity : entities) {
+                try {
+                    final Object dto = this.dtoClass.newInstance();
+                    assembleDto(dto, entity, converters, dtoBeanFactory, rule);
+                    dtos.add(dto);
+                } catch (InstantiationException | IllegalAccessException exp) {
+                    throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
+                            "Unable to create dto instance for: " + this.dtoClass.getName(), exp);
+                }
+            }
+
+        } else {
+            throw new InvalidDtoCollectionException();
+        }
     }
 
     /** {@inheritDoc} */
@@ -152,6 +191,28 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
 
     }
 
+    @Override
+    public void assembleEntity(Object dto, Object entity, Map<String, Object> converters, BeanFactory entityBeanFactory, PipeDataFlowRule rule) throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, NotEntityRetrieverException, EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, AnnotationMissingBeanKeyException, AnnotationMissingException, UnableToCreateInstanceException, CollectionEntityGenericReturnTypeException, InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
+        final Object[] values;
+        if (entity instanceof Object[]) {
+            values = (Object[]) entity;
+        } else {
+            values = new Object[] { entity };
+        }
+
+        for (final Object value : values) {
+            if (value != null) {
+                for (final Class type : composite.keySet()) {
+                    if (type.isAssignableFrom(value.getClass())) {
+                        final Assembler asm = composite.get(type);
+                        asm.assembleEntity(dto, value, converters, entityBeanFactory, rule);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     /** {@inheritDoc} */
     public void assembleEntities(final Collection dtos, final Collection entities,
             final Map<String, Object> converters, final BeanFactory entityBeanFactory)
@@ -164,6 +225,11 @@ public class DTOtoEntitiesAssemblerDecoratorImpl implements Assembler {
                GeDARuntimeException, AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException,
                NotDtoToEntityMatcherException {
 
+        throw new UnsupportedOperationException("Unsupported conversion of collection of composite DTO's to collection of entities");
+    }
+
+    @Override
+    public void assembleEntities(Collection dtos, Collection entities, Map<String, Object> converters, BeanFactory entityBeanFactory, PipeDataFlowRule rule) throws UnableToCreateInstanceException, InvalidEntityCollectionException, InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, NotEntityRetrieverException, EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, AnnotationMissingBeanKeyException, AnnotationMissingException, CollectionEntityGenericReturnTypeException, InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
         throw new UnsupportedOperationException("Unsupported conversion of collection of composite DTO's to collection of entities");
     }
 

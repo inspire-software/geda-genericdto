@@ -14,6 +14,7 @@ package com.inspiresoftware.lib.dto.geda.assembler;
 
 import com.inspiresoftware.lib.dto.geda.adapter.BeanFactory;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.Configurable;
+import com.inspiresoftware.lib.dto.geda.assembler.extension.PipeDataFlowRule;
 import com.inspiresoftware.lib.dto.geda.assembler.extension.MethodSynthesizer;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.CollectionPipeMetadata;
 import com.inspiresoftware.lib.dto.geda.assembler.meta.FieldPipeMetadata;
@@ -242,6 +243,43 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
 
 	}
 
+    @Override
+    public void assembleDto(final Object dto, final Object entity,
+                            final Map<String, Object> converters,
+                            final BeanFactory dtoBeanFactory,
+                            PipeDataFlowRule rule)
+            throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException,
+            BeanFactoryUnableToCreateInstanceException, AnnotationMissingException, NotValueConverterException,
+            ValueConverterNotFoundException, UnableToCreateInstanceException, CollectionEntityGenericReturnTypeException,
+            InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException,
+            AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException,
+            AnnotationDuplicateBindingException {
+
+        validateDtoAndEntity(dto, entity);
+
+        for (Pipe pipe : pipes) {
+            if (pipe instanceof DataPipe) {
+                String dtoFieldName = ((DataPipe) pipe).getDtoFieldName();
+                if (!rule.skipPipeDataFlow(dtoFieldName)) {
+                    pipe.writeFromEntityToDto(entity, dto, converters, resolveBeanFactory(dtoBeanFactory));
+                }
+                if (rule.getDefaultValue(dtoFieldName) != null) {
+                    ((DataPipe)pipe).writeDefaultValueToDto(rule.getDefaultValue(dtoFieldName), entity, dto, converters, resolveBeanFactory(dtoBeanFactory));
+                }
+            } else if(pipe instanceof DataVirtualPipe) {
+                String dtoFieldName = ((DataVirtualPipe) pipe).getDtoFieldName();
+                if (!rule.skipPipeDataFlow(dtoFieldName)) {
+                    pipe.writeFromEntityToDto(entity, dto, converters, resolveBeanFactory(dtoBeanFactory));
+                }
+                if (rule.getDefaultValue(dtoFieldName) != null) {
+                    ((DataVirtualPipe)pipe).writeDefaultValueToDto(rule.getDefaultValue(dtoFieldName), entity, dto, converters, resolveBeanFactory(dtoBeanFactory));
+                }
+            } else {
+                pipe.writeFromEntityToDto(entity, dto, converters, resolveBeanFactory(dtoBeanFactory));
+            }
+        }
+    }
+
     /** {@inheritDoc} */
 	public void assembleDtos(final Collection dtos, final Collection entities,
                             final Map<String, Object> converters,
@@ -261,20 +299,48 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
 					final Object dto = this.dtoClass.newInstance();
 					assembleDto(dto, entity, converters, beanFactory);
 					dtos.add(dto);
-				} catch (InstantiationException exp) {
-					throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
-							"Unable to create dto instance for: " + this.dtoClass.getName(), exp);
-				} catch (IllegalAccessException exp) {
+				} catch (InstantiationException | IllegalAccessException exp) {
 					throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
 							"Unable to create dto instance for: " + this.dtoClass.getName(), exp);
 				}
-			}
+            }
 
 		} else {
 			throw new InvalidDtoCollectionException();
 		}
-
 	}
+
+    @Override
+    public void assembleDtos(final Collection dtos, final Collection entities,
+                             final Map<String, Object> converters,
+                             final BeanFactory dtoBeanFactory,
+                             PipeDataFlowRule rule)
+            throws InvalidDtoCollectionException, UnableToCreateInstanceException, InspectionInvalidDtoInstanceException,
+            InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException,
+            AnnotationMissingException, NotValueConverterException, ValueConverterNotFoundException,
+            CollectionEntityGenericReturnTypeException, InspectionScanningException, InspectionPropertyNotFoundException,
+            InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
+            GeDARuntimeException, AnnotationDuplicateBindingException {
+
+        if (dtos != null && dtos.isEmpty() && entities != null) {
+
+            final BeanFactory beanFactory = resolveBeanFactory(dtoBeanFactory);
+            for (Object entity : entities) {
+                try {
+                    final Object dto = this.dtoClass.newInstance();
+                    assembleDto(dto, entity, converters, beanFactory, rule);
+                    dtos.add(dto);
+                } catch (InstantiationException | IllegalAccessException exp) {
+                    throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
+                            "Unable to create dto instance for: " + this.dtoClass.getName(), exp);
+                }
+            }
+
+        } else {
+            throw new InvalidDtoCollectionException();
+
+        }
+    }
 
     /** {@inheritDoc} */
 	public void assembleEntity(final Object dto, final Object entity,
@@ -292,8 +358,34 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
 		for (Pipe pipe : pipes) {
 			pipe.writeFromDtoToEntity(entity, dto, converters, resolveBeanFactory(entityBeanFactory));
 		}
-
 	}
+
+	@Override
+    public void assembleEntity(Object dto, Object entity, Map<String, Object> converters, BeanFactory entityBeanFactory, PipeDataFlowRule rule) throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException, NotEntityRetrieverException, EntityRetrieverNotFoundException, NotValueConverterException, ValueConverterNotFoundException, AnnotationMissingBeanKeyException, AnnotationMissingException, UnableToCreateInstanceException, CollectionEntityGenericReturnTypeException, InspectionScanningException, InspectionPropertyNotFoundException, InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException, GeDARuntimeException, AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException, NotDtoToEntityMatcherException {
+        validateDtoAndEntity(dto, entity);
+
+        for (Pipe pipe : pipes) {
+            if (pipe instanceof DataPipe) {
+                String dtoFieldName = ((DataPipe) pipe).getDtoFieldName();
+                if (!rule.skipPipeDataFlow(dtoFieldName)) {
+                    pipe.writeFromDtoToEntity(entity, dto, converters, resolveBeanFactory(entityBeanFactory));
+                }
+                if (rule.getDefaultValue(dtoFieldName) != null) {
+                    ((DataPipe) pipe).writeDefaultValueToEntity(rule.getDefaultValue(dtoFieldName), entity, dto, converters, resolveBeanFactory(entityBeanFactory));
+                }
+            } else if (pipe instanceof DataVirtualPipe) {
+                String dtoFieldName = ((DataVirtualPipe) pipe).getDtoFieldName();
+                if (!rule.skipPipeDataFlow(dtoFieldName)) {
+                    pipe.writeFromDtoToEntity(entity, dto, converters, resolveBeanFactory(entityBeanFactory));
+                }
+                if (rule.getDefaultValue(dtoFieldName) != null) {
+                    ((DataVirtualPipe) pipe).writeDefaultValueToEntity(rule.getDefaultValue(dtoFieldName), entity, dto, converters, resolveBeanFactory(entityBeanFactory));
+                }
+            } else {
+                pipe.writeFromDtoToEntity(entity, dto, converters, resolveBeanFactory(entityBeanFactory));
+            }
+        }
+    }
 
     /** {@inheritDoc} */
 	public void assembleEntities(final Collection dtos, final Collection entities,
@@ -315,14 +407,11 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
 					final Object entity = this.entityClass.newInstance();
 					assembleEntity(dto, entity, converters, beanFactory);
 					entities.add(entity);
-				} catch (InstantiationException exp) {
-					throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
-							"Unable to create entity instance for: " + this.dtoClass.getName(), exp);
-				} catch (IllegalAccessException exp) {
+				} catch (InstantiationException | IllegalAccessException exp) {
 					throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
 							"Unable to create entity instance for: " + this.dtoClass.getName(), exp);
 				}
-			}
+            }
 
 		} else {
 			throw new InvalidEntityCollectionException();
@@ -330,6 +419,38 @@ public final class DTOtoEntityAssemblerImpl implements Assembler, AssemblerConte
 
 	}
 
+    @Override
+    public void assembleEntities(final Collection dtos, final Collection entities,
+                                 final Map<String, Object> converters, final BeanFactory entityBeanFactory,
+                                 PipeDataFlowRule rule)
+            throws UnableToCreateInstanceException, InvalidEntityCollectionException, InspectionInvalidDtoInstanceException,
+            InspectionInvalidEntityInstanceException, BeanFactoryNotFoundException, BeanFactoryUnableToCreateInstanceException,
+            NotEntityRetrieverException, EntityRetrieverNotFoundException, NotValueConverterException,
+            ValueConverterNotFoundException, AnnotationMissingBeanKeyException, AnnotationMissingException,
+            CollectionEntityGenericReturnTypeException, InspectionScanningException, InspectionPropertyNotFoundException,
+            InspectionBindingNotFoundException, AnnotationMissingBindingException, AnnotationValidatingBindingException,
+            GeDARuntimeException, AnnotationDuplicateBindingException, DtoToEntityMatcherNotFoundException,
+            NotDtoToEntityMatcherException {
+
+        if (dtos instanceof Collection && entities instanceof Collection && entities.isEmpty()) {
+
+            final BeanFactory beanFactory = resolveBeanFactory(entityBeanFactory);
+            for (Object dto : dtos) {
+                try {
+                    final Object entity = this.entityClass.newInstance();
+                    assembleEntity(dto, entity, converters, beanFactory, rule);
+                    entities.add(entity);
+                } catch (InstantiationException | IllegalAccessException exp) {
+                    throw new UnableToCreateInstanceException(this.dtoClass.getCanonicalName(),
+                            "Unable to create entity instance for: " + this.dtoClass.getName(), exp);
+                }
+            }
+
+        } else {
+            throw new InvalidEntityCollectionException();
+        }
+
+    }
 
 	private void validateDtoAndEntity(final Object dto, final Object entity)
 			throws InspectionInvalidDtoInstanceException, InspectionInvalidEntityInstanceException {
